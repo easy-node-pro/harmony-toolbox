@@ -1,7 +1,7 @@
 # Easy Node - Validator Operations Toolbox
 Now with Easy Setup on first boot!
 
-## Harmony ONE Easy Mode Validator Operations Toolbox by [![EasyNode.ONE](http://EasyNode.ONE "EasyNode.ONE")]
+## Harmony ONE Easy Mode Validator Operations Toolbox by [EasyNode.ONE](http://EasyNode.ONE "EasyNode.ONE"){:target="_blank"}
 A menu driven python application to manage your Harmony ONE Validator Node.
 
 [![Easy Node - Harmony Validator Operations Toolbox](http://img.youtube.com/vi/ydvMXFDrHwg/0.jpg)](http://www.youtube.com/watch?v=ydvMXFDrHwg "Easy Node - Harmony Validator Operations Toolbox")
@@ -30,7 +30,7 @@ Once installed and loaded, the interface menu will assist with common tasks like
 - Rebooting your Harmony Server
 
 #  Pre-Installation 
-## Option A: If you're using [![Digital Ocean](https://m.do.co/c/b761e5fdd694 "Digital Ocean")] as your provider:
+## Option A: If you're using [Digital Ocean](https://m.do.co/c/b761e5fdd694 "Digital Ocean"){:target="_blank"} as your provider:
 Here\'s what **you need to setup** for our application to run smoothly the first time you want to setup a new node:
 
 During your node creation screen, Copy the box below and edit the information to use inside the \"User Data\" box.
