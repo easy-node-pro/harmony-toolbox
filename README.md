@@ -2,19 +2,19 @@
 Now with Easy Setup on first boot!
 
 ## Harmony ONE Easy Mode Validator Operations Toolbox by [EasyNode.ONE](http://EasyNode.ONE "EasyNode.ONE")
-A menu driven python application to manage your Harmony ONE Validator Node.
+### A menu driven python application to manage your Harmony ONE Validator Node.
 
 [![Easy Node - Harmony Validator Operations Toolbox](http://img.youtube.com/vi/ydvMXFDrHwg/0.jpg)](http://www.youtube.com/watch?v=ydvMXFDrHwg "Easy Node - Harmony Validator Operations Toolbox")
 
-## Current Application Features:
-### Installer - Detects install and runs if necessary
+# Current Application Features:
+#### Installer - Detects install and runs if necessary
 - First boot, application will install harmony if it's not present
 - Will download all harmony files
 - Will setup all necessary folders
 - rclone will download shard 0 & the shard # in your config file
 - After installation of harmony the only manual step is loading or creating BLS Keys
 
-### Easy Node Menu - The main application
+#### Easy Node Menu - The main application
 Once installed and loaded, the interface menu will assist with common tasks like:
 
 - Checking your Stats
@@ -30,7 +30,7 @@ Once installed and loaded, the interface menu will assist with common tasks like
 - Rebooting your Harmony Server
 
 #  Pre-Installation 
-## Option A: If you're using [Digital Ocean](https://m.do.co/c/b761e5fdd694 "Digital Ocean") as your provider:
+### Option A: If you're using [Digital Ocean](https://m.do.co/c/b761e5fdd694 "Digital Ocean") as your provider:
 Here\'s what **you need to setup** for our application to run smoothly the first time you want to setup a new node:
 
 During your node creation screen, Copy the box below and edit the information to use inside the \"User Data\" box.
@@ -53,14 +53,14 @@ packages:
  - python3-pip
 ```
 
-## Option B: If you're using any other VPS service as your provider:
+### Option B: If you're using any other VPS service as your provider:
 Here\'s what **you need to setup** for our application to run smoothly the first time you want to setup a new node:
 - Ubuntu 20.04LTS - The suggested operating system from harmony
 - Be logged into any user account not named root
 - Give that account sudoless root access on your server
 
 # Installation
-## Step 1: Clone our repo in your home folder
+#### Step 1: Clone our repo in your home folder
 Log into your new server as the user account you created. From the home folder of your non-root user account clone our repository using the HTTPS or SSH commands below:
 
 HTTPS Clone (login required while repo is private:)
@@ -75,7 +75,7 @@ SSH Clone (need keys on node while repo is private:)
 	cd
 	git clone git@github.com:easy-node-one/ez-node.git
 	
-### Step 2: Add your wallet and shard number to config.py file in the includes folder
+#### Step 2: Add your wallet and shard number to config.py file in the includes folder
 Update these two lines in the config.py file:
 - use nano or vim to edit `~/ez-node/ez_node/includes/config.py`
 - validatorWallet = Your validator wallet address
@@ -90,20 +90,20 @@ Configuration file example:
 	# the shard this node should run on - 0,1,2,3:
 	nodeShard = 1
 
-### Step 3: Install Requirements for Easy Node Validator Toolbox Menu
+#### Step 3: Install Requirements for Easy Node Validator Toolbox Menu
 Easy Node Validator Toolbox Menu makes running a validator a breeze. To get everything installed for Easy Menu run the following command:
 
 	cd ~/ez-node/
 	pip3 install -r requirements.txt
 
-If you receive an error, you may need to install pip3 by running `sudo apt install python3-pip -y`
+At this point the application is running and the menu will walk you through loading your Harmony Validator Node software or load right into the main menu.
 
-## Run the Easy Node Validator Toolbox Application!!!
+#### Run the Easy Node Validator Toolbox Application!!!
 To run the easy menu application anytime on your node **from any folder location** run the following command:
 
 	python3 ~/ez-node/ez_node/toolbox.py
 
-## Upgrade Easy Node Validator Operations Toolbox
+#### Upgrade Easy Node Validator Operations Toolbox
 Since you have run this out of our git repository, you can check for upgrades any time by running:
 
 	cd ~/ez-node
