@@ -1,5 +1,5 @@
 # Easy Node - Validator Operations Toolbox
-Now with Easy Setup on first boot!
+## Now with Easy Setup on first boot!
 
 ## Harmony ONE Easy Mode Validator Operations Toolbox by [EasyNode.ONE](http://EasyNode.ONE "EasyNode.ONE")
 ### A menu driven python application to manage your Harmony ONE Validator Node.
