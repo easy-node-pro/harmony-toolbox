@@ -41,9 +41,9 @@ Once installed and loaded, the interface menu will assist with common tasks like
 # Pre-Setup Guides
 Being a harmony validator currently isn't fully automated but we're getting there. Brand new validators have some tasks to complete before they jump into the tool and setup a wallet as a validator for the first time. They have their own guide pre-setup to go through. Existing validators simply need to choose the guide for their provider (if available, or use the other providers for any Ubuntu 20.04LTS server configuration)
 
-- Brand New Validators - [Read this guide](https://github.com/easy-node-one/validator-toolbox/blob/docs/new_validators "Read this guide") and complete 1 time tasks before using one of the guides below
-- Existing Validators - [Digital Ocean Setup Guide](https://github.com/easy-node-one/validator-toolbox/blob/docs/digital_ocean "Digital Ocean Setup Guide")
-- Existing Validators - [Any Other Cloud Provider Setup Guide](https://github.com/easy-node-one/validator-toolbox/blob/docs/other_provider "Other Providers")
+- Brand New Validators - [Read this guide](https://github.com/easy-node-one/validator-toolbox/blob/main/docs/new_validators.md "Read this guide") and complete 1 time tasks before using one of the guides below
+- Existing Validators - [Digital Ocean Setup Guide](https://github.com/easy-node-one/validator-toolbox/blob/docs/digital_ocean.md "Digital Ocean Setup Guide")
+- Existing Validators - [Any Other Cloud Provider Setup Guide](https://github.com/easy-node-one/validator-toolbox/blob/docs/other_provider.md "Other Providers")
 
 # Installation
 #### Step 1: Clone our Github repository while inside your home folder
