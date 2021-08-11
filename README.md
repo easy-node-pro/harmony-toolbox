@@ -1,8 +1,6 @@
 # Easy Node - Validator Operations Toolbox
 ## Now with Easy Setup on first boot!
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/21535f4e931748638944edbdc9b80305)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=easy-node-one/ez-node&amp;utm_campaign=Badge_Grade)
-
 # Harmony ONE Easy Mode Validator Operations Toolbox 
 by [EasyNode.ONE](http://EasyNode.ONE "EasyNode.ONE")
 
