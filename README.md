@@ -1,10 +1,10 @@
 # Easy Node - Validator Operations Toolbox
-## Now with Easy Setup on first boot!
+## A Harmony Validator installer and Management Interface!
 
-# Harmony ONE Easy Mode Validator Operations Toolbox 
+# Harmony ONE Validator Toolbox
 by [EasyNode.ONE](http://EasyNode.ONE "EasyNode.ONE")
 
-#### A menu driven python application to manage your Harmony ONE Validator Node.
+#### A full installer & menu driven python application to manage your Harmony ONE Validator Node.
 Preview Video:
 
 [![Easy Node - Harmony Validator Operations Toolbox](http://img.youtube.com/vi/ydvMXFDrHwg/0.jpg)](http://www.youtube.com/watch?v=ydvMXFDrHwg "Easy Node - Harmony Validator Operations Toolbox")
@@ -40,3 +40,6 @@ Once installed and loaded, the interface menu will assist with common tasks like
 
 # Installation Guide
 See the gitbook for validator-toolbox to [install our software here](https://validator-toolbox-guide.easynode.one/ "validator-toolbox gitbook guide").
+
+# Community
+Join our [telegram chat community](https://t.me/easynodesupport "telegram chat community") to get updates on releases and info on when the project will go live!
