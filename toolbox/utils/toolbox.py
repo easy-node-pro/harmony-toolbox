@@ -546,27 +546,25 @@ def upgradeHarmonyApp(testOrMain):
 
 
 def runStats() -> str:
-    timeNow = datetime.now()
-    ourUptime = subprocess.getoutput("uptime")
+    ourUptime = 
     ourShard = environ.get("SHARD")
-    networkZeroCall = environ.get("NETWORK_0_CALL")
-    networkNumCall = environ.get("NETWORK_S_CALL")
     printStars()
-    print(
-        f"* Current Date & Time: {timeNow}\n* Current Status of our server {serverHostName} currently on Shard {ourShard}:\n"
-    )
-    os.system(
-        f"{hmyAppPath} blockchain latest-headers | grep epoch && {hmyAppPath} blockchain latest-headers | grep viewID && {hmyAppPath} blockchain latest-headers | grep shardID"
-    )
+    if environ.get("NODE_TYPE") == "regular":
+        print(
+            f"* Current Date & Time: {datetime.now()}\n* Current Status of our server {serverHostName} currently on Shard {ourShard}:\n"
+        )
+        os.system(
+            f"{hmyAppPath} blockchain latest-headers | grep epoch && {hmyAppPath} blockchain latest-headers | grep viewID && {hmyAppPath} blockchain latest-headers | grep shardID"
+        )
     print(
         f"\n* Current Status of the Harmony Blockchain Shard {ourShard}:\n"
     )
     os.system(
-        f"{networkNumCall} blockchain latest-headers | grep epoch && {networkNumCall} blockchain latest-headers | grep viewID && {networkNumCall} blockchain latest-headers | grep shardID"
+        f"{environ.get("NETWORK_S_CALL")} blockchain latest-headers | grep epoch && {networkNumCall} blockchain latest-headers | grep viewID && {networkNumCall} blockchain latest-headers | grep shardID"
     )
     if ourShard == 0:
         os.system(
-            f"echo '\n* Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {getDBSize('0')}\n && {harmonyDirPath}/harmony -V"
+            f"echo '\n* Uptime :: {subprocess.getoutput("uptime")}\n\n Harmony DB 0 Size  ::  {getDBSize('0')}\n && {harmonyDirPath}/harmony -V"
         )
     else:
         os.system(
