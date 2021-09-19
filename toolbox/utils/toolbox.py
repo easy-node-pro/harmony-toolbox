@@ -14,7 +14,7 @@ from colorama import Fore, Back, Style
 from pyhmy import blockchain, account
 from requests.exceptions import HTTPError
 
-from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, setAPIPaths, askYesNo, return_txt, installHarmonyApp, installHmyApp
+from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, setAPIPaths, askYesNo, return_txt, installHarmonyApp, installHmyApp, getSignPercent, getValidatorInfo
 from utils.allsysinfo import allSysInfo
 
 
@@ -30,8 +30,12 @@ hmyWalletStorePath = os.path.join(userHomeDir, ".hmy_cli", "account-keys", activ
 toolboxLocation = os.path.join(userHomeDir, "validator-toolbox")
 dotenv_file = f"{userHomeDir}/.easynode.env"
 passwordPath = os.path.join(harmonyDirPath, "passphrase.txt")
-main_net = 'https://rpc.s0.t.hmny.io'
-test_net = 'https://rpc.s0.b.hmny.io'
+# Static rpc for balances
+main_net_rpc = 'https://rpc.s0.t.hmny.io'
+main_net_call = '/home/serviceharmony/harmony/hmy --node="https://api.s0.t.hmny.io"'
+test_net_rpc = 'https://rpc.s0.b.hmny.io'
+test_net_call = '/home/serviceharmony/harmony/hmy --node="https://api.s0.b.hmny.io"'
+# Get our IP
 ourExternalIPAddress = urllib.request.urlopen("https://ident.me").read().decode("utf8")
 mainMenuRegular = os.path.join(toolboxLocation, "toolbox", "messages", "regularmenu.txt")
 mainMenuFull = os.path.join(toolboxLocation, "toolbox", "messages", "fullmenu.txt")
@@ -40,54 +44,42 @@ mainMenuFull = os.path.join(toolboxLocation, "toolbox", "messages", "fullmenu.tx
 def loadVarFile():
     if os.path.exists(dotenv_file):
         load_dotenv(dotenv_file)
-        nodeType = environ.get("NODE_TYPE")
-        ourShard = environ.get("SHARD")
-        expressStatus = environ.get("EXPRESS")
-        validatorWallet = environ.get("VALIDATOR_WALLET")
-        testOrMain = environ.get("NETWORK")
-        setAPIPaths(hmyAppPath, ourShard, dotenv_file)
         return
     else:
         printStars()
         print("* No config file found, this should never print")
 
 
-def collectRewards(networkCall, validatorWallet, passphraseSwitch):
+def collectRewards(networkCall):
     os.system(
-        f"{networkCall} staking collect-rewards --delegator-addr {validatorWallet} --gas-price 2 {passphraseSwitch}"
+        f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 2 {environ.get('PASS_SWITCH')}"
     )
     return
 
 
 def rewardsCollecter() -> None:
-    validatorWallet = environ.get("VALIDATOR_WALLET")
-    nodeType = environ.get("NODE_TYPE")
-    passphraseSwitch = environ.get("PASS_SWITCH")
-    networkCallTest = environ.get("TESTNET_CALL")
-    networkZeroCall = environ.get("NETWORK_0_CALL")
-    networkNumCall = environ.get("NETWORK_S_CALL")
     printStars()
     print("* Harmony ONE Rewards Collection")
     printStars()
     question = askYesNo(
-        f"*\n* For your validator wallet {validatorWallet}\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
+        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
     )
     if question:
-        collectRewards(networkZeroCall, validatorWallet, passphraseSwitch)
+        collectRewards(main_net_call)
         printStars()
         print(
-            Fore.GREEN + f"* mainnet rewards for {validatorWallet} have been collected." + Style.RESET_ALL
+            Fore.GREEN + f"* mainnet rewards for {environ.get('VALIDATOR_WALLET')} have been collected." + Style.RESET_ALL
         )
         printStars()
     question = askYesNo(
-        f"*\n* For your validator wallet {validatorWallet}\n* Would you like to collect your rewards on the Harmony testnet? (YES/NO) "
+        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* Would you like to collect your rewards on the Harmony testnet? (YES/NO) "
     )
     if question:
-        collectRewards(networkCallTest, validatorWallet, passphraseSwitch)
+        collectRewards(test_net_call)
         print()
         printStars()
         print(
-            Fore.YELLOW + f"* testnet rewards for {validatorWallet} have been collected." + Style.RESET_ALL
+            Fore.YELLOW + f"* testnet rewards for {environ.get('VALIDATOR_WALLET')} have been collected." + Style.RESET_ALL
         )
         printStars()
         print()
@@ -95,20 +87,9 @@ def rewardsCollecter() -> None:
     return
 
 
-def menuTopper() -> None:
-    validatorSignPct = "Full Node"
-    curVersion = environ.get("EASY_VERSION")
-    nodeType = environ.get("NODE_TYPE")
-    testOrMain = environ.get("NETWORK")
-    validatorWallet = environ.get("VALIDATOR_WALLET")
-    if nodeType == "regular":
-        validatorWallet = environ.get("VALIDATOR_WALLET")
-        validatorSignPct = getSignPercent(validatorSignPct)
+def menuTopperRegular() -> None:
+    current_epoch = blockchain.get_current_epoch(main_net_rpc)
     os.system("clear")
-    if testOrMain == "mainnet" or "rasppi_main":
-        current_epoch = blockchain.get_current_epoch(main_net)
-    if testOrMain == "testnet":
-        current_epoch = blockchain.get_current_epoch(test_net)
     # Print Menu
     print(Style.RESET_ALL)
     printStars()
@@ -116,18 +97,17 @@ def menuTopper() -> None:
         "* "
         + Fore.GREEN
         + "validator-toolbox for Harmony ONE Validators by Easy Node   v"
-        + curVersion
+        + str(environ.get("EASY_VERSION"))
         + Style.RESET_ALL
         + "   https://easynode.one *"
     )
     printStars()
-    if nodeType == "regular":
-        print(
-            "* Your validator wallet address is: "
-            + Fore.RED
-            + str(validatorWallet)
-            + Style.RESET_ALL
-        )
+    print(
+        "* Your validator wallet address is: "
+        + Fore.RED
+        + str(environ.get("VALIDATOR_WALLET"))
+        + Style.RESET_ALL
+    )
     print(
         "* Server Hostname & IP:             "
         + serverHostName
@@ -138,16 +118,15 @@ def menuTopper() -> None:
         + Style.RESET_ALL
     )
     harmonyServiceStatus()
-    if nodeType == "regular":
-        print(
-            "* Epoch Signing Percentage:         "
-            + Style.BRIGHT
-            + Fore.GREEN
-            + Back.BLUE
-            + validatorSignPct
-            + " %"
-            + Style.RESET_ALL
-        )
+    print(
+        "* Epoch Signing Percentage:         "
+        + Style.BRIGHT
+        + Fore.GREEN
+        + Back.BLUE
+        + getSignPercent()
+        + " %"
+        + Style.RESET_ALL
+    )
     print(
         "* Current disk space free: "
         + Fore.CYAN
@@ -161,40 +140,75 @@ def menuTopper() -> None:
     printStarsReset()
 
 
-def menu() -> None:
-    nodeType = environ.get("NODE_TYPE")
-    passphraseStatus = environ.get("PASS_SWITCH")
-    menuTopper()
+def menuTopperFull() -> None:
+    current_epoch = blockchain.get_current_epoch(main_net_rpc)
+    os.system("clear")
+    # Print Menu
     print(Style.RESET_ALL)
-    nodeType = environ.get("NODE_TYPE")
-    if nodeType == "regular":
-        for x in return_txt(
-            mainMenuRegular
-        ):
-            x = x.strip()
-            try:
-                x = eval(x)
-            except SyntaxError:
-                pass
-            if x:
-                print(x)
-    else:
-        for x in return_txt(
-            mainMenuFull
-        ):
-            x = x.strip()
-            try:
-                x = eval(x)
-            except SyntaxError:
-                pass
-            if x:
-                print(x)
+    printStars()
+    print(
+        "* "
+        + Fore.GREEN
+        + "validator-toolbox for Harmony ONE Validators by Easy Node   v"
+        + str(environ.get("EASY_VERSION"))
+        + Style.RESET_ALL
+        + "   https://easynode.one *"
+    )
+    printStars()
+    print(
+        "* Server Hostname & IP:             "
+        + serverHostName
+        + Style.RESET_ALL
+        + " - "
+        + Fore.YELLOW
+        + ourExternalIPAddress
+        + Style.RESET_ALL
+    )
+    harmonyServiceStatus()
+    print(
+        "* Current disk space free: "
+        + Fore.CYAN
+        + f"{freeSpaceCheck(): >6}"
+        + Style.RESET_ALL
+        + "   Current Epoch: "
+        + Fore.GREEN
+        + str(current_epoch)
+        + Style.RESET_ALL
+    )
+    printStarsReset()
+
+
+def menuRegular() -> None:
+    menuTopperRegular()
+    print(Style.RESET_ALL)
+    for x in return_txt(
+        mainMenuRegular
+    ):
+        x = x.strip()
+        try:
+            x = eval(x)
+        except SyntaxError:
+            pass
+        if x:
+            print(x)
+
+def menuFull() -> None:
+    menuTopperFull()
+    print(Style.RESET_ALL)
+    for x in return_txt(
+        mainMenuFull
+    ):
+        x = x.strip()
+        try:
+            x = eval(x)
+        except SyntaxError:
+            pass
+        if x:
+            print(x)
 
 
 def getWalletJSON(wallet: str) -> str:
     testOrMain = environ.get("NETWORK")
-    if testOrMain == "rasppi_main":
-        testOrMain = "mainnet"
     try:
             response = requests.get(f"https://api.stake.hmny.io/networks/{testOrMain}/validators/{wallet}")
             response.raise_for_status()
@@ -210,7 +224,7 @@ def getWalletJSON(wallet: str) -> str:
 
 
 def tmiServerInfo() -> None:
-    validatorWallet = environ.get("VALIDATOR_WALLET")
+    validatorWallet = environ.get('VALIDATOR_WALLET')
     jsonResponse = getWalletJSON(validatorWallet)
     for key, value in jsonResponse.items():
         print(key, ":", value)
@@ -220,8 +234,6 @@ def tmiServerInfo() -> None:
 
 def runFullNode() -> None:
     loadVarFile()
-    networkZeroCall = environ.get("NETWORK_0_CALL")
-    networkNumCall = environ.get("NETWORK_S_CALL")
     menu_options = {
         # 0: finish_node, 
         1: runStats,
@@ -242,7 +254,7 @@ def runFullNode() -> None:
         999: menuRebootServer,
     }
     while True:
-        menu()
+        menuFull()
         try:
             option = int(input("Enter your option: "))
         except ValueError:
@@ -259,7 +271,7 @@ def runFullNode() -> None:
                 printStarsReset()
                 printWhiteSpace()
                 input("* Press ENTER to return to the main menu")
-                runFullNode(nodeType)
+                runFullNode(environ.get("NODE_TYPE"))
         if option == 0:
             return finish_node()
         os.system("clear")
@@ -280,8 +292,6 @@ def comingSoon():
 
 def runRegularNode() -> None:
     loadVarFile()
-    networkZeroCall = environ.get("NETWORK_0_CALL")
-    networkNumCall = environ.get("NETWORK_S_CALL")
     menu_options = {
         # 0: finish_node, 
         1: runStats,
@@ -302,7 +312,7 @@ def runRegularNode() -> None:
         999: menuRebootServer,
     }
     while True:
-        menu()
+        menuRegular()
         try:
             option = int(input("Enter your option: "))
         except ValueError:
@@ -522,7 +532,7 @@ def upgradeHarmonyApp(testOrMain):
     printStars()
     print("Downloading current harmony binary file from harmony.one: ")
     printStars()
-    installHarmonyApp(harmonyDirPath, testOrMain)
+    installHarmonyApp(harmonyDirPath)
     printStars()
     print("Updated version: ")
     os.system("./harmony -V")
@@ -657,7 +667,7 @@ def menuServiceRestart() -> str:
 
 
 def menuActiveBLS() -> str:
-    validatorWallet = environ.get("VALIDATOR_WALLET")
+    validatorWallet = environ.get('VALIDATOR_WALLET')
     jsonResponse = getWalletJSON(validatorWallet)
     printStarsReset()
     print("* This is a list of your BLS Keys that are active for the next election.")
@@ -672,26 +682,6 @@ def process_command(command: str) -> None:
     output, error = process.communicate()
 
 
-def getSignPercent(networkZeroCall: str) -> str:
-    validatorWallet = environ.get("VALIDATOR_WALLET")
-    networkZeroCall = environ.get("NETWORK_0_CALL")
-    networkNumCall = environ.get("NETWORK_S_CALL")
-    output = subprocess.getoutput(
-        f"{networkZeroCall} blockchain validator information {validatorWallet} | grep signing-percentage"
-    )
-    outputStripped = output.lstrip(
-        '        "current-epoch-signing-percentage": "'
-    ).rstrip('",')
-    if isfloat(outputStripped) == True:
-        math = float(outputStripped)
-        signPerc = math * 100
-        roundSignPerc = round(signPerc, 6)
-        return str(roundSignPerc)
-    else:
-        outputStripped = "0"
-        return str(outputStripped)
-
-
 def isfloat(value):
   try:
     float(value)
@@ -701,14 +691,13 @@ def isfloat(value):
 
 
 def menuCheckBalance() -> None:
-    nodeType = environ.get("NODE_TYPE")
-    validatorWallet = environ.get("VALIDATOR_WALLET")
-    if nodeType == "regular":
+    validatorWallet = environ.get('VALIDATOR_WALLET')
+    if environ.get("NODE_TYPE") == "regular":
         printStarsReset()
         print("* Calling mainnet and testnet for balances...")
         printStars()
-        total_balance = account.get_total_balance(validatorWallet, endpoint=main_net)
-        total_balance_test = account.get_total_balance(validatorWallet, endpoint=test_net)
+        total_balance = account.get_total_balance(validatorWallet, endpoint=main_net_rpc)
+        total_balance_test = account.get_total_balance(validatorWallet, endpoint=test_net_rpc)
         print(f"* Your Validator Wallet Balance on Mainnet is: {total_balance*0.000000000000000001} Harmony ONE Coins")
         print(f"* Your Validator Wallet Balance on Testnet is: {total_balance_test*0.000000000000000001} Harmony ONE Test Coins")
         printStars()
@@ -736,7 +725,7 @@ def menuCheckBalance() -> None:
 
 
 def balanceCheckAny():
-    validatorWallet = environ.get("VALIDATOR_WALLET")
+    validatorWallet = environ.get('VALIDATOR_WALLET')
     printStarsReset()
     checkWallet = input(
         "* Type the address of the Harmony ONE Wallet you would like to check.\n"
@@ -744,8 +733,8 @@ def balanceCheckAny():
     )
     print("* Calling mainnet and testnet for balances...")
     printStarsReset()
-    total_balance = account.get_total_balance(checkWallet, endpoint=main_net)
-    total_balance_test = account.get_total_balance(checkWallet, endpoint=test_net)
+    total_balance = account.get_total_balance(checkWallet, endpoint=main_net_rpc)
+    total_balance_test = account.get_total_balance(checkWallet, endpoint=test_net_rpc)
     print(f"* The Wallet Balance is: {total_balance*0.000000000000000001} Harmony ONE Coins")
     print(f"* Your Validator Wallet Balance on Testnet is: {total_balance_test*0.000000000000000001} Harmony ONE Test Coins")
     printStars()
@@ -762,3 +751,4 @@ def finish_node():
     print()
     print("Thanks for using Easy Node - EZ Mode! Goodbye.")
     printStars()
+    raise SystemExit(0)

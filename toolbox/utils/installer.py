@@ -5,8 +5,8 @@ import dotenv
 from os import environ
 from dotenv import load_dotenv
 from colorama import Fore, Back, Style
-from utils.shared import firstRun, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, save_text, installHarmonyApp, installHmyApp
-from utils.toolbox import *
+from utils.shared import isFirstRun, setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, save_text, installHarmonyApp, installHmyApp
+from utils.toolbox import runRegularNode, runFullNode
 
 
 easyVersion = "1.0.0"
@@ -20,35 +20,34 @@ hmyAppPath = os.path.join(harmonyDirPath, "hmy")
 blskeyDirPath = os.path.join(hmyAppPath, ".hmy", "blskeys")
 hmyWalletStorePath = os.path.join(userHomeDir, ".hmy_cli", "account-keys", activeUserName)
 toolboxLocation = os.path.join(userHomeDir, "validator-toolbox")
+validatorData = os.path.join(toolboxLocation, "toolbox", "metadata", "validator.json")
 dotenv_file = f"{userHomeDir}/.easynode.env"
 passwordPath = os.path.join(harmonyDirPath, "passphrase.txt")
 
 
 def checkEnvStatus(setupStatus) -> None:
-    setupStatus = firstRun(dotenv_file, setupStatus)
+    setupStatus = isFirstRun(dotenv_file, setupStatus)
     getShardMenu(dotenv_file)
     getNodeType(dotenv_file)
     setMainOrTest(dotenv_file)
-    passphraseStatus()
     load_dotenv(dotenv_file)
+    passphraseStatus()
     if setupStatus == "0":
         getExpressStatus(dotenv_file)
-        load_dotenv(dotenv_file)
         checkForInstall()
+    setAPIPaths(hmyAppPath, dotenv_file)
     return
 
 
 def checkForInstall() -> str:
     load_dotenv(dotenv_file)
-    ourShard = environ.get("SHARD")
-    expressStatus = environ.get("EXPRESS")
-    nodeType = environ.get("NODE_TYPE")
-    testOrMain = environ.get("NETWORK")
+    ourShard = environ.get('SHARD')
+    nodeType = environ.get('NODE_TYPE')
     if os.path.exists(harmonyDirPath) == False:
         print(
             f"* You selected Shard: {ourShard}. "
         )
-        if expressStatus == "1":
+        if environ.get("EXPRESS") == "1":
             question = askYesNo(
                 "* Would you like to install the Harmony Software and Databases now? (YES/NO) "
             )
@@ -69,21 +68,24 @@ def checkForInstall() -> str:
                 "* Clone Shards\n* Would you like to clone your shards now? (YES/NO) "
             )
             if question:
-                cloneShards(testOrMain)
+                cloneShards()
                 finish_node_install()
             finish_node_install()
         else:
-            installHarmony(testOrMain)
+            installHarmony()
             if nodeType == "regular":
                 restoreWallet()
             printStars()
             print("* All harmony files now installed. Database download starting now...")  
             printStars()
-            cloneShards(testOrMain)
+            cloneShards()
             finish_node_install()
+    # Harmony already exists but this is the first time this ran
+    return
         
 
-def installHarmony(testOrMain) -> None:
+def installHarmony() -> None:
+    testOrMain = environ.get("NETWORK")
     # check disk space, find mounted disks
     if os.path.isdir("/dev/disk/by-id/") == True:
         # First let's make sure your volume is mounted
@@ -118,7 +120,7 @@ def installHarmony(testOrMain) -> None:
     printStars()
     installHmyApp(harmonyDirPath)
     printStars()
-    installHarmonyApp(harmonyDirPath, testOrMain)
+    installHarmonyApp(harmonyDirPath)
     # install hmy files
     print("* Installing rclone application & rclone configuration files")
     printStars()
@@ -139,22 +141,21 @@ def installHarmony(testOrMain) -> None:
         )
 
 
-def cloneShards(testOrMain):
+def cloneShards():
     os.chdir(f"{harmonyDirPath}")
-    expressStatus = environ.get("EXPRESS")
-    if testOrMain == "rasppi_main":
-        testOrMain == "mainnet"
-    ourShard = environ.get("SHARD")
-    if expressStatus != 4:  
+    testOrMain = environ.get("NETWORK")
+    if environ.get("NETWORK") == "rasppi_main":
+        testOrMain = "mainnet"
+    if environ.get("EXPRESS") == "0":  
         os.system("clear")
         printStars()
-        print(f"* Now cloning shard {ourShard}")
+        print(f"* Now cloning shard {environ.get('SHARD')}")
         printStars()
         os.system(
-            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{ourShard} {harmonyDirPath}/harmony_db_{ourShard}"
+            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {harmonyDirPath}/harmony_db_{environ.get('SHARD')}"
         )
         printStars()
-        print(f"Shard {ourShard} completed.")
+        print(f"Shard {environ.get('SHARD')} completed.")
         printStars()
         if ourShard == '0':
             return
@@ -168,12 +169,12 @@ def cloneShards(testOrMain):
         os.system("clear")
         question = askYesNo(
             "* We are now ready to rclone your databases.\n"
-            + f"* Would you like to download the shard {ourShard} database now? (YES/NO) "
+            + f"* Would you like to download the shard {environ.get('SHARD')} database now? (YES/NO) "
         )
         if question:
-            print(f"* Now cloning shard {ourShard}")
+            print(f"* Now cloning shard {environ.get('SHARD')}")
             os.system(
-                f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{ourShard} {harmonyDirPath}/harmony_db_{ourShard}"
+                f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {harmonyDirPath}/harmony_db_{environ.get('SHARD')}"
             )
         question = askYesNo(
             "* Would you like to download the shard 0 database now? (YES/NO) "
@@ -189,17 +190,14 @@ def cloneShards(testOrMain):
 
 
 def passphraseStatus():
-    nodeType = environ.get("NODE_TYPE")
-    if nodeType == "regular":
+    if environ.get("NODE_TYPE") == "regular":
         if os.path.exists(passwordPath) is not True:
             passphraseSet()
-        output = f"--passphrase-file {harmonyDirPath}/passphrase.txt"
-        dotenv.set_key(dotenv_file, "PASS_SWITCH", output)
-        return output
-    if nodeType == "full":
-        output = "--passphrase"
-        dotenv.set_key(dotenv_file, "PASS_SWITCH", output)
-        return output
+        dotenv.set_key(dotenv_file, "PASS_SWITCH", f"--passphrase-file {harmonyDirPath}/passphrase.txt")
+        return
+    if environ.get("NODE_TYPE") == "full":
+        dotenv.set_key(dotenv_file, "PASS_SWITCH", "--passphrase")
+        return
 
 
 def passphraseSet():
@@ -228,7 +226,6 @@ def passphraseSet():
 
 
 def restoreWallet() -> str:
-    expressStatus = environ.get("EXPRESS")
     nodeType = environ.get("NODE_TYPE")
     if nodeType == "regular":
         if not os.path.isdir(hmyWalletStorePath):
@@ -238,7 +235,7 @@ def restoreWallet() -> str:
                 "* Harmony ONE Validator Wallet Import"
             )
             printStars()
-            if expressStatus == 4:
+            if environ.get("EXPRESS") == 1:
                 question = askYesNo(
                     "\n* You will directly utiilize the harmony applicaiton interface"
                     + "\n* We do not store any pass phrases  or data inside of our application"
@@ -313,7 +310,7 @@ def setMountedPoint():
 
 
 def finish_node_install():
-    ourShard = environ.get("SHARD")
+    ourShard = environ.get('SHARD')
     passphraseSwitch = environ.get("PASS_SWITCH")
     printStars()
     print("* Installation is completed"
