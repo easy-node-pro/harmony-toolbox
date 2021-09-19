@@ -559,11 +559,11 @@ def runStats() -> str:
         f"\n* Current Status of the Harmony Blockchain Shard {ourShard}:\n"
     )
     os.system(
-        f"{environ.get("NETWORK_S_CALL")} blockchain latest-headers | grep epoch && {networkNumCall} blockchain latest-headers | grep viewID && {networkNumCall} blockchain latest-headers | grep shardID"
+        f"{environ.get('NETWORK_S_CALL')} blockchain latest-headers | grep epoch && {environ.get('NETWORK_S_CALL')} blockchain latest-headers | grep viewID && {environ.get('NETWORK_S_CALL')} blockchain latest-headers | grep shardID"
     )
     if ourShard == 0:
         os.system(
-            f"echo '\n* Uptime :: {subprocess.getoutput("uptime")}\n\n Harmony DB 0 Size  ::  {getDBSize('0')}\n && {harmonyDirPath}/harmony -V"
+            f"echo '\n* Uptime :: {subprocess.getoutput('uptime')}\n\n Harmony DB 0 Size  ::  {getDBSize('0')}\n && {harmonyDirPath}/harmony -V"
         )
     else:
         os.system(
