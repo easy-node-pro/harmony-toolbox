@@ -157,7 +157,7 @@ def cloneShards():
         printStars()
         print(f"Shard {environ.get('SHARD')} completed.")
         printStars()
-        if ourShard == '0':
+        if environ.get('SHARD') == '0':
             return
         print("* Now cloning Shard 0, kick back and relax for awhile...")
         printStars()
