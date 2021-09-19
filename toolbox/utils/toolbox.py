@@ -546,7 +546,6 @@ def upgradeHarmonyApp(testOrMain):
 
 
 def runStats() -> str:
-    ourUptime = 
     ourShard = environ.get("SHARD")
     printStars()
     if environ.get("NODE_TYPE") == "regular":
