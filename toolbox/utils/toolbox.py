@@ -271,7 +271,7 @@ def runFullNode() -> None:
                 printStarsReset()
                 printWhiteSpace()
                 input("* Press ENTER to return to the main menu")
-                runFullNode(environ.get("NODE_TYPE"))
+                runFullNode()
         if option == 0:
             return finish_node()
         os.system("clear")
