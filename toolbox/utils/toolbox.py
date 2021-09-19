@@ -566,7 +566,7 @@ def runStats() -> str:
         )
     else:
         os.system(
-            f"echo '\n* Uptime :: {subprocess.getoutput('uptime')}\n\n Harmony DB 0 Size  ::  {getDBSize('0')}\n Harmony DB {environ.get('SHARD')} Size  ::   {getDBSize(str(environ.get('SHARD')))}\n' && {harmonyDirPath}/harmony -V"
+            f"echo '\n* Uptime :: {subprocess.getoutput('uptime')}\n\n Harmony DB 0 Size  ::  {getDBSize('0')}\n Harmony DB {environ.get('SHARD')} Size  ::   {getDBSize(environ.get('SHARD'))}\n' && {harmonyDirPath}/harmony -V"
         )
     printStars()
     input("Validator stats completed, press ENTER to return to the main menu. ")
