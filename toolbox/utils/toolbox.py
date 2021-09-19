@@ -546,28 +546,27 @@ def upgradeHarmonyApp(testOrMain):
 
 
 def runStats() -> str:
-    ourShard = environ.get("SHARD")
     printStars()
     if environ.get("NODE_TYPE") == "regular":
         print(
-            f"* Current Date & Time: {datetime.now()}\n* Current Status of our server {serverHostName} currently on Shard {ourShard}:\n"
+            f"* Current Date & Time: {datetime.now()}\n* Current Status of our server {serverHostName} currently on Shard {environ.get('SHARD')}:\n"
         )
         os.system(
             f"{hmyAppPath} blockchain latest-headers | grep epoch && {hmyAppPath} blockchain latest-headers | grep viewID && {hmyAppPath} blockchain latest-headers | grep shardID"
         )
     print(
-        f"\n* Current Status of the Harmony Blockchain Shard {ourShard}:\n"
+        f"\n* Current Status of the Harmony Blockchain Shard {environ.get('SHARD')}:\n"
     )
     os.system(
         f"{environ.get('NETWORK_S_CALL')} blockchain latest-headers | grep epoch && {environ.get('NETWORK_S_CALL')} blockchain latest-headers | grep viewID && {environ.get('NETWORK_S_CALL')} blockchain latest-headers | grep shardID"
     )
-    if ourShard == 0:
+    if environ.get('SHARD') == 0:
         os.system(
             f"echo '\n* Uptime :: {subprocess.getoutput('uptime')}\n\n Harmony DB 0 Size  ::  {getDBSize('0')}\n && {harmonyDirPath}/harmony -V"
         )
     else:
         os.system(
-            f"echo '\n* Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {getDBSize('0')}\n Harmony DB {ourShard} Size  ::   {getDBSize(str(ourShard))}\n' && {harmonyDirPath}/harmony -V"
+            f"echo '\n* Uptime :: {subprocess.getoutput('uptime')}\n\n Harmony DB 0 Size  ::  {getDBSize('0')}\n Harmony DB {environ.get('SHARD')} Size  ::   {getDBSize(str(environ.get('SHARD')))}\n' && {harmonyDirPath}/harmony -V"
         )
     printStars()
     input("Validator stats completed, press ENTER to return to the main menu. ")
