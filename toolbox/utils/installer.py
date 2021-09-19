@@ -275,6 +275,7 @@ def recoverWallet():
     )
     printStars()
     validatorWallet = setWalletEnv(dotenv_file, hmyAppPath, activeUserName)
+    os.system("clear")
     print(
         "\n* Verify the address above matches the address below: "
         + "\n* Detected Wallet: "
