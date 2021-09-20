@@ -64,13 +64,13 @@ def checkForInstall() -> str:
             if environ.get('NODE_TYPE') == "regular":
                 restoreWallet()
             printStars()
-            print("* All harmony files now installed. Database download starting now...")  
+            print("* All harmony files now installed. Database download starting now...")
             printStars()
             cloneShards()
             finish_node_install()
     # Harmony already exists but this is the first time this ran
     return
-        
+
 
 def installHarmony() -> None:
     testOrMain = environ.get("NETWORK")
@@ -128,7 +128,7 @@ def installHarmony() -> None:
     if activeUserName == 'root':
         os.system(
         f"sudo cp {toolboxLocation}/toolbox/bin/harmony.service . && sed -i 's/home\/serviceharmony/{activeUserName}/g' 'harmony.service' && sed -i 's/serviceharmony/{activeUserName}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
-    )    
+    )
     else:
         os.system(
             f"sudo cp {toolboxLocation}/toolbox/bin/harmony.service . && sed -i 's/serviceharmony/{activeUserName}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
@@ -140,7 +140,7 @@ def cloneShards():
     testOrMain = environ.get("NETWORK")
     if environ.get("NETWORK") == "rasppi_main":
         testOrMain = "mainnet"
-    if environ.get("EXPRESS") == "0":  
+    if environ.get("EXPRESS") == "0":
         os.system("clear")
         printStars()
         print(f"* Now cloning shard {environ.get('SHARD')}")
@@ -245,7 +245,7 @@ def restoreWallet() -> str:
                 return
             passphraseStatus()
             recoverWallet()
-            return 
+            return
         printStars()
         print("* Wallet already setup for this user account")
         return

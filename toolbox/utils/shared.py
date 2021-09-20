@@ -184,7 +184,7 @@ def isFirstRun(dotenv_file):
         setupStatus = str(terminal_menu.show())
         dotenv.unset_key(dotenv_file, "SETUP_STATUS", setupStatus)
         dotenv.set_key(dotenv_file, "SETUP_STATUS", setupStatus)
-        return 
+        return
     return
 
 
@@ -204,7 +204,7 @@ def getShardMenu(dotenv_file) -> None:
 
 
 def getNodeType(dotenv_file) -> None:
-    if environ.get("NODE_TYPE") is None:        
+    if environ.get("NODE_TYPE") is None:
         os.system("clear")
         print("*********************************************************************************************")
         print("* Which type of node would you like to run on this server?                                  *")
@@ -300,7 +300,7 @@ def getValidatorInfo(
 
 
 def currentPrice():
-    try: 
+    try:
         response = requests.get(onePriceURL, timeout=5)
     except (ValueError, KeyError, TypeError):
         response = "0.0000"

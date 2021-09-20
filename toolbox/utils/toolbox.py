@@ -226,7 +226,7 @@ def tmiServerInfo() -> None:
 def runFullNode() -> None:
     loadVarFile()
     menu_options = {
-        # 0: finish_node, 
+        # 0: finish_node,
         1: runStats,
         2: menuCheckBalance,
         3: comingSoon,
