@@ -1,12 +1,10 @@
 import os
 import socket
-import subprocess
 import dotenv
 from os import environ
 from dotenv import load_dotenv
-from colorama import Fore, Back, Style
-from utils.shared import isFirstRun, setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, save_text, installHarmonyApp, installHmyApp
-from utils.toolbox import runRegularNode, runFullNode
+from colorama import Fore, Style
+from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, save_text, installHarmonyApp, installHmyApp
 
 
 easyVersion = "1.0.5"
@@ -17,7 +15,8 @@ if os.path.exists(dotenv_file) == False:
     os.system("touch ~/.easynode.env")
     dotenv.set_key(dotenv_file, "FIRST_RUN", "1")
 else:
-    dotenv.unset_key(dotenv_file, "FIRST_RUN")
+    if environ.get("FIRST_RUN"):
+        dotenv.unset_key(dotenv_file, "FIRST_RUN")
 activeUserName = os.path.split(userHomeDir)[-1]
 harmonyDirPath = os.path.join(userHomeDir, "harmony")
 harmonyAppPath = os.path.join(harmonyDirPath, "harmony")

@@ -1,16 +1,13 @@
 import os
 import dotenv
 import subprocess
-import json2html
 import os
 import subprocess
 import requests
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
-from colorama import Fore, Back, Style
-from requests import get, post
-from json import load, dump, loads, load
+from colorama import Back, Style
 
 
 userHomeDir = os.path.expanduser("~")
