@@ -41,7 +41,7 @@ def checkForInstall() -> str:
                 # run install on server
                 installHarmony()
                 printStars()
-                print("* All harmony files now installed. Database download starting now...")  
+                print("* All harmony files now installed. Database download starting now...")
                 printStars()
             question = askYesNo(
                 "* Wallet Creation"
@@ -240,7 +240,7 @@ def restoreWallet() -> str:
                     passphraseStatus()
                     recoverWallet()
                 printStars()
-                return 
+                return
             passphraseStatus()
             recoverWallet()
             return 
