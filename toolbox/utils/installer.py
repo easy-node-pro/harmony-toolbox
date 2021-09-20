@@ -147,6 +147,7 @@ def installHarmony() -> None:
 
 
 def cloneShards():
+    ourShard = environ.get('SHARD')
     dotenv.set_key(dotenv_file, "SETUP_STATUS", "1")
     os.chdir(f"{harmonyDirPath}")
     testOrMain = environ.get("NETWORK")
@@ -155,13 +156,13 @@ def cloneShards():
     if environ.get("EXPRESS") == "0":  
         os.system("clear")
         printStars()
-        print(f"* Now cloning shard {environ.get('SHARD')}")
+        print(f"* Now cloning shard {ourShard}")
         printStars()
         os.system(
-            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {harmonyDirPath}/harmony_db_{environ.get('SHARD')}"
+            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{ourShard} {harmonyDirPath}/harmony_db_{ourShard}"
         )
         printStars()
-        print(f"Shard {environ.get('SHARD')} completed.")
+        print(f"Shard {ourShard} completed.")
         printStars()
         if environ.get('SHARD') == '0':
             return
