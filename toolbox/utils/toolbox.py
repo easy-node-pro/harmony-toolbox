@@ -15,7 +15,7 @@ from colorama import Fore, Back, Style
 from pyhmy import blockchain, account
 from requests.exceptions import HTTPError
 
-from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, return_txt, installHarmonyApp, installHmyApp, getValidatorInfo, getSignPercent
+from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, return_txt, installHarmonyApp, installHmyApp, getValidatorInfo, getSignPercent, loadVarFile
 from utils.allsysinfo import allSysInfo
 
 
@@ -40,15 +40,6 @@ test_net_call = '/home/serviceharmony/harmony/hmy --node="https://api.s0.b.hmny.
 ourExternalIPAddress = urllib.request.urlopen("https://ident.me").read().decode("utf8")
 mainMenuRegular = os.path.join(toolboxLocation, "toolbox", "messages", "regularmenu.txt")
 mainMenuFull = os.path.join(toolboxLocation, "toolbox", "messages", "fullmenu.txt")
-
-
-def loadVarFile():
-    if os.path.exists(dotenv_file):
-        load_dotenv(dotenv_file)
-        return
-    else:
-        printStars()
-        print("* No config file found, this should never print")
 
 
 def collectRewards(networkCall):

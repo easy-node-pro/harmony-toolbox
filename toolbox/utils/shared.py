@@ -164,6 +164,15 @@ def return_txt(fn: str) -> list:
         return []
 
 
+def loadVarFile():
+    if os.path.exists(dotenv_file):
+        load_dotenv(dotenv_file)
+        return
+    else:
+        printStars()
+        print("* No config file found, this should never print")
+
+
 def isFirstRun(dotenv_file):
     if environ.get("FIRST_RUN") == "1":
         os.system("clear")
