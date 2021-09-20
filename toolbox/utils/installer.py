@@ -21,7 +21,6 @@ blskeyDirPath = os.path.join(hmyAppPath, ".hmy", "blskeys")
 hmyWalletStorePath = os.path.join(userHomeDir, ".hmy_cli", "account-keys", activeUserName)
 toolboxLocation = os.path.join(userHomeDir, "validator-toolbox")
 validatorData = os.path.join(toolboxLocation, "toolbox", "metadata", "validator.json")
-dotenv_file = f"{userHomeDir}/.easynode.env"
 passwordPath = os.path.join(harmonyDirPath, "passphrase.txt")
 
 

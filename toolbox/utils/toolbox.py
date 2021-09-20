@@ -28,7 +28,6 @@ hmyAppPath = os.path.join(harmonyDirPath, "hmy")
 blskeyDirPath = os.path.join(hmyAppPath, ".hmy", "blskeys")
 hmyWalletStorePath = os.path.join(userHomeDir, ".hmy_cli", "account-keys", activeUserName)
 toolboxLocation = os.path.join(userHomeDir, "validator-toolbox")
-dotenv_file = f"{userHomeDir}/.easynode.env"
 passwordPath = os.path.join(harmonyDirPath, "passphrase.txt")
 # Static rpc for balances
 main_net_rpc = 'https://rpc.s0.t.hmny.io'
