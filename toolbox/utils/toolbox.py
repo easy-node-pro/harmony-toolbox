@@ -14,7 +14,7 @@ from colorama import Fore, Back, Style
 from pyhmy import blockchain, account
 from requests.exceptions import HTTPError
 
-from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, setAPIPaths, askYesNo, return_txt, installHarmonyApp, installHmyApp, getSignPercent, getValidatorInfo
+from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, setAPIPaths, askYesNo, return_txt, installHarmonyApp, installHmyApp, getSignPercent
 from utils.allsysinfo import allSysInfo
 
 
