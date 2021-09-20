@@ -175,6 +175,7 @@ def isFirstRun(dotenv_file, setupStatus):
         setupStatus = str(terminal_menu.show())
         dotenv.set_key(dotenv_file, "SETUP_STATUS", setupStatus)
         archType = os.popen('uname -m').read()
+        archType = archType.trim()
         dotenv.set_key(dotenv_file, "ARC", archType)
         return setupStatus
     return setupStatus
