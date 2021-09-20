@@ -7,7 +7,7 @@ import requests
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
-from colorama import Back, Style
+from colorama import Style
 
 
 userHomeDir = os.path.expanduser("~")
