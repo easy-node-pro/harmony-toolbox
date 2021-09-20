@@ -12,16 +12,14 @@ if __name__ == "__main__":
     envFile = pathlib.Path('~/.easynode.env')
     os.system("clear")
     loaderIntro()
-    try:
-        with envFile.open() as f:
-            setupStatus = environ.get("SETUP_STATUS")
+    if environ.get("SETUP_STATUS"):
         print("* Configuration file detected, loading the validator-toolbox menu application.")
         printStars()
         load_dotenv(dotenv_file)
         setupStatus = environ.get("SETUP_STATUS")
         dotenv.set_key(dotenv_file, "EASY_VERSION", easyVersion)
         time.sleep(1)
-    except OSError:
+    else:
         print("* This is the first time you've launched start.py, loading config menus.")
         printStars()
         dotenv.set_key(dotenv_file, "SETUP_STATUS", "2")
