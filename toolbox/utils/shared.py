@@ -164,7 +164,7 @@ def return_txt(fn: str) -> list:
         return []
 
 
-def isFirstRun(dotenv_file, setupStatus):
+def isFirstRun(dotenv_file):
     if environ.get("FIRST_RUN") == "1":
         os.system("clear")
         print("*********************************************************************************************")
@@ -178,8 +178,8 @@ def isFirstRun(dotenv_file, setupStatus):
         setupStatus = str(terminal_menu.show())
         dotenv.unset_key(dotenv_file, "SETUP_STATUS", setupStatus)
         dotenv.set_key(dotenv_file, "SETUP_STATUS", setupStatus)
-        return setupStatus
-    return setupStatus
+        return 
+    return
 
 
 def getShardMenu(dotenv_file) -> None:

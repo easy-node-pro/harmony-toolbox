@@ -18,13 +18,19 @@ if __name__ == "__main__":
         time.sleep(1)
         dotenv.set_key(dotenv_file, "SETUP_STATUS", "2")
         dotenv.set_key(dotenv_file, "EASY_VERSION", easyVersion)
-        setupStatus = isFirstRun(dotenv_file, setupStatus)
-        getShardMenu(dotenv_file)
-        getNodeType(dotenv_file)
-        setMainOrTest(dotenv_file)
-        load_dotenv(dotenv_file)
-        setAPIPaths(dotenv_file)
-        checkEnvStatus(environ.get('SETUP_STATUS'))
+        isFirstRun(dotenv_file)
+        if environ.get('SETUP_STATUS') == "0":
+            getShardMenu(dotenv_file)
+            getNodeType(dotenv_file)
+            setMainOrTest(dotenv_file)
+            getExpressStatus(dotenv_file)
+            load_dotenv(dotenv_file)
+            checkForInstall()
+            setAPIPaths(dotenv_file)
+            dotenv.unset_key(dotenv_file, "FIRST_RUN")
+            printStars()
+            passphraseStatus()
+            # load installer
     if environ.get('SETUP_STATUS') == "1":
         #not first run stuff
         print("* Configuration file detected, loading the validator-toolbox menu application.")
@@ -32,13 +38,11 @@ if __name__ == "__main__":
         dotenv.unset_key(dotenv_file, "EASY_VERSION")
         dotenv.set_key(dotenv_file, "EASY_VERSION", easyVersion)
         time.sleep(1)
-        setupStatus = isFirstRun(dotenv_file, setupStatus)
         getShardMenu(dotenv_file)
         getNodeType(dotenv_file)
         setMainOrTest(dotenv_file)
         load_dotenv(dotenv_file)
         setAPIPaths(dotenv_file)
-        checkEnvStatus(environ.get('SETUP_STATUS'))
         nodeType = environ.get("NODE_TYPE")
         if nodeType == "regular":
             if environ.get("VALIDATOR_WALLET") is None:
