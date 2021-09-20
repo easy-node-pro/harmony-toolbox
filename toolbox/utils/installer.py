@@ -21,6 +21,7 @@ blskeyDirPath = os.path.join(hmyAppPath, ".hmy", "blskeys")
 hmyWalletStorePath = os.path.join(userHomeDir, ".hmy_cli", "account-keys", activeUserName)
 toolboxLocation = os.path.join(userHomeDir, "validator-toolbox")
 validatorData = os.path.join(toolboxLocation, "toolbox", "metadata", "validator.json")
+dotenv_file = f"{userHomeDir}/.easynode.env"
 passwordPath = os.path.join(harmonyDirPath, "passphrase.txt")
 
 
@@ -147,8 +148,6 @@ def installHarmony() -> None:
 
 
 def cloneShards():
-    ourShard = environ.get('SHARD')
-    dotenv.set_key(dotenv_file, "SETUP_STATUS", "1")
     os.chdir(f"{harmonyDirPath}")
     testOrMain = environ.get("NETWORK")
     if environ.get("NETWORK") == "rasppi_main":
@@ -156,15 +155,15 @@ def cloneShards():
     if environ.get("EXPRESS") == "0":  
         os.system("clear")
         printStars()
-        print(f"* Now cloning shard {ourShard}")
+        print(f"* Now cloning shard {environ.get('SHARD')}")
         printStars()
         os.system(
-            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{ourShard} {harmonyDirPath}/harmony_db_{ourShard}"
+            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {harmonyDirPath}/harmony_db_{environ.get('SHARD')}"
         )
         printStars()
-        print(f"Shard {ourShard} completed.")
+        print(f"Shard {environ.get('SHARD')} completed.")
         printStars()
-        if environ.get('SHARD') == '0':
+        if ourShard == '0':
             return
         print("* Now cloning Shard 0, kick back and relax for awhile...")
         printStars()
@@ -281,7 +280,6 @@ def recoverWallet():
     )
     printStars()
     validatorWallet = setWalletEnv(dotenv_file, hmyAppPath, activeUserName)
-    os.system("clear")
     print(
         "\n* Verify the address above matches the address below: "
         + "\n* Detected Wallet: "
@@ -338,4 +336,5 @@ def finish_node_install():
     printStars()
     print("* Thanks for using Easy Node - Validator Node Server Software Installer!")
     printStars()
+    dotenv.set_key(dotenv_file, "SETUP_STATUS", "1")
     raise SystemExit(0)

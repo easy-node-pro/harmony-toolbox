@@ -29,8 +29,9 @@ dotenv_file = f"{userHomeDir}/.easynode.env"
 passwordPath = os.path.join(harmonyDirPath, "passphrase.txt")
 # Static rpc for balances
 main_net_rpc = 'https://rpc.s0.t.hmny.io'
+main_net_call = '/home/serviceharmony/harmony/hmy --node="https://api.s0.t.hmny.io"'
 test_net_rpc = 'https://rpc.s0.b.hmny.io'
-
+test_net_call = '/home/serviceharmony/harmony/hmy --node="https://api.s0.b.hmny.io"'
 # Get our IP
 mainMenuRegular = os.path.join(toolboxLocation, "toolbox", "messages", "regularmenu.txt")
 mainMenuFull = os.path.join(toolboxLocation, "toolbox", "messages", "fullmenu.txt")
@@ -174,6 +175,8 @@ def isFirstRun(dotenv_file, setupStatus):
         terminal_menu = TerminalMenu(menuOptions, title="* Is this a new server or an already existing harmony node?")
         setupStatus = str(terminal_menu.show())
         dotenv.set_key(dotenv_file, "SETUP_STATUS", setupStatus)
+        archType = os.system('uname -m')
+        dotenv.set_key(dotenv_file, "ARC", str(archType))
         return setupStatus
     return setupStatus
 
@@ -247,8 +250,7 @@ def getExpressStatus(dotenv_file) -> None:
         print("*********************************************************************************************")
         menuOptions = ["[0] - Express Install", "[1] - Manual Approval", ]
         terminal_menu = TerminalMenu(menuOptions, title="* Express Or Manual Setup")
-        status = str(terminal_menu.show())
-        dotenv.set_key(dotenv_file, "EXPRESS", status)
+        dotenv.set_key(dotenv_file, "EXPRESS", str(terminal_menu.show()))
     return
 
 
@@ -256,6 +258,49 @@ def setAPIPaths(hmyAppPath, dotenv_file):
     dotenv.set_key(dotenv_file, "NETWORK_0_CALL", f"{hmyAppPath} --node='https://api.s0.{environ.get('NETWORK_SWITCH')}.hmny.io'")
     dotenv.set_key(dotenv_file, "NETWORK_S_CALL", f"{hmyAppPath} --node='https://api.s{environ.get('SHARD')}.{environ.get('NETWORK_SWITCH')}.hmny.io'")
     return 
+
+
+def getValidatorInfo(
+    one_address: str, main_net_rpc: str, validatorData: str, save_data: bool = False, display: bool = False
+) -> dict:
+
+    d = {
+        "jsonrpc": "2.0",
+        "method": "hmyv2_getValidatorInformation",
+        "params": [one_address],
+        "id": 1,
+    }
+    try:
+        response = post(main_net_rpc, json=d)
+    except Exception as e:
+        print("ERROR: <getValidatorInfo> Something went wrong with the RPC API.")
+        return False, {"Error": response.text}
+
+    if response.status_code == 200:
+        data = response.json()
+
+        if save_data:
+            save_json(validatorData, data)
+
+        if display:
+            print(dumps(data, indent=4))
+
+    else:
+        data = False, {f"Error [{response.status_code}]": response.text}
+
+    return True, data
+
+
+def currentPrice():
+    try: 
+        response = requests.get(onePriceURL, timeout=5)
+    except (ValueError, KeyError, TypeError):
+        response = "0.0000"
+        return response
+    data_dict = response.json()
+    type(data_dict)
+    data_dict.keys()
+    return (data_dict['lastPrice'][:-4])
 
 
 def getWalletBalance(
