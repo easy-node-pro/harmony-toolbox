@@ -256,7 +256,7 @@ def getExpressStatus(dotenv_file) -> None:
 
 
 def setAPIPaths(dotenv_file):
-    if environ.get("NETWORK_0_CALL") is False:
+    if environ.get("NETWORK_0_CALL") is None:
         dotenv.set_key(dotenv_file, "NETWORK_0_CALL", f"{hmyAppPath} --node='https://api.s0.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
         dotenv.set_key(dotenv_file, "NETWORK_S_CALL", f"{hmyAppPath} --node='https://api.s{environ.get('SHARD')}.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
     return 

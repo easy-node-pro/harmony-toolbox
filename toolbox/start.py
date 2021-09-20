@@ -18,6 +18,12 @@ if __name__ == "__main__":
         time.sleep(1)
         dotenv.set_key(dotenv_file, "SETUP_STATUS", "2")
         dotenv.set_key(dotenv_file, "EASY_VERSION", easyVersion)
+        setupStatus = isFirstRun(dotenv_file, setupStatus)
+        getShardMenu(dotenv_file)
+        getNodeType(dotenv_file)
+        setMainOrTest(dotenv_file)
+        load_dotenv(dotenv_file)
+        setAPIPaths(dotenv_file)
         checkEnvStatus(environ.get('SETUP_STATUS'))
     if environ.get('SETUP_STATUS') == "1":
         #not first run stuff
@@ -26,6 +32,12 @@ if __name__ == "__main__":
         dotenv.unset_key(dotenv_file, "EASY_VERSION")
         dotenv.set_key(dotenv_file, "EASY_VERSION", easyVersion)
         time.sleep(1)
+        setupStatus = isFirstRun(dotenv_file, setupStatus)
+        getShardMenu(dotenv_file)
+        getNodeType(dotenv_file)
+        setMainOrTest(dotenv_file)
+        load_dotenv(dotenv_file)
+        setAPIPaths(dotenv_file)
         checkEnvStatus(environ.get('SETUP_STATUS'))
         nodeType = environ.get("NODE_TYPE")
         if nodeType == "regular":
@@ -34,4 +46,5 @@ if __name__ == "__main__":
             runRegularNode()
         if nodeType == "full":
             runFullNode()
+    print("Big problem, contact Easy Node")
     raise SystemExit(0)
