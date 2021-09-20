@@ -87,27 +87,33 @@ def checkForInstall() -> str:
 def installHarmony() -> None:
     testOrMain = environ.get("NETWORK")
     # check disk space, find mounted disks
+    mntCount = 0
     if os.path.isdir("/dev/disk/by-id/") == True:
+        testMnt = '/mnt'
+        for subdir, dirs, files in os.walk(testMnt):
+            for dir in dirs:
+                tester = os.path.join(subdir, dir)
+                if os.path.ismount(tester):
+                    myVolumePath = tester
+                    mntCount = mntCount + 1
+
         # First let's make sure your volume is mounted
-        totalDir = len(next(os.walk("/mnt/"))[1])
-        if totalDir == 0:
+        if mntCount == 0:
             print(
                 "* You have a volume but it is not mounted. See the digital ocean website for information on mounting your volume."
             )
             raise SystemExit(0)
-        if totalDir > 1:
+        if mntCount > 1:
             print(
-                "* You have multiple folders in /mnt - Review extra folders and delete leaving only your mounted volume & restart!"
+                "* You have multiple mounts in /mnt - Review mounts, only 1 allowed for our installer at this time!"
             )
             raise SystemExit(0)
         # Checks Passed at this point, only 1 folder in /mnt and it's probably our volume (can scope this down further later)
-        volumeMountPath = os.listdir("/mnt")
-        myVolumePath = "/mnt/" + str(volumeMountPath[0])
         myLongHmyPath = myVolumePath + "/harmony"
-        if totalDir == 1:
+        if mntCount == 1:
             dotenv.set_key(dotenv_file, "MOUNT_POINT", myLongHmyPath)
             print("* Creating all Harmony Files & Folders")
-            os.system(f"sudo chown serviceharmony {myVolumePath}")
+            os.system(f"sudo chown {activeUserName} {myVolumePath}")
             os.system(f"mkdir -p {myLongHmyPath}/.hmy/blskeys")
             os.system(f"ln -s {myLongHmyPath} {harmonyDirPath}")
         else:
