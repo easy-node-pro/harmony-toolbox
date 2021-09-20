@@ -8,8 +8,6 @@ from utils.shared import loaderIntro, getValidatorInfo
 
 if __name__ == "__main__":
     envFile = pathlib.Path(dotenv_file)
-    if os.path.exists("~/.easynode.env") == False:
-        os.system("touch ~/.easynode.env")
     os.system("clear")
     loaderIntro()
     try:
