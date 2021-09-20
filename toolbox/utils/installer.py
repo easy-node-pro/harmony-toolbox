@@ -37,13 +37,15 @@ def checkEnvStatus(setupStatus) -> None:
     if setupStatus == "0":
         getExpressStatus(dotenv_file)
         checkForInstall()
+        setAPIPaths(dotenv_file)
+        passphraseStatus()
     if environ.get("FIRST_RUN") == "1":
         dotenv.unset_key(dotenv_file, "FIRST_RUN")
         printStars()
+        setAPIPaths(dotenv_file)
+        passphraseStatus()
         print("* Inital setup completed, rerun toolbox to load menu.")
         raise SystemExit(0)
-    setAPIPaths(dotenv_file)
-    passphraseStatus()
     return
 
 
