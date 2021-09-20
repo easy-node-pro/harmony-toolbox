@@ -29,9 +29,9 @@ dotenv_file = f"{userHomeDir}/.easynode.env"
 passwordPath = os.path.join(harmonyDirPath, "passphrase.txt")
 # Static rpc for balances
 main_net_rpc = 'https://rpc.s0.t.hmny.io'
-main_net_call = '/home/serviceharmony/harmony/hmy --node="https://api.s0.t.hmny.io"'
+main_net_call = f'/home/{activeUserName}/harmony/hmy --node="https://api.s0.t.hmny.io"'
 test_net_rpc = 'https://rpc.s0.b.hmny.io'
-test_net_call = '/home/serviceharmony/harmony/hmy --node="https://api.s0.b.hmny.io"'
+test_net_call = f'/home/{activeUserName}/harmony/hmy --node="https://api.s0.b.hmny.io"'
 # Get our IP
 mainMenuRegular = os.path.join(toolboxLocation, "toolbox", "messages", "regularmenu.txt")
 mainMenuFull = os.path.join(toolboxLocation, "toolbox", "messages", "fullmenu.txt")
