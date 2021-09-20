@@ -14,7 +14,7 @@ from colorama import Fore, Back, Style
 from pyhmy import blockchain, account
 from requests.exceptions import HTTPError
 
-from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, setAPIPaths, askYesNo, return_txt, installHarmonyApp, installHmyApp, getSignPercent
+from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, setAPIPaths, askYesNo, return_txt, installHarmonyApp, installHmyApp, getValidatorInfo, getSignPercent
 from utils.allsysinfo import allSysInfo
 
 
@@ -28,6 +28,7 @@ hmyAppPath = os.path.join(harmonyDirPath, "hmy")
 blskeyDirPath = os.path.join(hmyAppPath, ".hmy", "blskeys")
 hmyWalletStorePath = os.path.join(userHomeDir, ".hmy_cli", "account-keys", activeUserName)
 toolboxLocation = os.path.join(userHomeDir, "validator-toolbox")
+dotenv_file = f"{userHomeDir}/.easynode.env"
 passwordPath = os.path.join(harmonyDirPath, "passphrase.txt")
 # Static rpc for balances
 main_net_rpc = 'https://rpc.s0.t.hmny.io'
@@ -270,7 +271,7 @@ def runFullNode() -> None:
                 printStarsReset()
                 printWhiteSpace()
                 input("* Press ENTER to return to the main menu")
-                runFullNode()
+                runFullNode(environ.get("NODE_TYPE"))
         if option == 0:
             return finish_node()
         os.system("clear")
@@ -545,27 +546,31 @@ def upgradeHarmonyApp(testOrMain):
 
 
 def runStats() -> str:
+    timeNow = datetime.now()
+    ourUptime = subprocess.getoutput("uptime")
+    ourShard = environ.get("SHARD")
+    networkZeroCall = environ.get("NETWORK_0_CALL")
+    networkNumCall = environ.get("NETWORK_S_CALL")
     printStars()
-    if environ.get("NODE_TYPE") == "regular":
-        print(
-            f"* Current Date & Time: {datetime.now()}\n* Current Status of our server {serverHostName} currently on Shard {environ.get('SHARD')}:\n"
-        )
-        os.system(
-            f"{hmyAppPath} blockchain latest-headers | grep epoch && {hmyAppPath} blockchain latest-headers | grep viewID && {hmyAppPath} blockchain latest-headers | grep shardID"
-        )
     print(
-        f"\n* Current Status of the Harmony Blockchain Shard {environ.get('SHARD')}:\n"
+        f"* Current Date & Time: {timeNow}\n* Current Status of our server {serverHostName} currently on Shard {ourShard}:\n"
     )
     os.system(
-        f"{environ.get('NETWORK_S_CALL')} blockchain latest-headers | grep epoch && {environ.get('NETWORK_S_CALL')} blockchain latest-headers | grep viewID && {environ.get('NETWORK_S_CALL')} blockchain latest-headers | grep shardID"
+        f"{hmyAppPath} blockchain latest-headers | grep epoch && {hmyAppPath} blockchain latest-headers | grep viewID && {hmyAppPath} blockchain latest-headers | grep shardID"
     )
-    if environ.get('SHARD') == 0:
+    print(
+        f"\n* Current Status of the Harmony Blockchain Shard {ourShard}:\n"
+    )
+    os.system(
+        f"{networkNumCall} blockchain latest-headers | grep epoch && {networkNumCall} blockchain latest-headers | grep viewID && {networkNumCall} blockchain latest-headers | grep shardID"
+    )
+    if ourShard == 0:
         os.system(
-            f"echo '\n* Uptime :: {subprocess.getoutput('uptime')}\n\n Harmony DB 0 Size  ::  {getDBSize('0')}\n && {harmonyDirPath}/harmony -V"
+            f"echo '\n* Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {getDBSize('0')}\n && {harmonyDirPath}/harmony -V"
         )
     else:
         os.system(
-            f"echo '\n* Uptime :: {subprocess.getoutput('uptime')}\n\n Harmony DB 0 Size  ::  {getDBSize('0')}\n Harmony DB {environ.get('SHARD')} Size  ::   {getDBSize(environ.get('SHARD'))}\n' && {harmonyDirPath}/harmony -V"
+            f"echo '\n* Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {getDBSize('0')}\n Harmony DB {ourShard} Size  ::   {getDBSize(str(ourShard))}\n' && {harmonyDirPath}/harmony -V"
         )
     printStars()
     input("Validator stats completed, press ENTER to return to the main menu. ")

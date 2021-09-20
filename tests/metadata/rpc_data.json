@@ -6,21 +6,93 @@
         "booted-status": null,
         "current-epoch-performance": {
             "current-epoch-signing-percent": {
-                "current-epoch-signed": 2433,
-                "current-epoch-signing-percentage": "1.000000000000000000",
-                "current-epoch-to-sign": 2433
+                "current-epoch-signed": 21536,
+                "current-epoch-signing-percentage": "0.999489488095790597",
+                "current-epoch-to-sign": 21547
             }
         },
         "currently-in-committee": true,
         "epos-status": "currently elected",
-        "epos-winning-stake": "6161125833541423643510000.000000000000000000",
+        "epos-winning-stake": "7170094464272185828564000.000000000000000000",
         "lifetime": {
-            "apr": "0.119554213854481588",
+            "apr": "0.085631779392275336",
             "blocks": {
-                "signed": 13350502,
-                "to-sign": 13363667
+                "signed": 12161310,
+                "to-sign": 12174066
             },
             "epoch-apr": [
+                {
+                    "apr": "0.090298678920341329",
+                    "epoch": 647
+                },
+                {
+                    "apr": "0.091619396720773851",
+                    "epoch": 648
+                },
+                {
+                    "apr": "0.088681808533861325",
+                    "epoch": 649
+                },
+                {
+                    "apr": "0.093167718379431992",
+                    "epoch": 650
+                },
+                {
+                    "apr": "0.091805491264516381",
+                    "epoch": 651
+                },
+                {
+                    "apr": "0.091403963037235718",
+                    "epoch": 652
+                },
+                {
+                    "apr": "0.066864466636369747",
+                    "epoch": 653
+                },
+                {
+                    "apr": "0.091248703666974060",
+                    "epoch": 654
+                },
+                {
+                    "apr": "0.089100225475950284",
+                    "epoch": 655
+                },
+                {
+                    "apr": "0.090367696882176338",
+                    "epoch": 656
+                },
+                {
+                    "apr": "0.092247706913567487",
+                    "epoch": 657
+                },
+                {
+                    "apr": "0.092322565337028896",
+                    "epoch": 658
+                },
+                {
+                    "apr": "0.090924376391305659",
+                    "epoch": 659
+                },
+                {
+                    "apr": "0.090082086918870172",
+                    "epoch": 660
+                },
+                {
+                    "apr": "0.091425305448034314",
+                    "epoch": 661
+                },
+                {
+                    "apr": "0.106637437429335428",
+                    "epoch": 662
+                },
+                {
+                    "apr": "0.089670658529588072",
+                    "epoch": 663
+                },
+                {
+                    "apr": "0.070767054027999798",
+                    "epoch": 664
+                },
                 {
                     "apr": "0.070774823888962518",
                     "epoch": 665
@@ -72,207 +144,9 @@
                 {
                     "apr": "0.085631779392275336",
                     "epoch": 677
-                },
-                {
-                    "apr": "0.098444653325983249",
-                    "epoch": 678
-                },
-                {
-                    "apr": "0.102732775554040004",
-                    "epoch": 679
-                },
-                {
-                    "apr": "0.102951909541572997",
-                    "epoch": 680
-                },
-                {
-                    "apr": "0.106679244030665377",
-                    "epoch": 681
-                },
-                {
-                    "apr": "0.091510514194302218",
-                    "epoch": 682
-                },
-                {
-                    "apr": "0.105785889916381872",
-                    "epoch": 683
-                },
-                {
-                    "apr": "0.106448190643444027",
-                    "epoch": 684
-                },
-                {
-                    "apr": "0.092695065719938950",
-                    "epoch": 685
-                },
-                {
-                    "apr": "0.097080572799424454",
-                    "epoch": 686
-                },
-                {
-                    "apr": "0.094824379699222274",
-                    "epoch": 687
-                },
-                {
-                    "apr": "0.093162861867584417",
-                    "epoch": 688
-                },
-                {
-                    "apr": "0.094293828178366990",
-                    "epoch": 689
-                },
-                {
-                    "apr": "0.113936937999298681",
-                    "epoch": 690
-                },
-                {
-                    "apr": "0.102611136106997887",
-                    "epoch": 691
-                },
-                {
-                    "apr": "0.104804532067851301",
-                    "epoch": 692
-                },
-                {
-                    "apr": "0.104026736213264152",
-                    "epoch": 693
-                },
-                {
-                    "apr": "0.106241856567094739",
-                    "epoch": 694
-                },
-                {
-                    "apr": "0.119554213854481588",
-                    "epoch": 695
                 }
             ],
             "epoch-blocks": [
-                {
-                    "blocks": {
-                        "signed": 65469,
-                        "to-sign": 65471
-                    },
-                    "epoch": 695
-                },
-                {
-                    "blocks": {
-                        "signed": 32757,
-                        "to-sign": 32768
-                    },
-                    "epoch": 694
-                },
-                {
-                    "blocks": {
-                        "signed": 32765,
-                        "to-sign": 32768
-                    },
-                    "epoch": 693
-                },
-                {
-                    "blocks": {
-                        "signed": 32764,
-                        "to-sign": 32768
-                    },
-                    "epoch": 692
-                },
-                {
-                    "blocks": {
-                        "signed": 32766,
-                        "to-sign": 32768
-                    },
-                    "epoch": 691
-                },
-                {
-                    "blocks": {
-                        "signed": 32770,
-                        "to-sign": 32776
-                    },
-                    "epoch": 690
-                },
-                {
-                    "blocks": {
-                        "signed": 32724,
-                        "to-sign": 32740
-                    },
-                    "epoch": 689
-                },
-                {
-                    "blocks": {
-                        "signed": 57667,
-                        "to-sign": 57706
-                    },
-                    "epoch": 688
-                },
-                {
-                    "blocks": {
-                        "signed": 56557,
-                        "to-sign": 56571
-                    },
-                    "epoch": 687
-                },
-                {
-                    "blocks": {
-                        "signed": 62159,
-                        "to-sign": 62254
-                    },
-                    "epoch": 686
-                },
-                {
-                    "blocks": {
-                        "signed": 61691,
-                        "to-sign": 61704
-                    },
-                    "epoch": 685
-                },
-                {
-                    "blocks": {
-                        "signed": 124568,
-                        "to-sign": 124630
-                    },
-                    "epoch": 684
-                },
-                {
-                    "blocks": {
-                        "signed": 108470,
-                        "to-sign": 108496
-                    },
-                    "epoch": 683
-                },
-                {
-                    "blocks": {
-                        "signed": 56730,
-                        "to-sign": 56738
-                    },
-                    "epoch": 682
-                },
-                {
-                    "blocks": {
-                        "signed": 108390,
-                        "to-sign": 108396
-                    },
-                    "epoch": 681
-                },
-                {
-                    "blocks": {
-                        "signed": 97216,
-                        "to-sign": 97274
-                    },
-                    "epoch": 680
-                },
-                {
-                    "blocks": {
-                        "signed": 102488,
-                        "to-sign": 102512
-                    },
-                    "epoch": 679
-                },
-                {
-                    "blocks": {
-                        "signed": 110344,
-                        "to-sign": 110375
-                    },
-                    "epoch": 678
-                },
                 {
                     "blocks": {
                         "signed": 51281,
@@ -356,38 +230,177 @@
                         "to-sign": 53254
                     },
                     "epoch": 666
+                },
+                {
+                    "blocks": {
+                        "signed": 52268,
+                        "to-sign": 52304
+                    },
+                    "epoch": 665
+                },
+                {
+                    "blocks": {
+                        "signed": 55945,
+                        "to-sign": 55975
+                    },
+                    "epoch": 664
+                },
+                {
+                    "blocks": {
+                        "signed": 113753,
+                        "to-sign": 113805
+                    },
+                    "epoch": 663
+                },
+                {
+                    "blocks": {
+                        "signed": 156861,
+                        "to-sign": 156939
+                    },
+                    "epoch": 662
+                },
+                {
+                    "blocks": {
+                        "signed": 103532,
+                        "to-sign": 103582
+                    },
+                    "epoch": 661
+                },
+                {
+                    "blocks": {
+                        "signed": 103738,
+                        "to-sign": 103758
+                    },
+                    "epoch": 660
+                },
+                {
+                    "blocks": {
+                        "signed": 100498,
+                        "to-sign": 100526
+                    },
+                    "epoch": 659
+                },
+                {
+                    "blocks": {
+                        "signed": 100664,
+                        "to-sign": 100674
+                    },
+                    "epoch": 658
+                },
+                {
+                    "blocks": {
+                        "signed": 89860,
+                        "to-sign": 89880
+                    },
+                    "epoch": 657
+                },
+                {
+                    "blocks": {
+                        "signed": 100460,
+                        "to-sign": 100506
+                    },
+                    "epoch": 656
+                },
+                {
+                    "blocks": {
+                        "signed": 98840,
+                        "to-sign": 99006
+                    },
+                    "epoch": 655
+                },
+                {
+                    "blocks": {
+                        "signed": 100763,
+                        "to-sign": 100809
+                    },
+                    "epoch": 654
+                },
+                {
+                    "blocks": {
+                        "signed": 48726,
+                        "to-sign": 48736
+                    },
+                    "epoch": 653
+                },
+                {
+                    "blocks": {
+                        "signed": 101416,
+                        "to-sign": 101470
+                    },
+                    "epoch": 652
+                },
+                {
+                    "blocks": {
+                        "signed": 99904,
+                        "to-sign": 99942
+                    },
+                    "epoch": 651
+                },
+                {
+                    "blocks": {
+                        "signed": 108486,
+                        "to-sign": 108502
+                    },
+                    "epoch": 650
+                },
+                {
+                    "blocks": {
+                        "signed": 102270,
+                        "to-sign": 102360
+                    },
+                    "epoch": 649
+                },
+                {
+                    "blocks": {
+                        "signed": 95344,
+                        "to-sign": 95358
+                    },
+                    "epoch": 648
                 }
             ],
-            "reward-accumulated": 426283901389182204127774
+            "reward-accumulated": 392470078628783954372413
         },
         "metrics": {
             "by-bls-key": [
                 {
-                    "earned-reward": 94758244713901304753,
+                    "earned-reward": 220783608033275177940,
                     "key": {
-                        "bls-public-key": "03cd329c628aed941e58a35b6e396df44ede87fcfb80506837ca48cba8e41e7e0ca31c3eb691522b1e6d9ad08b9d4584",
+                        "bls-public-key": "1d2b9e74c65cf0243930326a1304cd4b6cbb974a915f2a7d131e606a48e4fc05513a183462ccc0cd02cc027fe3ffd499",
                         "earning-account": "one18julyys26h67r4vq3zexzpfmvt9vpn0g75phmu",
-                        "effective-stake": "6161125833541423643510000.000000000000000000",
-                        "group-percent": "0.005781181667974645",
-                        "overall-percent": "0.002312472667189858",
-                        "raw-stake": "6161125833541423643510000.000000000000000000",
-                        "shard-id": 0
+                        "effective-stake": "3585047232136092914282000.000000000000000000",
+                        "group-percent": "0.002917216387631513",
+                        "overall-percent": "0.001166886555052605",
+                        "raw-stake": "3205217262478524231410000.000000000000000000",
+                        "shard-id": 1
+                    }
+                },
+                {
+                    "earned-reward": 221216575213299604197,
+                    "key": {
+                        "bls-public-key": "1819ef2cb512e8890db5611418ca9408d3f04755e40caaf3f93c5d5ca3b869d3677381899d3e212a1794fc9bb075a505",
+                        "earning-account": "one18julyys26h67r4vq3zexzpfmvt9vpn0g75phmu",
+                        "effective-stake": "3585047232136092914282000.000000000000000000",
+                        "group-percent": "0.002917216387631513",
+                        "overall-percent": "0.001166886555052605",
+                        "raw-stake": "3205217262478524231410000.000000000000000000",
+                        "shard-id": 1
                     }
                 }
             ]
         },
-        "total-delegation": 6165305833541423643510000,
+        "total-delegation": 6410434524957048462820000,
         "validator": {
             "address": "one18julyys26h67r4vq3zexzpfmvt9vpn0g75phmu",
             "bls-public-keys": [
-                "03cd329c628aed941e58a35b6e396df44ede87fcfb80506837ca48cba8e41e7e0ca31c3eb691522b1e6d9ad08b9d4584"
+                "1819ef2cb512e8890db5611418ca9408d3f04755e40caaf3f93c5d5ca3b869d3677381899d3e212a1794fc9bb075a505",
+                "1d2b9e74c65cf0243930326a1304cd4b6cbb974a915f2a7d131e606a48e4fc05513a183462ccc0cd02cc027fe3ffd499"
             ],
             "creation-height": 10414202,
             "delegations": [
                 {
-                    "amount": 136600867000000000000000,
+                    "amount": 126250867000000000000000,
                     "delegator-address": "one18julyys26h67r4vq3zexzpfmvt9vpn0g75phmu",
-                    "reward": 7762478274030024198,
+                    "reward": 91418408692714128526,
                     "undelegations": []
                 },
                 {
@@ -397,15 +410,15 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 24749906728000000000000,
+                    "amount": 24413606728000000000000,
                     "delegator-address": "one1prwn4hl7e3tvmcf2a0n2ftj6862fmz25dxymwu",
-                    "reward": 69306079189529767374,
+                    "reward": 22809960079662567872,
                     "undelegations": []
                 },
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1usnna423jkvcmnv2gz3jcksvxxf5t00qr47vds",
-                    "reward": 1762839932719345895,
+                    "reward": 3567948322007249223,
                     "undelegations": []
                 },
                 {
@@ -477,7 +490,7 @@
                 {
                     "amount": 66200000000000000,
                     "delegator-address": "one1mrcjn69dehxxk6qk3tz5gucqk5ewec2zrdu05p",
-                    "reward": 2813067317930318,
+                    "reward": 2457709071838062,
                     "undelegations": []
                 },
                 {
@@ -517,15 +530,15 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 2200000000000000000000,
+                    "amount": 2100000000000000000000,
                     "delegator-address": "one13jenzgac6vauvyt6wytrekx2ue30ak2eqdhg8t",
-                    "reward": 1513883600084037405,
+                    "reward": 807102220407996547,
                     "undelegations": []
                 },
                 {
                     "amount": 5124000000000000000000,
                     "delegator-address": "one190way6kdl7ayze3ufvrjjswks3hwl3ysmmythf",
-                    "reward": 108532157562108202162,
+                    "reward": 81026785154259435028,
                     "undelegations": []
                 },
                 {
@@ -541,15 +554,15 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 10328000000000000000000,
+                    "amount": 9528000000000000000000,
                     "delegator-address": "one1h4hdznem3tt8lzu6jrddr2rzryts4jyxwdnvdg",
-                    "reward": 9173533129401119071,
+                    "reward": 23379844051212316273,
                     "undelegations": []
                 },
                 {
                     "amount": 5000000000000000000000,
                     "delegator-address": "one1cx6p062dfwk2jevrznjqff2c0ku50hs52mvuer",
-                    "reward": 51149698066557320494,
+                    "reward": 24309951376618991111,
                     "undelegations": []
                 },
                 {
@@ -561,13 +574,13 @@
                 {
                     "amount": 8823111538000000000000,
                     "delegator-address": "one1f4zgdkrvaw75rsh7qm2y8khnw6qxd6chrrtskn",
-                    "reward": 157476429453933925907,
+                    "reward": 110114413714535499353,
                     "undelegations": []
                 },
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1wpqqh6uq93xr0ql6jemqycpjchx8qrmcjpch77",
-                    "reward": 42493464019341801967,
+                    "reward": 37125514681354235945,
                     "undelegations": []
                 },
                 {
@@ -615,7 +628,7 @@
                 {
                     "amount": 3000000000000000000000,
                     "delegator-address": "one1jrd759l9zv7lp9mjrdkfujr46cpkugq5562f8a",
-                    "reward": 6897095388482206978,
+                    "reward": 11574649661126994766,
                     "undelegations": []
                 },
                 {
@@ -627,7 +640,7 @@
                 {
                     "amount": 14000000000000000000000,
                     "delegator-address": "one1c6tfynwalxs6gt0vvw99550mc3vcfhduv7rj6s",
-                    "reward": 29447323975464263575,
+                    "reward": 1467713929022069014,
                     "undelegations": []
                 },
                 {
@@ -645,24 +658,19 @@
                 {
                     "amount": 100000000000000000000000,
                     "delegator-address": "one1vuvclr7wpy9a2vrvgegr8q6s9u59r3kzmzezqy",
-                    "reward": 20998105203364434663,
+                    "reward": 386042240604737844485,
                     "undelegations": []
                 },
                 {
-                    "amount": 1000000000000000000000,
+                    "amount": 15500000000000000000000,
                     "delegator-address": "one1hlxe68d7trza48k0n4y77antwaken3x99pgw75",
-                    "reward": 572988527572169900,
-                    "undelegations": [
-                        {
-                            "amount": 10500000000000000000000,
-                            "epoch": 691
-                        }
-                    ]
+                    "reward": 1514019806804964521,
+                    "undelegations": []
                 },
                 {
                     "amount": 2050000000000000000000,
                     "delegator-address": "one175tqx6mwruuef30pyhwyel8ugt97fnuu5fefpt",
-                    "reward": 21481847058263501671,
+                    "reward": 10477550915388728946,
                     "undelegations": []
                 },
                 {
@@ -704,7 +712,7 @@
                 {
                     "amount": 2818000000000000000000,
                     "delegator-address": "one1ktnl90pxa3wkk05gq5ggdmsku89utz38jcyfff",
-                    "reward": 18990525079855447796,
+                    "reward": 3863643845406171836,
                     "undelegations": []
                 },
                 {
@@ -722,7 +730,7 @@
                 {
                     "amount": 10002000000000000000000,
                     "delegator-address": "one1zwqljrptwcvuxdrfcp63kg0wlyp0es3776am9a",
-                    "reward": 420180438845602492680,
+                    "reward": 366490209567049785205,
                     "undelegations": []
                 },
                 {
@@ -768,15 +776,15 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 6968192345000000000000,
+                    "amount": 6500000000000000000000,
                     "delegator-address": "one1zqg7uh4d6vdyqed7peg2ywaa95m75ee549p48e",
-                    "reward": 34065760367822174054,
+                    "reward": 158851330221482424217,
                     "undelegations": []
                 },
                 {
                     "amount": 5000000000000000000000,
                     "delegator-address": "one1ff2uc6t5x0nh0zk75uphry77ujt2p057pv3qnm",
-                    "reward": 44052293833847534328,
+                    "reward": 17212547143909204945,
                     "undelegations": []
                 },
                 {
@@ -794,13 +802,13 @@
                 {
                     "amount": 16999999999700000,
                     "delegator-address": "one1c0hjhxcnxxfqq8mms80jghd33znwqzzmqvl58n",
-                    "reward": 700553292393330,
+                    "reward": 609298153620887,
                     "undelegations": []
                 },
                 {
                     "amount": 135107494947000000000000,
                     "delegator-address": "one1qsg788x007het2wvmlufn04rvqwt7q8vdzzgh6",
-                    "reward": 1249697212307138967,
+                    "reward": 216865516763624584883,
                     "undelegations": []
                 },
                 {
@@ -860,7 +868,7 @@
                 {
                     "amount": 10000000000000000000000,
                     "delegator-address": "one16se6dpn6kd4gk9zs0aaue2yjc6yffpr8u84e8x",
-                    "reward": 310644860169393838428,
+                    "reward": 256965366789517257924,
                     "undelegations": []
                 },
                 {
@@ -878,7 +886,7 @@
                 {
                     "amount": 18027267999999998600000,
                     "delegator-address": "one14ucd689fvs9vwkq2cjtjcf7j3eamer0rql0zwj",
-                    "reward": 749438463632758404094,
+                    "reward": 652669002306432186205,
                     "undelegations": []
                 },
                 {
@@ -902,7 +910,7 @@
                 {
                     "amount": 699999000000,
                     "delegator-address": "one1pmw40qyhr5thsnmlf62y2hl56k6vum3y4wlhuj",
-                    "reward": 1029802162,
+                    "reward": 619113267,
                     "undelegations": []
                 },
                 {
@@ -1022,7 +1030,7 @@
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1aex6svvrjx59qh6m22lkva44ctuze6p5sz5n5p",
-                    "reward": 252632820157917711,
+                    "reward": 207710125219413104,
                     "undelegations": []
                 },
                 {
@@ -1064,7 +1072,7 @@
                 {
                     "amount": 2800000000000000000000,
                     "delegator-address": "one13hzgejx6xve4lf2f8xny2fw076zm7yzf5947sx",
-                    "reward": 34055490568071557053,
+                    "reward": 19025232421706133466,
                     "undelegations": []
                 },
                 {
@@ -1088,7 +1096,7 @@
                 {
                     "amount": 50000000000000000000000,
                     "delegator-address": "one1a4ayp9pake9ch99zudstt83k5s7mh6qn4m08xt",
-                    "reward": 34088916947036813580,
+                    "reward": 130963002346105515891,
                     "undelegations": []
                 },
                 {
@@ -1098,9 +1106,9 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 2643000000000000000000,
+                    "amount": 2380000000000000000000,
                     "delegator-address": "one17ctnnh38s0mgypwt2re3l4ln3wr0fht3asen0j",
-                    "reward": 1064991937498088937,
+                    "reward": 87141273166929246447,
                     "undelegations": []
                 },
                 {
@@ -1112,7 +1120,7 @@
                 {
                     "amount": 440550000000000000000000,
                     "delegator-address": "one1kjy8hew7tm0ly3apxvqr9jfjlnkngstfmaevns",
-                    "reward": 5170514518292495179957,
+                    "reward": 2805664437442030023054,
                     "undelegations": []
                 },
                 {
@@ -1130,7 +1138,7 @@
                 {
                     "amount": 6826000000000000000000,
                     "delegator-address": "one1x0zut0kneatenhpc3gvezn8tx5e86r2ehk7ac6",
-                    "reward": 263229183505745276437,
+                    "reward": 226587561324641464896,
                     "undelegations": []
                 },
                 {
@@ -1160,13 +1168,13 @@
                 {
                     "amount": 10998000000000000000000,
                     "delegator-address": "one18p4z30hhufjp6hmd8p9tp2aqqe8tull45zlqdg",
-                    "reward": 461717262403174093738,
+                    "reward": 402680555583985876023,
                     "undelegations": []
                 },
                 {
                     "amount": 43850000000000000000000,
                     "delegator-address": "one1vp25gj6df6jhag9956xtsyjzn7rlf8044lp6my",
-                    "reward": 24568633839386113124,
+                    "reward": 4662242906218112923,
                     "undelegations": []
                 },
                 {
@@ -1178,19 +1186,19 @@
                 {
                     "amount": 25000000000000000000000,
                     "delegator-address": "one1axe47av2jzn9enqne82zyuw7j6vfpeey7eyyx9",
-                    "reward": 45604052663005264631,
+                    "reward": 85302451157552098527,
                     "undelegations": []
                 },
                 {
                     "amount": 2825034050000000000000,
                     "delegator-address": "one1q75250rdxrjmjavxkw9vdzcvxvfe7r0hvg8w64",
-                    "reward": 17009661959129973108,
+                    "reward": 1845022300639910141,
                     "undelegations": []
                 },
                 {
                     "amount": 9656770150000000000000,
                     "delegator-address": "one1rapv4xpntuyk67024vexuzucszvez3s9kscr3s",
-                    "reward": 18995859615359146776,
+                    "reward": 353572792248485844248,
                     "undelegations": []
                 },
                 {
@@ -1208,13 +1216,13 @@
                 {
                     "amount": 33621756051200000000000,
                     "delegator-address": "one1ftqymdgk440p4qgeqqsywyrvrefdnsfn44w6vr",
-                    "reward": 3540282212121706220,
+                    "reward": 231917064013513945692,
                     "undelegations": []
                 },
                 {
                     "amount": 1058820000000000000000,
                     "delegator-address": "one1mrrg7eyzq2v8xr09gp07u38jkzpk2z0a3pndmd",
-                    "reward": 5908444147430882544,
+                    "reward": 224752029382894254,
                     "undelegations": []
                 },
                 {
@@ -1238,7 +1246,7 @@
                 {
                     "amount": 9560320000000000000000,
                     "delegator-address": "one1zf2pu3ke0t99v4yq3vec94ztg4zqc9awc7lhcd",
-                    "reward": 12980486897618114226,
+                    "reward": 7436594575936747467,
                     "undelegations": []
                 },
                 {
@@ -1262,7 +1270,7 @@
                 {
                     "amount": 18953866531200000000000,
                     "delegator-address": "one1sxwerquuqckh3uaatyk990nm4kp5k24skf6xvs",
-                    "reward": 790412418414267148588,
+                    "reward": 688669023115805625472,
                     "undelegations": []
                 },
                 {
@@ -1280,7 +1288,7 @@
                 {
                     "amount": 77900000000000000000000,
                     "delegator-address": "one184lu566hfazh0zxatcqmkh823waln8k3ywe7e9",
-                    "reward": 3248578715752573484268,
+                    "reward": 2830415462323334631970,
                     "undelegations": []
                 },
                 {
@@ -1290,9 +1298,9 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 1898314485600000000000,
+                    "amount": 1501000000000000000000,
                     "delegator-address": "one106jez0n2rhkzq4etzswtujf94nlgrg7hgwpjpq",
-                    "reward": 1750345827029580242,
+                    "reward": 4328555911997098223,
                     "undelegations": []
                 },
                 {
@@ -1304,19 +1312,19 @@
                 {
                     "amount": 27700735007000000000000,
                     "delegator-address": "one129ar8cefu8kzfz2n64awxfl5ms5rkanv9aext4",
-                    "reward": 116892222294237971085,
+                    "reward": 722014255936031974277,
                     "undelegations": []
                 },
                 {
                     "amount": 30003000000000000000000,
                     "delegator-address": "one1vsrd90ls5fgrrmvhzdg7y50jv66z28dddtap9m",
-                    "reward": 1251182377518927438057,
+                    "reward": 1090127793531283639844,
                     "undelegations": []
                 },
                 {
-                    "amount": 2725409224700000000000,
+                    "amount": 2600000000000000000000,
                     "delegator-address": "one1zcvgxxrlf5xgvtwusfupezl92a0rxm7taw9sjl",
-                    "reward": 11255785548930752496,
+                    "reward": 94468295276517021615,
                     "undelegations": []
                 },
                 {
@@ -1334,7 +1342,7 @@
                 {
                     "amount": 1200988469400000000000,
                     "delegator-address": "one1904qxf4w08ya5uqf9as79pf4e64mdh3w6fu0la",
-                    "reward": 22169383580055538968,
+                    "reward": 15722538320809080973,
                     "undelegations": []
                 },
                 {
@@ -1352,7 +1360,7 @@
                 {
                     "amount": 6807685200000000000000,
                     "delegator-address": "one15c9lgrnx52exk69fx4eu2x8mw2frs8hml35q9u",
-                    "reward": 283893469117635598666,
+                    "reward": 247350159855067198865,
                     "undelegations": []
                 },
                 {
@@ -1382,7 +1390,7 @@
                 {
                     "amount": 78582508367700000000000,
                     "delegator-address": "one1schg9gkx4jc8syz8s673ug0p5s885890gshsue",
-                    "reward": 107818124896681158032,
+                    "reward": 604598235939357906939,
                     "undelegations": []
                 },
                 {
@@ -1394,20 +1402,25 @@
                 {
                     "amount": 1012720655700000000000,
                     "delegator-address": "one1gvpmh32ycdpd7utsckxt25564lv9agq7f2sxla",
-                    "reward": 9427050702056987714,
+                    "reward": 3990817528725781575,
                     "undelegations": []
                 },
                 {
                     "amount": 1020000000000000000000,
                     "delegator-address": "one1kjqsgw84w3a7jfrz5xcncflh4ff9mz3rqll09v",
-                    "reward": 21019427486421094457,
+                    "reward": 15544119161673717069,
                     "undelegations": []
                 },
                 {
                     "amount": 0,
                     "delegator-address": "one1gnzr63y6xj0av4lnra4yqhvnc32ukvzjf0t8zs",
-                    "reward": 0,
-                    "undelegations": []
+                    "reward": 1051225324737359828,
+                    "undelegations": [
+                        {
+                            "amount": 74000000000000000000000,
+                            "epoch": 673
+                        }
+                    ]
                 },
                 {
                     "amount": 0,
@@ -1436,7 +1449,7 @@
                 {
                     "amount": 1600000000000000000000,
                     "delegator-address": "one107wmwv9g5nftvx0x223ydgjkmztncprfdycm0r",
-                    "reward": 498030888638183172,
+                    "reward": 173678383244176917,
                     "undelegations": []
                 },
                 {
@@ -1448,7 +1461,7 @@
                 {
                     "amount": 4255210000000000000000,
                     "delegator-address": "one1tafuza0ghhztepx3de7y5z2ye3gpkewdgnrvsa",
-                    "reward": 5024887008607811528,
+                    "reward": 3105290193636740776,
                     "undelegations": []
                 },
                 {
@@ -1460,13 +1473,13 @@
                 {
                     "amount": 8008000000000000000000,
                     "delegator-address": "one12qvz0rx2lhmym6rwvsmngal9hqhtw4uexlpq06",
-                    "reward": 50567675553250074303,
+                    "reward": 7581137254644886437,
                     "undelegations": []
                 },
                 {
                     "amount": 3600917000000000000000,
                     "delegator-address": "one12e2z8mxw5px865q37gpxsm6f9zpa7fce3ufys3",
-                    "reward": 147535299372971287570,
+                    "reward": 128205759346672826061,
                     "undelegations": []
                 },
                 {
@@ -1478,13 +1491,13 @@
                 {
                     "amount": 32001000000000000000000,
                     "delegator-address": "one1pj3jpj6v3l2cnyvkjjwjjmgmu66t5g3xmt7vwg",
-                    "reward": 95369102465881376822,
+                    "reward": 137067760907843082848,
                     "undelegations": []
                 },
                 {
                     "amount": 221444636236000000000000,
                     "delegator-address": "one1c5xnr2f9fzprladfhzjlvu2kvxh8zaltet0dpx",
-                    "reward": 557237284372833217389,
+                    "reward": 4056029853951256376987,
                     "undelegations": []
                 },
                 {
@@ -1538,7 +1551,7 @@
                 {
                     "amount": 61000000000000000000000,
                     "delegator-address": "one19vc0l87dsfcz9u5epdqsvmpakdclulv2n47hed",
-                    "reward": 157849513235667474300,
+                    "reward": 131603578122986010387,
                     "undelegations": []
                 },
                 {
@@ -1560,9 +1573,9 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 100280497147000000000000,
                     "delegator-address": "one1m30e2cr629h90ry9ge9nnv8u5leg7fgp64akk4",
-                    "reward": 0,
+                    "reward": 2026572819085708015387,
                     "undelegations": []
                 },
                 {
@@ -1598,13 +1611,13 @@
                 {
                     "amount": 0,
                     "delegator-address": "one1p5sh63vkt6pyh2xklpmt5a2gzyslp0x2jlh2gz",
-                    "reward": 0,
+                    "reward": 46952850187715347483,
                     "undelegations": []
                 },
                 {
                     "amount": 13880000000000000000000,
                     "delegator-address": "one1wzjcg7rw6u5gz9e9gle6warhxtt3ultsznnqhr",
-                    "reward": 107034624368706471269,
+                    "reward": 32527487557437622702,
                     "undelegations": []
                 },
                 {
@@ -1676,13 +1689,13 @@
                 {
                     "amount": 0,
                     "delegator-address": "one1q68f0x584nzm0agc8tl853znpcjy9rxq48tdcz",
-                    "reward": 0,
+                    "reward": 1122285013651864384,
                     "undelegations": []
                 },
                 {
                     "amount": 10000000,
                     "delegator-address": "one12hfrrlds8sqsyhq7aeq80t3t89fypelhrnqwtc",
-                    "reward": 19123,
+                    "reward": 0,
                     "undelegations": []
                 },
                 {
@@ -1692,15 +1705,15 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 5898166660000000000000,
+                    "amount": 5174000000000000000000,
                     "delegator-address": "one15xvv2n223fjs2t77nnssuck53a9vac0gpreq8n",
-                    "reward": 6817108225115326529,
+                    "reward": 255336887576024804,
                     "undelegations": []
                 },
                 {
                     "amount": 137252016547700000000000,
                     "delegator-address": "one1qc05df0gclgz3utmcqsdmck03nvqpxk8q4z6pl",
-                    "reward": 1887595729790175173679,
+                    "reward": 1150833858425477163439,
                     "undelegations": []
                 },
                 {
@@ -1778,7 +1791,7 @@
                 {
                     "amount": 10000000000000000000000,
                     "delegator-address": "one1vpv362aqgjunvlmgq7na5pjvtp7t9uf4rx2ght",
-                    "reward": 179762769675615444869,
+                    "reward": 126083276295738864365,
                     "undelegations": []
                 },
                 {
@@ -1808,7 +1821,7 @@
                 {
                     "amount": 1039000000000000000000,
                     "delegator-address": "one1ftcffshtyzd33kzzqk6pg5fxud6suwpc4ksukd",
-                    "reward": 748989358249104006,
+                    "reward": 361805686745016884,
                     "undelegations": []
                 },
                 {
@@ -1856,7 +1869,7 @@
                 {
                     "amount": 4000000000000000000000,
                     "delegator-address": "one18g85rdke5d7xdlvhfus2juplkv9r5wq7mzzv3t",
-                    "reward": 150380487875213695290,
+                    "reward": 128908690523262961802,
                     "undelegations": []
                 },
                 {
@@ -1874,13 +1887,13 @@
                 {
                     "amount": 1000000000000000,
                     "delegator-address": "one1xxytugrjudxw5956f8vrntxy244xkgcdq8kmgl",
-                    "reward": 8829278518,
+                    "reward": 863701423054723129,
                     "undelegations": []
                 },
                 {
                     "amount": 100000000000000000000000,
                     "delegator-address": "one168xuk63uhwgh8mcx96amkr8q3gthj7scg4538s",
-                    "reward": 230776374743522685257,
+                    "reward": 71481472334017576919,
                     "undelegations": []
                 },
                 {
@@ -1916,7 +1929,7 @@
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1u2cywpzavmlkqje9835cqjsp3slw5vr2et63ws",
-                    "reward": 41265178381554394508,
+                    "reward": 35897229043566828486,
                     "undelegations": []
                 },
                 {
@@ -1994,7 +2007,7 @@
                 {
                     "amount": 1335900000000000000000,
                     "delegator-address": "one139xflynx9y22n6lepu8xcnf092ej0eqlqtxpvm",
-                    "reward": 8386698058872324781,
+                    "reward": 1215654538254602205,
                     "undelegations": []
                 },
                 {
@@ -2012,7 +2025,7 @@
                 {
                     "amount": 126000000000000000000000,
                     "delegator-address": "one14gax0ezyv0h20tzjmf67e925uvre8k3wh4vqs4",
-                    "reward": 172876687435517686658,
+                    "reward": 1132583632562855319965,
                     "undelegations": []
                 },
                 {
@@ -2024,7 +2037,7 @@
                 {
                     "amount": 10379527866630000000000,
                     "delegator-address": "one1gg6dxw9lc6ga05d04m5pdclfehfzualsvmv4wu",
-                    "reward": 31910226219630336307,
+                    "reward": 1027297634295687922,
                     "undelegations": []
                 },
                 {
@@ -2036,13 +2049,13 @@
                 {
                     "amount": 0,
                     "delegator-address": "one1qd0gntqestcevafs09ngf2uwetjq7yrnsh0we3",
-                    "reward": 0,
+                    "reward": 17910753150300,
                     "undelegations": []
                 },
                 {
                     "amount": 4500000000000000000000,
                     "delegator-address": "one1w0s3l05wt5xjyd88gtav3cacapkh644m30jgwu",
-                    "reward": 10066104851456397311,
+                    "reward": 14628890399329932368,
                     "undelegations": []
                 },
                 {
@@ -2072,13 +2085,13 @@
                 {
                     "amount": 4895452851200000000000,
                     "delegator-address": "one1pgxzz3my78992ft9644d6eukrqa92yycecjl3v",
-                    "reward": 180230369425306755703,
+                    "reward": 153951826533557840155,
                     "undelegations": []
                 },
                 {
                     "amount": 1998999999999000000,
                     "delegator-address": "one1pveufmk0m9qganq0put7p2vr6dggeu5ysvxamq",
-                    "reward": 2148069863921176416,
+                    "reward": 2137339333194485636,
                     "undelegations": []
                 },
                 {
@@ -2096,7 +2109,7 @@
                 {
                     "amount": 9999989000000000000000,
                     "delegator-address": "one19k7r2eq6ltl8jr2u3gx9c87972904vrmcvflq2",
-                    "reward": 412651329898584092943,
+                    "reward": 358971895566150177240,
                     "undelegations": []
                 },
                 {
@@ -2132,7 +2145,7 @@
                 {
                     "amount": 8865000000000000000000,
                     "delegator-address": "one1f9vhchsucvxg7jfa2pu5rs4ktynrc0hg0et4p7",
-                    "reward": 365815806352481507090,
+                    "reward": 318228935471220881450,
                     "undelegations": []
                 },
                 {
@@ -2150,7 +2163,7 @@
                 {
                     "amount": 7220000000000000000000,
                     "delegator-address": "one15fje7gueellmn3nm4al854kv72th9gvfs738zn",
-                    "reward": 39679014105370526571,
+                    "reward": 922419885099694588,
                     "undelegations": []
                 },
                 {
@@ -2162,13 +2175,13 @@
                 {
                     "amount": 0,
                     "delegator-address": "one19ujgvhumv6w78eu33lpz878mmcxxe3xgxlk27n",
-                    "reward": 0,
+                    "reward": 46375380299365955,
                     "undelegations": []
                 },
                 {
                     "amount": 21940345491300000000000,
                     "delegator-address": "one1rwpz0nrgjh9ht4kn03jq7yfhcxwperp7d6r6xu",
-                    "reward": 157367677065100051297,
+                    "reward": 39593014009855614556,
                     "undelegations": []
                 },
                 {
@@ -2192,7 +2205,7 @@
                 {
                     "amount": 21022028000000000000000,
                     "delegator-address": "one1saqqecdv2faw37phclylfwnu2d2f96ma9ducfh",
-                    "reward": 323845832244322333459,
+                    "reward": 211000650958564132251,
                     "undelegations": []
                 },
                 {
@@ -2210,19 +2223,19 @@
                 {
                     "amount": 3000000,
                     "delegator-address": "one19m3l766cyh8l4mvkaqp0tutdum8m2s77zsj5gj",
-                    "reward": 0,
+                    "reward": 273733391155789426644,
                     "undelegations": []
                 },
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1mclc47kcvjjpkumragv56r56jwraffhgyukzt0",
-                    "reward": 4052964181603139861,
+                    "reward": 10812392756345599478,
                     "undelegations": []
                 },
                 {
                     "amount": 20000000000000000000000,
                     "delegator-address": "one1n2q6v75hdrvs8v59l5xua74u4aawapgm3rhfzw",
-                    "reward": 250726445559319885753,
+                    "reward": 143367458799566596550,
                     "undelegations": []
                 },
                 {
@@ -2246,13 +2259,13 @@
                 {
                     "amount": 0,
                     "delegator-address": "one147t82ms9cd29z64nldgp9qdvxje24fuqd8qx6r",
-                    "reward": 0,
+                    "reward": 60161957850279701008,
                     "undelegations": []
                 },
                 {
                     "amount": 2000000000000000000000,
                     "delegator-address": "one10w9w3zw5vmrwe77ll5hw6mndk4l4cayfnwxlhy",
-                    "reward": 7013667730163765387,
+                    "reward": 638089056085466280,
                     "undelegations": []
                 },
                 {
@@ -2270,7 +2283,7 @@
                 {
                     "amount": 0,
                     "delegator-address": "one1hm5qnj9lyszk2h0zwkx4z9f5ed6auhh30q0cs9",
-                    "reward": 0,
+                    "reward": 33724552177869752,
                     "undelegations": []
                 },
                 {
@@ -2286,21 +2299,21 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 1263995956000000000000,
                     "delegator-address": "one1pzgxmte2d4ftdwvjt2t9mp9dgrxy8djzvnkh6n",
-                    "reward": 84664080598214878,
+                    "reward": 45050243933928109967,
                     "undelegations": []
                 },
                 {
                     "amount": 186697000000000000000000,
                     "delegator-address": "one1zuu0qj6rxza4jpf3xp4vhmcs7emrkrjazstxg5",
-                    "reward": 13505213667614012916,
+                    "reward": 3460215153333460422,
                     "undelegations": []
                 },
                 {
                     "amount": 3463826391000000000000,
                     "delegator-address": "one1cdkzhjz657rr50vg3ev9vy552ssxkq2ndk6r6q",
-                    "reward": 108402655200157691578,
+                    "reward": 89809010617684992711,
                     "undelegations": []
                 },
                 {
@@ -2318,13 +2331,13 @@
                 {
                     "amount": 4295770000000000000000,
                     "delegator-address": "one12u202ngnt7hv88v4xqgdjluqatqa9qmeyk9t8w",
-                    "reward": 23036433976821538485,
+                    "reward": 29291403367592909313,
                     "undelegations": []
                 },
                 {
                     "amount": 5000000000000000000000,
                     "delegator-address": "one1fe8tpswj7s48vp9jv722pj4dg3rmj2upcaj8g8",
-                    "reward": 3254429912628024807,
+                    "reward": 64089177780206734577,
                     "undelegations": []
                 },
                 {
@@ -2342,13 +2355,13 @@
                 {
                     "amount": 7327432009100000000000,
                     "delegator-address": "one12z372aeecyrl9xsz0wwcgd35xk8rwje2qhjz5d",
-                    "reward": 23425803347280224102,
+                    "reward": 1708583143535626370,
                     "undelegations": []
                 },
                 {
                     "amount": 20500000000000000000000,
                     "delegator-address": "one1njvtz43zc32v094k26uj2dn75zh97t0dknu2f7",
-                    "reward": 114830238276066151305,
+                    "reward": 4787276847319045239,
                     "undelegations": []
                 },
                 {
@@ -2360,7 +2373,7 @@
                 {
                     "amount": 1987022000000000000000,
                     "delegator-address": "one1ptmucmduxxtsnp537grqfcpm7r5vyvqcqc6wpx",
-                    "reward": 173594109729177758,
+                    "reward": 718681417972712374,
                     "undelegations": []
                 },
                 {
@@ -2396,7 +2409,7 @@
                 {
                     "amount": 2000000000000000000000,
                     "delegator-address": "one1pfppmzryz0d8y00pd7lcp05u8v6lae0nmmqty3",
-                    "reward": 15525330568525538379,
+                    "reward": 4789431892550287030,
                     "undelegations": []
                 },
                 {
@@ -2414,7 +2427,7 @@
                 {
                     "amount": 10000000000000000000000,
                     "delegator-address": "one156mgeyvvmmlyy7ghht0p7xvp33zf53e4sqshqr",
-                    "reward": 278150366673058928977,
+                    "reward": 224470873293182348473,
                     "undelegations": []
                 },
                 {
@@ -2430,15 +2443,10 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 100000000000000000000,
                     "delegator-address": "one1pj2pw3g3txehzad7lrmg5j9tr2dmtf3thw5qv3",
-                    "reward": 0,
-                    "undelegations": [
-                        {
-                            "amount": 100000000000000000000,
-                            "epoch": 689
-                        }
-                    ]
+                    "reward": 5522544856970648,
+                    "undelegations": []
                 },
                 {
                     "amount": 0,
@@ -2449,7 +2457,7 @@
                 {
                     "amount": 10000000000000000000000,
                     "delegator-address": "one1c0u4cykq9vav2l9tkq8qwqjfrr04hu2jqjuj3t",
-                    "reward": 399875178130507011491,
+                    "reward": 346195684750630430987,
                     "undelegations": []
                 },
                 {
@@ -2467,7 +2475,7 @@
                 {
                     "amount": 1400000000000000000000,
                     "delegator-address": "one1arj4gj36ezjj6tweqrdwkvvanj9fae4jzfa9fp",
-                    "reward": 57058626571897858665,
+                    "reward": 49543497498715065715,
                     "undelegations": []
                 },
                 {
@@ -2497,7 +2505,7 @@
                 {
                     "amount": 3400960657500000000000,
                     "delegator-address": "one1pdvcku8gq2r0n7s5g0kvs88dk8d296sfye4n7p",
-                    "reward": 59833694611664542241,
+                    "reward": 41577510101715326361,
                     "undelegations": []
                 },
                 {
@@ -2515,7 +2523,7 @@
                 {
                     "amount": 2000000000000000000000,
                     "delegator-address": "one1e88jrhampwv4fh4a9esjm4wnhqrvk43llkl0m5",
-                    "reward": 15302989715776243788,
+                    "reward": 4567091039800992439,
                     "undelegations": []
                 },
                 {
@@ -2533,7 +2541,7 @@
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1q7dgx4we5785fxgaas84pjrd6lhjqag4crrh7h",
-                    "reward": 40506875459077629503,
+                    "reward": 35138926121090063481,
                     "undelegations": []
                 },
                 {
@@ -2563,7 +2571,7 @@
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one12u8q55f5klzj459ccskx46wg6netz2gasejpcv",
-                    "reward": 1169736309571616424,
+                    "reward": 2281430229711509646,
                     "undelegations": []
                 },
                 {
@@ -2581,13 +2589,13 @@
                 {
                     "amount": 0,
                     "delegator-address": "one1up6d65hytgdsqg8887pd48fk5mth3g5ge2jdqf",
-                    "reward": 0,
+                    "reward": 165968227899240592,
                     "undelegations": []
                 },
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1eqat4ndwlfcwdlg7apcny358zd4r5zkrpz58kd",
-                    "reward": 40506875459077629503,
+                    "reward": 35138926121090063481,
                     "undelegations": []
                 },
                 {
@@ -2599,7 +2607,7 @@
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one18e48qupldaczw7d2zq074xn0tjvw44vd8neaug",
-                    "reward": 5439288175558470843,
+                    "reward": 71338837570904821,
                     "undelegations": []
                 },
                 {
@@ -2657,9 +2665,9 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 10000000000000000000000,
                     "delegator-address": "one1u2fp7mpgqftr7c0vnttr95s60za6aruvuucxuk",
-                    "reward": 949399207323905125,
+                    "reward": 162703723952157858421,
                     "undelegations": []
                 },
                 {
@@ -2729,15 +2737,10 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 3800000000000000000000,
+                    "amount": 13800000000000000000000,
                     "delegator-address": "one14645ymjaxny9f78pzdfm9eduhd5p7e4ruvqp6s",
-                    "reward": 4325127331529012022,
-                    "undelegations": [
-                        {
-                            "amount": 10000000000000000000000,
-                            "epoch": 692
-                        }
-                    ]
+                    "reward": 12999415798889948128,
+                    "undelegations": []
                 },
                 {
                     "amount": 0,
@@ -2748,7 +2751,7 @@
                 {
                     "amount": 3080000000000000000000,
                     "delegator-address": "one1fl3ua65mgtpy6l95f6wlghavm6548gucxffh22",
-                    "reward": 154126220531813668,
+                    "reward": 1098096107946288436,
                     "undelegations": []
                 },
                 {
@@ -2760,7 +2763,7 @@
                 {
                     "amount": 4499000000000000000000,
                     "delegator-address": "one14qyw8l7xlrdpuy52wrv7ld38wcx208p5x7fdqw",
-                    "reward": 180097019155396707168,
+                    "reward": 155946615083790134108,
                     "undelegations": []
                 },
                 {
@@ -2808,7 +2811,7 @@
                 {
                     "amount": 1174627200000000000000,
                     "delegator-address": "one1jd523j4plvsd67sr0n6s87ezcre5g94m87j3vc",
-                    "reward": 46744708539260927010,
+                    "reward": 40439369238638679164,
                     "undelegations": []
                 },
                 {
@@ -2820,13 +2823,13 @@
                 {
                     "amount": 1104087248200000,
                     "delegator-address": "one1cnly940245ce83sh0yvh6mfh5wrtzz9j6jn4ky",
-                    "reward": 35496948073486,
+                    "reward": 29570263583462,
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 23037347532000000000000,
                     "delegator-address": "one1lcsjc3s3le0nzv3jmzx8mcvsu6fvynjkt2u75k",
-                    "reward": 5177536924058814827,
+                    "reward": 541936142921101874657,
                     "undelegations": []
                 },
                 {
@@ -2850,7 +2853,7 @@
                 {
                     "amount": 3000000000000000000000,
                     "delegator-address": "one130v98mudjsvz6wkt3c48sj2a2m0kgvng64406e",
-                    "reward": 6829379178578782774,
+                    "reward": 6575784008254154184,
                     "undelegations": []
                 },
                 {
@@ -2880,13 +2883,13 @@
                 {
                     "amount": 1191777300000000000000,
                     "delegator-address": "one1eeqpdnelxsl2ygxd5ewx8gymquh0qtf5mlhvwm",
-                    "reward": 47427202888037540689,
+                    "reward": 41029802719473831522,
                     "undelegations": []
                 },
                 {
                     "amount": 20796503330200000000000,
                     "delegator-address": "one1z2vcueevlnwgk8e4dyman3n3ck6skvgp44yft8",
-                    "reward": 128094984799833492498,
+                    "reward": 16460408516028077913,
                     "undelegations": []
                 },
                 {
@@ -2898,7 +2901,7 @@
                 {
                     "amount": 149200000000000000000000,
                     "delegator-address": "one1x5pnmlx7sae2m0ep7r8hjv4usugtpu6ddljwuk",
-                    "reward": 4657953145783103569911,
+                    "reward": 3857055104555344187953,
                     "undelegations": []
                 },
                 {
@@ -2916,24 +2919,19 @@
                 {
                     "amount": 1015000000000000000000,
                     "delegator-address": "one1krfjex8fj8g2s260nnwzx5ulxdq8qmgra5my6k",
-                    "reward": 535174874331610025,
+                    "reward": 212045406943761558,
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 94390000000000000000000,
                     "delegator-address": "one1678sjh6wxuqjxxvrtllswgh3dy4a0e3z3tavhc",
-                    "reward": 0,
-                    "undelegations": [
-                        {
-                            "amount": 94390000000000000000000,
-                            "epoch": 690
-                        }
-                    ]
+                    "reward": 105697131733096851932,
+                    "undelegations": []
                 },
                 {
                     "amount": 4741773830000000000000,
                     "delegator-address": "one1dcw3qedtvvcfauylzt70lzu84qxer7gsmwkl2f",
-                    "reward": 32955421957403130345,
+                    "reward": 7501820265767430816,
                     "undelegations": []
                 },
                 {
@@ -2951,7 +2949,7 @@
                 {
                     "amount": 1781385930000000000000,
                     "delegator-address": "one1r844800v2tm6wf2aylql323phg0qvwfm65qt36",
-                    "reward": 30654766393709698275,
+                    "reward": 21092376970065551341,
                     "undelegations": []
                 },
                 {
@@ -3047,7 +3045,7 @@
                 {
                     "amount": 3900000000000000000000,
                     "delegator-address": "one1zfg8fyuw7qz64pu08sd6g6fgj6gauwun97yk2k",
-                    "reward": 130621455987791200199,
+                    "reward": 109686453569639405583,
                     "undelegations": []
                 },
                 {
@@ -3059,8 +3057,13 @@
                 {
                     "amount": 0,
                     "delegator-address": "one16rfx0qd3ahnnhzcf8ptr2rhpe8gffzuzjjypx8",
-                    "reward": 0,
-                    "undelegations": []
+                    "reward": 676456240769324988,
+                    "undelegations": [
+                        {
+                            "amount": 51650000000000000000000,
+                            "epoch": 677
+                        }
+                    ]
                 },
                 {
                     "amount": 0,
@@ -3077,13 +3080,13 @@
                 {
                     "amount": 3000000000000000000000,
                     "delegator-address": "one1rc6pcxcgpaeyl3puz4zmj7cpynudfggmqa5j2s",
-                    "reward": 53002628329930205539,
+                    "reward": 36898780315967392941,
                     "undelegations": []
                 },
                 {
                     "amount": 126003569000000000000000,
                     "delegator-address": "one1t338970lmgxlakyk97jqvuaanzv3ufzrdncg5g",
-                    "reward": 115509689947185952937,
+                    "reward": 196857427816663456456,
                     "undelegations": []
                 },
                 {
@@ -3101,13 +3104,13 @@
                 {
                     "amount": 2500000000000000000000,
                     "delegator-address": "one10xqex3lx7epa5y2yqn9c7d966waj573yzjdwt5",
-                    "reward": 86734156826772225831,
+                    "reward": 73314283481803170070,
                     "undelegations": []
                 },
                 {
-                    "amount": 16721000000000000000000,
+                    "amount": 16568000000000000000000,
                     "delegator-address": "one1q57dmh4gcn9g55cyee37ffnnvfj2w5dzlpvr6h",
-                    "reward": 4175650532701282786,
+                    "reward": 15529025119960537746,
                     "undelegations": []
                 },
                 {
@@ -3131,7 +3134,7 @@
                 {
                     "amount": 43640000000000000000000,
                     "delegator-address": "one150wx96d48yn8rz3x38c22t5pzdscu86x5v7wdy",
-                    "reward": 1716434346103679566022,
+                    "reward": 1482177036993897953047,
                     "undelegations": []
                 },
                 {
@@ -3149,13 +3152,13 @@
                 {
                     "amount": 10000000,
                     "delegator-address": "one177syu7x08gaf6p2gq7hnyw4xnvty9uwunvjw6l",
-                    "reward": 19123,
+                    "reward": 0,
                     "undelegations": []
                 },
                 {
                     "amount": 0,
                     "delegator-address": "one1yc7keh5uftculyr7k4gmmpeqvazgsr2q8gcsxv",
-                    "reward": 0,
+                    "reward": 1395341098430425656,
                     "undelegations": []
                 },
                 {
@@ -3179,13 +3182,13 @@
                 {
                     "amount": 6373106597000000000000,
                     "delegator-address": "one14jewsgeuplsgmat7umdrp6hff8tkeye4uph03e",
-                    "reward": 17264508613337988335,
+                    "reward": 72607188388216914245,
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 1292687114993723000000,
                     "delegator-address": "one1cemhq0ne7z55x7kav35gp09tacpt70epx5dyzn",
-                    "reward": 0,
+                    "reward": 43904471994994967228,
                     "undelegations": []
                 },
                 {
@@ -3197,7 +3200,7 @@
                 {
                     "amount": 1959224000000000000000,
                     "delegator-address": "one1syg5r5m9te0l8xyrhqrdksh7q6wpac5qmxd22m",
-                    "reward": 77059563824716606075,
+                    "reward": 66542548650947001630,
                     "undelegations": []
                 },
                 {
@@ -3227,25 +3230,25 @@
                 {
                     "amount": 4686499500000000000000,
                     "delegator-address": "one1jvp8mk90g88euzre6ynue7445dz42zfquvcerx",
-                    "reward": 184327880494906348869,
+                    "reward": 159170988606401821817,
                     "undelegations": []
                 },
                 {
                     "amount": 1001000000000000000000,
                     "delegator-address": "one1lgxpen39u5n0v86gfnrztem332w6r2sjgxwvf4",
-                    "reward": 3368879577185222140,
+                    "reward": 33997690513998086997,
                     "undelegations": []
                 },
                 {
                     "amount": 20292560000000000000000,
                     "delegator-address": "one176ustxmf8qz77m80v3l7hzyvtz47d5dm7jq6ag",
-                    "reward": 632830619120468234128,
+                    "reward": 523901185102393256101,
                     "undelegations": []
                 },
                 {
                     "amount": 18000103686300000000000,
                     "delegator-address": "one1jt3j0tlymrztgd8f9s7f6h5evvu8mrv3vn6n8f",
-                    "reward": 707974248409550562972,
+                    "reward": 611350603742967077327,
                     "undelegations": []
                 },
                 {
@@ -3263,13 +3266,13 @@
                 {
                     "amount": 5596000000000000000000,
                     "delegator-address": "one1gzjk8jjstu7y9dfteaug4rsrsle2p55yva4ax2",
-                    "reward": 34594524043686254734,
+                    "reward": 4555479548307247799,
                     "undelegations": []
                 },
                 {
                     "amount": 2499998672460000000000,
                     "delegator-address": "one16ucmjzu78qz8cqeuuafrzumhgf79jzp6292lrm",
-                    "reward": 12435514599961776948,
+                    "reward": 69612987319903295323,
                     "undelegations": []
                 },
                 {
@@ -3303,15 +3306,10 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 1000000000000000000000,
                     "delegator-address": "one1ewlqsxjyt2dyr6l4uer5dax2rdu2cfqxkety2q",
-                    "reward": 230724921369679761,
-                    "undelegations": [
-                        {
-                            "amount": 1000000000000000000000,
-                            "epoch": 690
-                        }
-                    ]
+                    "reward": 2297589757162889662,
+                    "undelegations": []
                 },
                 {
                     "amount": 0,
@@ -3334,7 +3332,7 @@
                 {
                     "amount": 30843998000000000000000,
                     "delegator-address": "one1my8easpj9trczkvqrqtglslv0w6upkyy5a8765",
-                    "reward": 1205464867295827920943,
+                    "reward": 1039895848650835103982,
                     "undelegations": []
                 },
                 {
@@ -3350,15 +3348,15 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 5000000000000000000000,
                     "delegator-address": "one1t5g8jl0p3rmvu8vzcpzqtmpps078q8wg4ew90y",
-                    "reward": 0,
+                    "reward": 1081017688135872145,
                     "undelegations": []
                 },
                 {
-                    "amount": 5300000000000000000000,
+                    "amount": 5198000000000000000000,
                     "delegator-address": "one1h57zytgzr0gf7q7lv3l2qctfglnv7rlqwj059m",
-                    "reward": 2150124404755467504,
+                    "reward": 30421588250056604486,
                     "undelegations": []
                 },
                 {
@@ -3400,7 +3398,7 @@
                 {
                     "amount": 4900000000000000000000,
                     "delegator-address": "one103v79ft0aygxlawvwpuqk6q304vnhxfc8z2jm3",
-                    "reward": 43346593155676090574,
+                    "reward": 17043641399536550397,
                     "undelegations": []
                 },
                 {
@@ -3418,19 +3416,19 @@
                 {
                     "amount": 3451662000000000000000,
                     "delegator-address": "one1hyzxnmqu4wsk9v6che7lqrfggjc9kacez4drtc",
-                    "reward": 134041281750253714543,
+                    "reward": 115512935002396652088,
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 1102191000000000000000,
                     "delegator-address": "one1hmpjqacg8pp00tfftdj9zwpru7786s34ufamse",
-                    "reward": 0,
+                    "reward": 4461173924197258264,
                     "undelegations": []
                 },
                 {
                     "amount": 52392000000000000000000,
                     "delegator-address": "one1c6j5f5drv0ffzmlef7e27h8rvfr0g8v0755syz",
-                    "reward": 5034262557218836553,
+                    "reward": 19291586514973789138,
                     "undelegations": []
                 },
                 {
@@ -3446,9 +3444,9 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 5106000000000000000000,
                     "delegator-address": "one1xkx27n657q707mqzamt5xsvje9y5cl8wtakl6s",
-                    "reward": 0,
+                    "reward": 42842970059451601120,
                     "undelegations": []
                 },
                 {
@@ -3472,7 +3470,7 @@
                 {
                     "amount": 6545017417131979000000,
                     "delegator-address": "one1e9wh4mjt7r58tstzwr9texxe7np2gkqjesc3rm",
-                    "reward": 263996521861829227642,
+                    "reward": 228863199950417845531,
                     "undelegations": []
                 },
                 {
@@ -3484,7 +3482,7 @@
                 {
                     "amount": 14123562157000000000000,
                     "delegator-address": "one1uul4esewxrvtztdrq5jylw9cprllm40agn8ln3",
-                    "reward": 106636176189671658944,
+                    "reward": 30821610058975960916,
                     "undelegations": []
                 },
                 {
@@ -3508,19 +3506,19 @@
                 {
                     "amount": 59037988400000000000000,
                     "delegator-address": "one1y2f9wpuw5hl3gchzfgvd8n6ca74vdqhnage56v",
-                    "reward": 283389984337695205591,
+                    "reward": 967160848224441377289,
                     "undelegations": []
                 },
                 {
                     "amount": 8350988400000000000000,
                     "delegator-address": "one1drhsh6qxdmmgl78u88m888carx6252yqtjvugw",
-                    "reward": 117372674697198214559,
+                    "reward": 72544992043875593994,
                     "undelegations": []
                 },
                 {
                     "amount": 12200000000000000000000,
                     "delegator-address": "one1vfsu3xe95rkyd4yntu7svfdekvekaye3dlvvz2",
-                    "reward": 382775754447826961010,
+                    "reward": 317286772524377407967,
                     "undelegations": []
                 },
                 {
@@ -3544,25 +3542,30 @@
                 {
                     "amount": 4998000000000000000000,
                     "delegator-address": "one1flxp0xarml9fju8jucxc0m0c0ryqhurv4d2g0j",
-                    "reward": 138806148226513047779,
+                    "reward": 111977137435250755483,
                     "undelegations": []
                 },
                 {
                     "amount": 0,
                     "delegator-address": "one1tsaxedlhvyqqgffmfdteg4dk9lecr5r0hkdzqe",
                     "reward": 9173569716930153502,
-                    "undelegations": []
+                    "undelegations": [
+                        {
+                            "amount": 4041580000000000000000,
+                            "epoch": 677
+                        }
+                    ]
                 },
                 {
                     "amount": 132254000000000000000000,
                     "delegator-address": "one17t6eusjla0922llys37qhn0vnwzgp07sueft74",
-                    "reward": 2643498615601845323,
+                    "reward": 19189573479883303468,
                     "undelegations": []
                 },
                 {
                     "amount": 1162989200000000000000,
                     "delegator-address": "one107sxt7h43vgv67nvtdsdvtpvqwf7ccq2gt94km",
-                    "reward": 18013594037384720273,
+                    "reward": 11770726931157907775,
                     "undelegations": []
                 },
                 {
@@ -3574,7 +3577,7 @@
                 {
                     "amount": 30000000000000000000000,
                     "delegator-address": "one1j9pxgk9dpvc2er993y303p40hg7jxvsyw3elsv",
-                    "reward": 5819621777350996016,
+                    "reward": 3583490425609185657,
                     "undelegations": []
                 },
                 {
@@ -3598,19 +3601,19 @@
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1txazd3g96lsasnksk3r0y0t4ksvplx7hrea5lk",
-                    "reward": 1517921338108724076,
+                    "reward": 26690740020716928999,
                     "undelegations": []
                 },
                 {
                     "amount": 1152733760000000000000,
                     "delegator-address": "one1thpl59r2gaytavfkj27dc6lg6r4qaggp3jr6la",
-                    "reward": 18701630448035344963,
+                    "reward": 12513814024167292158,
                     "undelegations": []
                 },
                 {
                     "amount": 3245482121000000000000,
                     "delegator-address": "one126nzz7fgrlmj8nhyrxhwzfx5vvtwmtmpct4x0t",
-                    "reward": 45117373067965949633,
+                    "reward": 27695789465093210362,
                     "undelegations": []
                 },
                 {
@@ -3622,7 +3625,7 @@
                 {
                     "amount": 204371462999999980100000,
                     "delegator-address": "one10zmzxltnqrwuqcuql5lu6fm537qkk7ktc4xp6e",
-                    "reward": 3452997009124029782046,
+                    "reward": 2355941349609609534762,
                     "undelegations": []
                 },
                 {
@@ -3664,19 +3667,19 @@
                 {
                     "amount": 5500157075000000000000,
                     "delegator-address": "one1ewaxaxg0reap6y8skv39e8yt23yud22wvaa9pf",
-                    "reward": 30165058800148643622,
+                    "reward": 640494270574271084,
                     "undelegations": []
                 },
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1xsfqux6an3tratwjlgrvpl6he9zc7htys0vnyz",
-                    "reward": 11968362647188508722,
+                    "reward": 6600413309200942700,
                     "undelegations": []
                 },
                 {
                     "amount": 5500000000000000000000,
                     "delegator-address": "one1v8me68a0vcuk86qcenp7x42uce0382el5snnhn",
-                    "reward": 38786493861968388046,
+                    "reward": 9262772503036233211,
                     "undelegations": []
                 },
                 {
@@ -3686,21 +3689,21 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 3795512421000000000000,
+                    "amount": 1500047159400000000000,
                     "delegator-address": "one18eh76skvpaa0gw770065f3nlzw9e06cu23s2rt",
-                    "reward": 1975480625533303543,
+                    "reward": 49830484232436620129,
                     "undelegations": []
                 },
                 {
                     "amount": 5000000000000000000000,
                     "delegator-address": "one1kum8jjgf6fmhw6kwkwpnzt7wvtvwtxeyfwytmm",
-                    "reward": 75572097218630970867,
+                    "reward": 48732350528692641484,
                     "undelegations": []
                 },
                 {
                     "amount": 2000000000000000000000,
                     "delegator-address": "one130m9mk8d5h6jz68tjurq5tjywscmxnsxn7ys29",
-                    "reward": 77174455517572423728,
+                    "reward": 66438556841597172379,
                     "undelegations": []
                 },
                 {
@@ -3716,15 +3719,10 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 25000000000000000000000,
+                    "amount": 25350000000000000000000,
                     "delegator-address": "one1v04e0qhht8hnjexnqwth3wdl9h24kevvelhatn",
-                    "reward": 7973829357311908322,
-                    "undelegations": [
-                        {
-                            "amount": 350000000000000000000,
-                            "epoch": 694
-                        }
-                    ]
+                    "reward": 16976836010426998504,
+                    "undelegations": []
                 },
                 {
                     "amount": 0,
@@ -3741,7 +3739,7 @@
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1ucrnrnat4ulezq59h8f3vc8m0jgdkya06syxs9",
-                    "reward": 38587227758785941985,
+                    "reward": 33219278420798375963,
                     "undelegations": []
                 },
                 {
@@ -3783,7 +3781,7 @@
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one19cnck7f8u0vdr8jkzhrlw7zmds8du3wmatjuye",
-                    "reward": 15283945900006155682,
+                    "reward": 9915996562018589660,
                     "undelegations": []
                 },
                 {
@@ -3795,7 +3793,7 @@
                 {
                     "amount": 10000000000000000000000,
                     "delegator-address": "one1lqxfw0mm7f228f22hsvpqgmfqdw9zenyuac4le",
-                    "reward": 87149452762674357705,
+                    "reward": 33469959382797777201,
                     "undelegations": []
                 },
                 {
@@ -3831,7 +3829,7 @@
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1a3nl0plgm2exzvpyauffzldj74cn9nrxx3scgq",
-                    "reward": 38587227758785941985,
+                    "reward": 33219278420798375963,
                     "undelegations": []
                 },
                 {
@@ -3847,9 +3845,9 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 250000000000000,
                     "delegator-address": "one1z3mn86djdh0rre8k48xr4nw0gc7eujsxa5ls0t",
-                    "reward": 1118140482,
+                    "reward": 369045762674,
                     "undelegations": []
                 },
                 {
@@ -3867,7 +3865,7 @@
                 {
                     "amount": 15000000000000000000000,
                     "delegator-address": "one13r2598q6ys6frjr2t0t89cn09tjzrefstrzy5g",
-                    "reward": 41395144168260956467,
+                    "reward": 1835834109690389446,
                     "undelegations": []
                 },
                 {
@@ -3943,15 +3941,15 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 2000706033000000000000,
+                    "amount": 1800706033000000000000,
                     "delegator-address": "one1rj9x292waz65x28g5aevr6xh52gde8uyvw0r5g",
-                    "reward": 958098349457961915,
+                    "reward": 1203960974270189563,
                     "undelegations": []
                 },
                 {
                     "amount": 2173000000000000000000,
                     "delegator-address": "one1ka0rcxaupx38ngfz4z2p963llth7f9egncgxur",
-                    "reward": 74892097106416593011,
+                    "reward": 63227543194969424043,
                     "undelegations": []
                 },
                 {
@@ -3963,19 +3961,19 @@
                 {
                     "amount": 1490000000000000000000,
                     "delegator-address": "one1jlu4f7kpy5m7s5zdrg28jwdt79cmpnsxwuun7p",
-                    "reward": 14985348986405446015,
+                    "reward": 6987104472803779540,
                     "undelegations": []
                 },
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1upxa6x04x8vys592nhyxfcyqj0twszfv5h84wc",
-                    "reward": 16278612215286488982,
+                    "reward": 10910662877298922960,
                     "undelegations": []
                 },
                 {
                     "amount": 1850000000000000000000,
                     "delegator-address": "one1c7c36yn7kcauwj4x48rrjr8wf6k30rryuknsdx",
-                    "reward": 70955711081607560423,
+                    "reward": 61025004806330377816,
                     "undelegations": []
                 },
                 {
@@ -3991,15 +3989,15 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 1000000000000000000000,
+                    "amount": 1228000000000000000000,
                     "delegator-address": "one1g98h5zkplpxy5eac8pw6gtxgc9kh0gld3qhjlz",
-                    "reward": 1156264986443248886,
+                    "reward": 5666545631187480386,
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 5000000000000000000000,
                     "delegator-address": "one1xhrydefasdp74949k398fvygszh02gcv5qzs25",
-                    "reward": 0,
+                    "reward": 521858627706861407,
                     "undelegations": []
                 },
                 {
@@ -4015,21 +4013,21 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 4691698200000000000000,
                     "delegator-address": "one1ermz7cfpuyzaqye3uty972qjkxh2htmy56l4sr",
-                    "reward": 360362167109090111,
+                    "reward": 154762651462081837461,
                     "undelegations": []
                 },
                 {
                     "amount": 12018000000000000000000,
                     "delegator-address": "one1j887c7zf5exhj037qldkc57cwfgjl67jfquxwh",
-                    "reward": 460943640961490730757,
+                    "reward": 396431625817555072522,
                     "undelegations": []
                 },
                 {
                     "amount": 2145322877600000000000,
                     "delegator-address": "one13flhc24mhlslpadkc9xjhevre2xmstqtv88un9",
-                    "reward": 5801258394331813886,
+                    "reward": 70766669684686582276,
                     "undelegations": []
                 },
                 {
@@ -4057,9 +4055,9 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 11206949399466728420000,
+                    "amount": 11101949399466728420000,
                     "delegator-address": "one1k6c700vl5geyd2vjzmunqeyslw4syu97jy8448",
-                    "reward": 43224223319128018879,
+                    "reward": 42906201436460749896,
                     "undelegations": []
                 },
                 {
@@ -4071,7 +4069,7 @@
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1us6h2s55v64y7ggka4w2ghvsw2qnkudk9dztwg",
-                    "reward": 14410369785647537658,
+                    "reward": 9042420447659971636,
                     "undelegations": []
                 },
                 {
@@ -4143,13 +4141,13 @@
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1llq4dj63h3xmslt5dpy5kk82t2xp2t8z09zepk",
-                    "reward": 38125320060986202561,
+                    "reward": 32757370722998636539,
                     "undelegations": []
                 },
                 {
                     "amount": 0,
                     "delegator-address": "one1un789cf95tvmykau6pwn6y2jnve9ggklmu2muz",
-                    "reward": 0,
+                    "reward": 481116415789229368,
                     "undelegations": []
                 },
                 {
@@ -4183,9 +4181,9 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 21001544013000000000000,
                     "delegator-address": "one1v2v6p4yuf8rtta443fkxhrxe8d5sl4kd6t0mwd",
-                    "reward": 0,
+                    "reward": 66092658971315273519,
                     "undelegations": []
                 },
                 {
@@ -4197,7 +4195,7 @@
                 {
                     "amount": 4390000000000000000000,
                     "delegator-address": "one12u2447uclw3jms8k8zxh5d0zg7qvcv0yl9flcr",
-                    "reward": 167370155067730195739,
+                    "reward": 143804857473964270673,
                     "undelegations": []
                 },
                 {
@@ -4215,7 +4213,7 @@
                 {
                     "amount": 191769000000000000000000,
                     "delegator-address": "one1aqdavgd3knfjck872hlt6d7hcs2srth3fyaaun",
-                    "reward": 1700240047455662075458,
+                    "reward": 670833770859105784845,
                     "undelegations": []
                 },
                 {
@@ -4227,7 +4225,7 @@
                 {
                     "amount": 6000000000000000000000,
                     "delegator-address": "one1j4dxczx9w9u9arhu3vc0mdnknn0q0jc7gy6tf2",
-                    "reward": 16674472637668797156,
+                    "reward": 27642580312150249164,
                     "undelegations": []
                 },
                 {
@@ -4251,7 +4249,7 @@
                 {
                     "amount": 2437000000000000000000,
                     "delegator-address": "one1npdylh3hg8p02yf7w096z4wqth909aqu65yfpl",
-                    "reward": 72046881386860699768,
+                    "reward": 58965188850184765545,
                     "undelegations": []
                 },
                 {
@@ -4263,13 +4261,13 @@
                 {
                     "amount": 2000000000000000000000,
                     "delegator-address": "one12yav2mzlm5973xjugl4y8d549mepsv3m4vhtfd",
-                    "reward": 76250640121972887532,
+                    "reward": 65514741445997636183,
                     "undelegations": []
                 },
                 {
                     "amount": 1700000000000000000000,
                     "delegator-address": "one1y6c6tyqwrt5xzztc4qhgxnysakajyed4y63p9p",
-                    "reward": 4630770953492440333,
+                    "reward": 29877913767362712896,
                     "undelegations": []
                 },
                 {
@@ -4279,9 +4277,9 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 8999998000000000000000,
                     "delegator-address": "one1umfwct6sy870qrldsey2q6y70pqdx4jz7ya57t",
-                    "reward": 0,
+                    "reward": 827916012219921658,
                     "undelegations": []
                 },
                 {
@@ -4293,7 +4291,7 @@
                 {
                     "amount": 11250000000000000000000,
                     "delegator-address": "one16lsudtk4nfgjpl07a3nt3ask95xfsqf8ynp3cd",
-                    "reward": 19957790080139489541,
+                    "reward": 296192789280980064088,
                     "undelegations": []
                 },
                 {
@@ -4317,13 +4315,13 @@
                 {
                     "amount": 1100000000000000000000,
                     "delegator-address": "one1ygdq4fkg8yyfgk2fz3lkeltm3pw3vmcl028wej",
-                    "reward": 2480303710799388662,
+                    "reward": 6113118096881718259,
                     "undelegations": []
                 },
                 {
                     "amount": 16831000000000000000000,
                     "delegator-address": "one1qgx92rtewyt9ypcjsdsn55euaqs67gwzwresty",
-                    "reward": 54590808384812507520,
+                    "reward": 28897330809823461976,
                     "undelegations": []
                 },
                 {
@@ -4347,8 +4345,13 @@
                 {
                     "amount": 0,
                     "delegator-address": "one1cty2nklpcy9dcq86eemsrt4e4f4ejmey4vedxh",
-                    "reward": 0,
-                    "undelegations": []
+                    "reward": 42804516873234106,
+                    "undelegations": [
+                        {
+                            "amount": 2500000000000000000000,
+                            "epoch": 677
+                        }
+                    ]
                 },
                 {
                     "amount": 0,
@@ -4377,7 +4380,7 @@
                 {
                     "amount": 1012468083300000000000,
                     "delegator-address": "one14mngmu3h8rmrdq2w9qxzh638x80mc4m349uslp",
-                    "reward": 9740989707243393508,
+                    "reward": 4306112329759512780,
                     "undelegations": []
                 },
                 {
@@ -4389,13 +4392,13 @@
                 {
                     "amount": 5144600000000000000000,
                     "delegator-address": "one1dq8l5g4mjy9rslm688ndgp9sz2h0x6evgmxk29",
-                    "reward": 46143393070165232092,
+                    "reward": 18527440905953857653,
                     "undelegations": []
                 },
                 {
                     "amount": 5000000000000000000000,
                     "delegator-address": "one1y65f4f2623epu77j7qwe4yerhk5acch7cj4hu8",
-                    "reward": 19959768509159691890,
+                    "reward": 40497583652738214947,
                     "undelegations": []
                 },
                 {
@@ -4431,7 +4434,7 @@
                 {
                     "amount": 1758000000000000000000,
                     "delegator-address": "one104zyegtl6s5c7xay8cscyskt2t88asqrfqkka7",
-                    "reward": 11172378891310894576,
+                    "reward": 1735523955128673494,
                     "undelegations": []
                 },
                 {
@@ -4461,14 +4464,19 @@
                 {
                     "amount": 7480799827000000000000,
                     "delegator-address": "one1j7jam2fx297r8vx3kqcjy7u7dy9krter06fn4t",
-                    "reward": 65296494162964789671,
+                    "reward": 25139939684001884644,
                     "undelegations": []
                 },
                 {
                     "amount": 0,
                     "delegator-address": "one1yahjr5ztpxhrjspm3twtdtgqg64e2ukaqjauzq",
                     "reward": 0,
-                    "undelegations": []
+                    "undelegations": [
+                        {
+                            "amount": 2253988000000000000000,
+                            "epoch": 674
+                        }
+                    ]
                 },
                 {
                     "amount": 0,
@@ -4479,7 +4487,7 @@
                 {
                     "amount": 82805000000000000000000,
                     "delegator-address": "one1gpfj4009gm9c3z9f5d4n58kuyrc7f897t4vpfl",
-                    "reward": 669063168824799334776,
+                    "reward": 224570123892730778839,
                     "undelegations": []
                 },
                 {
@@ -4533,7 +4541,7 @@
                 {
                     "amount": 2179997000000000000000,
                     "delegator-address": "one1mah56c633l7qegdxlyyp70lnv9xfekyz04eelq",
-                    "reward": 4769637381452536412,
+                    "reward": 1076385578241739982,
                     "undelegations": []
                 },
                 {
@@ -4543,9 +4551,9 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 23014599709000000000000,
                     "delegator-address": "one1l2eudsn6nhtycjfpymmumfkytd8gnmzz38m4kh",
-                    "reward": 7001660985553128205,
+                    "reward": 193573663444393579979,
                     "undelegations": []
                 },
                 {
@@ -4563,7 +4571,7 @@
                 {
                     "amount": 0,
                     "delegator-address": "one19zwkt0cr3e6682qdycsrqqwwg6cry3dhp73rlg",
-                    "reward": 0,
+                    "reward": 454848690417555372,
                     "undelegations": []
                 },
                 {
@@ -4587,7 +4595,7 @@
                 {
                     "amount": 1030000000000000000000,
                     "delegator-address": "one1ve475aw3h9xpxmertskl3nstdgw3rl60f5dku3",
-                    "reward": 5409270575390050955,
+                    "reward": 7092360170205067888,
                     "undelegations": []
                 },
                 {
@@ -4635,7 +4643,7 @@
                 {
                     "amount": 4000000000000000000000,
                     "delegator-address": "one1nuy5hxs2vfwhxewmtvam2seypf23gykf4wrh6c",
-                    "reward": 33707752911336269155,
+                    "reward": 12235955559385535667,
                     "undelegations": []
                 },
                 {
@@ -4659,7 +4667,7 @@
                 {
                     "amount": 21552529399999999000000,
                     "delegator-address": "one1rpr0nx8e4adh8nxm2emxclq8f6h5kwk4v5mvlx",
-                    "reward": 729891891429044697249,
+                    "reward": 614199005504355071305,
                     "undelegations": []
                 },
                 {
@@ -4683,31 +4691,31 @@
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one17efjyng3k8yvm6ssmaxlv36l9r8ua28y0cuxp6",
-                    "reward": 37405437134820117005,
+                    "reward": 32037487796832550983,
                     "undelegations": []
                 },
                 {
-                    "amount": 314478946381000000000000,
+                    "amount": 310676233200000000000000,
                     "delegator-address": "one1sjxn3nysrt3lzjjlnqr6unxdwzzaehs7qpv3st",
-                    "reward": 1124010523912792048290,
+                    "reward": 3246110274408157481514,
                     "undelegations": []
                 },
                 {
                     "amount": 1999000000000000000000,
                     "delegator-address": "one1qemmltrd4qer29cn2xxrds3afwz2wuw0jrwwk2",
-                    "reward": 16793582573525637521,
+                    "reward": 6063051846888436489,
                     "undelegations": []
                 },
                 {
                     "amount": 3000000000000000000000,
                     "delegator-address": "one1fjj54jwgtpgrkd4s89mhv33dvk9felhdmfwsp8",
-                    "reward": 112216311404460686506,
+                    "reward": 96112463390497873908,
                     "undelegations": []
                 },
                 {
                     "amount": 1005000000000000000000,
                     "delegator-address": "one1v578pmfk02nqqunlrud7wj2hs7e8eap4rmkudm",
-                    "reward": 37592464320494055817,
+                    "reward": 32197675235816487310,
                     "undelegations": []
                 },
                 {
@@ -4717,9 +4725,9 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 4483058308000000000000,
+                    "amount": 3500000000000000000000,
                     "delegator-address": "one1hmh944dwd4edsssweydt46yf5hzc6mav0mwjnq",
-                    "reward": 9262764827619460527,
+                    "reward": 112131207288914378712,
                     "undelegations": []
                 },
                 {
@@ -4738,12 +4746,17 @@
                     "amount": 0,
                     "delegator-address": "one1et3z3meqya4plm2w533vrqrxcyu0hsmmthqn3a",
                     "reward": 0,
-                    "undelegations": []
+                    "undelegations": [
+                        {
+                            "amount": 10000000000000000000000,
+                            "epoch": 672
+                        }
+                    ]
                 },
                 {
-                    "amount": 0,
+                    "amount": 2989000000000000000000,
                     "delegator-address": "one1nfws3sp9gzevj8fhlkvr2u953un52g5p02swee",
-                    "reward": 103911988865774567873,
+                    "reward": 94578763466260356692,
                     "undelegations": []
                 },
                 {
@@ -4779,7 +4792,7 @@
                 {
                     "amount": 30000000000000000000000,
                     "delegator-address": "one1y3r53qxku0m75lfsqsd7v6mw8l9dpchdzpmpla",
-                    "reward": 107170171498892650773,
+                    "reward": 949268285041087696904,
                     "undelegations": []
                 },
                 {
@@ -4803,7 +4816,7 @@
                 {
                     "amount": 65678000000000000000000,
                     "delegator-address": "one14ze94ceyqaerm7h5acxs8rcgl7lljx7lvuxzgh",
-                    "reward": 102687533739146032317,
+                    "reward": 267940128719688241900,
                     "undelegations": []
                 },
                 {
@@ -4821,14 +4834,19 @@
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one153jjfl7vsl8g45wlxpjvfxwswvkw4cvv993pud",
-                    "reward": 5384761847943013756,
+                    "reward": 16812509955447734,
                     "undelegations": []
                 },
                 {
                     "amount": 0,
                     "delegator-address": "one13helxt0nrxfxfg6adjsqglq657jfq6f68s8jjd",
                     "reward": 0,
-                    "undelegations": []
+                    "undelegations": [
+                        {
+                            "amount": 1016000000000000000000,
+                            "epoch": 671
+                        }
+                    ]
                 },
                 {
                     "amount": 0,
@@ -4839,7 +4857,7 @@
                 {
                     "amount": 4319998560000000000000,
                     "delegator-address": "one1syjdv4ssxqzge9h6qvl48rh5wc8m69lr3ezp8y",
-                    "reward": 12529744783887523941,
+                    "reward": 43270402935689511688,
                     "undelegations": []
                 },
                 {
@@ -4863,7 +4881,7 @@
                 {
                     "amount": 1212165247613334000000,
                     "delegator-address": "one1uq99uge6mg79x3za4wamctfu6ecq2zrh0wkcys",
-                    "reward": 44559680380047211086,
+                    "reward": 38052838741589529198,
                     "undelegations": []
                 },
                 {
@@ -4879,9 +4897,9 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 100201000000000000000000,
+                    "amount": 120001000000000000000000,
                     "delegator-address": "one12euzhs4h4eg5rlgltk7udhqr760wk2lkdm8hgd",
-                    "reward": 1808575074173550025,
+                    "reward": 21714725797993900733,
                     "undelegations": []
                 },
                 {
@@ -4893,7 +4911,7 @@
                 {
                     "amount": 125000000000000000000000,
                     "delegator-address": "one17c7aczc7vumaxw5lmxt9mh4w34lexar90qmdue",
-                    "reward": 24490745512203044327,
+                    "reward": 594848699212713355598,
                     "undelegations": []
                 },
                 {
@@ -4905,13 +4923,13 @@
                 {
                     "amount": 6520530900000000000000,
                     "delegator-address": "one1tacj06mu2ycpw2mhh2yuye98j3agd0uv33hw8l",
-                    "reward": 103513183489683356721,
+                    "reward": 68511303961700269941,
                     "undelegations": []
                 },
                 {
                     "amount": 4035240235800000000000,
                     "delegator-address": "one1vlzl3km5esa396jr5muv4w2nqyx9pltgtt7g4f",
-                    "reward": 112622918663967305929,
+                    "reward": 90961953511583536655,
                     "undelegations": []
                 },
                 {
@@ -4923,19 +4941,19 @@
                 {
                     "amount": 18693000000000000000000,
                     "delegator-address": "one1g48cznva2cjrg0hhmmrfaqd4p29nha8qnclyrv",
-                    "reward": 19705640296251629868,
+                    "reward": 64122801087235068168,
                     "undelegations": []
                 },
                 {
                     "amount": 3396499617000000000000,
                     "delegator-address": "one1n4m4cdm43mg49sdgtenq47w4ekpz7zc0ug3xqw",
-                    "reward": 124856687355511121062,
+                    "reward": 106624449484960703280,
                     "undelegations": []
                 },
                 {
                     "amount": 5071000000000000000000,
                     "delegator-address": "one1mr6tgddl72e5jsw858rqrx0zuz420y9yemktlk",
-                    "reward": 1180336389290295952,
+                    "reward": 59758951414946578292,
                     "undelegations": []
                 },
                 {
@@ -4947,7 +4965,7 @@
                 {
                     "amount": 47268745662300000000000,
                     "delegator-address": "one1wngme43zd6k8ls2mw90wcp4a8fgae2d6j2k370",
-                    "reward": 941768745348646681655,
+                    "reward": 688032513363196216005,
                     "undelegations": []
                 },
                 {
@@ -4977,7 +4995,7 @@
                 {
                     "amount": 1443000000000000000000,
                     "delegator-address": "one1g9d94twc0d4ge4zlvmwxtsfzmml2de5nlts9hx",
-                    "reward": 18831029992561772092,
+                    "reward": 11085079097845495786,
                     "undelegations": []
                 },
                 {
@@ -5001,7 +5019,7 @@
                 {
                     "amount": 1545000000000000000000,
                     "delegator-address": "one1m7hujrwdcqqyug0vh4hc9f9vxhsjjt7urg67l6",
-                    "reward": 56794819289468577825,
+                    "reward": 48501337562277635613,
                     "undelegations": []
                 },
                 {
@@ -5011,27 +5029,27 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 42201921066000000000000,
                     "delegator-address": "one13j03htqeqgnd6f4q94m4d8vjps0lnln7rc4yaa",
-                    "reward": 0,
+                    "reward": 402925588839836687125,
                     "undelegations": []
                 },
                 {
                     "amount": 4000000000000000000000,
                     "delegator-address": "one1vutrsdlcmtl9xjzs7vqh8e70xcnsmqx8y3kcv9",
-                    "reward": 5892285094224212340,
+                    "reward": 62321744228511088810,
                     "undelegations": []
                 },
                 {
                     "amount": 7475000000000000000000,
                     "delegator-address": "one1cl9ltr3286zf4tqawpv25vqt5qd0kpkqtvsnqx",
-                    "reward": 3182302048667133436,
+                    "reward": 930760841316895300,
                     "undelegations": []
                 },
                 {
                     "amount": 15000000011200000000000,
                     "delegator-address": "one1gt843pjwcwvv3qwfjsg246zr8npr9ruws8hvzk",
-                    "reward": 547596909350625964102,
+                    "reward": 467077669220689917258,
                     "undelegations": []
                 },
                 {
@@ -5049,7 +5067,7 @@
                 {
                     "amount": 9999998702400000000000,
                     "delegator-address": "one1uuqs7q34jfjpv67hwtfk7zw96pzqw6a5trt28n",
-                    "reward": 12347608615979029196,
+                    "reward": 13234083967301959946,
                     "undelegations": []
                 },
                 {
@@ -5073,7 +5091,7 @@
                 {
                     "amount": 4995000000000000000000,
                     "delegator-address": "one10kn75cxef9fzn26knmxwejexfl49snwpgt63y6",
-                    "reward": 181100779390908899379,
+                    "reward": 154287872447660489993,
                     "undelegations": []
                 },
                 {
@@ -5085,8 +5103,13 @@
                 {
                     "amount": 0,
                     "delegator-address": "one1v9rmrl5ce60wgakaudnnvxsv5sczqw6473jgzu",
-                    "reward": 0,
-                    "undelegations": []
+                    "reward": 2385395554237721707,
+                    "undelegations": [
+                        {
+                            "amount": 1121250771000000000000,
+                            "epoch": 676
+                        }
+                    ]
                 },
                 {
                     "amount": 0,
@@ -5097,7 +5120,7 @@
                 {
                     "amount": 1157000000000000000000,
                     "delegator-address": "one15zuwkhjz4g3f2t3mnmct20y8f2wg66frryaj3s",
-                    "reward": 41948669020076343066,
+                    "reward": 35737951636024518231,
                     "undelegations": []
                 },
                 {
@@ -5115,7 +5138,7 @@
                 {
                     "amount": 25000000000000000000000,
                     "delegator-address": "one1l9crkyydzjqvy86an4cwgp9g2vrkq5tjwyqxg2",
-                    "reward": 114266732627267628355,
+                    "reward": 189530675022147021354,
                     "undelegations": []
                 },
                 {
@@ -5145,13 +5168,13 @@
                 {
                     "amount": 4000000000000000000000,
                     "delegator-address": "one1u2v9nk50n5dp7rh3kx8klzk858cp58ng7c6z4l",
-                    "reward": 46583277985950727801,
+                    "reward": 25111480633999994313,
                     "undelegations": []
                 },
                 {
                     "amount": 1157000000000000000000,
                     "delegator-address": "one10qeql5s0wr0qgcwxkn3kujkm0plj9vj3ycxw52",
-                    "reward": 8668847217575678135,
+                    "reward": 2458129833523853300,
                     "undelegations": []
                 },
                 {
@@ -5163,25 +5186,25 @@
                 {
                     "amount": 1400000000000000000000,
                     "delegator-address": "one1dgq5y7ear2y8upjjv37x2cqj756dxwxkytuc9p",
-                    "reward": 2636033137651612685,
+                    "reward": 6356224099115988022,
                     "undelegations": []
                 },
                 {
                     "amount": 0,
                     "delegator-address": "one1wnhtskny5ecf94npy2kz5j0fte3zexamw4z9kr",
-                    "reward": 0,
+                    "reward": 13846536370473950679,
                     "undelegations": []
                 },
                 {
-                    "amount": 50130000000000000000000,
+                    "amount": 0,
                     "delegator-address": "one14xl659xzvhwn7yj0s9pfjulm8l226zvdzcq8hm",
-                    "reward": 20719014245152595740,
+                    "reward": 0,
                     "undelegations": []
                 },
                 {
                     "amount": 0,
                     "delegator-address": "one16894rq77ge2pa9whhgt39l4pd964zvy2d53jpn",
-                    "reward": 0,
+                    "reward": 2282827839067448734,
                     "undelegations": []
                 },
                 {
@@ -5193,13 +5216,13 @@
                 {
                     "amount": 2285064626657040200000,
                     "delegator-address": "one1k96qt6yv8jce7wa3ttmgrkkgr3cjf5868k87lq",
-                    "reward": 842623769779042106,
+                    "reward": 516198733697009996,
                     "undelegations": []
                 },
                 {
                     "amount": 1500000000000000000000,
                     "delegator-address": "one1evmejk7vnmcanmcx9jn593a34ksw8ad3xfv7mc",
-                    "reward": 54034284477488719105,
+                    "reward": 45982360470507252451,
                     "undelegations": []
                 },
                 {
@@ -5215,15 +5238,15 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 4000000000000000000000,
+                    "amount": 1900000000000000000000,
                     "delegator-address": "one10sprvuy7kjrvuvs88vnayep2tf5sa8dqdvvqy8",
-                    "reward": 17619869020303900906,
+                    "reward": 42100100720775310529,
                     "undelegations": []
                 },
                 {
                     "amount": 1500000000000000000000,
                     "delegator-address": "one1q3x4uvf8qrl99qks7d499jdrlss45xulcyq03g",
-                    "reward": 9583156960680681800,
+                    "reward": 1531232953699215146,
                     "undelegations": []
                 },
                 {
@@ -5247,7 +5270,7 @@
                 {
                     "amount": 4000000000000000000000,
                     "delegator-address": "one1aewqr67ky5gpewg9w0tczaefphp47tcydtnaem",
-                    "reward": 5689756849843059522,
+                    "reward": 253224192569177208,
                     "undelegations": []
                 },
                 {
@@ -5259,7 +5282,7 @@
                 {
                     "amount": 6060669821817227000000,
                     "delegator-address": "one1qth25je6976helm7zy0cenyz4502rj2vmf4f67",
-                    "reward": 216679035868951189408,
+                    "reward": 184145667311165501332,
                     "undelegations": []
                 },
                 {
@@ -5271,13 +5294,13 @@
                 {
                     "amount": 7580000000000000000000,
                     "delegator-address": "one17agph30f68a4ejutpzrl47v4mmcnkesw4z2277",
-                    "reward": 112551993751241348270,
+                    "reward": 71862937769294917098,
                     "undelegations": []
                 },
                 {
                     "amount": 24999999300000,
                     "delegator-address": "one1rk38f6ge4dj8sxaly84s7n627hn7gcl5n56zn5",
-                    "reward": 827648904883,
+                    "reward": 693450113196,
                     "undelegations": []
                 },
                 {
@@ -5295,7 +5318,7 @@
                 {
                     "amount": 2690000000000000000000,
                     "delegator-address": "one1c94adxj0y8dcyhpkp9ygl4d6cl6x9a77cqvety",
-                    "reward": 81262821306815907864,
+                    "reward": 66823037587629203653,
                     "undelegations": []
                 },
                 {
@@ -5307,13 +5330,13 @@
                 {
                     "amount": 12000000000000000000000,
                     "delegator-address": "one15t5q0gdzzhwj546tzux5ur9m6j6s0vkc622cxq",
-                    "reward": 218877766697819043369,
+                    "reward": 154462374641967016580,
                     "undelegations": []
                 },
                 {
                     "amount": 5000000000000000000000,
                     "delegator-address": "one1v7tp5alav6shr5zeguc88794tds8lvw2rtzms9",
-                    "reward": 47690728587733850048,
+                    "reward": 20850981897795520665,
                     "undelegations": []
                 },
                 {
@@ -5326,12 +5349,17 @@
                     "amount": 0,
                     "delegator-address": "one12apwn4f02mtgtq2ljlpu8yj4fllaqd2mjwfxh2",
                     "reward": 81556022944955593758,
-                    "undelegations": []
+                    "undelegations": [
+                        {
+                            "amount": 50499988200000000000000,
+                            "epoch": 671
+                        }
+                    ]
                 },
                 {
                     "amount": 16415989200000000000000,
                     "delegator-address": "one1nvvx0pqjaccwzawy5hxvlqddyktf2v7gqr2a5l",
-                    "reward": 42576325435917740127,
+                    "reward": 29861257636520182599,
                     "undelegations": []
                 },
                 {
@@ -5343,7 +5371,7 @@
                 {
                     "amount": 1592394872640000000000,
                     "delegator-address": "one16eg27tdvflzzna2n3ywdnkjjgm9gmjcah5x082",
-                    "reward": 56930767699012838293,
+                    "reward": 48382872696609967434,
                     "undelegations": []
                 },
                 {
@@ -5373,7 +5401,7 @@
                 {
                     "amount": 6444408626000000000000,
                     "delegator-address": "one1cu5lf7dqwpaqrch7u9rlyezrf9ttpnkkszu224",
-                    "reward": 72882182507812490320,
+                    "reward": 38288923490153768734,
                     "undelegations": []
                 },
                 {
@@ -5415,7 +5443,7 @@
                 {
                     "amount": 1015988400000000000000,
                     "delegator-address": "one1ds5fcelks59jv3j3wvfrq7n9350lgfkkrwjwcs",
-                    "reward": 36081344533833242078,
+                    "reward": 30627570274650027110,
                     "undelegations": []
                 },
                 {
@@ -5451,7 +5479,7 @@
                 {
                     "amount": 8530988672640000000000,
                     "delegator-address": "one1a3hvxjj3lxexc2n7e89dr9f5yw0c9e7exgen5e",
-                    "reward": 7456481257253624381,
+                    "reward": 13931491129762706153,
                     "undelegations": []
                 },
                 {
@@ -5461,15 +5489,10 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 10000000000000000000000,
+                    "amount": 25000000000000000000000,
                     "delegator-address": "one1e0p7njqsamcfc75e3ljpyt6wt3u42kd3c84930",
-                    "reward": 3168624080179668649,
-                    "undelegations": [
-                        {
-                            "amount": 15000000000000000000000,
-                            "epoch": 695
-                        }
-                    ]
+                    "reward": 85518695582377685553,
+                    "undelegations": []
                 },
                 {
                     "amount": 0,
@@ -5486,7 +5509,7 @@
                 {
                     "amount": 10000000000000000000000,
                     "delegator-address": "one1ryn5wdnvaf6w00k2ltlyz4r7y9xa7mqu8e6na8",
-                    "reward": 355135398532436695778,
+                    "reward": 301455905152560115274,
                     "undelegations": []
                 },
                 {
@@ -5504,13 +5527,13 @@
                 {
                     "amount": 6026000000000000000000,
                     "delegator-address": "one18elsqwkvmulgwmfyyw0dvh7tekvp6p9d9csdpk",
-                    "reward": 214004591155646072590,
+                    "reward": 181657328444932490721,
                     "undelegations": []
                 },
                 {
                     "amount": 6117767813097110000000,
                     "delegator-address": "one1jj9tdc2ku7293d878hdkaqgl0e4n378jlgvmft",
-                    "reward": 6004660652906041273,
+                    "reward": 18367542123639168091,
                     "undelegations": []
                 },
                 {
@@ -5552,19 +5575,19 @@
                 {
                     "amount": 2000000000000000000000,
                     "delegator-address": "one1qwa6tgdstcnfpqdh8f3htap0tq65zdcn4d3j3y",
-                    "reward": 1079086263691601141,
+                    "reward": 3752346286687505124,
                     "undelegations": []
                 },
                 {
                     "amount": 0,
                     "delegator-address": "one1g8x2ls0hgpxarx9sjnpsznjarg06e4mnc5x490",
-                    "reward": 0,
+                    "reward": 15171262150477037944,
                     "undelegations": []
                 },
                 {
                     "amount": 1100000000000000000000,
                     "delegator-address": "one1nxw5t2d0xsnapav2y7sj4rksmy4rdjw755peza",
-                    "reward": 12070118919581807886,
+                    "reward": 6165374647795395977,
                     "undelegations": []
                 },
                 {
@@ -5589,7 +5612,12 @@
                     "amount": 0,
                     "delegator-address": "one1p7yelk5zxtduvf0svt7hlwsttwz74ldhelfazc",
                     "reward": 277838730632876797,
-                    "undelegations": []
+                    "undelegations": [
+                        {
+                            "amount": 2422000000000000000000,
+                            "epoch": 673
+                        }
+                    ]
                 },
                 {
                     "amount": 0,
@@ -5606,13 +5634,18 @@
                 {
                     "amount": 0,
                     "delegator-address": "one1ma77vpzpe7dtzy7w4mmj5u03s09cn5m4pekm2a",
-                    "reward": 0,
-                    "undelegations": []
+                    "reward": 225991528452078022,
+                    "undelegations": [
+                        {
+                            "amount": 1000000000000000000000,
+                            "epoch": 672
+                        }
+                    ]
                 },
                 {
                     "amount": 5000000000000000000000,
                     "delegator-address": "one1q4feghctqj76ypdx7txleg0f3d2zqvyk5qrja5",
-                    "reward": 667033586117152988,
+                    "reward": 309605006021168910,
                     "undelegations": []
                 },
                 {
@@ -5630,7 +5663,7 @@
                 {
                     "amount": 1007933000000000000000,
                     "delegator-address": "one1vypfpyv6j6rt605fgsr46q3da48ahtupastkqf",
-                    "reward": 29979274447656150028,
+                    "reward": 24568741167570245099,
                     "undelegations": []
                 },
                 {
@@ -5642,7 +5675,7 @@
                 {
                     "amount": 2000000000000000000000,
                     "delegator-address": "one1ha6j4z37l3r8agqphxlvmqup43xunklmc4hc3f",
-                    "reward": 10714244132739912097,
+                    "reward": 45134351095061985416,
                     "undelegations": []
                 },
                 {
@@ -5654,7 +5687,7 @@
                 {
                     "amount": 5005000000000000000000,
                     "delegator-address": "one1d28nn04t6rr8r0lgyv22nprza87ftsvzy2g2e0",
-                    "reward": 101425687965810110898,
+                    "reward": 74559101529181822527,
                     "undelegations": []
                 },
                 {
@@ -5666,19 +5699,19 @@
                 {
                     "amount": 1099000000000000000000,
                     "delegator-address": "one17e0fsrt08cav6ym8npednrwn6w4m7drq777zqa",
-                    "reward": 350634799059960476,
+                    "reward": 359132937357946246,
                     "undelegations": []
                 },
                 {
                     "amount": 29462933657200000000000,
                     "delegator-address": "one1qztpmas5pxn4srlynkrxea5ck9m9zcfdmtklq6",
-                    "reward": 198128357121577185050,
+                    "reward": 39972821901235987965,
                     "undelegations": []
                 },
                 {
                     "amount": 2000000000000000000000,
                     "delegator-address": "one19qpxr24hase83sq63rykeatrnd2e3cc25tkapj",
-                    "reward": 69561750234646458278,
+                    "reward": 58825851558671206929,
                     "undelegations": []
                 },
                 {
@@ -5690,7 +5723,7 @@
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1kcktcpftag7gvkmzx6f2jkxhhtrue99auh4c5u",
-                    "reward": 2564978901575623884,
+                    "reward": 21439195457756077485,
                     "undelegations": []
                 },
                 {
@@ -5702,13 +5735,13 @@
                 {
                     "amount": 2000000000000000000000,
                     "delegator-address": "one1t3eywq3qjg23ns2cte5urqet6kv8hq462pzlcz",
-                    "reward": 69561750234646458278,
+                    "reward": 58825851558671206929,
                     "undelegations": []
                 },
                 {
                     "amount": 3500000000000000000000,
                     "delegator-address": "one1k3nzp5j877z65pezl6ueqmall0m37nvfc5nm3p",
-                    "reward": 121733062910631237576,
+                    "reward": 102945240227674396913,
                     "undelegations": []
                 },
                 {
@@ -5720,7 +5753,7 @@
                 {
                     "amount": 0,
                     "delegator-address": "one1ujfmmazm5x6gnnjeelu6wsxwmzpgjjytd35kd4",
-                    "reward": 0,
+                    "reward": 1968131815050286526,
                     "undelegations": []
                 },
                 {
@@ -5744,7 +5777,7 @@
                 {
                     "amount": 100000000000000000000000,
                     "delegator-address": "one14zmfx50m5ecjugrqnqd2362kygmwxgu3r6my40",
-                    "reward": 23712384257190858172,
+                    "reward": 8055020355333687750,
                     "undelegations": []
                 },
                 {
@@ -5754,21 +5787,16 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 66312000000000000000000,
                     "delegator-address": "one1qrquanyharz9wzw7vsxzz6xuhgddphqadla9kh",
-                    "reward": 0,
+                    "reward": 14136139336784144125,
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 3518000000000000000000,
                     "delegator-address": "one1cvyz088euxd9qtcw8jhpa9t5e2kfss9ast0ecg",
-                    "reward": 393264453951517699,
-                    "undelegations": [
-                        {
-                            "amount": 3518000000000000000000,
-                            "epoch": 689
-                        }
-                    ]
+                    "reward": 78807651355398660475,
+                    "undelegations": []
                 },
                 {
                     "amount": 0,
@@ -5785,7 +5813,7 @@
                 {
                     "amount": 1780700000000000000000,
                     "delegator-address": "one1w3yaex9r9vxkhm8x2gkvwlvc2gdfv7v3wwdzgc",
-                    "reward": 61065141853914693435,
+                    "reward": 51506434467759966867,
                     "undelegations": []
                 },
                 {
@@ -5795,9 +5823,9 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 14584538708200000000000,
                     "delegator-address": "one1kme0plwyugns6jjne6lzfta867tdn09er4du5g",
-                    "reward": 0,
+                    "reward": 187245821991516867668,
                     "undelegations": []
                 },
                 {
@@ -5815,13 +5843,13 @@
                 {
                     "amount": 1500000000000000000000,
                     "delegator-address": "one1cnd9eweeycx4d40ex53fy035patwtr92cth5yf",
-                    "reward": 50723364277611454902,
+                    "reward": 42671440270629988248,
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 10005608972400000000000,
                     "delegator-address": "one1j9d3hhg6nv9ekh6ua9geceyme6ntlvvxds8nwn",
-                    "reward": 0,
+                    "reward": 68104246615185029131,
                     "undelegations": []
                 },
                 {
@@ -5833,13 +5861,13 @@
                 {
                     "amount": 2009000000000000000000,
                     "delegator-address": "one1mfahj78zhxhejpvfxvglm3lvngjpg02pm4q45u",
-                    "reward": 67463151700073482059,
+                    "reward": 56678941480056245266,
                     "undelegations": []
                 },
                 {
-                    "amount": 5277638131600000000000,
+                    "amount": 4999000000000000000000,
                     "delegator-address": "one1g6dsr62stg5c0pv39ah2dam9lkzneuuvaf4kn2",
-                    "reward": 17155489650304974964,
+                    "reward": 117150183248654240972,
                     "undelegations": []
                 },
                 {
@@ -5852,48 +5880,53 @@
                     "amount": 0,
                     "delegator-address": "one1k96dm5rzttucw9q8rf05memq6pfv692k8ah2ma",
                     "reward": 0,
-                    "undelegations": []
+                    "undelegations": [
+                        {
+                            "amount": 7000000000000000000000,
+                            "epoch": 671
+                        }
+                    ]
                 },
                 {
                     "amount": 1810702637100000000000,
                     "delegator-address": "one1pzm6aw4rfqjerykvsg9ljgaxejpjf9g4vfz39t",
-                    "reward": 19122203730997807155,
+                    "reward": 9402443708884290025,
                     "undelegations": []
                 },
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1lkk9js0asx2656hghn0sr8pkaxcxr25jatq7ee",
-                    "reward": 2781152930289499796,
+                    "reward": 25313340655236857640,
                     "undelegations": []
                 },
                 {
                     "amount": 2598276535000000000000,
                     "delegator-address": "one1r5r2m63v3k7yqe4lpqegy9xqlvnx4ge2hx70q7",
-                    "reward": 17188308406558020338,
+                    "reward": 3240891600595916341,
                     "undelegations": []
                 },
                 {
                     "amount": 2350000000000000000000,
                     "delegator-address": "one19efgj5ayrppmz5sylyduk90hydkn69s5xqw2py",
-                    "reward": 47807037303581484111,
+                    "reward": 35192356359310438366,
                     "undelegations": []
                 },
                 {
                     "amount": 5018650000000000000000,
                     "delegator-address": "one1zw7sw9es93panm4t2kn4sn3l8qevj9kj0sp33p",
-                    "reward": 10053470001806082004,
+                    "reward": 2617647256774177490,
                     "undelegations": []
                 },
                 {
                     "amount": 0,
                     "delegator-address": "one1tyzmv8cl63yjkj5a8t5paxr6e2u6haelfrm4kk",
-                    "reward": 0,
+                    "reward": 613432663947777193,
                     "undelegations": []
                 },
                 {
                     "amount": 1209537898000000000000,
                     "delegator-address": "one1xhkf24nruk87tn5n3ehps66c8eujtl4k330ndv",
-                    "reward": 16807553769387776512,
+                    "reward": 10314815610547767064,
                     "undelegations": []
                 },
                 {
@@ -5905,13 +5938,13 @@
                 {
                     "amount": 50000000000000000000000,
                     "delegator-address": "one168tz65kadaaq0actpjytx44wcmtfkdxffkaq8f",
-                    "reward": 1532545430733421009511,
+                    "reward": 1264147963834037840092,
                     "undelegations": []
                 },
                 {
-                    "amount": 54921000000000000000000,
+                    "amount": 54111000000000000000000,
                     "delegator-address": "one15tqdwr8r8cam7xfhp0etsql6wwnjylkefz0vu2",
-                    "reward": 15291333246159191630,
+                    "reward": 8263481794431968469,
                     "undelegations": []
                 },
                 {
@@ -5933,21 +5966,21 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 1150000000000000000000,
                     "delegator-address": "one105e2tzkyf6cnpvw52g4meu9694pv8t9vvq45qs",
-                    "reward": 0,
+                    "reward": 770883784050831726,
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 5000000000000000000000,
                     "delegator-address": "one1a85lywu4twwgyzx3rld5ufk59ynmjcmuskzekn",
-                    "reward": 11221470889149012806,
+                    "reward": 1369523963058272988,
                     "undelegations": []
                 },
                 {
                     "amount": 7998990000000000000000,
                     "delegator-address": "one1je77yvmzws846amdj7f4ksnqt9c5xzvxzrvxcr",
-                    "reward": 103483822211150267771,
+                    "reward": 60545649136080367121,
                     "undelegations": []
                 },
                 {
@@ -5971,13 +6004,13 @@
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1xxq6d53sa7a93mftm560xjssjvm4f8t6khrgm8",
-                    "reward": 30874009854304190074,
+                    "reward": 25506060516316624052,
                     "undelegations": []
                 },
                 {
-                    "amount": 29885238420000000000000,
+                    "amount": 29636309131000000000000,
                     "delegator-address": "one15m47hqx5hmt7qrk36sjuynqtm0xvy0k0zq9uwz",
-                    "reward": 144099031093144447909,
+                    "reward": 232758535428386899403,
                     "undelegations": []
                 },
                 {
@@ -5995,25 +6028,25 @@
                 {
                     "amount": 10180000000000000000000,
                     "delegator-address": "one1ral0awup5etkhxck6h2tr74r6w4027x2ryfev0",
-                    "reward": 75119160467804907470,
+                    "reward": 20473436207090498926,
                     "undelegations": []
                 },
                 {
                     "amount": 80000000000000000000000,
                     "delegator-address": "one1hkpp78fq2dju0ryxemtgrww067xm8yaqhk6ph7",
-                    "reward": 218189727298863591583,
+                    "reward": 1013564498225046293616,
                     "undelegations": []
                 },
                 {
                     "amount": 2280000000000000000000,
                     "delegator-address": "one1thft5hpskw7sujw3ss42qx0upu8z4cptlm00jj",
-                    "reward": 67901672637376750249,
+                    "reward": 55662748146764939794,
                     "undelegations": []
                 },
                 {
                     "amount": 2880000000000000000000,
                     "delegator-address": "one1jjhvwhl2l0phu38wqfx9x2y4qsxczhz0cdwq40",
-                    "reward": 83191277853191577962,
+                    "reward": 67731583759787072808,
                     "undelegations": []
                 },
                 {
@@ -6031,61 +6064,66 @@
                 {
                     "amount": 3326000000000000000000,
                     "delegator-address": "one1yelfdc8nquetq4auypqc84ec3ym8tc0vtx6q8c",
-                    "reward": 93162370261417852723,
+                    "reward": 75308570763270834116,
                     "undelegations": []
                 },
                 {
                     "amount": 1634000000000000000000,
                     "delegator-address": "one1d9whfgk367fztnqp509lhmm066l0t2guaenzg0",
-                    "reward": 8265964435302729048,
+                    "reward": 499324625116024514,
                     "undelegations": []
                 },
                 {
-                    "amount": 30794916117600000000000,
+                    "amount": 28054916117600000000000,
                     "delegator-address": "one1gdlm8vfmdu5us9flx23wm5cql0ewc9m8986w6u",
-                    "reward": 50130985657820330658,
+                    "reward": 32532700135925328799,
                     "undelegations": []
                 },
                 {
                     "amount": 16627000000000000000000,
                     "delegator-address": "one1rjx3pretmg8dvfkuk02mws4clt8j6fnhlted8q",
-                    "reward": 848147700293682935,
+                    "reward": 1185524681674049231,
                     "undelegations": []
                 },
                 {
                     "amount": 200000,
                     "delegator-address": "one1qdp08r3ywnqkwex9gptjgrwhlkkpw9m4hpgfvu",
                     "reward": 3926296272434445158,
-                    "undelegations": []
+                    "undelegations": [
+                        {
+                            "amount": 3214303116082629000000,
+                            "epoch": 677
+                        }
+                    ]
                 },
                 {
-                    "amount": 2101603878486038350000,
+                    "amount": 2000000000000000000000,
                     "delegator-address": "one15zmeggvwn3ag420lf3n2g6ltnv7pk03eu8e79j",
-                    "reward": 2385914189884020169,
+                    "reward": 12658251112055136226,
                     "undelegations": []
                 },
                 {
                     "amount": 100000000000000000000,
                     "delegator-address": "one1l6cxwzncmzznzsehrmc5hd5q39455uqdy3vjqn",
-                    "reward": 203490405629921405,
+                    "reward": 85474446624506678,
                     "undelegations": []
                 },
                 {
                     "amount": 9999000000000000000000,
                     "delegator-address": "one1mqe8985djaht6tlw988ramaje6pr4njdg28lqu",
-                    "reward": 7092847711785995753,
+                    "reward": 867030962568247219,
                     "undelegations": []
                 },
                 {
                     "amount": 49999988400000000000000,
                     "delegator-address": "one1wmtw5eltt7w4cu5jg5frtj7gfv79u9r99h3j8e",
-                    "reward": 1232327271841421996993,
+                    "reward": 963929867210251175287,
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 3000000000000000000000,
                     "delegator-address": "one1es7hlh974auaav7qqpq4dp7mwwj3ke8nrc7pzr",
-                    "reward": 4560998435446179885,
+                    "reward": 1772151010067532499,
                     "undelegations": []
                 },
                 {
@@ -6101,15 +6139,15 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 5000000000000000000000,
+                    "amount": 0,
                     "delegator-address": "one1lvf60em5zxppvxgd4v55qhdpuk22hn24sj8k57",
-                    "reward": 16987799763847589565,
+                    "reward": 0,
                     "undelegations": []
                 },
                 {
                     "amount": 1030000000000000000000,
                     "delegator-address": "one1e9xz643utyc9gjkktuqnp75vnz5tt26lwqw9qe",
-                    "reward": 2632626114614194172,
+                    "reward": 818587380222367385,
                     "undelegations": []
                 },
                 {
@@ -6127,61 +6165,66 @@
                 {
                     "amount": 114000000000000000000000,
                     "delegator-address": "one169pe3q35m7g30a965q94lr222mtyu4h2jdtwm9",
-                    "reward": 59191334304109452439,
+                    "reward": 189339602040888084043,
                     "undelegations": []
                 },
                 {
                     "amount": 166000000000000000000000,
                     "delegator-address": "one1jwmwu84t4wky6wzrak2vdzevnxmwqn0u6whnkv",
-                    "reward": 81622480277548841965,
+                    "reward": 202554054513282421290,
                     "undelegations": []
                 },
                 {
                     "amount": 0,
                     "delegator-address": "one1zegt4flgacwzfnc0xr3shzd0ap29n59jhag7ae",
                     "reward": 0,
-                    "undelegations": []
+                    "undelegations": [
+                        {
+                            "amount": 1000000000000000000000,
+                            "epoch": 673
+                        }
+                    ]
                 },
                 {
                     "amount": 5067000000000000000000,
                     "delegator-address": "one149wx82pzfw6etqz3qg3ms2y63fd4ukq59lhtn8",
-                    "reward": 27855377159803636142,
+                    "reward": 655977864220117418,
                     "undelegations": []
                 },
                 {
-                    "amount": 10102000000000000000000,
+                    "amount": 10001000000000000000000,
                     "delegator-address": "one1ysp0earh6um3xsjctuxvve82gf7szf6jkkf835",
-                    "reward": 9654258781873940483,
+                    "reward": 3010284599532661975,
                     "undelegations": []
                 },
                 {
                     "amount": 5100000000000000000000,
                     "delegator-address": "one1ls4qcw0scaf8sc46zxtjsmawv3gru4m7jr7pe9",
-                    "reward": 111825733148939393,
+                    "reward": 35251586795334376,
                     "undelegations": []
                 },
                 {
                     "amount": 900000000000000000000,
                     "delegator-address": "one12sjzyan9r88fedkkyp44qylayxec7qhy59m60l",
-                    "reward": 315541267812074845,
+                    "reward": 684193885459397519,
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 20000000000000000000000,
                     "delegator-address": "one1prcdcwtddltsju4uw2jqwvkz05e9jsunr9ayps",
-                    "reward": 0,
+                    "reward": 257819729700951966714,
                     "undelegations": []
                 },
                 {
-                    "amount": 0,
+                    "amount": 15000000000000000000000,
                     "delegator-address": "one1mj85653h23cqujhahn2n0z6v060al2a5g06s62",
-                    "reward": 0,
+                    "reward": 5791213264384855989,
                     "undelegations": []
                 },
                 {
                     "amount": 3000473854714070400000,
                     "delegator-address": "one18r4v900v2xwtkj72928pgz5sshemgk7m9s34st",
-                    "reward": 8261949290340126169,
+                    "reward": 14807405700261395723,
                     "undelegations": []
                 },
                 {
@@ -6191,10 +6234,15 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 10000000000000000000000,
+                    "amount": 0,
                     "delegator-address": "one1mck6a0v46ql6fwpqe6g2706zqz2xuh37rsz5u8",
-                    "reward": 26228634434958344636,
-                    "undelegations": []
+                    "reward": 937032318479104431,
+                    "undelegations": [
+                        {
+                            "amount": 53073800000000000000000,
+                            "epoch": 677
+                        }
+                    ]
                 },
                 {
                     "amount": 0,
@@ -6209,33 +6257,33 @@
                     "undelegations": []
                 },
                 {
-                    "amount": 2001000000000000000000,
+                    "amount": 1001000000000000000000,
                     "delegator-address": "one10kghymfhl2w276a0ma9q8u792epwse4j9es287",
-                    "reward": 1299881498462694690,
+                    "reward": 75710785124542063,
                     "undelegations": []
                 },
                 {
                     "amount": 5300000000000000000000,
                     "delegator-address": "one1ezj0qu6xe084l4d0la726vsqqe9cclhv2xqy59",
-                    "reward": 31383365013315721068,
+                    "reward": 2933233521981093862,
                     "undelegations": []
                 },
                 {
                     "amount": 5662674783900000000000,
                     "delegator-address": "one1tuyazughyr9p3qj6l6hu3zp6lzgvhms4j8zgp3",
-                    "reward": 76186368588764156,
+                    "reward": 703141444862192154,
                     "undelegations": []
                 },
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one13x0zmvw2j4nfugj9yq04ukh8a54ez88ju553u6",
-                    "reward": 1423200770283486230,
+                    "reward": 1552881082370770927,
                     "undelegations": []
                 },
                 {
                     "amount": 5000000000000000000000,
                     "delegator-address": "one1zhe5xf8lfmrg4c6e6q7y6s749k7smwe3cw06yn",
-                    "reward": 60521632707629797174,
+                    "reward": 33681886017691467791,
                     "undelegations": []
                 },
                 {
@@ -6265,334 +6313,124 @@
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1hh9qjvqx9gfltyjwh204s7w2ykqfs0rp234h7v",
-                    "reward": 14583919133619511234,
+                    "reward": 9215969795631945212,
                     "undelegations": []
                 },
                 {
-                    "amount": 981000000000000000000,
+                    "amount": 760000000000000000000,
                     "delegator-address": "one1eznh64ac87dgr0lzr748fq7m2qelrjufy4vszr",
-                    "reward": 743750547808159878,
+                    "reward": 1541181219790435671,
                     "undelegations": []
                 },
                 {
-                    "amount": 684000000000000000000,
+                    "amount": 294000000000000000000,
                     "delegator-address": "one14pnf2xvnly9qduhjw8u58xdmtuz9mr3jdmwcp8",
-                    "reward": 25276832171350087,
+                    "reward": 711024282179583443,
                     "undelegations": []
                 },
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1fty0hpdnu2myuggdtygs3ksrtt2y3yf49udfhj",
-                    "reward": 435668369984469292,
+                    "reward": 4915866431197049618,
                     "undelegations": []
                 },
                 {
                     "amount": 3489343598700000000000,
                     "delegator-address": "one13lvz4epparlpzxqu2sjz4qexy829z3ypdgm5ts",
-                    "reward": 34884587615384617067,
+                    "reward": 16153967954731584188,
                     "undelegations": []
                 },
                 {
                     "amount": 2000000000000000000000,
                     "delegator-address": "one1fa3raesgaqyf6y8q754c5l3md5e9mmmhmkszh0",
-                    "reward": 930969956448129070,
+                    "reward": 3710631850008616156,
                     "undelegations": []
                 },
                 {
-                    "amount": 450000000000000000000,
+                    "amount": 105000000000000000000,
                     "delegator-address": "one1gsanwlyl87e3ny8t5vxf24y7ktr42khkv2z7pu",
-                    "reward": 1370452192464500531,
+                    "reward": 280758623765427522,
                     "undelegations": []
                 },
                 {
                     "amount": 243149932800000000000,
                     "delegator-address": "one1vy9qrmj6hl7mhe6386acu9qgzf73ur2qc0ql8c",
-                    "reward": 1522692707069665105,
+                    "reward": 217476186264128179,
                     "undelegations": []
                 },
                 {
                     "amount": 61629000000000000000000,
                     "delegator-address": "one10h0atvx00hdkxrm0rc4mn452lwf2q3lqn5gqxk",
-                    "reward": 298907685589235803406,
+                    "reward": 89938031084498564494,
                     "undelegations": []
                 },
                 {
-                    "amount": 12000000000000000000000,
+                    "amount": 11500000000000000000000,
                     "delegator-address": "one1uvml0dkmpctna0ncq53rhddljqe5644pay5k0l",
-                    "reward": 72123538641934720509,
+                    "reward": 10149869588845435235,
                     "undelegations": []
                 },
                 {
                     "amount": 0,
                     "delegator-address": "one1j0wekz4a3tv5nqhz635zj6yeqxy86zegm7gmge",
-                    "reward": 0,
+                    "reward": 958093883560713270,
                     "undelegations": []
                 },
                 {
                     "amount": 1000000000000000000000,
                     "delegator-address": "one1px8msxecufhyqps4qkvjjlqydr4rstkfftszla",
-                    "reward": 339363237758028953,
+                    "reward": 564809814549614853,
                     "undelegations": []
                 },
                 {
                     "amount": 400000000000000000000,
                     "delegator-address": "one1czp6t2k5g026e33pfnsffj2nfsuxwewuqhwkg3",
-                    "reward": 114309256624098377,
+                    "reward": 48468913124768606,
                     "undelegations": []
                 },
                 {
                     "amount": 2021000000000000000000,
                     "delegator-address": "one1tfe77qhlcgydk4dy8wt67w5weruerpcr9gx38m",
-                    "reward": 4098334307742618491,
+                    "reward": 1807976894519878742,
                     "undelegations": []
                 },
                 {
-                    "amount": 11040000000000000000000,
+                    "amount": 10290000000000000000000,
                     "delegator-address": "one1pwdqnwglhlseu945sqav7gduznr9550mtddg9j",
-                    "reward": 64342685982442400918,
+                    "reward": 6868315765995935453,
                     "undelegations": []
                 },
                 {
                     "amount": 600000000000000000000,
                     "delegator-address": "one1qaxlevz0f6dxktsj843zcl2m00nm9a6qyr0s3n",
-                    "reward": 3592557157767178473,
+                    "reward": 371787554974649491,
                     "undelegations": []
                 },
                 {
                     "amount": 1247372142000000000000,
                     "delegator-address": "one1pywpht2wmt2qjr3j6m346pe3u9jf4y7nljxatn",
-                    "reward": 7468759528569349030,
-                    "undelegations": []
-                },
-                {
-                    "amount": 2000000000000000000000,
-                    "delegator-address": "one1vk5rru6ezjdc23j7ksvhs92kpmmxkghauceue4",
-                    "reward": 11526930118554429969,
-                    "undelegations": []
-                },
-                {
-                    "amount": 66630000000000000000000,
-                    "delegator-address": "one18p4g7ygjjd2wsyj3ax5fvyk5t887ecym8axzml",
-                    "reward": 13377491872729937864,
-                    "undelegations": []
-                },
-                {
-                    "amount": 1090506705300000000000,
-                    "delegator-address": "one19sdf30xtcpys95gwd2j8pxazt628am20m2vauw",
-                    "reward": 4094003677483374558,
-                    "undelegations": []
-                },
-                {
-                    "amount": 0,
-                    "delegator-address": "one1d4d09xrhclhkklpsw6hmmyh4d3mwj6qfqxcf2s",
-                    "reward": 2996651548228136352,
-                    "undelegations": []
-                },
-                {
-                    "amount": 3680000000000000000000,
-                    "delegator-address": "one1h7kj2kgsvr5t5wwa5w6s7jdk0zxf9tl3v5f4a8",
-                    "reward": 2855599985418878404,
-                    "undelegations": []
-                },
-                {
-                    "amount": 2000000000000000000000,
-                    "delegator-address": "one14eclez6qc4dmmtafe9q5nwlhem8fyuuzhrt5lh",
-                    "reward": 1091787140599497782,
-                    "undelegations": []
-                },
-                {
-                    "amount": 0,
-                    "delegator-address": "one18dd5v2hk7w2ynrk7gk40zhu8ffcwquudugtzf7",
-                    "reward": 1339896513862123204,
-                    "undelegations": []
-                },
-                {
-                    "amount": 25000000000000000000000,
-                    "delegator-address": "one1nq22cuu8tlma69t8t54awrpkv9cmt574gchg8y",
-                    "reward": 451236782610340773,
-                    "undelegations": []
-                },
-                {
-                    "amount": 600000000000000000000,
-                    "delegator-address": "one1f63pv5t0pglvjwlz8snk4xqtwh50txwtsrlw3h",
-                    "reward": 1347254969233368094,
-                    "undelegations": []
-                },
-                {
-                    "amount": 1550788072640000000000,
-                    "delegator-address": "one1nwvtjn0urash0aava0pnzdkpltl90h742nysek",
-                    "reward": 3482178228486838786,
-                    "undelegations": []
-                },
-                {
-                    "amount": 340000000000000000000,
-                    "delegator-address": "one13ht5t2sx2c0k5emrtu9qm63jeludju0v8s0vrk",
-                    "reward": 650026894946813567,
-                    "undelegations": []
-                },
-                {
-                    "amount": 389579536000000000000,
-                    "delegator-address": "one1gn5lxakmg773rhjdl39ztr9ncyh43rxt6tsmk6",
-                    "reward": 744815223885010253,
-                    "undelegations": []
-                },
-                {
-                    "amount": 3201786000000000000000,
-                    "delegator-address": "one1ggps8eywc3v48jazhltkwhf5t6tev79cwdq92p",
-                    "reward": 6121314740776980148,
-                    "undelegations": []
-                },
-                {
-                    "amount": 28025000000000000000000,
-                    "delegator-address": "one155mzeglhyg5caup56jw3twqxxnmqhvak7m0dyn",
-                    "reward": 53579422737895403208,
-                    "undelegations": []
-                },
-                {
-                    "amount": 11532000000000000000000,
-                    "delegator-address": "one1868f6x7lpw3dmedqaxjw0axnmqp7am33tuu5y6",
-                    "reward": 799947716851140188,
-                    "undelegations": []
-                },
-                {
-                    "amount": 6248717047000000000000,
-                    "delegator-address": "one1f0crkndnhy25kpfjz8t5e3w5ufvz9sp7r94awv",
-                    "reward": 8751843986471446140,
-                    "undelegations": []
-                },
-                {
-                    "amount": 1335241004000000000000,
-                    "delegator-address": "one15snpjmfpqad6avapmks5pgcrr9mauqljj7ugcz",
-                    "reward": 2552772246575840175,
-                    "undelegations": []
-                },
-                {
-                    "amount": 1000000000000000000000,
-                    "delegator-address": "one1mzz8udly9fgwqmpn7ejrmlrmj4v227cr4chjwj",
-                    "reward": 137768503141760961,
+                    "reward": 772929064696170054,
                     "undelegations": []
                 },
                 {
                     "amount": 1500000000000000000000,
-                    "delegator-address": "one1r46435a8fgu02wk23pu9lxdysnwauhjcf5fpqu",
-                    "reward": 25620278317177108,
-                    "undelegations": []
-                },
-                {
-                    "amount": 100000000000000000000,
-                    "delegator-address": "one13mgz69gczjahqxjazfdw889huh3vumclkyydr9",
-                    "reward": 137125957298917492,
-                    "undelegations": []
-                },
-                {
-                    "amount": 4100000000000000000000,
-                    "delegator-address": "one13re7q2lttxkycpddvw8u3twlthaen0fcjm6lhx",
-                    "reward": 5622164249255612165,
-                    "undelegations": []
-                },
-                {
-                    "amount": 5000000000000000000000,
-                    "delegator-address": "one1v8zml8vkf07m80q9cr86g22n43apaz0f4v6tct",
-                    "reward": 6856297864945867874,
-                    "undelegations": []
-                },
-                {
-                    "amount": 100000000000000000000,
-                    "delegator-address": "one1288ddf6clapmmw7ydpzhlasdmp7av6pnatkn2c",
-                    "reward": 113351514428924892,
-                    "undelegations": []
-                },
-                {
-                    "amount": 10000000000000000000000,
-                    "delegator-address": "one18e8pwqx7wumvv78mcl2u2qxzr48xet88swevk8",
-                    "reward": 11335151442892529251,
-                    "undelegations": []
-                },
-                {
-                    "amount": 140000000000000000000,
-                    "delegator-address": "one13d6qjglk89fy42gkn9r7nkpa58408xxf883lqe",
-                    "reward": 128759144455671418,
-                    "undelegations": []
-                },
-                {
-                    "amount": 10245774663000000000000,
-                    "delegator-address": "one1ulevuskzsdvmfpy49c9tcqs2p0u0nd9wx9gj3v",
-                    "reward": 9423122713524855317,
-                    "undelegations": []
-                },
-                {
-                    "amount": 2900000000000000000000,
-                    "delegator-address": "one19f9n0ld0rd3jhknnelnkp7svvs3gwkk796cce7",
-                    "reward": 2667153706581772937,
-                    "undelegations": []
-                },
-                {
-                    "amount": 0,
-                    "delegator-address": "one1aefsvjvxn0l3wm5jt4ny3r3yauae9lj4vy7v7p",
-                    "reward": 0,
-                    "undelegations": []
-                },
-                {
-                    "amount": 5000000000000000000000,
-                    "delegator-address": "one1pg9ws26dv8zv6sj4l293zkqt0axp9hwyftpa0u",
-                    "reward": 3506240458798347380,
-                    "undelegations": []
-                },
-                {
-                    "amount": 110000000000000000000,
-                    "delegator-address": "one1ysdap4k0y9rugr0jw3dzc9gzyywlxfl60yxd26",
-                    "reward": 53295366570843733,
-                    "undelegations": []
-                },
-                {
-                    "amount": 154000000000000000000,
-                    "delegator-address": "one1jew4u303m22xjwyzlyjhgvvwl3pd8ajckt0427",
-                    "reward": 74613513199181202,
-                    "undelegations": []
-                },
-                {
-                    "amount": 10370000000000000000000,
-                    "delegator-address": "one1nqk2nx9swjnuyhuq0myqcswj9xtxrm0d3djgam",
-                    "reward": 5024299557633165932,
-                    "undelegations": []
-                },
-                {
-                    "amount": 126752460042865340000,
-                    "delegator-address": "one1qm4yk9z2z72sjfty6vm89hxv03dgljl98aeznn",
-                    "reward": 33373886673600029,
-                    "undelegations": []
-                },
-                {
-                    "amount": 320000000000000000000,
-                    "delegator-address": "one1pyfq3m9847q99zmcs6cxq0yszsr5hxpdd3dad5",
-                    "reward": 84255908973602600,
-                    "undelegations": []
-                },
-                {
-                    "amount": 399000000000000000000,
-                    "delegator-address": "one1xjdl4r0az3z326m7vqyk9cvh2r2japr7zfj4lf",
-                    "reward": 6041503996185271,
-                    "undelegations": []
-                },
-                {
-                    "amount": 4180000000000000000000,
-                    "delegator-address": "one17x4du7drj7gheapedgjuvgurstarc6ezkxdg30",
-                    "reward": 0,
+                    "delegator-address": "one1vk5rru6ezjdc23j7ksvhs92kpmmxkghauceue4",
+                    "reward": 929468887436710112,
                     "undelegations": []
                 }
             ],
-            "details": "No Fee Promo Till Epoch 731 \u26a1 High Uptime \u26a1 Supporting us allows us to support all validators! Decentralization & Open Source for 1 Billion",
+            "details": "Minimum Fee | 12.5x the Mininum Self Stake \u26a1 High Uptime \u26a1 Supporting us allows us to support all validators! | Validator Toolbox & EZSetup Coming Soon!",
             "identity": "8377817fe4e34f249abbfb65f6732c3cfeb65a30",
-            "last-epoch-in-committee": 696,
+            "last-epoch-in-committee": 678,
             "max-change-rate": "0.050000000000000000",
             "max-rate": "0.200000000000000000",
             "max-total-delegation": 2000000000000000000000000000,
             "min-self-delegation": 10000000000000000000000,
-            "name": "Easy Node \u26a1 EZ Staking",
-            "rate": "0.000000000000000000",
-            "security-contact": "info@easynode.one",
-            "update-height": 16851232,
-            "website": "https://EasyNode.ONE"
+            "name": "Easy Node \u26a1 Easy Staking",
+            "rate": "0.025000000000000000",
+            "security-contact": "patrick@easynode.one",
+            "update-height": 16023530,
+            "website": "http://EasyNode.ONE"
         }
     }
 }
