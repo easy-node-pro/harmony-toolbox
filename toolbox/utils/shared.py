@@ -175,7 +175,8 @@ def isFirstRun(dotenv_file, setupStatus):
         setupStatus = str(terminal_menu.show())
         dotenv.set_key(dotenv_file, "SETUP_STATUS", setupStatus)
         archType = os.system('uname -m')
-        dotenv.set_key(dotenv_file, "ARC", str(archType))
+        archType = str(archType)
+        dotenv.set_key(dotenv_file, "ARC", archType)
         return setupStatus
     return setupStatus
 
@@ -249,7 +250,8 @@ def getExpressStatus(dotenv_file) -> None:
         print("*********************************************************************************************")
         menuOptions = ["[0] - Express Install", "[1] - Manual Approval", ]
         terminal_menu = TerminalMenu(menuOptions, title="* Express Or Manual Setup")
-        dotenv.set_key(dotenv_file, "EXPRESS", str(terminal_menu.show()))
+        status = str(terminal_menu.show())
+        dotenv.set_key(dotenv_file, "EXPRESS", status)
     return
 
 
