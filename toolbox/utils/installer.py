@@ -21,6 +21,7 @@ blskeyDirPath = os.path.join(hmyAppPath, ".hmy", "blskeys")
 hmyWalletStorePath = os.path.join(userHomeDir, ".hmy_cli", "account-keys", activeUserName)
 toolboxLocation = os.path.join(userHomeDir, "validator-toolbox")
 validatorData = os.path.join(toolboxLocation, "toolbox", "metadata", "validator.json")
+dotenv_file = f"{userHomeDir}/.easynode.env"
 passwordPath = os.path.join(harmonyDirPath, "passphrase.txt")
 
 
@@ -30,11 +31,11 @@ def checkEnvStatus(setupStatus) -> None:
     getNodeType(dotenv_file)
     setMainOrTest(dotenv_file)
     load_dotenv(dotenv_file)
+    passphraseStatus()
     if setupStatus == "0":
         getExpressStatus(dotenv_file)
         checkForInstall()
     setAPIPaths(hmyAppPath, dotenv_file)
-    passphraseStatus()
     return
 
 
@@ -86,33 +87,27 @@ def checkForInstall() -> str:
 def installHarmony() -> None:
     testOrMain = environ.get("NETWORK")
     # check disk space, find mounted disks
-    mntCount = 0
     if os.path.isdir("/dev/disk/by-id/") == True:
-        testMnt = '/mnt'
-        for subdir, dirs, files in os.walk(testMnt):
-            for dir in dirs:
-                tester = os.path.join(subdir, dir)
-                if os.path.ismount(tester):
-                    myVolumePath = tester
-                    mntCount = mntCount + 1
-
         # First let's make sure your volume is mounted
-        if mntCount == 0:
+        totalDir = len(next(os.walk("/mnt/"))[1])
+        if totalDir == 0:
             print(
                 "* You have a volume but it is not mounted. See the digital ocean website for information on mounting your volume."
             )
             raise SystemExit(0)
-        if mntCount > 1:
+        if totalDir > 1:
             print(
-                "* You have multiple mounts in /mnt - Review mounts, only 1 allowed for our installer at this time!"
+                "* You have multiple folders in /mnt - Review extra folders and delete leaving only your mounted volume & restart!"
             )
             raise SystemExit(0)
         # Checks Passed at this point, only 1 folder in /mnt and it's probably our volume (can scope this down further later)
+        volumeMountPath = os.listdir("/mnt")
+        myVolumePath = "/mnt/" + str(volumeMountPath[0])
         myLongHmyPath = myVolumePath + "/harmony"
-        if mntCount == 1:
+        if totalDir == 1:
             dotenv.set_key(dotenv_file, "MOUNT_POINT", myLongHmyPath)
             print("* Creating all Harmony Files & Folders")
-            os.system(f"sudo chown {activeUserName} {myVolumePath}")
+            os.system(f"sudo chown serviceharmony {myVolumePath}")
             os.system(f"mkdir -p {myLongHmyPath}/.hmy/blskeys")
             os.system(f"ln -s {myLongHmyPath} {harmonyDirPath}")
         else:
@@ -147,8 +142,6 @@ def installHarmony() -> None:
 
 
 def cloneShards():
-    ourShard = environ.get('SHARD')
-    dotenv.set_key(dotenv_file, "SETUP_STATUS", "1")
     os.chdir(f"{harmonyDirPath}")
     testOrMain = environ.get("NETWORK")
     if environ.get("NETWORK") == "rasppi_main":
@@ -156,15 +149,15 @@ def cloneShards():
     if environ.get("EXPRESS") == "0":  
         os.system("clear")
         printStars()
-        print(f"* Now cloning shard {ourShard}")
+        print(f"* Now cloning shard {environ.get('SHARD')}")
         printStars()
         os.system(
-            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{ourShard} {harmonyDirPath}/harmony_db_{ourShard}"
+            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {harmonyDirPath}/harmony_db_{environ.get('SHARD')}"
         )
         printStars()
-        print(f"Shard {ourShard} completed.")
+        print(f"Shard {environ.get('SHARD')} completed.")
         printStars()
-        if environ.get('SHARD') == '0':
+        if ourShard == '0':
             return
         print("* Now cloning Shard 0, kick back and relax for awhile...")
         printStars()
@@ -281,7 +274,6 @@ def recoverWallet():
     )
     printStars()
     validatorWallet = setWalletEnv(dotenv_file, hmyAppPath, activeUserName)
-    os.system("clear")
     print(
         "\n* Verify the address above matches the address below: "
         + "\n* Detected Wallet: "
@@ -338,4 +330,5 @@ def finish_node_install():
     printStars()
     print("* Thanks for using Easy Node - Validator Node Server Software Installer!")
     printStars()
+    dotenv.set_key(dotenv_file, "SETUP_STATUS", "1")
     raise SystemExit(0)
