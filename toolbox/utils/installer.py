@@ -152,6 +152,7 @@ def installHarmony() -> None:
 def cloneShards():
     os.chdir(f"{harmonyDirPath}")
     testOrMain = environ.get("NETWORK")
+    dotenv.set_key(dotenv_file, "SETUP_STATUS", "1")
     if environ.get("NETWORK") == "rasppi_main":
         testOrMain = "mainnet"
     if environ.get("EXPRESS") == "0":  
@@ -165,7 +166,7 @@ def cloneShards():
         printStars()
         print(f"Shard {environ.get('SHARD')} completed.")
         printStars()
-        if ourShard == '0':
+        if environ.get('SHARD') == '0':
             return
         print("* Now cloning Shard 0, kick back and relax for awhile...")
         printStars()
@@ -338,5 +339,4 @@ def finish_node_install():
     printStars()
     print("* Thanks for using Easy Node - Validator Node Server Software Installer!")
     printStars()
-    dotenv.set_key(dotenv_file, "SETUP_STATUS", "1")
     raise SystemExit(0)
