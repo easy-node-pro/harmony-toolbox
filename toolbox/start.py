@@ -19,6 +19,7 @@ if __name__ == "__main__":
         dotenv.set_key(dotenv_file, "SETUP_STATUS", "2")
         dotenv.set_key(dotenv_file, "EASY_VERSION", easyVersion)
         isFirstRun(dotenv_file)
+        load_dotenv(dotenv_file)
         if environ.get('SETUP_STATUS') == "0":
             getShardMenu(dotenv_file)
             getNodeType(dotenv_file)
