@@ -28,32 +28,10 @@ dotenv_file = f"{userHomeDir}/.easynode.env"
 passwordPath = os.path.join(harmonyDirPath, "passphrase.txt")
 
 
-def checkEnvStatus(setupStatus) -> None:
-    setupStatus = isFirstRun(dotenv_file, setupStatus)
-    getShardMenu(dotenv_file)
-    getNodeType(dotenv_file)
-    setMainOrTest(dotenv_file)
-    load_dotenv(dotenv_file)
-    if setupStatus == "0":
-        getExpressStatus(dotenv_file)
-        checkForInstall()
-    if environ.get("FIRST_RUN") == "1":
-        dotenv.unset_key(dotenv_file, "FIRST_RUN")
-        printStars()
-        print("* Inital setup completed, rerun toolbox to load menu.")
-        raise SystemExit(0)
-    setAPIPaths(dotenv_file)
-    passphraseStatus()
-    return
-
-
 def checkForInstall() -> str:
-    load_dotenv(dotenv_file)
-    ourShard = environ.get('SHARD')
-    nodeType = environ.get('NODE_TYPE')
     if os.path.exists(harmonyDirPath) == False:
         print(
-            f"* You selected Shard: {ourShard}. "
+            f"* You selected Shard: {environ.get('SHARD')}. "
         )
         if environ.get("EXPRESS") == "1":
             question = askYesNo(
@@ -81,7 +59,7 @@ def checkForInstall() -> str:
             finish_node_install()
         else:
             installHarmony()
-            if nodeType == "regular":
+            if environ.get('NODE_TYPE') == "regular":
                 restoreWallet()
             printStars()
             print("* All harmony files now installed. Database download starting now...")  

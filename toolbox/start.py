@@ -3,14 +3,14 @@ import pathlib
 import time
 from os import environ
 from utils.installer import *
-from utils.shared import loaderIntro, getValidatorInfo
+from utils.shared import loaderIntro, getValidatorInfo, loadVarFile
 
 
 if __name__ == "__main__":
     envFile = pathlib.Path(dotenv_file)
     os.system("clear")
     loaderIntro()
-    load_dotenv(dotenv_file)
+    loadVarFile()
     if environ.get('FIRST_RUN') == "1":
         #first run stuff
         print("* This is the first time you've launched start.py, loading config menus.")
@@ -18,7 +18,20 @@ if __name__ == "__main__":
         time.sleep(1)
         dotenv.set_key(dotenv_file, "SETUP_STATUS", "2")
         dotenv.set_key(dotenv_file, "EASY_VERSION", easyVersion)
-        checkEnvStatus(environ.get('SETUP_STATUS'))
+        isFirstRun(dotenv_file)
+        loadVarFile()
+        if environ.get('SETUP_STATUS') == "0":
+            getShardMenu(dotenv_file)
+            getNodeType(dotenv_file)
+            setMainOrTest(dotenv_file)
+            getExpressStatus(dotenv_file)
+            loadVarFile()
+            checkForInstall()
+            setAPIPaths(dotenv_file)
+            dotenv.unset_key(dotenv_file, "FIRST_RUN")
+            printStars()
+            passphraseStatus()
+            # load installer
     if environ.get('SETUP_STATUS') == "1":
         #not first run stuff
         print("* Configuration file detected, loading the validator-toolbox menu application.")
@@ -26,7 +39,11 @@ if __name__ == "__main__":
         dotenv.unset_key(dotenv_file, "EASY_VERSION")
         dotenv.set_key(dotenv_file, "EASY_VERSION", easyVersion)
         time.sleep(1)
-        checkEnvStatus(environ.get('SETUP_STATUS'))
+        getShardMenu(dotenv_file)
+        getNodeType(dotenv_file)
+        setMainOrTest(dotenv_file)
+        loadVarFile()
+        setAPIPaths(dotenv_file)
         nodeType = environ.get("NODE_TYPE")
         if nodeType == "regular":
             if environ.get("VALIDATOR_WALLET") is None:
@@ -34,4 +51,5 @@ if __name__ == "__main__":
             runRegularNode()
         if nodeType == "full":
             runFullNode()
+    print("Big problem, contact Easy Node")
     raise SystemExit(0)

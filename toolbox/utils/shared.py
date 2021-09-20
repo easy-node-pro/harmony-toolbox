@@ -164,7 +164,16 @@ def return_txt(fn: str) -> list:
         return []
 
 
-def isFirstRun(dotenv_file, setupStatus):
+def loadVarFile():
+    if os.path.exists(dotenv_file):
+        load_dotenv(dotenv_file)
+        return
+    else:
+        printStars()
+        print("* No config file found, this should never print")
+
+
+def isFirstRun(dotenv_file):
     if environ.get("FIRST_RUN") == "1":
         os.system("clear")
         print("*********************************************************************************************")
@@ -178,8 +187,8 @@ def isFirstRun(dotenv_file, setupStatus):
         setupStatus = str(terminal_menu.show())
         dotenv.unset_key(dotenv_file, "SETUP_STATUS", setupStatus)
         dotenv.set_key(dotenv_file, "SETUP_STATUS", setupStatus)
-        return setupStatus
-    return setupStatus
+        return 
+    return
 
 
 def getShardMenu(dotenv_file) -> None:
@@ -256,7 +265,7 @@ def getExpressStatus(dotenv_file) -> None:
 
 
 def setAPIPaths(dotenv_file):
-    if environ.get("NETWORK_0_CALL") is False:
+    if environ.get("NETWORK_0_CALL") is None:
         dotenv.set_key(dotenv_file, "NETWORK_0_CALL", f"{hmyAppPath} --node='https://api.s0.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
         dotenv.set_key(dotenv_file, "NETWORK_S_CALL", f"{hmyAppPath} --node='https://api.s{environ.get('SHARD')}.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
     return 
