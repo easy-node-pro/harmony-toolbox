@@ -6,7 +6,6 @@ import requests
 import time
 import subprocess
 import dotenv
-from icecream import ic
 from os import environ
 from dotenv import load_dotenv
 from datetime import datetime
