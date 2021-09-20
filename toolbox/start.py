@@ -23,8 +23,13 @@ if __name__ == "__main__":
         print("* This is the first time you've launched start.py, loading config menus.")
         printStars()
         time.sleep(1)
-        dotenv.set_key(dotenv_file, "SETUP_STATUS", "2")
-        dotenv.set_key(dotenv_file, "EASY_VERSION", easyVersion)
+        try:
+            dotenv.set_key(dotenv_file, "SETUP_STATUS", "2")
+            dotenv.set_key(dotenv_file, "EASY_VERSION", easyVersion)
+        except OSError:
+            os.system('touch ~/.easynode.env')
+            dotenv.set_key(dotenv_file, "SETUP_STATUS", "2")
+            dotenv.set_key(dotenv_file, "EASY_VERSION", easyVersion)
     setupStatus = environ.get("SETUP_STATUS")
     checkEnvStatus(setupStatus)
     if setupStatus == "1":
