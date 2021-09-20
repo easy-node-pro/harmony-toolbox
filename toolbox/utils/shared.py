@@ -174,8 +174,7 @@ def isFirstRun(dotenv_file, setupStatus):
         terminal_menu = TerminalMenu(menuOptions, title="* Is this a new server or an already existing harmony node?")
         setupStatus = str(terminal_menu.show())
         dotenv.set_key(dotenv_file, "SETUP_STATUS", setupStatus)
-        archType = os.system('uname -m')
-        archType = str(archType)
+        archType = process_command('uname -m')
         dotenv.set_key(dotenv_file, "ARC", archType)
         return setupStatus
     return setupStatus
