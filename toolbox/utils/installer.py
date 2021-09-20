@@ -31,11 +31,11 @@ def checkEnvStatus(setupStatus) -> None:
     getNodeType(dotenv_file)
     setMainOrTest(dotenv_file)
     load_dotenv(dotenv_file)
-    passphraseStatus()
     if setupStatus == "0":
         getExpressStatus(dotenv_file)
         checkForInstall()
     setAPIPaths(hmyAppPath, dotenv_file)
+    passphraseStatus()
     return
 
 
