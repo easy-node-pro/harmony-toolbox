@@ -15,6 +15,7 @@ userHomeDir = os.path.expanduser("~")
 dotenv_file = f"{userHomeDir}/.easynode.env"
 if os.path.exists(dotenv_file) == False:
     os.system("touch ~/.easynode.env")
+    dotenv.set_key(dotenv_file, "FIRST_RUN", "1")
 activeUserName = os.path.split(userHomeDir)[-1]
 harmonyDirPath = os.path.join(userHomeDir, "harmony")
 harmonyAppPath = os.path.join(harmonyDirPath, "harmony")
@@ -165,7 +166,7 @@ def cloneShards():
         printStars()
         print(f"Shard {environ.get('SHARD')} completed.")
         printStars()
-        if ourShard == '0':
+        if environ.get('SHARD') == '0':
             return
         print("* Now cloning Shard 0, kick back and relax for awhile...")
         printStars()
@@ -338,5 +339,4 @@ def finish_node_install():
     printStars()
     print("* Thanks for using Easy Node - Validator Node Server Software Installer!")
     printStars()
-    dotenv.set_key(dotenv_file, "SETUP_STATUS", "1")
     raise SystemExit(0)
