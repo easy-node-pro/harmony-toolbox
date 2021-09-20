@@ -9,7 +9,7 @@ from utils.shared import isFirstRun, setAPIPaths, getShardMenu, getExpressStatus
 from utils.toolbox import runRegularNode, runFullNode
 
 
-easyVersion = "1.0.0"
+easyVersion = "1.0.1"
 serverHostName = socket.gethostname()
 userHomeDir = os.path.expanduser("~")
 dotenv_file = f"{userHomeDir}/.easynode.env"
