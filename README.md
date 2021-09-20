@@ -5,6 +5,7 @@ This repository provides two functions in one application:
 - Harmony Validator Menu Driven Installer
 - Harmony Validator Management Interface Menu
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/bc95b2782ba84d3f847f4af0842f36a7)](https://app.codacy.com/gh/easy-node-one/validator-toolbox?utm_source=github.com&utm_medium=referral&utm_content=easy-node-one/validator-toolbox&utm_campaign=Badge_Grade_Settings)
 [![Easy Node - Harmony Validator Operations Toolbox](http://img.youtube.com/vi/ydvMXFDrHwg/0.jpg)](http://www.youtube.com/watch?v=ydvMXFDrHwg "Easy Node - Harmony Validator Operations Toolbox")
 
 # Quickstart Guide
