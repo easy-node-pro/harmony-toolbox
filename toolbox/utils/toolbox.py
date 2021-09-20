@@ -549,7 +549,6 @@ def runStats() -> str:
     timeNow = datetime.now()
     ourUptime = subprocess.getoutput("uptime")
     ourShard = environ.get("SHARD")
-    networkZeroCall = environ.get("NETWORK_0_CALL")
     networkNumCall = environ.get("NETWORK_S_CALL")
     printStars()
     print(
@@ -677,11 +676,6 @@ def menuActiveBLS() -> str:
     input("Press ENTER to return to the main menu.")
 
 
-def process_command(command: str) -> None:
-    process = subprocess.Popen(command, shell=True)
-    output, error = process.communicate()
-
-
 def isfloat(value):
   try:
     float(value)
@@ -725,7 +719,6 @@ def menuCheckBalance() -> None:
 
 
 def balanceCheckAny():
-    validatorWallet = environ.get('VALIDATOR_WALLET')
     printStarsReset()
     checkWallet = input(
         "* Type the address of the Harmony ONE Wallet you would like to check.\n"

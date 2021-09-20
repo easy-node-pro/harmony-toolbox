@@ -3,15 +3,12 @@ import dotenv
 import subprocess
 import json2html
 import os
-import math
-import json
 import subprocess
 import requests
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
 from colorama import Fore, Back, Style
-from collections import defaultdict
 from requests import get, post
 from json import load, dump, loads, load
 
@@ -402,6 +399,6 @@ def getSignPercent() -> str:
         signPerc = math * 100
         roundSignPerc = round(signPerc, 6)
         return str(roundSignPerc)
-    except:
+    except OSError:
         outputStripped = "0"
         return str(outputStripped)
