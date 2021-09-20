@@ -87,13 +87,15 @@ def installHarmonyApp(harmonyDirPath):
     print("* Harmony application installed & ~/harmony/harmony.conf created.")
 
 
-def setWalletEnv(dotenv_file, hmyAppPath, activeUserName):
+def setWalletEnv(dotenv_file):
     output = subprocess.getoutput(f"{hmyAppPath} keys list | grep {activeUserName}")
     outputStripped = output.lstrip(activeUserName)
     outputStripped = outputStripped.strip()
     # verify strip matches file if this isn't a first run, if first run set it
-    dotenv.set_key(dotenv_file, "VALIDATOR_WALLET", outputStripped)
-    return str(outputStripped)
+    if environ.get("FIRST_RUN") == "1":
+        dotenv.set_key(dotenv_file, "VALIDATOR_WALLET", outputStripped)
+    load_dotenv(dotenv_file)
+    return environ.get("VALILDATOR_WALLET")
 
 
 def process_command(command: str) -> None:
@@ -163,7 +165,7 @@ def return_txt(fn: str) -> list:
 
 
 def isFirstRun(dotenv_file, setupStatus):
-    if setupStatus not in {"0", "1"}:
+    if environ.get("FIRST_RUN") == "1":
         os.system("clear")
         print("*********************************************************************************************")
         print("* First run detected!                                                                       *")
@@ -174,9 +176,8 @@ def isFirstRun(dotenv_file, setupStatus):
         menuOptions = ["[0] - Start Installer Application", "[1] - Start Validator Toolbox Menu", ]
         terminal_menu = TerminalMenu(menuOptions, title="* Is this a new server or an already existing harmony node?")
         setupStatus = str(terminal_menu.show())
+        dotenv.unset_key(dotenv_file, "SETUP_STATUS", setupStatus)
         dotenv.set_key(dotenv_file, "SETUP_STATUS", setupStatus)
-        archType = os.system('uname -m')
-        dotenv.set_key(dotenv_file, "ARC", str(archType))
         return setupStatus
     return setupStatus
 
@@ -254,9 +255,10 @@ def getExpressStatus(dotenv_file) -> None:
     return
 
 
-def setAPIPaths(hmyAppPath, dotenv_file):
-    dotenv.set_key(dotenv_file, "NETWORK_0_CALL", f"{hmyAppPath} --node='https://api.s0.{environ.get('NETWORK_SWITCH')}.hmny.io'")
-    dotenv.set_key(dotenv_file, "NETWORK_S_CALL", f"{hmyAppPath} --node='https://api.s{environ.get('SHARD')}.{environ.get('NETWORK_SWITCH')}.hmny.io'")
+def setAPIPaths(dotenv_file):
+    if environ.get("NETWORK_0_CALL") is False:
+        dotenv.set_key(dotenv_file, "NETWORK_0_CALL", f"{hmyAppPath} --node='https://api.s0.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
+        dotenv.set_key(dotenv_file, "NETWORK_S_CALL", f"{hmyAppPath} --node='https://api.s{environ.get('SHARD')}.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
     return 
 
 

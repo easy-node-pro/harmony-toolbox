@@ -15,6 +15,7 @@ userHomeDir = os.path.expanduser("~")
 dotenv_file = f"{userHomeDir}/.easynode.env"
 if os.path.exists(dotenv_file) == False:
     os.system("touch ~/.easynode.env")
+    dotenv.set_key(dotenv_file, "FIRST_RUN", "1")
 activeUserName = os.path.split(userHomeDir)[-1]
 harmonyDirPath = os.path.join(userHomeDir, "harmony")
 harmonyAppPath = os.path.join(harmonyDirPath, "harmony")
@@ -36,7 +37,7 @@ def checkEnvStatus(setupStatus) -> None:
     if setupStatus == "0":
         getExpressStatus(dotenv_file)
         checkForInstall()
-    setAPIPaths(hmyAppPath, dotenv_file)
+    setAPIPaths(dotenv_file)
     passphraseStatus()
     return
 
@@ -152,7 +153,6 @@ def installHarmony() -> None:
 def cloneShards():
     os.chdir(f"{harmonyDirPath}")
     testOrMain = environ.get("NETWORK")
-    dotenv.set_key(dotenv_file, "SETUP_STATUS", "1")
     if environ.get("NETWORK") == "rasppi_main":
         testOrMain = "mainnet"
     if environ.get("EXPRESS") == "0":  
@@ -202,9 +202,11 @@ def passphraseStatus():
     if environ.get("NODE_TYPE") == "regular":
         if os.path.exists(passwordPath) is not True:
             passphraseSet()
+        dotenv.unset_key(dotenv_file, "PASS_SWITCH")
         dotenv.set_key(dotenv_file, "PASS_SWITCH", f"--passphrase-file {harmonyDirPath}/passphrase.txt")
         return
     if environ.get("NODE_TYPE") == "full":
+        dotenv.unset_key(dotenv_file, "PASS_SWITCH")
         dotenv.set_key(dotenv_file, "PASS_SWITCH", "--passphrase")
         return
 
@@ -282,7 +284,7 @@ def recoverWallet():
         f"{hmyAppPath} keys recover-from-mnemonic {activeUserName} {passphraseSwitch}"
     )
     printStars()
-    validatorWallet = setWalletEnv(dotenv_file, hmyAppPath, activeUserName)
+    validatorWallet = setWalletEnv(dotenv_file)
     print(
         "\n* Verify the address above matches the address below: "
         + "\n* Detected Wallet: "
@@ -339,4 +341,7 @@ def finish_node_install():
     printStars()
     print("* Thanks for using Easy Node - Validator Node Server Software Installer!")
     printStars()
+    dotenv.unset_key(dotenv_file, "SETUP_STATUS")
+    dotenv.unset_key(dotenv_file, "FIRST_RUN")
+    dotenv.set_key(dotenv_file, "SETUP_STATUS", "1")
     raise SystemExit(0)

@@ -6,6 +6,7 @@ import requests
 import time
 import subprocess
 import dotenv
+from icecream import ic
 from os import environ
 from dotenv import load_dotenv
 from datetime import datetime
@@ -547,38 +548,51 @@ def upgradeHarmonyApp(testOrMain):
 
 def runStats() -> str:
     timeNow = datetime.now()
-    ourUptime = subprocess.getoutput("uptime")
     ourShard = environ.get("SHARD")
     networkZeroCall = environ.get("NETWORK_0_CALL")
     networkNumCall = environ.get("NETWORK_S_CALL")
     printStars()
     print(
-        f"* Current Date & Time: {timeNow}\n* Current Status of our server {serverHostName} currently on Shard {ourShard}:\n"
+        f"* Current Date & Time: {timeNow}\n* Current Status of our server {serverHostName} currently on Shard {environ.get('SHARD')}:\n"
     )
     os.system(
         f"{hmyAppPath} blockchain latest-headers | grep epoch && {hmyAppPath} blockchain latest-headers | grep viewID && {hmyAppPath} blockchain latest-headers | grep shardID"
     )
     print(
-        f"\n* Current Status of the Harmony Blockchain Shard {ourShard}:\n"
+        f"\n* Current Status of the Harmony Blockchain Shard {environ.get('SHARD')}:\n"
     )
     os.system(
         f"{networkNumCall} blockchain latest-headers | grep epoch && {networkNumCall} blockchain latest-headers | grep viewID && {networkNumCall} blockchain latest-headers | grep shardID"
     )
-    if ourShard == 0:
-        os.system(
-            f"echo '\n* Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {getDBSize('0')}\n && {harmonyDirPath}/harmony -V"
-        )
-    else:
-        os.system(
-            f"echo '\n* Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {getDBSize('0')}\n Harmony DB {ourShard} Size  ::   {getDBSize(str(ourShard))}\n' && {harmonyDirPath}/harmony -V"
-        )
-    printStars()
+    shardStats(ourShard)
     input("Validator stats completed, press ENTER to return to the main menu. ")
 
 
-def getDBSize(shard) -> str:
-    harmonyDBSize = subprocess.getoutput(f"du -h {harmonyDirPath}/harmony_db_{shard}")
-    return str(harmonyDBSize[:-41])
+def getDBSize(ourShard) -> str:
+    harmonyDBSize = subprocess.getoutput(f"du -h {harmonyDirPath}/harmony_db_{ourShard}")
+    harmonyDBSize = harmonyDBSize.rstrip('\t')
+    return harmonyDBSize[:-41]
+
+def shardStats(ourShard) -> str:
+    ourUptime = subprocess.getoutput("uptime")
+    dbZeroSize = getDBSize('0')
+    if ourShard == "0":
+        os.system(
+            f"echo '\n* Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {dbZeroSize}\n'"
+        )
+        os.system(
+            f"{harmonyAppPath} -V"
+        )
+    else:
+        os.system(
+            f"echo '\n* Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {dbZeroSize}\n Harmony DB {ourShard} Size  ::   {getDBSize(str(ourShard))}\n'"
+        )
+        os.system(
+            f"{harmonyAppPath} -V"
+        )
+    printStars()
+    return
+
 
 
 def menuBinaryUpdates():
