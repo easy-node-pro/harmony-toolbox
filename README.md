@@ -27,8 +27,7 @@ Digital Ocean users can use [this pre-installation quick guide](https://validato
 	-   Mount your volume to any folder inside of /mnt and we'll detect a single mount point inside of that folder, install harmony in /mnt/yourfolder/harmony and symlink that folder to ~/harmony
 
 ### Installation
-**New & Existing Ubuntu Servers:**
-After completing the pre-requisites pull the repository into your home directory.
+**After** completing the Pre-Instlalation Requirements pull the repository into your home directory.
 ```bash
 git clone https://github.com/easy-node-one/validator-toolbox.git
 ```
