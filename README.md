@@ -1,11 +1,13 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c023922143c04967bffb1a2469af938e)](https://app.codacy.com/gh/easy-node-one/validator-toolbox?utm_source=github.com&utm_medium=referral&utm_content=easy-node-one/validator-toolbox&utm_campaign=Badge_Grade_Settings)
+[![Telegram Badge](https://img.shields.io/badge/chat-telegram-brightgreen)](https://t.me/easynodesupport)
+[![Discord Badge](https://img.shields.io/badge/chat-discord-brightgreen)](https://discord.gg/babnYCEZ7Q)
+
 # Easy Node - Validator Toolbox
 by [EasyNode.ONE](http://EasyNode.ONE "EasyNode.ONE")
 
 This repository provides two functions in one application:
 -   Harmony Validator Menu Driven Installer
 -   Harmony Validator Management Interface Menu
-
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c023922143c04967bffb1a2469af938e)](https://app.codacy.com/gh/easy-node-one/validator-toolbox?utm_source=github.com&utm_medium=referral&utm_content=easy-node-one/validator-toolbox&utm_campaign=Badge_Grade_Settings)
 
 [![Easy Node - Harmony Validator Operations Toolbox](http://img.youtube.com/vi/ydvMXFDrHwg/0.jpg)](http://www.youtube.com/watch?v=ydvMXFDrHwg "Easy Node - Harmony Validator Operations Toolbox")
 
