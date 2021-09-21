@@ -1,5 +1,4 @@
 import os
-import pathlib
 import time
 from os import environ
 from utils.installer import *
@@ -8,7 +7,6 @@ from utils.toolbox import runRegularNode, runFullNode
 
 
 if __name__ == "__main__":
-    envFile = pathlib.Path(dotenv_file)
     os.system("clear")
     loaderIntro()
     loadVarFile()
@@ -18,6 +16,8 @@ if __name__ == "__main__":
         printStars()
         time.sleep(1)
         dotenv.set_key(dotenv_file, "SETUP_STATUS", "2")
+        if environ.get("EASY_VERSION"):
+            dotenv.unset_key(dotenv_file, "EASY_VERSION")
         dotenv.set_key(dotenv_file, "EASY_VERSION", easyVersion)
         isFirstRun(dotenv_file)
         loadVarFile()
@@ -52,5 +52,6 @@ if __name__ == "__main__":
             runRegularNode()
         if nodeType == "full":
             runFullNode()
+    dotenv.unset_key(dotenv_file, "FIRST_RUN")
     print("Big problem, contact Easy Node")
     raise SystemExit(0)

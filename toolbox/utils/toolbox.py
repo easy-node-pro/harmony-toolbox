@@ -748,4 +748,6 @@ def finish_node():
     print()
     print("Thanks for using Easy Node - EZ Mode! Goodbye.")
     printStars()
+    if environ.get("FIRST_RUN"):
+        dotenv.unset_key(dotenv_file, "FIRST_RUN")
     raise SystemExit(0)
