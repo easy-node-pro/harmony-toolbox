@@ -21,7 +21,7 @@ Any other provider or hardware pre-install requirements:
 -   ✔️ A new Ubuntu 20.04LTS server
 -   ✔️ Login as a user account with sudoless root access or run and install as root
 	-   Our tips on setting this up for our installer to perform sudo commands is [right here](https://validator-toolbox-guide.easynode.one/full-manual/pre-installation-information/pre-installation/any-other-provider-validator-node-setup/sudoless-root-access "right here"). You can revert this after installation is complete.
-	-   If you skip this step, you will be prompted for your password during rclone setup but it will be hidden in the menu. If it pauses there type your user account password.
+	-   If you skip this step, you will be prompted for your password during rclone setup but it will be hidden in the menu. If it pauses at that point, type your user account password to continue.
 -   ✔️ Volume Support
 	-   Mount a volume at ~/harmony before you start or in a folder in /mnt and we\'ll install there and symlink to ~/harmony
 
