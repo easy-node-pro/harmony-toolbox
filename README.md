@@ -29,6 +29,7 @@ Digital Ocean users can use [this pre-installation quick guide](https://validato
 ### Installation
 **After** completing the Pre-Instlalation Requirements pull the repository into your home directory.
 ```bash
+cd ~/
 git clone https://github.com/easy-node-one/validator-toolbox.git
 ```
 Install requirements.
