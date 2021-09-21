@@ -3,7 +3,7 @@ import pathlib
 import time
 from os import environ
 from utils.installer import *
-from utils.shared import loaderIntro, loadVarFile
+from utils.shared import loaderIntro, loadVarFile, isFirstRun
 from utils.toolbox import runRegularNode, runFullNode
 
 
