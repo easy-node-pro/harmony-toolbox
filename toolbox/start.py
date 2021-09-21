@@ -35,7 +35,7 @@ if __name__ == "__main__":
             # load installer
     if environ.get('SETUP_STATUS') == "1":
         #not first run stuff
-        print("* Configuration file detected, loading the validator-toolbox menu application.")
+        print("* Configuration file detected, loading the validatortoolbox menu application.")
         printStars()
         dotenv.unset_key(dotenv_file, "EASY_VERSION")
         dotenv.set_key(dotenv_file, "EASY_VERSION", easyVersion)

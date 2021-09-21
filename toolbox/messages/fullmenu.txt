@@ -1,4 +1,4 @@
-* Easy Node's validator-toolbox Menu Options:
+* Easy Node's validatortoolbox Menu Options:
 print("*")
 print("*  [1] Check Statistics          - This Nodes Current Stats")
 print("*  [2] Check Any Wallet Balance")

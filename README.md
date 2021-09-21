@@ -1,4 +1,4 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c023922143c04967bffb1a2469af938e)](https://app.codacy.com/gh/easy-node-one/validator-toolbox?utm_source=github.com&utm_medium=referral&utm_content=easy-node-one/validator-toolbox&utm_campaign=Badge_Grade_Settings)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/215c4479f0304b40a535f7e84ce75f55)](https://www.codacy.com/gh/easy-node-one/validatortoolbox/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=easy-node-one/validatortoolbox&amp;utm_campaign=Badge_Grade)
 [![Telegram Badge](https://img.shields.io/badge/chat-telegram-brightgreen?logo=telegram)](https://t.me/easynodesupport)
 [![Discord Badge](https://img.shields.io/badge/chat-discord-brightgreen?logo=discord)](https://discord.gg/babnYCEZ7Q)
 [![Stake Now Badge](https://img.shields.io/badge/stake-harmony-brightgreen)](https://bit.ly/easynode)
@@ -30,18 +30,18 @@ Digital Ocean users can use [this pre-installation quick guide](https://validato
 **After** completing the Pre-Instlalation Requirements pull the repository into your home directory.
 ```bash
 cd ~/
-git clone https://github.com/easy-node-one/validator-toolbox.git
+git clone https://github.com/easy-node-one/validatortoolbox.git
 ```
 Install requirements.
 ```bash
-cd validator-toolbox
+cd validatortoolbox
 sudo apt-get install dnsutils python3-pip python3-dotenv -y
 pip3 install -r requirements.txt
 ```
 Run the installer from anywhere. You'll be presented with our menu to grab configuration details.
 ```bash
-python3 ~/validator-toolbox/toolbox/start.py
+python3 ~/validatortoolbox/toolbox/start.py
 ```
 
 ## Full Installation Guide & Documentation
-See the gitbook for validator-toolbox to [install our software here](https://validator-toolbox-guide.easynode.one/ "validator-toolbox gitbook guide").
+See the gitbook for validatortoolbox to [install our software here](https://validator-toolbox-guide.easynode.one/ "validatortoolbox gitbook guide").
