@@ -13,17 +13,18 @@ This repository provides two functions in one application:
 
 [![Easy Node - Harmony Validator Operations Toolbox](http://img.youtube.com/vi/ydvMXFDrHwg/0.jpg)](http://www.youtube.com/watch?v=ydvMXFDrHwg "Easy Node - Harmony Validator Operations Toolbox")
 
-# Quickstart Guide
+## Quickstart Guide
 #### Pre-Installation Requirements:
 Digital Ocean users can use [this pre-installation quick guide](https://validator-toolbox-guide.easynode.one/full-manual/pre-installation-information/pre-installation/digital-ocean-validator-node-setup "this pre-installation quick guide").
 
-Any other provider or hardware pre-install requirements:
--   ✔️ A new Ubuntu 20.04LTS server
--   ✔️ Login as a user account with sudoless root access or run and install as root
-	-   Our tips on setting this up for our installer to perform sudo commands is [right here](https://validator-toolbox-guide.easynode.one/full-manual/pre-installation-information/pre-installation/any-other-provider-validator-node-setup/sudoless-root-access "right here"). You can revert this after installation is complete.
-	-   If you skip this step, you will be prompted for your password during rclone setup but it will be hidden in the menu. If it pauses at that point, type your user account password to continue.
--   ✔️ Volume Support
-	-   Mount a volume at ~/harmony before you start or in a folder in /mnt and we\'ll install there and symlink to ~/harmony
+**Operating System**
+-   Ubuntu 20.04LTS - The suggested operating system from harmony
+**Account**
+-   Be logged into any user account, we strongly suggest not using root.
+	-   Account must have sudoless root access (if not using the root account)
+	-   If you skip this step, you will be prompted for your password during rclone setup but it will be hidden in the menu. If it pauses there type your user account password.
+**Storage Volume**
+	-   Mount your volume to any folder inside of /mnt and we'll detect a single mount point inside of that folder, install harmony in /mnt/yourfolder/harmony and symlink that folder to ~/harmony
 
 #### Installation - New & Existing servers:
 After completing the pre-requisites pull the repository into your home directory.
@@ -41,8 +42,5 @@ Run the installer from anywhere. You'll be presented with our menu to grab confi
 python3 ~/validator-toolbox/toolbox/start.py
 ```
 
-# Full Installation Guide & Documentation
+## Full Installation Guide & Documentation
 See the gitbook for validator-toolbox to [install our software here](https://validator-toolbox-guide.easynode.one/ "validator-toolbox gitbook guide").
-
-# Community
-Join our [Discord](https://discord.gg/babnYCEZ7Q "Discord") or [Telegram](https://t.me/easynodesupport "Telegram") servers for free comunity driven support.
