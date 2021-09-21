@@ -45,6 +45,7 @@ if __name__ == "__main__":
         setMainOrTest(dotenv_file)
         loadVarFile()
         setAPIPaths(dotenv_file)
+        passphraseStatus()
         nodeType = environ.get("NODE_TYPE")
         if nodeType == "regular":
             if environ.get("VALIDATOR_WALLET") is None:
