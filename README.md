@@ -14,7 +14,7 @@ This repository provides two functions in one application:
 [![Easy Node - Harmony Validator Operations Toolbox](http://img.youtube.com/vi/ydvMXFDrHwg/0.jpg)](http://www.youtube.com/watch?v=ydvMXFDrHwg "Easy Node - Harmony Validator Operations Toolbox")
 
 ## Quickstart Guide
-#### Pre-Installation Requirements:
+### Pre-Installation Requirements:
 Digital Ocean users can use [this pre-installation quick guide](https://validator-toolbox-guide.easynode.one/full-manual/pre-installation-information/pre-installation/digital-ocean-validator-node-setup "this pre-installation quick guide").
 
 **Operating System**
@@ -26,7 +26,7 @@ Digital Ocean users can use [this pre-installation quick guide](https://validato
 **Storage Volume**
 	-   Mount your volume to any folder inside of /mnt and we'll detect a single mount point inside of that folder, install harmony in /mnt/yourfolder/harmony and symlink that folder to ~/harmony
 
-## Installation
+### Installation
 **New & Existing Ubuntu Servers**:
 After completing the pre-requisites pull the repository into your home directory.
 ```bash
