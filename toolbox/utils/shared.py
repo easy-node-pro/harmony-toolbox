@@ -201,23 +201,28 @@ def getShardMenu(dotenv_file) -> None:
 
 
 def getNodeType(dotenv_file) -> None:
-    if environ.get("NODE_TYPE") is None:
-        os.system("clear")
-        print("*********************************************************************************************")
-        print("* Which type of node would you like to run on this server?                                  *")
-        print("*********************************************************************************************")
-        print("* [0] - Standard - Harmony Validator Signing Node (Harmony Validator Server Node)           *")
-        print("* [1] - Full Node Dev/RPC - Non Validating Harmony Node                                     *")
-        print("*********************************************************************************************")
-        menuOptions = ["[0] Standard Signing Node", "[1] Full Node Non Validating Dev/RPC", ]
-        terminal_menu = TerminalMenu(menuOptions, title="Regular or Full Node Server")
-        results = terminal_menu.show()
-        if results == 0:
-            dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
-        if results == 1:
-            dotenv.set_key(dotenv_file, "NODE_TYPE", "full")
-        os.system("clear")
+    if not os.path.exists(hmyWalletStorePath):
+        if environ.get("NODE_TYPE") is None:
+            os.system("clear")
+            print("*********************************************************************************************")
+            print("* Which type of node would you like to run on this server?                                  *")
+            print("*********************************************************************************************")
+            print("* [0] - Standard - Harmony Validator Signing Node (Harmony Validator Server Node)           *")
+            print("* [1] - Full Node Dev/RPC - Non Validating Harmony Node                                     *")
+            print("*********************************************************************************************")
+            menuOptions = ["[0] Standard Signing Node", "[1] Full Node Non Validating Dev/RPC", ]
+            terminal_menu = TerminalMenu(menuOptions, title="Regular or Full Node Server")
+            results = terminal_menu.show()
+            if results == 0:
+                dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
+            if results == 1:
+                dotenv.set_key(dotenv_file, "NODE_TYPE", "full")
+            os.system("clear")
+            return
         return
+    if not environ.get("NODE_TYPE"):
+        dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
+    return
 
 
 def setMainOrTest(dotenv_file) -> None:
