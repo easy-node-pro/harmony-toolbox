@@ -78,7 +78,7 @@ def installHarmonyApp(harmonyDirPath):
             os.system("curl -LO https://harmony.one/binary-arm64 && mv binary-arm64 harmony && chmod +x harmony")
             os.system("./harmony config dump harmony.conf")
     printStars()
-    print("* Harmony application installed & ~/harmony/harmony.conf created.")
+    print(f"* Harmony {testOrMain} application installed & ~/harmony/harmony.conf created.")
 
 
 def setWalletEnv(dotenv_file):
