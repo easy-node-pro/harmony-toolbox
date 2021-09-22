@@ -75,7 +75,7 @@ def installHarmony() -> None:
     testOrMain = environ.get("NETWORK")
     # check disk space, find mounted disks
     mntCount = 0
-    if os.path.isdir("/dev/disk/by-id/") == True:
+    if os.path.isdir("/dev/disk/by-id/"):
         testMnt = '/mnt'
         for subdir, dirs, files in os.walk(testMnt):
             for dir in dirs:
@@ -84,28 +84,30 @@ def installHarmony() -> None:
                     myVolumePath = tester
                     mntCount = mntCount + 1
 
-        # First let's make sure your volume is mounted
-        if mntCount == 0:
-            print(
-                "* You have a volume but it is not mounted. See the digital ocean website for information on mounting your volume."
-            )
-            raise SystemExit(0)
+        # if you have more than one, we'll have to find a way to list them and let people choose
         if mntCount > 1:
             print(
                 "* You have multiple mounts in /mnt - Review mounts, only 1 allowed for our installer at this time!"
             )
             raise SystemExit(0)
         # Checks Passed at this point, only 1 folder in /mnt and it's probably our volume (can scope this down further later)
-        myLongHmyPath = myVolumePath + "/harmony"
         if mntCount == 1:
+            myLongHmyPath = myVolumePath + "/harmony"
             dotenv.set_key(dotenv_file, "MOUNT_POINT", myLongHmyPath)
             print("* Creating all Harmony Files & Folders")
             os.system(f"sudo chown {activeUserName} {myVolumePath}")
             os.system(f"mkdir -p {myLongHmyPath}/.hmy/blskeys")
             os.system(f"ln -s {myLongHmyPath} {harmonyDirPath}")
-        else:
-            dotenv.set_key(dotenv_file, "MOUNT_POINT", harmonyDirPath)
-    # Setup folders now that symlink exists or not
+        # Let's make sure your volume is mounted
+        if mntCount == 0:
+            question = askYesNo(
+                "* You have a volume but it is not mounted.\n* Would you like to install Harmony in ~/harmony on your main disk instead of your volume? (Yes/No) "
+            )
+            if question:
+                dotenv.set_key(dotenv_file, "MOUNT_POINT", harmonyDirPath)
+            else:
+                raise SystemExit(0)
+    # Setup folders now that symlink exists or we know we're using ~/harmony
     if not os.path.isdir(f"{harmonyDirPath}/.hmy/blskeys"):
         print("* Creating all Harmony Files & Folders")
         os.system(f"mkdir -p {harmonyDirPath}/.hmy/blskeys")
