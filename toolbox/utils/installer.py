@@ -101,7 +101,7 @@ def installHarmony() -> None:
         # Let's make sure your volume is mounted
         if mntCount == 0:
             question = askYesNo(
-                "* You have a volume but it is not mounted.\n* Would you like to install Harmony in ~/harmony on your main disk instead of your volume?"
+                "* You have a volume but it is not mounted.\n* Would you like to install Harmony in ~/harmony on your main disk instead of your volume? (Yes/No) "
             )
             if question:
                 dotenv.set_key(dotenv_file, "MOUNT_POINT", harmonyDirPath)
