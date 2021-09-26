@@ -7,7 +7,7 @@ from colorama import Fore, Style
 from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, save_text, installHarmonyApp, installHmyApp
 
 
-easyVersion = "1.1.1"
+easyVersion = "1.1.2"
 serverHostName = socket.gethostname()
 userHomeDir = os.path.expanduser("~")
 dotenv_file = f"{userHomeDir}/.easynode.env"
