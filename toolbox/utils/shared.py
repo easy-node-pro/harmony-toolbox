@@ -82,14 +82,14 @@ def installHarmonyApp(harmonyDirPath):
 
 
 def setWalletEnv(dotenv_file):
-    output = subprocess.getoutput(f"{hmyAppPath} keys list | grep {activeUserName}")
-    outputStripped = output.lstrip(activeUserName)
-    outputStripped = outputStripped.strip()
-    # verify strip matches file if this isn't a first run, if first run set it
-    if environ.get("FIRST_RUN") == "1":
+    if environ.get("VALIDATOR_WALLET") is None:
+        output = subprocess.getoutput(f"{hmyAppPath} keys list | grep {activeUserName}")
+        outputStripped = output.lstrip(activeUserName)
+        outputStripped = outputStripped.strip()
         dotenv.set_key(dotenv_file, "VALIDATOR_WALLET", outputStripped)
+    # verify strip matches file if this isn't a first run, if first run set it   
     load_dotenv(dotenv_file)
-    return environ.get("VALILDATOR_WALLET")
+    return outputStripped
 
 
 def process_command(command: str) -> None:
