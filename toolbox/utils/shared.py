@@ -87,11 +87,12 @@ def setWalletEnv(dotenv_file):
         outputStripped = output.lstrip(activeUserName)
         outputStripped = outputStripped.strip()
         dotenv.set_key(dotenv_file, "VALIDATOR_WALLET", outputStripped)
+        return outputStripped
     else:
-        outputStripped = environ.get("VALIDATOR_WALLET")
-    # verify strip matches file if this isn't a first run, if first run set it   
-    load_dotenv(dotenv_file)
-    return outputStripped
+        load_dotenv(dotenv_file)
+        validatorWallet = environ.get("VALIDATOR_WALLET")
+        return validatorWallet
+    
 
 
 def process_command(command: str) -> None:
