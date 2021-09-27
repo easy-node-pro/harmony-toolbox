@@ -176,10 +176,10 @@ def isFirstRun(dotenv_file):
         print("*********************************************************************************************")
         print("* First run detected!                                                                       *")
         print("*********************************************************************************************")
-        print("* [0] = Installer App - New Harmony Node Setup                                              *")
-        print("* [1] = Validator Toolbox Menu App - Menu to manage already installed harmony server        *")
+        print("* [0] = Start Harmony Installer App - For brand new servers needed validator software       *")
+        print("* [1] = Load Validator Toolbox Menu App - Our simple management server for installed Nodes  *")
         print("*********************************************************************************************")
-        menuOptions = ["[0] - Start Installer Application", "[1] - Start Validator Toolbox Menu", ]
+        menuOptions = ["[0] - Start Installer Application", "[1] - Load Validator Toolbox Menu", ]
         terminal_menu = TerminalMenu(menuOptions, title="* Is this a new server or an already existing harmony node?")
         setupStatus = str(terminal_menu.show())
         dotenv.unset_key(dotenv_file, "SETUP_STATUS", setupStatus)
@@ -210,15 +210,19 @@ def getNodeType(dotenv_file) -> None:
             print("*********************************************************************************************")
             print("* Which type of node would you like to run on this server?                                  *")
             print("*********************************************************************************************")
-            print("* [0] - Standard - Harmony Validator Signing Node (Harmony Validator Server Node)           *")
-            print("* [1] - Full Node Dev/RPC - Non Validating Harmony Node                                     *")
+            print("* [0] - Standard w/ Wallet - Harmony Validator Signing Node with Wallet                     *")
+            print("* [1] - Standard No Wallet - Harmony Validator Signing Node no Wallet                       *")
+            print("* [2] - Full Node Dev/RPC - Non Validating Harmony Node                                     *")
             print("*********************************************************************************************")
-            menuOptions = ["[0] Standard Signing Node", "[1] Full Node Non Validating Dev/RPC", ]
+            menuOptions = ["[0] Signing Node w/ Wallet", "[1] Signing Node No Wallet", "[2] Full Node Non Validating Dev/RPC", ]
             terminal_menu = TerminalMenu(menuOptions, title="Regular or Full Node Server")
             results = terminal_menu.show()
             if results == 0:
                 dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
+                dotenv.set_key(dotenv_file, "NODE_WALLET", "true")
             if results == 1:
+                dotenv.set_key(dotenv_file, "NODE_WALLET", "false")
+            if results == 2:
                 dotenv.set_key(dotenv_file, "NODE_TYPE", "full")
             os.system("clear")
             return

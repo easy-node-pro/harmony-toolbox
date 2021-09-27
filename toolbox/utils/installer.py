@@ -186,15 +186,15 @@ def cloneShards():
 
 def passphraseStatus():
     if environ.get("NODE_TYPE") == "regular":
-        if os.path.exists(passwordPath) is not True:
-            passphraseSet()
-        dotenv.unset_key(dotenv_file, "PASS_SWITCH")
-        dotenv.set_key(dotenv_file, "PASS_SWITCH", f"--passphrase-file {harmonyDirPath}/passphrase.txt")
-        return
-    if environ.get("NODE_TYPE") == "full":
-        dotenv.unset_key(dotenv_file, "PASS_SWITCH")
-        dotenv.set_key(dotenv_file, "PASS_SWITCH", "--passphrase")
-        return
+        if environ.get("NODE_WALLET") == "true":
+            if os.path.exists(passwordPath) is not True:
+                passphraseSet()
+            dotenv.unset_key(dotenv_file, "PASS_SWITCH")
+            dotenv.set_key(dotenv_file, "PASS_SWITCH", f"--passphrase-file {harmonyDirPath}/passphrase.txt")
+            return
+    dotenv.unset_key(dotenv_file, "PASS_SWITCH")
+    dotenv.set_key(dotenv_file, "PASS_SWITCH", "--passphrase")
+    return
 
 
 def passphraseSet():
@@ -259,6 +259,10 @@ def recoverWallet():
     nodeType = environ.get("NODE_TYPE")
     passphraseSwitch = environ.get("PASS_SWITCH")
     if nodeType == "full":
+        printStars()
+        print("* Full node, no wallet recovery")
+        return
+    if environ.get("NODE_WALLET") == "false":
         printStars()
         print("* Full node, no wallet recovery")
         return
