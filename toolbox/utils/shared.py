@@ -4,32 +4,11 @@ import subprocess
 import os
 import subprocess
 import requests
+from utils.config import validatorToolbox
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
 from colorama import Style
-
-
-userHomeDir = os.path.expanduser("~")
-dotenv_file = f"{userHomeDir}/.easynode.env"
-activeUserName = os.path.split(userHomeDir)[-1]
-harmonyDirPath = os.path.join(userHomeDir, "harmony")
-harmonyAppPath = os.path.join(harmonyDirPath, "harmony")
-harmonyConfPath = os.path.join(harmonyDirPath, "harmony.conf")
-hmyAppPath = os.path.join(harmonyDirPath, "hmy")
-blskeyDirPath = os.path.join(hmyAppPath, ".hmy", "blskeys")
-hmyWalletStorePath = os.path.join(userHomeDir, ".hmy_cli", "account-keys", activeUserName)
-toolboxLocation = os.path.join(userHomeDir, "validatortoolbox")
-dotenv_file = f"{userHomeDir}/.easynode.env"
-passwordPath = os.path.join(harmonyDirPath, "passphrase.txt")
-# Static rpc for balances
-main_net_rpc = 'https://rpc.s0.t.hmny.io'
-main_net_call = '/home/serviceharmony/harmony/hmy --node="https://api.s0.t.hmny.io"'
-test_net_rpc = 'https://rpc.s0.b.hmny.io'
-test_net_call = '/home/serviceharmony/harmony/hmy --node="https://api.s0.b.hmny.io"'
-# Get our IP
-mainMenuRegular = os.path.join(toolboxLocation, "toolbox", "messages", "regularmenu.txt")
-mainMenuFull = os.path.join(toolboxLocation, "toolbox", "messages", "fullmenu.txt")
 
 
 def loaderIntro():
@@ -79,11 +58,11 @@ def installHarmonyApp(harmonyDirPath):
     if testOrMain == "testnet":
         os.system("curl -LO https://harmony.one/binary_testnet && mv binary_testnet harmony && chmod +x harmony")
         os.system("./harmony config dump --network testnet harmony.conf")
-        updateTextFile(harmonyConfPath)
+        updateTextFile(validatorToolbox.harmonyConfPath)
     if testOrMain == "mainnet":
         os.system("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
         os.system("./harmony config dump harmony.conf")
-        updateTextFile(harmonyConfPath)
+        updateTextFile(validatorToolbox.harmonyConfPath)
     # when we setup rasppi as an option, this is the install command for harmony
     if environ.get("ARC") == "arm64":
         if environ.get("NETWORK") == "testnet":
@@ -99,8 +78,8 @@ def installHarmonyApp(harmonyDirPath):
 
 def setWalletEnv(dotenv_file):
     if environ.get("VALIDATOR_WALLET") is None:
-        output = subprocess.getoutput(f"{hmyAppPath} keys list | grep {activeUserName}")
-        outputStripped = output.lstrip(activeUserName)
+        output = subprocess.getoutput(f"{validatorToolbox.hmyAppPath} keys list | grep {validatorToolbox.activeUserName}")
+        outputStripped = output.lstrip(validatorToolbox.activeUserName)
         outputStripped = outputStripped.strip()
         dotenv.set_key(dotenv_file, "VALIDATOR_WALLET", outputStripped)
         return outputStripped
@@ -109,7 +88,6 @@ def setWalletEnv(dotenv_file):
         validatorWallet = environ.get("VALIDATOR_WALLET")
         return validatorWallet
     
-
 
 def process_command(command: str) -> None:
     process = subprocess.Popen(command, shell=True)
@@ -178,15 +156,16 @@ def return_txt(fn: str) -> list:
 
 
 def loadVarFile():
-    if os.path.exists(dotenv_file):
-        load_dotenv(dotenv_file)
+    if os.path.exists(validatorToolbox.dotenv_file):
+        load_dotenv(validatorToolbox.dotenv_file)
         return
     else:
         printStars()
         print("* No config file found, this should never print")
 
 
-def isFirstRun(dotenv_file):
+def isFirstRun():
+    loadVarFile()
     if environ.get("FIRST_RUN") == "1":
         os.system("clear")
         print("*********************************************************************************************")
@@ -198,8 +177,8 @@ def isFirstRun(dotenv_file):
         menuOptions = ["[0] - Start Installer Application", "[1] - Load Validator Toolbox Menu", ]
         terminal_menu = TerminalMenu(menuOptions, title="* Is this a new server or an already existing harmony node?")
         setupStatus = str(terminal_menu.show())
-        dotenv.unset_key(dotenv_file, "SETUP_STATUS", setupStatus)
-        dotenv.set_key(dotenv_file, "SETUP_STATUS", setupStatus)
+        dotenv.unset_key(validatorToolbox.dotenv_file, "SETUP_STATUS", setupStatus)
+        dotenv.set_key(validatorToolbox.dotenv_file, "SETUP_STATUS", setupStatus)
         return
     return
 
@@ -220,7 +199,7 @@ def getShardMenu(dotenv_file) -> None:
 
 
 def getNodeType(dotenv_file) -> None:
-    if not os.path.exists(hmyWalletStorePath):
+    if not os.path.exists(validatorToolbox.hmyWalletStorePath):
         if environ.get("NODE_TYPE") == None:
             os.system("clear")
             print("*********************************************************************************************")
@@ -237,6 +216,7 @@ def getNodeType(dotenv_file) -> None:
                 dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
                 dotenv.set_key(dotenv_file, "NODE_WALLET", "true")
             if results == 1:
+                dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
                 dotenv.set_key(dotenv_file, "NODE_WALLET", "false")
             if results == 2:
                 dotenv.set_key(dotenv_file, "NODE_TYPE", "full")
@@ -303,8 +283,8 @@ def getWalletAddress():
 
 def setAPIPaths(dotenv_file):
     if environ.get("NETWORK_0_CALL") is None:
-        dotenv.set_key(dotenv_file, "NETWORK_0_CALL", f"{hmyAppPath} --node='https://api.s0.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
-        dotenv.set_key(dotenv_file, "NETWORK_S_CALL", f"{hmyAppPath} --node='https://api.s{environ.get('SHARD')}.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
+        dotenv.set_key(dotenv_file, "NETWORK_0_CALL", f"{validatorToolbox.hmyAppPath} --node='https://api.s0.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
+        dotenv.set_key(dotenv_file, "NETWORK_S_CALL", f"{validatorToolbox.hmyAppPath} --node='https://api.s{environ.get('SHARD')}.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
     return 
 
 
@@ -341,7 +321,7 @@ def getValidatorInfo(
 
 def currentPrice():
     try:
-        response = requests.get(onePriceURL, timeout=5)
+        response = requests.get(validatorToolbox.onePriceURL, timeout=5)
     except (ValueError, KeyError, TypeError):
         response = "0.0000"
         return response
@@ -362,7 +342,7 @@ def getWalletBalance(
         "id": 1,
     }
     try:
-        response = post(rpc_url, json=d)
+        response = post(validatorToolbox.rpc_url, json=d)
     except (ValueError, KeyError, TypeError):
         return render_template("regular_wallet.html")
 
@@ -370,7 +350,7 @@ def getWalletBalance(
         data = response.json()
 
         if save_data:
-            save_json(validatorData, data)
+            save_json(validatorToolbox.validatorData, data)
 
         if display:
             print(dumps(data, indent=4))
@@ -392,7 +372,7 @@ def getRewardsBalance(
         "id": 1,
     }
     try:
-        response = post(rpc_url, json=d)
+        response = post(validatorToolbox.rpc_url, json=d)
     except (ValueError, KeyError, TypeError):
         return render_template("regular_wallet.html")
 
@@ -400,7 +380,7 @@ def getRewardsBalance(
         data = response.json()
 
         if save_data:
-            save_json(validatorData, data)
+            save_json(validatorToolbox.validatorData, data)
 
         if display:
             print(dumps(data, indent=4))
@@ -445,11 +425,10 @@ def getSignPercent() -> str:
         '        "current-epoch-signing-percentage": "'
     ).rstrip('",')
     try:
-        float(outputStripped)
         math = float(outputStripped)
         signPerc = math * 100
         roundSignPerc = round(signPerc, 6)
         return str(roundSignPerc)
-    except OSError:
+    except (OSError, ValueError):
         outputStripped = "0"
         return str(outputStripped)
