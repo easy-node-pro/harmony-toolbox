@@ -425,7 +425,6 @@ def getSignPercent() -> str:
         '        "current-epoch-signing-percentage": "'
     ).rstrip('",')
     try:
-        float(outputStripped)
         math = float(outputStripped)
         signPerc = math * 100
         roundSignPerc = round(signPerc, 6)
