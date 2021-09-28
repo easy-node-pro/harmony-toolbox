@@ -33,7 +33,9 @@ if __name__ == "__main__":
             printStars()
             passphraseStatus()
             # load installer
-    
+    if environ.get("FIRST_RUN") != "0":
+        dotenv.unset_key(dotenv_file, "FIRST_RUN")
+        dotenv.set_key(dotenv_file, "FIRST_RUN", "0")
     print("* Configuration file detected, loading the validatortoolbox menu application.")
     printStars()
     dotenv.unset_key(dotenv_file, "EASY_VERSION")
