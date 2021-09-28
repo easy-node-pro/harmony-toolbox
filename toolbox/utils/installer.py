@@ -117,6 +117,8 @@ def installHarmony() -> None:
             else:
                 raise SystemExit(0)
     # Setup folders now that symlink exists or we know we're using ~/harmony
+    if not os.path.isdir(f"{validatorToolbox.userHomeDir}/.hmy_cli/account-keys/{validatorToolbox.activeUserName}"):
+        os.system(f"mkdir -p {validatorToolbox.userHomeDir}/.hmy_cli/account-keys/{validatorToolbox.activeUserName}")
     if not os.path.isdir(f"{validatorToolbox.harmonyDirPath}/.hmy/blskeys"):
         print("* Creating all Harmony Files & Folders")
         os.system(f"mkdir -p {validatorToolbox.harmonyDirPath}/.hmy/blskeys")
