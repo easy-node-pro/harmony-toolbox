@@ -1,36 +1,48 @@
 import os
-import socket
 import dotenv
+import time
+from utils.config import validatorToolbox
 from os import environ
 from dotenv import load_dotenv
 from colorama import Fore, Style
-from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, save_text, installHarmonyApp, installHmyApp
+from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, isFirstRun, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp
 
 
-easyVersion = "1.1.3"
-serverHostName = socket.gethostname()
-userHomeDir = os.path.expanduser("~")
-dotenv_file = f"{userHomeDir}/.easynode.env"
-if os.path.exists(dotenv_file) == False:
+def firstSetup():
     os.system("touch ~/.easynode.env")
-    dotenv.set_key(dotenv_file, "FIRST_RUN", "1")
-else:
-    dotenv.unset_key(dotenv_file, "FIRST_RUN")
-    dotenv.set_key(dotenv_file, "FIRST_RUN", "0")
-activeUserName = os.path.split(userHomeDir)[-1]
-harmonyDirPath = os.path.join(userHomeDir, "harmony")
-harmonyAppPath = os.path.join(harmonyDirPath, "harmony")
-hmyAppPath = os.path.join(harmonyDirPath, "hmy")
-blskeyDirPath = os.path.join(hmyAppPath, ".hmy", "blskeys")
-hmyWalletStorePath = os.path.join(userHomeDir, ".hmy_cli", "account-keys", activeUserName)
-toolboxLocation = os.path.join(userHomeDir, "validatortoolbox")
-validatorData = os.path.join(toolboxLocation, "toolbox", "metadata", "validator.json")
-dotenv_file = f"{userHomeDir}/.easynode.env"
-passwordPath = os.path.join(harmonyDirPath, "passphrase.txt")
+    dotenv.set_key(validatorToolbox.dotenv_file, "FIRST_RUN", "1")
+    #first run stuff
+    print("* This is the first time you've launched start.py, loading config menus.")
+    printStars()
+    time.sleep(1)
+    dotenv.set_key(validatorToolbox.dotenv_file, "SETUP_STATUS", "2")
+    if environ.get("EASY_VERSION"):
+        dotenv.unset_key(validatorToolbox.dotenv_file, "EASY_VERSION")
+    dotenv.set_key(validatorToolbox.dotenv_file, "EASY_VERSION", str(validatorToolbox.easyVersion))
+    isFirstRun()
+    recheckVars()
+    getExpressStatus(validatorToolbox.dotenv_file)
+    loadVarFile()
+    checkForInstall()
+    setAPIPaths(validatorToolbox.dotenv_file)
+    dotenv.unset_key(validatorToolbox.dotenv_file, "FIRST_RUN")
+    dotenv.set_key(validatorToolbox.dotenv_file, "FIRST_RUN", "0")
+    printStars()
+    passphraseStatus()
+    # load installer
+
+
+def recheckVars():
+    loadVarFile()
+    getShardMenu(validatorToolbox.dotenv_file)
+    getNodeType(validatorToolbox.dotenv_file)
+    setMainOrTest(validatorToolbox.dotenv_file)
+    loadVarFile()
+    return
 
 
 def checkForInstall() -> str:
-    if os.path.exists(harmonyDirPath) == False:
+    if os.path.exists(validatorToolbox.harmonyDirPath) == False:
         print(
             f"* You selected Shard: {environ.get('SHARD')}. "
         )
@@ -93,51 +105,51 @@ def installHarmony() -> None:
         # Checks Passed at this point, only 1 folder in /mnt and it's probably our volume (can scope this down further later)
         if mntCount == 1:
             myLongHmyPath = myVolumePath + "/harmony"
-            dotenv.set_key(dotenv_file, "MOUNT_POINT", myLongHmyPath)
+            dotenv.set_key(validatorToolbox.dotenv_file, "MOUNT_POINT", myLongHmyPath)
             print("* Creating all Harmony Files & Folders")
-            os.system(f"sudo chown {activeUserName} {myVolumePath}")
+            os.system(f"sudo chown {validatorToolbox.activeUserName} {myVolumePath}")
             os.system(f"mkdir -p {myLongHmyPath}/.hmy/blskeys")
-            os.system(f"ln -s {myLongHmyPath} {harmonyDirPath}")
+            os.system(f"ln -s {myLongHmyPath} {validatorToolbox.harmonyDirPath}")
         # Let's make sure your volume is mounted
         if mntCount == 0:
             question = askYesNo(
                 "* You have a volume but it is not mounted.\n* Would you like to install Harmony in ~/harmony on your main disk instead of your volume? (Yes/No) "
             )
             if question:
-                dotenv.set_key(dotenv_file, "MOUNT_POINT", harmonyDirPath)
+                dotenv.set_key(validatorToolbox.dotenv_file, "MOUNT_POINT", validatorToolbox.harmonyDirPath)
             else:
                 raise SystemExit(0)
     # Setup folders now that symlink exists or we know we're using ~/harmony
-    if not os.path.isdir(f"{harmonyDirPath}/.hmy/blskeys"):
+    if not os.path.isdir(f"{validatorToolbox.harmonyDirPath}/.hmy/blskeys"):
         print("* Creating all Harmony Files & Folders")
-        os.system(f"mkdir -p {harmonyDirPath}/.hmy/blskeys")
-    os.chdir(f"{harmonyDirPath}")
+        os.system(f"mkdir -p {validatorToolbox.harmonyDirPath}/.hmy/blskeys")
+    os.chdir(f"{validatorToolbox.harmonyDirPath}")
     printStars()
-    installHmyApp(harmonyDirPath)
+    installHmyApp(validatorToolbox.harmonyDirPath)
     printStars()
-    installHarmonyApp(harmonyDirPath)
+    installHarmonyApp(validatorToolbox.harmonyDirPath)
     # install hmy files
     print("* Installing rclone application & rclone configuration files")
     printStars()
     os.system("curl https://rclone.org/install.sh | sudo bash")
     os.system(
-        f"mkdir -p {userHomeDir}/.config/rclone && cp {toolboxLocation}/toolbox/bin/rclone.conf {userHomeDir}/.config/rclone/"
+        f"mkdir -p {validatorToolbox.userHomeDir}/.config/rclone && cp {validatorToolbox.toolboxLocation}/toolbox/bin/rclone.conf {validatorToolbox.userHomeDir}/.config/rclone/"
     )
     # setup the harmony service
     printStars()
     print("* Customizing, Moving & Enabling your harmony.service systemd file")
-    if activeUserName == 'root':
+    if validatorToolbox.activeUserName == 'root':
         os.system(
-        f"sudo cp {toolboxLocation}/toolbox/bin/harmony.service . && sed -i 's/home\/serviceharmony/{activeUserName}/g' 'harmony.service' && sed -i 's/serviceharmony/{activeUserName}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
+        f"sudo cp {validatorToolbox.toolboxLocation}/toolbox/bin/harmony.service . && sed -i 's/home\/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony.service' && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
     )
     else:
         os.system(
-            f"sudo cp {toolboxLocation}/toolbox/bin/harmony.service . && sed -i 's/serviceharmony/{activeUserName}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
+            f"sudo cp {validatorToolbox.toolboxLocation}/toolbox/bin/harmony.service . && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
         )
 
 
 def cloneShards():
-    os.chdir(f"{harmonyDirPath}")
+    os.chdir(f"{validatorToolbox.harmonyDirPath}")
     testOrMain = environ.get("NETWORK")
     if environ.get("NETWORK") == "rasppi_main":
         testOrMain = "mainnet"
@@ -147,7 +159,7 @@ def cloneShards():
         print(f"* Now cloning shard {environ.get('SHARD')}")
         printStars()
         os.system(
-            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {harmonyDirPath}/harmony_db_{environ.get('SHARD')}"
+            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')}"
         )
         printStars()
         print(f"Shard {environ.get('SHARD')} completed.")
@@ -157,7 +169,7 @@ def cloneShards():
         print("* Now cloning Shard 0, kick back and relax for awhile...")
         printStars()
         os.system(
-            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_0 {harmonyDirPath}/harmony_db_0"
+            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0"
         )
         return
     else:
@@ -169,7 +181,7 @@ def cloneShards():
         if question:
             print(f"* Now cloning shard {environ.get('SHARD')}")
             os.system(
-                f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {harmonyDirPath}/harmony_db_{environ.get('SHARD')}"
+                f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')}"
             )
         question = askYesNo(
             "* Would you like to download the shard 0 database now? (YES/NO) "
@@ -177,7 +189,7 @@ def cloneShards():
         if question:
             print("* Now cloning Shard 0, kick back and relax for awhile...")
             os.system(
-                f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_0 {harmonyDirPath}/harmony_db_0"
+                f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0"
             )
         else:
             return
@@ -187,18 +199,18 @@ def cloneShards():
 def passphraseStatus():
     if environ.get("NODE_TYPE") == "regular":
         if environ.get("NODE_WALLET") == "true":
-            if os.path.exists(passwordPath) is not True:
+            if os.path.exists(validatorToolbox.passwordPath) is not True:
                 passphraseSet()
-            dotenv.unset_key(dotenv_file, "PASS_SWITCH")
-            dotenv.set_key(dotenv_file, "PASS_SWITCH", f"--passphrase-file {harmonyDirPath}/passphrase.txt")
+            dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
+            dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH", f"--passphrase-file {validatorToolbox.harmonyDirPath}/passphrase.txt")
             return
-    dotenv.unset_key(dotenv_file, "PASS_SWITCH")
-    dotenv.set_key(dotenv_file, "PASS_SWITCH", "--passphrase")
+    dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
+    dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH", "--passphrase")
     return
 
 
 def passphraseSet():
-    if os.path.exists(passwordPath):
+    if os.path.exists(validatorToolbox.passwordPath):
         return
     import getpass
     os.system("clear")
@@ -218,14 +230,14 @@ def passphraseSet():
             print("* Passwords Match!")
             break
     # Save file, we won't encrypt because if someone has access to the file, they will also have the salt and decrpyt code at their disposal.
-    save_text(passwordPath, password1)
+    save_text(validatorToolbox.passwordPath, password1)
     return
 
 
 def restoreWallet() -> str:
     nodeType = environ.get("NODE_TYPE")
     if nodeType == "regular":
-        if not os.path.isdir(hmyWalletStorePath):
+        if not os.path.isdir(validatorToolbox.hmyWalletStorePath):
             os.system("clear")
             printStars()
             print(
@@ -254,7 +266,7 @@ def restoreWallet() -> str:
 
 
 def recoverWallet():
-    load_dotenv(dotenv_file)
+    load_dotenv(validatorToolbox.dotenv_file)
     os.system("clear")
     nodeType = environ.get("NODE_TYPE")
     passphraseSwitch = environ.get("PASS_SWITCH")
@@ -271,10 +283,10 @@ def recoverWallet():
     printStars()
     print("* Recover your validator wallet now:")
     os.system(
-        f"{hmyAppPath} keys recover-from-mnemonic {activeUserName} {passphraseSwitch}"
+        f"{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}"
     )
     printStars()
-    validatorWallet = setWalletEnv(dotenv_file)
+    validatorWallet = setWalletEnv(validatorToolbox.dotenv_file)
     print(
         "\n* Verify the address above matches the address below: "
         + "\n* Detected Wallet: "
@@ -283,11 +295,11 @@ def recoverWallet():
         + Style.RESET_ALL
         + "\n* If a different wallet is showing you can remove it and retry it after installation."
         + "\n*"
-        + f"\n* .{hmyAppPath} keys remove {activeUserName}"
+        + f"\n* .{validatorToolbox.hmyAppPath} keys remove {validatorToolbox.activeUserName}"
         + "\n*"
         + "\n* To restore a wallet once again, run the following:"
         + "\n*"
-        + f"\n* .{hmyAppPath} keys recover-from-mnemonic {activeUserName} {passphraseSwitch}"
+        + f"\n* .{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}"
         + "\n* "
     )
     printStars()
@@ -302,11 +314,11 @@ def setMountedPoint():
         myVolumePath = "/mnt/" + str(volumeMountPath[0])
         myLongHmyPath = myVolumePath + "/harmony"
     else:
-        myVolumePath = harmonyDirPath
+        myVolumePath = validatorToolbox.harmonyDirPath
     if totalDir == 1:
-        dotenv.set_key(dotenv_file, "MOUNT_POINT", myLongHmyPath)
+        dotenv.set_key(validatorToolbox.dotenv_file, "MOUNT_POINT", myLongHmyPath)
     else:
-        dotenv.set_key(dotenv_file, "MOUNT_POINT", f"{harmonyDirPath}")
+        dotenv.set_key(validatorToolbox.dotenv_file, "MOUNT_POINT", f"{validatorToolbox.harmonyDirPath}")
     return
 
 
@@ -322,7 +334,7 @@ def finish_node_install():
     printStars()
     print("* Post installation quick tips:"
         + "\n* To recover your wallet run:"
-        + f"\n* ./hmy keys recover-from-mnemonic {activeUserName} {passphraseSwitch}"
+        + f"\n* ./hmy keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}"
         + "\n*"
         + "\n* To create BLS keys run:"
         + f"\n* ./hmy keys generate-bls-keys --count 1 --shard {ourShard} {passphraseSwitch}"
@@ -331,7 +343,7 @@ def finish_node_install():
     printStars()
     print("* Thanks for using Easy Node - Validator Node Server Software Installer!")
     printStars()
-    dotenv.unset_key(dotenv_file, "SETUP_STATUS")
-    dotenv.unset_key(dotenv_file, "FIRST_RUN")
-    dotenv.set_key(dotenv_file, "SETUP_STATUS", "1")
+    dotenv.unset_key(validatorToolbox.dotenv_file, "SETUP_STATUS")
+    dotenv.unset_key(validatorToolbox.dotenv_file, "FIRST_RUN")
+    dotenv.set_key(validatorToolbox.dotenv_file, "SETUP_STATUS", "1")
     raise SystemExit(0)
