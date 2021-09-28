@@ -15,8 +15,8 @@ if os.path.exists(dotenv_file) == False:
     os.system("touch ~/.easynode.env")
     dotenv.set_key(dotenv_file, "FIRST_RUN", "1")
 else:
-    if environ.get("FIRST_RUN"):
-        dotenv.unset_key(dotenv_file, "FIRST_RUN")
+    dotenv.unset_key(dotenv_file, "FIRST_RUN")
+    dotenv.set_key(dotenv_file, "FIRST_RUN", "0")
 activeUserName = os.path.split(userHomeDir)[-1]
 harmonyDirPath = os.path.join(userHomeDir, "harmony")
 harmonyAppPath = os.path.join(harmonyDirPath, "harmony")

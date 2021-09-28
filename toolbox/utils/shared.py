@@ -15,7 +15,7 @@ dotenv_file = f"{userHomeDir}/.easynode.env"
 activeUserName = os.path.split(userHomeDir)[-1]
 harmonyDirPath = os.path.join(userHomeDir, "harmony")
 harmonyAppPath = os.path.join(harmonyDirPath, "harmony")
-harmonyConfPath = os.path.join(harmonyAppPath, "harmony.conf")
+harmonyConfPath = os.path.join(harmonyDirPath, "harmony.conf")
 hmyAppPath = os.path.join(harmonyDirPath, "hmy")
 blskeyDirPath = os.path.join(hmyAppPath, ".hmy", "blskeys")
 hmyWalletStorePath = os.path.join(userHomeDir, ".hmy_cli", "account-keys", activeUserName)
@@ -222,33 +222,30 @@ def getShardMenu(dotenv_file) -> None:
 def getNodeType(dotenv_file) -> None:
     if not os.path.exists(hmyWalletStorePath):
         if environ.get("NODE_TYPE") == None:
-            if environ.get("NODE_WALLET") == "true":    
-                os.system("clear")
-                print("*********************************************************************************************")
-                print("* Which type of node would you like to run on this server?                                  *")
-                print("*********************************************************************************************")
-                print("* [0] - Standard w/ Wallet - Harmony Validator Signing Node with Wallet                     *")
-                print("* [1] - Standard No Wallet - Harmony Validator Signing Node no Wallet                       *")
-                print("* [2] - Full Node Dev/RPC - Non Validating Harmony Node                                     *")
-                print("*********************************************************************************************")
-                menuOptions = ["[0] Signing Node w/ Wallet", "[1] Signing Node No Wallet", "[2] Full Node Non Validating Dev/RPC", ]
-                terminal_menu = TerminalMenu(menuOptions, title="Regular or Full Node Server")
-                results = terminal_menu.show()
-                if results == 0:
-                    dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
-                    dotenv.set_key(dotenv_file, "NODE_WALLET", "true")
-                if results == 1:
-                    dotenv.set_key(dotenv_file, "NODE_WALLET", "false")
-                if results == 2:
-                    dotenv.set_key(dotenv_file, "NODE_TYPE", "full")
-                os.system("clear")
+            os.system("clear")
+            print("*********************************************************************************************")
+            print("* Which type of node would you like to run on this server?                                  *")
+            print("*********************************************************************************************")
+            print("* [0] - Standard w/ Wallet - Harmony Validator Signing Node with Wallet                     *")
+            print("* [1] - Standard No Wallet - Harmony Validator Signing Node no Wallet                       *")
+            print("* [2] - Full Node Dev/RPC - Non Validating Harmony Node                                     *")
+            print("*********************************************************************************************")
+            menuOptions = ["[0] Signing Node w/ Wallet", "[1] Signing Node No Wallet", "[2] Full Node Non Validating Dev/RPC", ]
+            terminal_menu = TerminalMenu(menuOptions, title="Regular or Full Node Server")
+            results = terminal_menu.show()
+            if results == 0:
+                dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
+                dotenv.set_key(dotenv_file, "NODE_WALLET", "true")
+            if results == 1:
+                dotenv.set_key(dotenv_file, "NODE_WALLET", "false")
+            if results == 2:
+                dotenv.set_key(dotenv_file, "NODE_TYPE", "full")
+            os.system("clear")
+            return
+        else:
+            if environ.get("VALIDATOR_WALLET"):
                 return
-            else:
-                if environ.get("VALIDATOR_WALLET"):
-                    return
-                getWalletAddress()
-        dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
-        return
+            getWalletAddress()
     if not environ.get("NODE_TYPE"):
         dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
     return
