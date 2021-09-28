@@ -4,7 +4,7 @@ import dotenv
 from os import environ
 from utils.config import validatorToolbox
 from utils.installer import firstSetup, printStars, recheckVars, setAPIPaths, passphraseStatus, setWalletEnv
-from utils.shared import loaderIntro, loadVarFile
+from utils.shared import loaderIntro, loadVarFile, getNodeType
 from utils.toolbox import runRegularNode, runFullNode
 
 
@@ -14,9 +14,6 @@ if __name__ == "__main__":
     loadVarFile()
     if os.path.exists(validatorToolbox.dotenv_file) == False:
         firstSetup()
-    if environ.get("FIRST_RUN") != "0":
-        dotenv.unset_key(validatorToolbox.dotenv_file, "FIRST_RUN")
-        dotenv.set_key(validatorToolbox.dotenv_file, "FIRST_RUN", "0")
     print("* Configuration file detected, loading the validatortoolbox menu application.")
     printStars()
     if validatorToolbox.easyVersion != environ.get("EASY_VERSION"):
@@ -26,14 +23,12 @@ if __name__ == "__main__":
     recheckVars()
     setAPIPaths(validatorToolbox.dotenv_file)
     passphraseStatus()
-    nodeType = environ.get("NODE_TYPE")
-    if nodeType == "regular":
+    getNodeType(validatorToolbox.dotenv_file)
+    if environ.get("NODE_TYPE") == "regular":
         if environ.get("VALIDATOR_WALLET") is None:
             setWalletEnv(validatorToolbox.dotenv_file)
         runRegularNode()
-    if nodeType == "full":
+    if environ.get("NODE_TYPE") == "full":
         runFullNode()
-    if environ.get("FIRST_RUN"):
-        dotenv.unset_key(validatorToolbox.dotenv_file, "FIRST_RUN")
-    print("Big problem, contact Easy Node")
+    print("You broke the internet, congrats! Contact Easy Node about this status code.")
     raise SystemExit(0)

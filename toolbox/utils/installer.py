@@ -5,12 +5,11 @@ from utils.config import validatorToolbox
 from os import environ
 from dotenv import load_dotenv
 from colorama import Fore, Style
-from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, isFirstRun, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp
+from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, firstRunMenu, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp
 
 
 def firstSetup():
     os.system("touch ~/.easynode.env")
-    dotenv.set_key(validatorToolbox.dotenv_file, "FIRST_RUN", "1")
     #first run stuff
     print("* This is the first time you've launched start.py, loading config menus.")
     printStars()
@@ -19,14 +18,11 @@ def firstSetup():
     if environ.get("EASY_VERSION"):
         dotenv.unset_key(validatorToolbox.dotenv_file, "EASY_VERSION")
     dotenv.set_key(validatorToolbox.dotenv_file, "EASY_VERSION", str(validatorToolbox.easyVersion))
-    isFirstRun()
+    firstRunMenu()
     recheckVars()
     getExpressStatus(validatorToolbox.dotenv_file)
-    loadVarFile()
     checkForInstall()
     setAPIPaths(validatorToolbox.dotenv_file)
-    dotenv.unset_key(validatorToolbox.dotenv_file, "FIRST_RUN")
-    dotenv.set_key(validatorToolbox.dotenv_file, "FIRST_RUN", "0")
     printStars()
     passphraseStatus()
     # load installer
@@ -42,6 +38,7 @@ def recheckVars():
 
 
 def checkForInstall() -> str:
+    loadVarFile()
     if os.path.exists(validatorToolbox.harmonyDirPath) == False:
         print(
             f"* You selected Shard: {environ.get('SHARD')}. "

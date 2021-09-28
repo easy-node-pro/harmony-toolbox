@@ -164,23 +164,21 @@ def loadVarFile():
         print("* No config file found, this should never print")
 
 
-def isFirstRun():
-    loadVarFile()
-    if environ.get("FIRST_RUN") == "1":
-        os.system("clear")
-        print("*********************************************************************************************")
-        print("* First run detected!                                                                       *")
-        print("*********************************************************************************************")
-        print("* [0] = Start Harmony Installer App - For brand new servers needed validator software       *")
-        print("* [1] = Load Validator Toolbox Menu App - Our simple management server for installed Nodes  *")
-        print("*********************************************************************************************")
-        menuOptions = ["[0] - Start Installer Application", "[1] - Load Validator Toolbox Menu", ]
-        terminal_menu = TerminalMenu(menuOptions, title="* Is this a new server or an already existing harmony node?")
-        setupStatus = str(terminal_menu.show())
-        dotenv.unset_key(validatorToolbox.dotenv_file, "SETUP_STATUS", setupStatus)
-        dotenv.set_key(validatorToolbox.dotenv_file, "SETUP_STATUS", setupStatus)
-        return
+def firstRunMenu():
+    os.system("clear")
+    print("*********************************************************************************************")
+    print("* First run detected!                                                                       *")
+    print("*********************************************************************************************")
+    print("* [0] = Start Harmony Installer App - For brand new servers needed validator software       *")
+    print("* [1] = Load Validator Toolbox Menu App - Our simple management server for installed Nodes  *")
+    print("*********************************************************************************************")
+    menuOptions = ["[0] - Start Installer Application", "[1] - Load Validator Toolbox Menu", ]
+    terminal_menu = TerminalMenu(menuOptions, title="* Is this a new server or an already existing harmony node?")
+    setupStatus = str(terminal_menu.show())
+    dotenv.unset_key(validatorToolbox.dotenv_file, "SETUP_STATUS", setupStatus)
+    dotenv.set_key(validatorToolbox.dotenv_file, "SETUP_STATUS", setupStatus)
     return
+
 
 
 def getShardMenu(dotenv_file) -> None:
