@@ -430,6 +430,6 @@ def getSignPercent() -> str:
         signPerc = math * 100
         roundSignPerc = round(signPerc, 6)
         return str(roundSignPerc)
-    except OSError:
+    except (OSError, ValueError):
         outputStripped = "0"
         return str(outputStripped)
