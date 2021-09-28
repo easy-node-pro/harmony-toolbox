@@ -53,6 +53,7 @@ if __name__ == "__main__":
             runRegularNode()
         if nodeType == "full":
             runFullNode()
-    dotenv.unset_key(dotenv_file, "FIRST_RUN")
+    if environ.get("FIRST_RUN"):
+        dotenv.unset_key(dotenv_file, "FIRST_RUN")
     print("Big problem, contact Easy Node")
     raise SystemExit(0)
