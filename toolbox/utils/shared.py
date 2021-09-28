@@ -15,6 +15,7 @@ dotenv_file = f"{userHomeDir}/.easynode.env"
 activeUserName = os.path.split(userHomeDir)[-1]
 harmonyDirPath = os.path.join(userHomeDir, "harmony")
 harmonyAppPath = os.path.join(harmonyDirPath, "harmony")
+harmonyConfPath = os.path.join(harmonyAppPath, "harmony.conf")
 hmyAppPath = os.path.join(harmonyDirPath, "hmy")
 blskeyDirPath = os.path.join(hmyAppPath, ".hmy", "blskeys")
 hmyWalletStorePath = os.path.join(userHomeDir, ".hmy_cli", "account-keys", activeUserName)
@@ -59,15 +60,30 @@ def installHmyApp(harmonyDirPath):
     print("* hmy application installed.")
 
 
+def updateTextFile(fileName):
+    f = open(fileName,'r')
+    filedata = f.read()
+    f.close()
+
+    newdata = filedata.replace("MaxKeys = 10","MaxKeys = 30")
+
+    f = open(fileName,'w')
+    f.write(newdata)
+    f.close()
+    return
+
+
 def installHarmonyApp(harmonyDirPath):
     testOrMain = environ.get("NETWORK")
     os.chdir(f"{harmonyDirPath}")
     if testOrMain == "testnet":
         os.system("curl -LO https://harmony.one/binary_testnet && mv binary_testnet harmony && chmod +x harmony")
         os.system("./harmony config dump --network testnet harmony.conf")
+        updateTextFile(harmonyConfPath)
     if testOrMain == "mainnet":
         os.system("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
         os.system("./harmony config dump harmony.conf")
+        updateTextFile(harmonyConfPath)
     # when we setup rasppi as an option, this is the install command for harmony
     if environ.get("ARC") == "arm64":
         if environ.get("NETWORK") == "testnet":
