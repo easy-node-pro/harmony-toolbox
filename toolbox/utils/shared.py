@@ -15,6 +15,7 @@ dotenv_file = f"{userHomeDir}/.easynode.env"
 activeUserName = os.path.split(userHomeDir)[-1]
 harmonyDirPath = os.path.join(userHomeDir, "harmony")
 harmonyAppPath = os.path.join(harmonyDirPath, "harmony")
+harmonyConfPath = os.path.join(harmonyDirPath, "harmony.conf")
 hmyAppPath = os.path.join(harmonyDirPath, "hmy")
 blskeyDirPath = os.path.join(hmyAppPath, ".hmy", "blskeys")
 hmyWalletStorePath = os.path.join(userHomeDir, ".hmy_cli", "account-keys", activeUserName)
@@ -59,15 +60,30 @@ def installHmyApp(harmonyDirPath):
     print("* hmy application installed.")
 
 
+def updateTextFile(fileName):
+    f = open(fileName,'r')
+    filedata = f.read()
+    f.close()
+
+    newdata = filedata.replace("MaxKeys = 10","MaxKeys = 30")
+
+    f = open(fileName,'w')
+    f.write(newdata)
+    f.close()
+    return
+
+
 def installHarmonyApp(harmonyDirPath):
     testOrMain = environ.get("NETWORK")
     os.chdir(f"{harmonyDirPath}")
     if testOrMain == "testnet":
         os.system("curl -LO https://harmony.one/binary_testnet && mv binary_testnet harmony && chmod +x harmony")
         os.system("./harmony config dump --network testnet harmony.conf")
+        updateTextFile(harmonyConfPath)
     if testOrMain == "mainnet":
         os.system("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
         os.system("./harmony config dump harmony.conf")
+        updateTextFile(harmonyConfPath)
     # when we setup rasppi as an option, this is the install command for harmony
     if environ.get("ARC") == "arm64":
         if environ.get("NETWORK") == "testnet":
@@ -176,10 +192,10 @@ def isFirstRun(dotenv_file):
         print("*********************************************************************************************")
         print("* First run detected!                                                                       *")
         print("*********************************************************************************************")
-        print("* [0] = Installer App - New Harmony Node Setup                                              *")
-        print("* [1] = Validator Toolbox Menu App - Menu to manage already installed harmony server        *")
+        print("* [0] = Start Harmony Installer App - For brand new servers needed validator software       *")
+        print("* [1] = Load Validator Toolbox Menu App - Our simple management server for installed Nodes  *")
         print("*********************************************************************************************")
-        menuOptions = ["[0] - Start Installer Application", "[1] - Start Validator Toolbox Menu", ]
+        menuOptions = ["[0] - Start Installer Application", "[1] - Load Validator Toolbox Menu", ]
         terminal_menu = TerminalMenu(menuOptions, title="* Is this a new server or an already existing harmony node?")
         setupStatus = str(terminal_menu.show())
         dotenv.unset_key(dotenv_file, "SETUP_STATUS", setupStatus)
@@ -205,24 +221,31 @@ def getShardMenu(dotenv_file) -> None:
 
 def getNodeType(dotenv_file) -> None:
     if not os.path.exists(hmyWalletStorePath):
-        if environ.get("NODE_TYPE") is None:
+        if environ.get("NODE_TYPE") == None:
             os.system("clear")
             print("*********************************************************************************************")
             print("* Which type of node would you like to run on this server?                                  *")
             print("*********************************************************************************************")
-            print("* [0] - Standard - Harmony Validator Signing Node (Harmony Validator Server Node)           *")
-            print("* [1] - Full Node Dev/RPC - Non Validating Harmony Node                                     *")
+            print("* [0] - Standard w/ Wallet - Harmony Validator Signing Node with Wallet                     *")
+            print("* [1] - Standard No Wallet - Harmony Validator Signing Node no Wallet                       *")
+            print("* [2] - Full Node Dev/RPC - Non Validating Harmony Node                                     *")
             print("*********************************************************************************************")
-            menuOptions = ["[0] Standard Signing Node", "[1] Full Node Non Validating Dev/RPC", ]
+            menuOptions = ["[0] Signing Node w/ Wallet", "[1] Signing Node No Wallet", "[2] Full Node Non Validating Dev/RPC", ]
             terminal_menu = TerminalMenu(menuOptions, title="Regular or Full Node Server")
             results = terminal_menu.show()
             if results == 0:
                 dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
+                dotenv.set_key(dotenv_file, "NODE_WALLET", "true")
             if results == 1:
+                dotenv.set_key(dotenv_file, "NODE_WALLET", "false")
+            if results == 2:
                 dotenv.set_key(dotenv_file, "NODE_TYPE", "full")
             os.system("clear")
             return
-        return
+        else:
+            if environ.get("VALIDATOR_WALLET"):
+                return
+            getWalletAddress()
     if not environ.get("NODE_TYPE"):
         dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
     return
@@ -264,6 +287,18 @@ def getExpressStatus(dotenv_file) -> None:
         terminal_menu = TerminalMenu(menuOptions, title="* Express Or Manual Setup")
         dotenv.set_key(dotenv_file, "EXPRESS", str(terminal_menu.show()))
     return
+
+
+def getWalletAddress():
+    os.system("clear")
+    print("*********************************************************************************************")
+    print("* Signing Node, No Wallet!                                                                  *")
+    print("* You are attempting to launch the menu but no wallet has been loaded                       *")
+    print("*********************************************************************************************")
+    print("* Edit ~/.easynode.conf and add your wallet address on a new line like this example:        *")
+    print("* VALIDATOR_WALLET='one1thisisjustanexamplewalletreplaceme'                                 *")
+    print("*********************************************************************************************")
+    raise SystemExit(0)
 
 
 def setAPIPaths(dotenv_file):

@@ -7,7 +7,7 @@ from colorama import Fore, Style
 from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, save_text, installHarmonyApp, installHmyApp
 
 
-easyVersion = "1.1.2"
+easyVersion = "1.1.3"
 serverHostName = socket.gethostname()
 userHomeDir = os.path.expanduser("~")
 dotenv_file = f"{userHomeDir}/.easynode.env"
@@ -15,8 +15,8 @@ if os.path.exists(dotenv_file) == False:
     os.system("touch ~/.easynode.env")
     dotenv.set_key(dotenv_file, "FIRST_RUN", "1")
 else:
-    if environ.get("FIRST_RUN"):
-        dotenv.unset_key(dotenv_file, "FIRST_RUN")
+    dotenv.unset_key(dotenv_file, "FIRST_RUN")
+    dotenv.set_key(dotenv_file, "FIRST_RUN", "0")
 activeUserName = os.path.split(userHomeDir)[-1]
 harmonyDirPath = os.path.join(userHomeDir, "harmony")
 harmonyAppPath = os.path.join(harmonyDirPath, "harmony")
@@ -186,15 +186,15 @@ def cloneShards():
 
 def passphraseStatus():
     if environ.get("NODE_TYPE") == "regular":
-        if os.path.exists(passwordPath) is not True:
-            passphraseSet()
-        dotenv.unset_key(dotenv_file, "PASS_SWITCH")
-        dotenv.set_key(dotenv_file, "PASS_SWITCH", f"--passphrase-file {harmonyDirPath}/passphrase.txt")
-        return
-    if environ.get("NODE_TYPE") == "full":
-        dotenv.unset_key(dotenv_file, "PASS_SWITCH")
-        dotenv.set_key(dotenv_file, "PASS_SWITCH", "--passphrase")
-        return
+        if environ.get("NODE_WALLET") == "true":
+            if os.path.exists(passwordPath) is not True:
+                passphraseSet()
+            dotenv.unset_key(dotenv_file, "PASS_SWITCH")
+            dotenv.set_key(dotenv_file, "PASS_SWITCH", f"--passphrase-file {harmonyDirPath}/passphrase.txt")
+            return
+    dotenv.unset_key(dotenv_file, "PASS_SWITCH")
+    dotenv.set_key(dotenv_file, "PASS_SWITCH", "--passphrase")
+    return
 
 
 def passphraseSet():
@@ -259,6 +259,10 @@ def recoverWallet():
     nodeType = environ.get("NODE_TYPE")
     passphraseSwitch = environ.get("PASS_SWITCH")
     if nodeType == "full":
+        printStars()
+        print("* Full node, no wallet recovery")
+        return
+    if environ.get("NODE_WALLET") == "false":
         printStars()
         print("* Full node, no wallet recovery")
         return

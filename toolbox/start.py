@@ -33,26 +33,28 @@ if __name__ == "__main__":
             printStars()
             passphraseStatus()
             # load installer
-    if environ.get('SETUP_STATUS') == "1":
-        #not first run stuff
-        print("* Configuration file detected, loading the validatortoolbox menu application.")
-        printStars()
-        dotenv.unset_key(dotenv_file, "EASY_VERSION")
-        dotenv.set_key(dotenv_file, "EASY_VERSION", easyVersion)
-        time.sleep(1)
-        getShardMenu(dotenv_file)
-        getNodeType(dotenv_file)
-        setMainOrTest(dotenv_file)
-        loadVarFile()
-        setAPIPaths(dotenv_file)
-        passphraseStatus()
-        nodeType = environ.get("NODE_TYPE")
-        if nodeType == "regular":
-            if environ.get("VALIDATOR_WALLET") is None:
-                setWalletEnv(dotenv_file)
-            runRegularNode()
-        if nodeType == "full":
-            runFullNode()
-    dotenv.unset_key(dotenv_file, "FIRST_RUN")
+    if environ.get("FIRST_RUN") != "0":
+        dotenv.unset_key(dotenv_file, "FIRST_RUN")
+        dotenv.set_key(dotenv_file, "FIRST_RUN", "0")
+    print("* Configuration file detected, loading the validatortoolbox menu application.")
+    printStars()
+    dotenv.unset_key(dotenv_file, "EASY_VERSION")
+    dotenv.set_key(dotenv_file, "EASY_VERSION", easyVersion)
+    time.sleep(1)
+    getShardMenu(dotenv_file)
+    getNodeType(dotenv_file)
+    setMainOrTest(dotenv_file)
+    loadVarFile()
+    setAPIPaths(dotenv_file)
+    passphraseStatus()
+    nodeType = environ.get("NODE_TYPE")
+    if nodeType == "regular":
+        if environ.get("VALIDATOR_WALLET") is None:
+            setWalletEnv(dotenv_file)
+        runRegularNode()
+    if nodeType == "full":
+        runFullNode()
+    if environ.get("FIRST_RUN"):
+        dotenv.unset_key(dotenv_file, "FIRST_RUN")
     print("Big problem, contact Easy Node")
     raise SystemExit(0)
