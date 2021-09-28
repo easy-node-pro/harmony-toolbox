@@ -244,6 +244,8 @@ def getNodeType(dotenv_file) -> None:
                     os.system("clear")
                     return
                 else:
+                    if environ.get("VALIDATOR_WALLET"):
+                        return
                     getWalletAddress()
         return
     if not environ.get("NODE_TYPE"):
