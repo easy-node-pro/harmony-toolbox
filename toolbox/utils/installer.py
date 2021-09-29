@@ -23,7 +23,6 @@ def firstSetup():
     getExpressStatus(validatorToolbox.dotenv_file)
     checkForInstall()
     printStars()
-    passphraseStatus()
     # load installer
 
 
@@ -195,13 +194,12 @@ def cloneShards():
 
 
 def passphraseStatus():
-    if environ.get("NODE_TYPE") == "regular":
-        if environ.get("NODE_WALLET") == "true":
-            if os.path.exists(validatorToolbox.passwordPath) is not True:
-                passphraseSet()
-            dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
-            dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH", f"--passphrase-file {validatorToolbox.harmonyDirPath}/passphrase.txt")
-            return
+    if environ.get("NODE_WALLET") == "true":
+        if os.path.exists(validatorToolbox.passwordPath) is not True:
+            passphraseSet()
+        dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
+        dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH", f"--passphrase-file {validatorToolbox.harmonyDirPath}/passphrase.txt")
+        return
     dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
     dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH", "--passphrase")
     return
