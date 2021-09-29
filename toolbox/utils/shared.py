@@ -159,9 +159,6 @@ def loadVarFile():
     if os.path.exists(validatorToolbox.dotenv_file):
         load_dotenv(validatorToolbox.dotenv_file)
         return
-    else:
-        printStars()
-        print("* No config file found, this should never print")
 
 
 def firstRunMenu():
