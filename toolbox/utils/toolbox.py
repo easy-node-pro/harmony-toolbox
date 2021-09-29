@@ -186,8 +186,10 @@ def getWalletJSON(wallet: str) -> str:
     except HTTPError as http_err:
             print(f'HTTP error occurred: {http_err}')
             print(f'* You have not created your validator yet, try again after you add one!\n* cd ~/harmony\n* ./hmy keys recover-from-mnemonic {validatorToolbox.activeUserName} {environ.get("PASS_SWITCH")}')
+            return
     except Exception as err:
             print(f'Other error occurred: {err}')
+            return
     return(jsonResponse)
 
 
