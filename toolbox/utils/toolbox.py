@@ -1,5 +1,6 @@
 import os
 import shutil
+from validatortoolbox.toolbox.utils.installer import passphraseSet
 import requests
 import time
 import subprocess
@@ -184,8 +185,13 @@ def getWalletJSON(wallet: str) -> str:
     #        print(jsonResponse)
     except HTTPError as http_err:
             print(f'HTTP error occurred: {http_err}')
+            print(f'* You have not created your validator yet, try again after you add one!\n* cd ~/harmony\n* ./hmy keys recover-from-mnemonic {validatorToolbox.activeUserName} {environ.get("PASS_SWITCH")}')
+            input("Press ENTER to return to the main menu.")
+            return
     except Exception as err:
             print(f'Other error occurred: {err}')
+            input("Press ENTER to return to the main menu.")
+            return
     return(jsonResponse)
 
 

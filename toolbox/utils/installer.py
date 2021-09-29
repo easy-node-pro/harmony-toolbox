@@ -5,12 +5,11 @@ from utils.config import validatorToolbox
 from os import environ
 from dotenv import load_dotenv
 from colorama import Fore, Style
-from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, isFirstRun, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp
+from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, firstRunMenu, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp
 
 
 def firstSetup():
     os.system("touch ~/.easynode.env")
-    dotenv.set_key(validatorToolbox.dotenv_file, "FIRST_RUN", "1")
     #first run stuff
     print("* This is the first time you've launched start.py, loading config menus.")
     printStars()
@@ -19,16 +18,11 @@ def firstSetup():
     if environ.get("EASY_VERSION"):
         dotenv.unset_key(validatorToolbox.dotenv_file, "EASY_VERSION")
     dotenv.set_key(validatorToolbox.dotenv_file, "EASY_VERSION", str(validatorToolbox.easyVersion))
-    isFirstRun()
+    firstRunMenu()
     recheckVars()
     getExpressStatus(validatorToolbox.dotenv_file)
-    loadVarFile()
     checkForInstall()
-    setAPIPaths(validatorToolbox.dotenv_file)
-    dotenv.unset_key(validatorToolbox.dotenv_file, "FIRST_RUN")
-    dotenv.set_key(validatorToolbox.dotenv_file, "FIRST_RUN", "0")
     printStars()
-    passphraseStatus()
     # load installer
 
 
@@ -37,11 +31,13 @@ def recheckVars():
     getShardMenu(validatorToolbox.dotenv_file)
     getNodeType(validatorToolbox.dotenv_file)
     setMainOrTest(validatorToolbox.dotenv_file)
+    setAPIPaths(validatorToolbox.dotenv_file)
     loadVarFile()
     return
 
 
 def checkForInstall() -> str:
+    loadVarFile()
     if os.path.exists(validatorToolbox.harmonyDirPath) == False:
         print(
             f"* You selected Shard: {environ.get('SHARD')}. "
@@ -72,7 +68,7 @@ def checkForInstall() -> str:
             finish_node_install()
         else:
             installHarmony()
-            if environ.get('NODE_TYPE') == "regular":
+            if environ.get('NODE_WALLET') == "true":
                 restoreWallet()
             printStars()
             print("* All harmony files now installed. Database download starting now...")
@@ -84,7 +80,6 @@ def checkForInstall() -> str:
 
 
 def installHarmony() -> None:
-    testOrMain = environ.get("NETWORK")
     # check disk space, find mounted disks
     mntCount = 0
     if os.path.isdir("/dev/disk/by-id/"):
@@ -120,6 +115,8 @@ def installHarmony() -> None:
             else:
                 raise SystemExit(0)
     # Setup folders now that symlink exists or we know we're using ~/harmony
+    if not os.path.isdir(f"{validatorToolbox.userHomeDir}/.hmy_cli/account-keys/"):
+        os.system(f"mkdir -p {validatorToolbox.userHomeDir}/.hmy_cli/account-keys/")
     if not os.path.isdir(f"{validatorToolbox.harmonyDirPath}/.hmy/blskeys"):
         print("* Creating all Harmony Files & Folders")
         os.system(f"mkdir -p {validatorToolbox.harmonyDirPath}/.hmy/blskeys")
@@ -197,13 +194,12 @@ def cloneShards():
 
 
 def passphraseStatus():
-    if environ.get("NODE_TYPE") == "regular":
-        if environ.get("NODE_WALLET") == "true":
-            if os.path.exists(validatorToolbox.passwordPath) is not True:
-                passphraseSet()
-            dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
-            dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH", f"--passphrase-file {validatorToolbox.harmonyDirPath}/passphrase.txt")
-            return
+    if environ.get("NODE_WALLET") == "true":
+        if os.path.exists(validatorToolbox.passwordPath) is not True:
+            passphraseSet()
+        dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
+        dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH", f"--passphrase-file {validatorToolbox.harmonyDirPath}/passphrase.txt")
+        return
     dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
     dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH", "--passphrase")
     return
@@ -235,16 +231,15 @@ def passphraseSet():
 
 
 def restoreWallet() -> str:
-    nodeType = environ.get("NODE_TYPE")
-    if nodeType == "regular":
-        if not os.path.isdir(validatorToolbox.hmyWalletStorePath):
+    if environ.get("NODE_WALLET") == "true":
+        if os.path.exists(validatorToolbox.hmyWalletStorePath) == False:
             os.system("clear")
             printStars()
             print(
                 "* Harmony ONE Validator Wallet Import"
             )
             printStars()
-            if environ.get("EXPRESS") == 1:
+            if environ.get("EXPRESS") == "1":
                 question = askYesNo(
                     "\n* You will directly utiilize the harmony applicaiton interface"
                     + "\n* We do not store any pass phrases  or data inside of our application"
@@ -266,18 +261,9 @@ def restoreWallet() -> str:
 
 
 def recoverWallet():
-    load_dotenv(validatorToolbox.dotenv_file)
+    loadVarFile()
     os.system("clear")
-    nodeType = environ.get("NODE_TYPE")
     passphraseSwitch = environ.get("PASS_SWITCH")
-    if nodeType == "full":
-        printStars()
-        print("* Full node, no wallet recovery")
-        return
-    if environ.get("NODE_WALLET") == "false":
-        printStars()
-        print("* Full node, no wallet recovery")
-        return
     printStars()
     print("* Loading harmony wallet recovery tool.")
     printStars()
@@ -344,6 +330,5 @@ def finish_node_install():
     print("* Thanks for using Easy Node - Validator Node Server Software Installer!")
     printStars()
     dotenv.unset_key(validatorToolbox.dotenv_file, "SETUP_STATUS")
-    dotenv.unset_key(validatorToolbox.dotenv_file, "FIRST_RUN")
     dotenv.set_key(validatorToolbox.dotenv_file, "SETUP_STATUS", "1")
     raise SystemExit(0)
