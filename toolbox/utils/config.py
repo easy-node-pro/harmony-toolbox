@@ -3,7 +3,7 @@ import socket
 import urllib.request
 
 class validatorToolbox:
-    easyVersion = "1.1.5"
+    easyVersion = "1.1.6"
     serverHostName = socket.gethostname()
     userHomeDir = os.path.expanduser("~")
     dotenv_file = f"{userHomeDir}/.easynode.env"
