@@ -1,6 +1,5 @@
 import os
 import shutil
-from validatortoolbox.toolbox.utils.installer import passphraseSet
 import requests
 import time
 import subprocess
@@ -15,7 +14,6 @@ from pyhmy import blockchain, account
 from requests.exceptions import HTTPError
 from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, return_txt, installHarmonyApp, installHmyApp, getSignPercent, loadVarFile
 from utils.allsysinfo import allSysInfo
-
 
 def collectRewards(networkCall):
     os.system(
