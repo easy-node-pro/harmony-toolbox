@@ -202,6 +202,7 @@ def passphraseStatus():
         return
     dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
     dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH", "--passphrase")
+    loadVarFile()
     return
 
 
