@@ -155,7 +155,7 @@ def return_txt(fn: str) -> list:
 
 
 def loadVarFile():
-    if os.path.exists(validatorToolbox.dotenv_file):
+    if os.path.exists(validatorToolbox.dotenv_file) == True:
         loadVarFile()
         return
 
