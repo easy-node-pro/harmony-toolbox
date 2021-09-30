@@ -6,7 +6,6 @@ import subprocess
 import requests
 from utils.config import validatorToolbox
 from os import environ
-from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
 from colorama import Style
 
@@ -84,7 +83,7 @@ def setWalletEnv(dotenv_file):
         dotenv.set_key(dotenv_file, "VALIDATOR_WALLET", outputStripped)
         return outputStripped
     else:
-        load_dotenv(dotenv_file)
+        loadVarFile()
         validatorWallet = environ.get("VALIDATOR_WALLET")
         return validatorWallet
     
@@ -157,7 +156,7 @@ def return_txt(fn: str) -> list:
 
 def loadVarFile():
     if os.path.exists(validatorToolbox.dotenv_file):
-        load_dotenv(validatorToolbox.dotenv_file)
+        loadVarFile()
         return
 
 
@@ -247,6 +246,7 @@ def setMainOrTest(dotenv_file) -> None:
             dotenv.set_key(dotenv_file, "NETWORK_SWITCH", "b")
             dotenv.set_key(dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
         os.system("clear")
+        loadVarFile()
         return 
 
 
