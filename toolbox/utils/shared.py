@@ -6,6 +6,7 @@ import subprocess
 import requests
 from utils.config import validatorToolbox
 from os import environ
+from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
 from colorama import Style
 
@@ -156,7 +157,7 @@ def return_txt(fn: str) -> list:
 
 def loadVarFile():
     if os.path.exists(validatorToolbox.dotenv_file) == True:
-        loadVarFile()
+        load_dotenv(validatorToolbox.dotenv_file)
         return
 
 
