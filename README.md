@@ -3,7 +3,6 @@
 [![Discord Badge](https://img.shields.io/badge/chat-discord-purple?logo=discord)](https://discord.gg/babnYCEZ7Q)
 [![Stake Now Badge](https://img.shields.io/badge/stake-harmony-brightgreen)](https://bit.ly/easynode)
 
-
 # Easy Node - Validator Toolbox
 by [EasyNode.ONE](http://EasyNode.ONE "EasyNode.ONE")
 
@@ -14,15 +13,17 @@ This repository provides two functions in one application:
 [![Easy Node - Harmony Validator Operations Toolbox](http://img.youtube.com/vi/mtlgZQc7BjM/0.jpg)](https://www.youtube.com/watch?v=mtlgZQc7BjM "Easy Node - Harmony Validator Operations Toolbox")
 
 ## Quickstart Guide
-### Pre-Installation Requirements:
+### Pre-Installation Requirements
 Digital Ocean users can use [this pre-installation quick guide](https://validator-toolbox-guide.easynode.one/full-manual/pre-installation-information/pre-installation/digital-ocean-validator-node-setup "this pre-installation quick guide").
 
 **Operating System**
 -   Ubuntu 20.04LTS - The suggested operating system from harmony
+
 **Account**
 -   Be logged into any user account, we strongly suggest not using root.
 	-   Account must have sudoless root access (if not using the root account)
 	-   If you skip this step, you will be prompted for your password during rclone setup but it will be hidden in the menu. If it pauses there type your user account password.
+
 **Storage Volume**
 	-   Mount your volume to any folder inside of /mnt and we'll detect a single mount point inside of that folder, install harmony in /mnt/yourfolder/harmony and symlink that folder to ~/harmony
 
