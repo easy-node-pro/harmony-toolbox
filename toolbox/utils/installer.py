@@ -10,14 +10,15 @@ from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrT
 
 def firstSetup():
     os.system("touch ~/.easynode.env")
-    #first run stuff
+    # first run stuff
     print("* This is the first time you've launched start.py, loading config menus.")
     printStars()
     time.sleep(1)
     dotenv.set_key(validatorToolbox.dotenv_file, "SETUP_STATUS", "2")
     if environ.get("EASY_VERSION"):
         dotenv.unset_key(validatorToolbox.dotenv_file, "EASY_VERSION")
-    dotenv.set_key(validatorToolbox.dotenv_file, "EASY_VERSION", str(validatorToolbox.easyVersion))
+    dotenv.set_key(validatorToolbox.dotenv_file, "EASY_VERSION",
+                   str(validatorToolbox.easyVersion))
     firstRunMenu()
     recheckVars()
     getExpressStatus(validatorToolbox.dotenv_file)
@@ -50,7 +51,8 @@ def checkForInstall() -> str:
                 # run install on server
                 installHarmony()
                 printStars()
-                print("* All harmony files now installed. Database download starting now...")
+                print(
+                    "* All harmony files now installed. Database download starting now...")
                 printStars()
             question = askYesNo(
                 "* Wallet Creation"
@@ -75,7 +77,18 @@ def checkForInstall() -> str:
             printStars()
             cloneShards()
             finish_node_install()
-    # Harmony already exists but this is the first time this ran
+    question = askYesNo(
+        "* You already have a harmony folder on this system, would you like to re-run installation and rclone? (YES/NO)"
+    )
+    if question:
+        installHarmony()
+        if environ.get('NODE_WALLET') == "true":
+            restoreWallet()
+        printStars()
+        print("* All harmony files now installed. Database download starting now...")
+        printStars()
+        cloneShards()
+        finish_node_install()
     return
 
 
@@ -100,23 +113,28 @@ def installHarmony() -> None:
         # Checks Passed at this point, only 1 folder in /mnt and it's probably our volume (can scope this down further later)
         if mntCount == 1:
             myLongHmyPath = myVolumePath + "/harmony"
-            dotenv.set_key(validatorToolbox.dotenv_file, "MOUNT_POINT", myLongHmyPath)
+            dotenv.set_key(validatorToolbox.dotenv_file,
+                           "MOUNT_POINT", myLongHmyPath)
             print("* Creating all Harmony Files & Folders")
-            os.system(f"sudo chown {validatorToolbox.activeUserName} {myVolumePath}")
+            os.system(
+                f"sudo chown {validatorToolbox.activeUserName} {myVolumePath}")
             os.system(f"mkdir -p {myLongHmyPath}/.hmy/blskeys")
-            os.system(f"ln -s {myLongHmyPath} {validatorToolbox.harmonyDirPath}")
+            os.system(
+                f"ln -s {myLongHmyPath} {validatorToolbox.harmonyDirPath}")
         # Let's make sure your volume is mounted
         if mntCount == 0:
             question = askYesNo(
                 "* You have a volume but it is not mounted.\n* Would you like to install Harmony in ~/harmony on your main disk instead of your volume? (Yes/No) "
             )
             if question:
-                dotenv.set_key(validatorToolbox.dotenv_file, "MOUNT_POINT", validatorToolbox.harmonyDirPath)
+                dotenv.set_key(validatorToolbox.dotenv_file,
+                               "MOUNT_POINT", validatorToolbox.harmonyDirPath)
             else:
                 raise SystemExit(0)
     # Setup folders now that symlink exists or we know we're using ~/harmony
     if not os.path.isdir(f"{validatorToolbox.userHomeDir}/.hmy_cli/account-keys/"):
-        os.system(f"mkdir -p {validatorToolbox.userHomeDir}/.hmy_cli/account-keys/")
+        os.system(
+            f"mkdir -p {validatorToolbox.userHomeDir}/.hmy_cli/account-keys/")
     if not os.path.isdir(f"{validatorToolbox.harmonyDirPath}/.hmy/blskeys"):
         print("* Creating all Harmony Files & Folders")
         os.system(f"mkdir -p {validatorToolbox.harmonyDirPath}/.hmy/blskeys")
@@ -137,8 +155,8 @@ def installHarmony() -> None:
     print("* Customizing, Moving & Enabling your harmony.service systemd file")
     if validatorToolbox.activeUserName == 'root':
         os.system(
-        f"sudo cp {validatorToolbox.toolboxLocation}/toolbox/bin/harmony.service . && sed -i 's/home\/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony.service' && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
-    )
+            f"sudo cp {validatorToolbox.toolboxLocation}/toolbox/bin/harmony.service . && sed -i 's/home\/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony.service' && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
+        )
     else:
         os.system(
             f"sudo cp {validatorToolbox.toolboxLocation}/toolbox/bin/harmony.service . && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
@@ -198,7 +216,8 @@ def passphraseStatus():
         if os.path.exists(validatorToolbox.passwordPath) is not True:
             passphraseSet()
         dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
-        dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH", f"--passphrase-file {validatorToolbox.harmonyDirPath}/passphrase.txt")
+        dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH",
+                       f"--passphrase-file {validatorToolbox.harmonyDirPath}/passphrase.txt")
         return
     dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
     dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH", "--passphrase")
@@ -217,7 +236,8 @@ def passphraseSet():
     # take input
     while True:
         print("* ")
-        password1 = getpass.getpass(prompt="* Please set a wallet password for this node\n* Enter your password now: ", stream=None)
+        password1 = getpass.getpass(
+            prompt="* Please set a wallet password for this node\n* Enter your password now: ", stream=None)
         password2 = getpass.getpass(
             prompt="* Re-enter your password: ", stream=None
         )
@@ -303,9 +323,11 @@ def setMountedPoint():
     else:
         myVolumePath = validatorToolbox.harmonyDirPath
     if totalDir == 1:
-        dotenv.set_key(validatorToolbox.dotenv_file, "MOUNT_POINT", myLongHmyPath)
+        dotenv.set_key(validatorToolbox.dotenv_file,
+                       "MOUNT_POINT", myLongHmyPath)
     else:
-        dotenv.set_key(validatorToolbox.dotenv_file, "MOUNT_POINT", f"{validatorToolbox.harmonyDirPath}")
+        dotenv.set_key(validatorToolbox.dotenv_file, "MOUNT_POINT",
+                       f"{validatorToolbox.harmonyDirPath}")
     return
 
 
@@ -314,19 +336,19 @@ def finish_node_install():
     passphraseSwitch = environ.get("PASS_SWITCH")
     printStars()
     print("* Installation is completed"
-    + "\n* Create a new wallet or recover your existing wallet into ./hmy"
-    + "\n* Create or upload your bls key & pass files into ~/harmony/.hmy/blskeys"
-    + "\n* Finally, reboot to start syncronization."
-    )
+          + "\n* Create a new wallet or recover your existing wallet into ./hmy"
+          + "\n* Create or upload your bls key & pass files into ~/harmony/.hmy/blskeys"
+          + "\n* Finally, reboot to start syncronization."
+          )
     printStars()
     print("* Post installation quick tips:"
-        + "\n* To recover your wallet run:"
-        + f"\n* ./hmy keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}"
-        + "\n*"
-        + "\n* To create BLS keys run:"
-        + f"\n* ./hmy keys generate-bls-keys --count 1 --shard {ourShard} {passphraseSwitch}"
-        + "\n*"
-    )
+          + "\n* To recover your wallet run:"
+          + f"\n* ./hmy keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}"
+          + "\n*"
+          + "\n* To create BLS keys run:"
+          + f"\n* ./hmy keys generate-bls-keys --count 1 --shard {ourShard} {passphraseSwitch}"
+          + "\n*"
+          )
     printStars()
     print("* Thanks for using Easy Node - Validator Node Server Software Installer!")
     printStars()
