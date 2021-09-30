@@ -194,7 +194,7 @@ def cloneShards():
 
 
 def passphraseStatus():
-    if environ.get("NODE_WALLET") == "true":
+    if os.path.exists(validatorToolbox.hmyWalletStorePath):
         if os.path.exists(validatorToolbox.passwordPath) is not True:
             passphraseSet()
         dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
