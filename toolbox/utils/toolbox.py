@@ -413,9 +413,6 @@ def disk_partitions(all=False):
 
 
 def get_mount_point(pathname):
-    """
-    Get the mount point of the filesystem containing pathname
-    """
     pathname = os.path.normcase(os.path.realpath(pathname))
     parent_device = path_device = os.stat(pathname).st_dev
     while parent_device == path_device:

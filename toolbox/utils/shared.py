@@ -1,8 +1,6 @@
 import os
 import dotenv
 import subprocess
-import os
-import subprocess
 import requests
 from utils.config import validatorToolbox
 from os import environ
@@ -140,13 +138,6 @@ def save_text(fn: str, to_write: str) -> bool:
 
 
 def return_txt(fn: str) -> list:
-    """
-    Opens a file and returns the whole file as a list
-    Args:
-        fn (str): File name to open
-    Returns:
-        list: return whole file as a list
-    """
     try:
         with open(fn, "r") as f:
             return f.readlines()
@@ -371,7 +362,9 @@ def getRewardsBalance(
     try:
         response = post(validatorToolbox.rpc_url, json=d)
     except (ValueError, KeyError, TypeError):
-        return render_template("regular_wallet.html")
+        input("* Something went wrong with the API, press ENTER to try again.")
+        getRewardsBalance(wallet)
+        return
 
     if response.status_code == 200:
         data = response.json()

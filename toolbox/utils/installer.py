@@ -3,7 +3,6 @@ import dotenv
 import time
 from utils.config import validatorToolbox
 from os import environ
-from dotenv import load_dotenv
 from colorama import Fore, Style
 from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, firstRunMenu, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp
 
