@@ -7,6 +7,7 @@ from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
 from colorama import Style
+from pathlib import Path
 
 
 def loaderIntro():
@@ -37,12 +38,12 @@ def installHmyApp(harmonyDirPath):
     print("* hmy application installed.")
 
 
-def updateTextFile(fileName):
+def updateHarmonyConf(fileName, originalText, newText):
     f = open(fileName,'r')
     filedata = f.read()
     f.close()
 
-    newdata = filedata.replace("MaxKeys = 10","MaxKeys = 30")
+    newdata = filedata.replace(originalText, newText)
 
     f = open(fileName,'w')
     f.write(newdata)
@@ -51,16 +52,15 @@ def updateTextFile(fileName):
 
 
 def installHarmonyApp(harmonyDirPath):
-    testOrMain = environ.get("NETWORK")
     os.chdir(f"{harmonyDirPath}")
-    if testOrMain == "testnet":
+    if environ.get("NETWORK") == "testnet":
         os.system("curl -LO https://harmony.one/binary_testnet && mv binary_testnet harmony && chmod +x harmony")
         os.system("./harmony config dump --network testnet harmony.conf")
-        updateTextFile(validatorToolbox.harmonyConfPath)
-    if testOrMain == "mainnet":
+        updateHarmonyConf(validatorToolbox.harmonyConfPath, "MaxKeys = 10", "MaxKeys = 30")
+    if environ.get("NETWORK") == "mainnet":
         os.system("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
         os.system("./harmony config dump harmony.conf")
-        updateTextFile(validatorToolbox.harmonyConfPath)
+        updateHarmonyConf(validatorToolbox.harmonyConfPath, "MaxKeys = 10", "MaxKeys = 30")
     # when we setup rasppi as an option, this is the install command for harmony
     if environ.get("ARC") == "arm64":
         if environ.get("NETWORK") == "testnet":
@@ -70,6 +70,10 @@ def installHarmonyApp(harmonyDirPath):
         else:
             os.system("curl -LO https://harmony.one/binary-arm64 && mv binary-arm64 harmony && chmod +x harmony")
             os.system("./harmony config dump harmony.conf")
+    if os.path.exists(blsKeyFile):
+        updateTxt = Path(blsKeyFile).read_text()
+        updateTxt = txt.replace('\n', '')
+        updateHarmonyConf(validatorToolbox.harmonyConfPath, "PassFile = \"\"", updateTxt)
     printStars()
     print(f"* Harmony {testOrMain} application installed & ~/harmony/harmony.conf created.")
 

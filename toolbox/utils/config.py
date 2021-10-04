@@ -10,6 +10,7 @@ class validatorToolbox:
     activeUserName = os.path.split(userHomeDir)[-1]
     harmonyDirPath = os.path.join(userHomeDir, "harmony")
     harmonyAppPath = os.path.join(harmonyDirPath, "harmony")
+    blsKeyFile = os.path.join(harmonyDirPath, "blskey.pass")
     hmyAppPath = os.path.join(harmonyDirPath, "hmy")
     harmonyConfPath = os.path.join(harmonyDirPath, "harmony.conf")
     blskeyDirPath = os.path.join(hmyAppPath, ".hmy", "blskeys")
