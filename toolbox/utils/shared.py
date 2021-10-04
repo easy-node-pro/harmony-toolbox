@@ -72,7 +72,7 @@ def installHarmonyApp(harmonyDirPath, blsKeyFile):
             os.system("./harmony config dump harmony.conf")
     if os.path.exists(blsKeyFile):
         updateTxt = Path(blsKeyFile).read_text()
-        updateTxt = txt.replace('\n', '')
+        updateTxt = updateTxt.replace('\n', '')
         updateHarmonyConf(validatorToolbox.harmonyConfPath, "PassFile = \"\"", updateTxt)
     printStars()
     print(f"* Harmony {testOrMain} application installed & ~/harmony/harmony.conf created.")
