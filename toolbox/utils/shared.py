@@ -61,6 +61,7 @@ def installHarmonyApp(harmonyDirPath, blsKeyFile):
         os.system("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
         os.system("./harmony config dump harmony.conf")
         updateHarmonyConf(validatorToolbox.harmonyConfPath, "MaxKeys = 10", "MaxKeys = 30")
+    print("* harmony.conf MaxKeys modified to 30")
     # when we setup rasppi as an option, this is the install command for harmony
     if environ.get("ARC") == "arm64":
         if environ.get("NETWORK") == "testnet":
@@ -71,9 +72,8 @@ def installHarmonyApp(harmonyDirPath, blsKeyFile):
             os.system("curl -LO https://harmony.one/binary-arm64 && mv binary-arm64 harmony && chmod +x harmony")
             os.system("./harmony config dump harmony.conf")
     if os.path.exists(blsKeyFile):
-        updateTxt = Path(blsKeyFile).read_text()
-        updateTxt = updateTxt.replace('\n', '')
-        updateHarmonyConf(validatorToolbox.harmonyConfPath, "PassFile = \"\"", f"PassFile = '{updateTxt}'")
+        updateHarmonyConf(validatorToolbox.harmonyConfPath, "PassFile = \"\"", f"PassFile = 'blskey.pass'")
+        print("* blskey.pass found, updated harmony.conf")
     printStars()
     print(f"* Harmony {environ.get('NETWORK')} application installed & ~/harmony/harmony.conf created.")
 
