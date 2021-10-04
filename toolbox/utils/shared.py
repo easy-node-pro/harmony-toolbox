@@ -75,7 +75,7 @@ def installHarmonyApp(harmonyDirPath, blsKeyFile):
         updateTxt = updateTxt.replace('\n', '')
         updateHarmonyConf(validatorToolbox.harmonyConfPath, "PassFile = \"\"", updateTxt)
     printStars()
-    print(f"* Harmony {environ.get("NETWORK")} application installed & ~/harmony/harmony.conf created.")
+    print(f"* Harmony {environ.get('NETWORK')} application installed & ~/harmony/harmony.conf created.")
 
 
 def setWalletEnv(dotenv_file):
