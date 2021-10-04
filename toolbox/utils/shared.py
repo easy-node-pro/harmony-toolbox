@@ -51,7 +51,7 @@ def updateHarmonyConf(fileName, originalText, newText):
     return
 
 
-def installHarmonyApp(harmonyDirPath):
+def installHarmonyApp(harmonyDirPath, blsKeyFile):
     os.chdir(f"{harmonyDirPath}")
     if environ.get("NETWORK") == "testnet":
         os.system("curl -LO https://harmony.one/binary_testnet && mv binary_testnet harmony && chmod +x harmony")
