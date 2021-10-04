@@ -499,7 +499,7 @@ def upgradeHarmonyApp(testOrMain):
     printStars()
     print("Downloading current harmony binary file from harmony.one: ")
     printStars()
-    installHarmonyApp(validatorToolbox.harmonyDirPath)
+    installHarmonyApp(validatorToolbox.harmonyDirPath, validatorToolbox.blsKeyFile)
     printStars()
     print("Updated version: ")
     os.system("./harmony -V")

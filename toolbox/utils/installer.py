@@ -141,7 +141,7 @@ def installHarmony() -> None:
     printStars()
     installHmyApp(validatorToolbox.harmonyDirPath)
     printStars()
-    installHarmonyApp(validatorToolbox.harmonyDirPath)
+    installHarmonyApp(validatorToolbox.harmonyDirPath, validatorToolbox.blsKeyFile)
     # install hmy files
     print("* Installing rclone application & rclone configuration files")
     printStars()
