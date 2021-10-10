@@ -4,7 +4,7 @@ import time
 from utils.config import validatorToolbox
 from os import environ
 from colorama import Fore, Style
-from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, firstRunMenu, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp, recoveryType
+from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, firstRunMenu, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp, recoveryType, passphraseStatus, passphraseSet
 
 
 def firstSetup():
@@ -210,51 +210,6 @@ def cloneShards():
         return
 
 
-def passphraseStatus():
-    if os.path.exists(validatorToolbox.hmyWalletStorePath):
-        if os.path.exists(validatorToolbox.passwordPath) is not True:
-            passphraseSet()
-        dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
-        dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH",
-                       f"--passphrase-file {validatorToolbox.harmonyDirPath}/passphrase.txt")
-        dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_WALLET")
-        dotenv.set_key(validatorToolbox.dotenv_file, "NODE_WALLET", "true")
-        return
-    dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
-    dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH", "--passphrase")
-    dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_WALLET")
-    dotenv.set_key(validatorToolbox.dotenv_file, "NODE_WALLET", "false")
-    loadVarFile()
-    return
-
-
-def passphraseSet():
-    if os.path.exists(validatorToolbox.passwordPath):
-        return
-    import getpass
-    os.system("clear")
-    printStars()
-    print("* Setup ~/harmony/passphrase.txt file for use with autobidder & validatortoolbox.")
-    printStars()
-    # take input
-    while True:
-        print("* ")
-        password1 = getpass.getpass(
-            prompt="* Please set a wallet password for this node\n* Enter your password now: ", stream=None)
-        password2 = getpass.getpass(
-            prompt="* Re-enter your password: ", stream=None
-        )
-        if not password1 == password2:
-            print("* Passwords do NOT match, Please try again..")
-        else:
-            print("* Passwords Match!")
-            break
-    # Save file, we won't encrypt because if someone has access to the file, they will also have the salt and decrypt code at their disposal.
-    save_text(validatorToolbox.passwordPath, password1)
-    passphraseStatus()
-    return
-
-
 def restoreWallet() -> str:
     if environ.get("NODE_WALLET") == "true":
         if os.path.exists(validatorToolbox.hmyWalletStorePath) == False:
@@ -287,9 +242,8 @@ def restoreWallet() -> str:
 
 def recoverWallet():
     recoveryType()
-    setWalletEnv(validatorToolbox.dotenv_file)
-    loadVarFile()
     validatorWallet = environ.get("VALIDATOR_WALLET")
+    passphraseSwitch = environ.get("PASS_SWITCH")
     print(
         "\n* Verify the address above matches the address below: "
         + "\n* Detected Wallet: "

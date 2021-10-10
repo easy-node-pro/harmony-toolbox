@@ -95,6 +95,8 @@ def setWalletEnv(dotenv_file):
 def recoveryType():
     loadVarFile()
     os.system("clear")
+    dotenv.set_key(validatorToolbox.dotenv_file, "NODE_WALLET", "true")
+    passphraseStatus()
     passphraseSwitch = environ.get("PASS_SWITCH")
     print("*********************************************************************************************")
     print("* Wallet Recovery Type!                                                                     *")
@@ -108,16 +110,57 @@ def recoveryType():
         # Mnemonic Recovery Here
         os.system(f"{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}")
         printStars()
-        # ENV SETTING
         return
     if terminal_menu.show() == 1:
         # Private Key Recovery Here
         print("* Private key recovery requires your private information in the command itself.")
         private = input("* Please enter your private key to restore your wallet: ")
-        os.system(f"{validatorToolbox.hmyAppPath} keys import-private-key {private} {validatorToolbox.activeUserName} {passphraseSwitch}")
+        os.system(f"{validatorToolbox.hmyAppPath} keys import-private-key {private} {validatorToolbox.activeUserName} --passphrase")
         printStars()
-        # ENV SETTING
         return
+    return
+
+
+def passphraseStatus():
+    loadVarFile()
+    if environ.get("NODE_WALLET") == "true":
+        passphraseSet()
+        dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
+        dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH",
+                       f"--passphrase-file {validatorToolbox.harmonyDirPath}/passphrase.txt")
+    if environ.get("NODE_WALLET") == "false":
+        dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
+        dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH", "--passphrase")
+    loadVarFile()
+    return
+
+
+def passphraseSet():
+    if os.path.exists(validatorToolbox.passwordPath):
+        return
+    import getpass
+    os.system("clear")
+    printStars()
+    print("* Setup ~/harmony/passphrase.txt file for use with autobidder & validatortoolbox.")
+    printStars()
+    # take input
+    while True:
+        print("* ")
+        password1 = getpass.getpass(
+            prompt="* Please set a wallet password for this node\n* Enter your password now: ", stream=None)
+        password2 = getpass.getpass(
+            prompt="* Re-enter your password: ", stream=None
+        )
+        if not password1 == password2:
+            print("* Passwords do NOT match, Please try again..")
+        else:
+            print("* Passwords Match!")
+            break
+    # Save file, we won't encrypt because if someone has access to the file, they will also have the salt and decrypt code at their disposal.
+    save_text(validatorToolbox.passwordPath, password1)
+    loadVarFile()
+    passphraseStatus()
+    return
 
 
 def process_command(command: str) -> None:
