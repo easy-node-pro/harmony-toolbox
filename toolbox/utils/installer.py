@@ -32,6 +32,7 @@ def recheckVars():
     getNodeType(validatorToolbox.dotenv_file)
     setMainOrTest(validatorToolbox.dotenv_file)
     setAPIPaths(validatorToolbox.dotenv_file)
+    setWalletEnv(validatorToolbox.dotenv_file)
     loadVarFile()
     return
 
