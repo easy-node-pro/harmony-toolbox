@@ -80,16 +80,17 @@ def installHarmonyApp(harmonyDirPath, blsKeyFile):
 
 
 def setWalletEnv(dotenv_file):
-    if environ.get("VALIDATOR_WALLET") is None:
-        output = subprocess.getoutput(f"{validatorToolbox.hmyAppPath} keys list | grep {validatorToolbox.activeUserName}")
-        outputStripped = output.lstrip(validatorToolbox.activeUserName)
-        outputStripped = outputStripped.strip()
-        dotenv.set_key(dotenv_file, "VALIDATOR_WALLET", outputStripped)
-        return outputStripped
-    else:
-        loadVarFile()
-        validatorWallet = environ.get("VALIDATOR_WALLET")
-        return validatorWallet
+    if environ.get("NODE_WALLET") == "true":
+        if environ.get("VALIDATOR_WALLET") is None:
+            output = subprocess.getoutput(f"{validatorToolbox.hmyAppPath} keys list | grep {validatorToolbox.activeUserName}")
+            outputStripped = output.lstrip(validatorToolbox.activeUserName)
+            outputStripped = outputStripped.strip()
+            dotenv.set_key(dotenv_file, "VALIDATOR_WALLET", outputStripped)
+            return outputStripped
+        else:
+            loadVarFile()
+            validatorWallet = environ.get("VALIDATOR_WALLET")
+            return validatorWallet
 
 
 def recoveryType():
@@ -106,19 +107,21 @@ def recoveryType():
     print("*********************************************************************************************")
     menuOptions = ["[0] - Mnemonic Phrase Recovery", "[1] - Private Key Recovery", ]
     terminal_menu = TerminalMenu(menuOptions, title="* Which type of restore method would you like to use for your validator wallet?")
-    if terminal_menu.show() == 0:
+    results = terminal_menu.show()
+    if results == 0:
         # Mnemonic Recovery Here
         os.system(f"{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}")
         printStars()
+        setWalletEnv(validatorToolbox.dotenv_file)
         return
-    if terminal_menu.show() == 1:
+    if results == 1:
         # Private Key Recovery Here
         print("* Private key recovery requires your private information in the command itself.")
         private = input("* Please enter your private key to restore your wallet: ")
         os.system(f"{validatorToolbox.hmyAppPath} keys import-private-key {private} {validatorToolbox.activeUserName} --passphrase")
         printStars()
+        setWalletEnv(validatorToolbox.dotenv_file)
         return
-    return
 
 
 def passphraseStatus():

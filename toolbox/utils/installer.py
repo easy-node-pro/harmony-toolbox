@@ -242,6 +242,7 @@ def restoreWallet() -> str:
 
 def recoverWallet():
     recoveryType()
+    loadVarFile()
     validatorWallet = environ.get("VALIDATOR_WALLET")
     passphraseSwitch = environ.get("PASS_SWITCH")
     print(
@@ -284,6 +285,7 @@ def setMountedPoint():
 def finish_node_install():
     ourShard = environ.get('SHARD')
     passphraseSwitch = environ.get("PASS_SWITCH")
+    nodeWallet = environ.get("NODE_WALLET")
     printStars()
     print("* Installation is completed"
           + "\n* Create a new wallet or recover your existing wallet into ./hmy"
@@ -291,14 +293,24 @@ def finish_node_install():
           + "\n* Finally, reboot to start synchronization."
           )
     printStars()
-    print("* Post installation quick tips:"
-          + "\n* To recover your wallet run:"
-          + f"\n* ./hmy keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}"
-          + "\n*"
-          + "\n* To create BLS keys run:"
-          + f"\n* ./hmy keys generate-bls-keys --count 1 --shard {ourShard} {passphraseSwitch}"
-          + "\n*"
-          )
+    if nodeWallet == "false":
+        print("* Post installation quick tips:"
+            + "\n* To recover your wallet on this server run:"
+            + f"\n* python3 ~/validatortoolbox/toolbox/load_wallet.py"
+            + "\n*"
+            + "\n* To create BLS keys run:"
+            + f"\n* ./hmy keys generate-bls-keys --count 1 --shard {ourShard} --passphrase"
+            + "\n*"
+            )
+    else:
+        print("* Post installation quick tips:"
+            + "\n* To recover your wallet again, run:"
+            + f"\n* python3 ~/validatortoolbox/toolbox/load_wallet.py"
+            + "\n*"
+            + "\n* To create BLS keys run:"
+            + f"\n* ./hmy keys generate-bls-keys --count 1 --shard {ourShard} {passphraseSwitch}"
+            + "\n*"
+            )
     printStars()
     print("* Thanks for using Easy Node - Validator Node Server Software Installer!")
     printStars()
