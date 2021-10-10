@@ -81,18 +81,17 @@ def installHarmonyApp(harmonyDirPath, blsKeyFile):
 
 def setWalletEnv():
     if environ.get("NODE_WALLET") == "true":
-        validatorWalletAddress = environ.get("VALIDATOR_WALLET")
-        if validatorWalletAddress.startswith("one1") or not environ.get("VALIDATOR_WALLET"):
-            loadVarFile()
-            validatorWallet = environ.get("VALIDATOR_WALLET")
-            return validatorWallet            
-        else:
+        if not environ.get("VALIDATOR_WALLET"):
             output = subprocess.getoutput(f"{validatorToolbox.hmyAppPath} keys list | grep {validatorToolbox.activeUserName}")
             outputStripped = output.lstrip(validatorToolbox.activeUserName)
             outputStripped = outputStripped.strip()
             dotenv.unset_key(validatorToolbox.dotenv_file, "VALIDATOR_WALLET")
             dotenv.set_key(validatorToolbox.dotenv_file, "VALIDATOR_WALLET", outputStripped)
             return outputStripped
+        else:
+            loadVarFile()
+            validatorWallet = environ.get("VALIDATOR_WALLET")
+            return validatorWallet
 
 
 def recoveryType():
