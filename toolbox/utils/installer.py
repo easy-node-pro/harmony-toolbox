@@ -217,9 +217,13 @@ def passphraseStatus():
         dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
         dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH",
                        f"--passphrase-file {validatorToolbox.harmonyDirPath}/passphrase.txt")
+        dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_WALLET")
+        dotenv.set_key(validatorToolbox.dotenv_file, "NODE_WALLET", "true")
         return
     dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
     dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH", "--passphrase")
+    dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_WALLET")
+    dotenv.set_key(validatorToolbox.dotenv_file, "NODE_WALLET", "false")
     loadVarFile()
     return
 
