@@ -23,7 +23,7 @@ if __name__ == "__main__":
         recheckVars()
         passphraseStatus()
     if environ.get("NODE_TYPE") == "regular":
-        if environ.get("VALIDATOR_WALLET") is None:
+        if not environ.get("VALIDATOR_WALLET"):
             setWalletEnv()
         runRegularNode()
     if environ.get("NODE_TYPE") == "full":
