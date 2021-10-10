@@ -237,10 +237,10 @@ def firstRunMenu():
     print("*********************************************************************************************")
     print("* First run detected!                                                                       *")
     print("*********************************************************************************************")
-    print("* [0] = Start Harmony Installer App - For brand new servers needed validator software       *")
-    print("* [1] = Load Validator Toolbox Menu App - Our simple management server for installed Nodes  *")
+    print("* [0] = Install Harmony Validator Software - For Brand NEW SERVERS ONLY                     *")
+    print("* [1] = Load Validator Toolbox Menu App    - For servers already running harmony validator  *")
     print("*********************************************************************************************")
-    menuOptions = ["[0] - Start Installer Application", "[1] - Load Validator Toolbox Menu", ]
+    menuOptions = ["[0] - Install Harmony Validator Software", "[1] - Load Validator Toolbox Menu Setup", ]
     terminal_menu = TerminalMenu(menuOptions, title="* Is this a new server or an already existing harmony node?")
     setupStatus = str(terminal_menu.show())
     dotenv.unset_key(validatorToolbox.dotenv_file, "SETUP_STATUS", setupStatus)
