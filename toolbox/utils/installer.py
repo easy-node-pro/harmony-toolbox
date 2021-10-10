@@ -261,7 +261,7 @@ def restoreWallet() -> str:
             printStars()
             if environ.get("EXPRESS") == "1":
                 question = askYesNo(
-                    "\n* You will directly utiilize the harmony applicaiton interface"
+                    "\n* You will directly utilize the harmony application interface"
                     + "\n* We do not store any pass phrases  or data inside of our application"
                     + "\n* Respond yes to recover your validator wallet via Mnemonic phrase now or say NO to create a new wallet post-install"
                     + "\n* Restore an existing wallet now? (YES/NO) "
@@ -337,7 +337,7 @@ def finish_node_install():
     print("* Installation is completed"
           + "\n* Create a new wallet or recover your existing wallet into ./hmy"
           + "\n* Create or upload your bls key & pass files into ~/harmony/.hmy/blskeys"
-          + "\n* Finally, reboot to start syncronization."
+          + "\n* Finally, reboot to start synchronization."
           )
     printStars()
     print("* Post installation quick tips:"
