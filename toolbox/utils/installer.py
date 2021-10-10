@@ -4,7 +4,7 @@ import time
 from utils.config import validatorToolbox
 from os import environ
 from colorama import Fore, Style
-from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, firstRunMenu, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp
+from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, firstRunMenu, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp, recoveryType
 
 
 def firstSetup():
@@ -249,7 +249,7 @@ def passphraseSet():
         else:
             print("* Passwords Match!")
             break
-    # Save file, we won't encrypt because if someone has access to the file, they will also have the salt and decrpyt code at their disposal.
+    # Save file, we won't encrypt because if someone has access to the file, they will also have the salt and decrypt code at their disposal.
     save_text(validatorToolbox.passwordPath, password1)
     return
 
@@ -285,17 +285,7 @@ def restoreWallet() -> str:
 
 
 def recoverWallet():
-    loadVarFile()
-    os.system("clear")
-    passphraseSwitch = environ.get("PASS_SWITCH")
-    printStars()
-    print("* Loading harmony wallet recovery tool.")
-    printStars()
-    print("* Recover your validator wallet now:")
-    os.system(
-        f"{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}"
-    )
-    printStars()
+    recoveryType()
     setWalletEnv(validatorToolbox.dotenv_file)
     loadVarFile()
     validatorWallet = environ.get("VALIDATOR_WALLET")

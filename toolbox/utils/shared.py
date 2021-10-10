@@ -90,7 +90,35 @@ def setWalletEnv(dotenv_file):
         loadVarFile()
         validatorWallet = environ.get("VALIDATOR_WALLET")
         return validatorWallet
-    
+
+
+def recoveryType():
+    loadVarFile()
+    os.system("clear")
+    passphraseSwitch = environ.get("PASS_SWITCH")
+    print("*********************************************************************************************")
+    print("* Wallet Recovery Type!                                                                     *")
+    print("*********************************************************************************************")
+    print("* [0] = Mnemonic phrase recovery (aka seed phrase)                                          *")
+    print("* [1] = Private Key recovery                                                                *")
+    print("*********************************************************************************************")
+    menuOptions = ["[0] - Mnemonic Phrase Recovery", "[1] - Private Key Recovery", ]
+    terminal_menu = TerminalMenu(menuOptions, title="* Which type of restore method would you like to use for your validator wallet?")
+    if terminal_menu.show() == 0:
+        # Mnemonic Recovery Here
+        os.system(f"{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}")
+        printStars()
+        # ENV SETTING
+        return
+    if terminal_menu.show() == 1:
+        # Private Key Recovery Here
+        print("* Private key recovery requires your private information in the command itself.")
+        private = input("* Please enter your private key to restore your wallet: ")
+        os.system(f"{validatorToolbox.hmyAppPath} keys import-private-key {private} {validatorToolbox.activeUserName} {passphraseSwitch}")
+        printStars()
+        # ENV SETTING
+        return
+
 
 def process_command(command: str) -> None:
     process = subprocess.Popen(command, shell=True)
