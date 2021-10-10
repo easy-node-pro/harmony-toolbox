@@ -322,7 +322,7 @@ def setMainOrTest(dotenv_file) -> None:
 
 
 def getExpressStatus(dotenv_file) -> None:
-    if environ.get("EXPRESS") is None:
+    if environ.get("SETUP_STATUS") == "0":
         os.system("clear")
         print("*********************************************************************************************")
         print("* Express or Manual Setup?                                                                  *")
