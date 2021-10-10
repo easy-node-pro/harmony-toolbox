@@ -100,12 +100,12 @@ def recoveryType():
     dotenv.set_key(validatorToolbox.dotenv_file, "NODE_WALLET", "true")
     passphraseStatus()
     passphraseSwitch = environ.get("PASS_SWITCH")
-    print("*********************************************************************************************")
+    printStars()
     print("* Wallet Recovery Type!                                                                     *")
-    print("*********************************************************************************************")
+    printStars()
     print("* [0] = Mnemonic phrase recovery (aka seed phrase)                                          *")
     print("* [1] = Private Key recovery                                                                *")
-    print("*********************************************************************************************")
+    printStars()
     menuOptions = ["[0] - Mnemonic Phrase Recovery", "[1] - Private Key Recovery", ]
     terminal_menu = TerminalMenu(menuOptions, title="* Which type of restore method would you like to use for your validator wallet?")
     results = terminal_menu.show()
@@ -234,12 +234,12 @@ def loadVarFile():
 
 def firstRunMenu():
     os.system("clear")
-    print("*********************************************************************************************")
+    printStars()
     print("* First run detected!                                                                       *")
-    print("*********************************************************************************************")
+    printStars()
     print("* [0] = Install Harmony Validator Software - For Brand NEW SERVERS ONLY                     *")
     print("* [1] = Load Validator Toolbox Menu App    - For servers already running harmony validator  *")
-    print("*********************************************************************************************")
+    printStars()
     menuOptions = ["[0] - Install Harmony Validator Software", "[1] - Load Validator Toolbox Menu Setup", ]
     terminal_menu = TerminalMenu(menuOptions, title="* Is this a new server or an already existing harmony node?")
     setupStatus = str(terminal_menu.show())
@@ -252,11 +252,11 @@ def firstRunMenu():
 def getShardMenu(dotenv_file) -> None:
     if environ.get("SHARD") is None:
         os.system("clear")
-        print("*********************************************************************************************")
+        printStars()
         print("* First Boot - Gathering more information about your server                                 *")
-        print("*********************************************************************************************")
+        printStars()
         print("* Which shard do you want this node run on?                                                 *")
-        print("*********************************************************************************************")
+        printStars()
         menuOptions = ["[0] - Shard 0", "[1] - Shard 1", "[2] - Shard 2", "[3] - Shard 3", ]
         terminal_menu = TerminalMenu(menuOptions, title="* Which Shard will this node operate on? ")
         ourShard = str(terminal_menu.show())
@@ -268,13 +268,13 @@ def getNodeType(dotenv_file) -> None:
     if not os.path.exists(validatorToolbox.hmyWalletStorePath):
         if environ.get("NODE_TYPE") == None:
             os.system("clear")
-            print("*********************************************************************************************")
+            printStars()
             print("* Which type of node would you like to run on this server?                                  *")
-            print("*********************************************************************************************")
+            printStars()
             print("* [0] - Standard w/ Wallet - Harmony Validator Signing Node with Wallet                     *")
             print("* [1] - Standard No Wallet - Harmony Validator Signing Node no Wallet                       *")
             print("* [2] - Full Node Dev/RPC - Non Validating Harmony Node                                     *")
-            print("*********************************************************************************************")
+            printStars()
             menuOptions = ["[0] Signing Node w/ Wallet", "[1] Signing Node No Wallet", "[2] Full Node Non Validating Dev/RPC", ]
             terminal_menu = TerminalMenu(menuOptions, title="Regular or Full Node Server")
             results = terminal_menu.show()
@@ -299,12 +299,12 @@ def getNodeType(dotenv_file) -> None:
 def setMainOrTest(dotenv_file) -> None:
     if environ.get("NETWORK") is None:
         os.system("clear")
-        print("*********************************************************************************************")
+        printStars()
         print("* Setup config not found, which blockchain does this node run on?                           *")
-        print("*********************************************************************************************")
+        printStars()
         print("* [0] - Mainnet                                                                             *")
         print("* [1] - Testnet                                                                             *")
-        print("*********************************************************************************************")
+        printStars()
         menuOptions = ["[0] Mainnet", "[1] Testnet", ]
         terminal_menu = TerminalMenu(menuOptions, title="Mainnet or Testnet")
         results = terminal_menu.show()
@@ -324,11 +324,11 @@ def setMainOrTest(dotenv_file) -> None:
 def getExpressStatus(dotenv_file) -> None:
     if environ.get("SETUP_STATUS") == "0":
         os.system("clear")
-        print("*********************************************************************************************")
+        printStars()
         print("* Express or Manual Setup?                                                                  *")
-        print("*********************************************************************************************")
+        printStars()
         print("* Would you like the turbo express setup or Manual approval of each step?                   *")
-        print("*********************************************************************************************")
+        printStars()
         menuOptions = ["[0] - Express Install", "[1] - Manual Approval", ]
         terminal_menu = TerminalMenu(menuOptions, title="* Express Or Manual Setup")
         dotenv.set_key(dotenv_file, "EXPRESS", str(terminal_menu.show()))
@@ -337,14 +337,14 @@ def getExpressStatus(dotenv_file) -> None:
 
 def getWalletAddress():
     os.system("clear")
-    print("*********************************************************************************************")
+    printStars()
     print("* Signing Node, No Wallet!                                                                  *")
     print("* You are attempting to launch the menu but no wallet has been loaded, as you chose         *")
     print("* If you would like to use the menu on the server, complete the following:                  *")
-    print("*********************************************************************************************")
+    printStars()
     print("* Edit ~/.easynode.env and add your wallet address on a new line like this example:         *")
     print("* VALIDATOR_WALLET='one1thisisjustanexamplewalletreplaceme'                                 *")
-    print("*********************************************************************************************")
+    printStars()
     raise SystemExit(0)
 
 
