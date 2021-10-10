@@ -251,6 +251,7 @@ def passphraseSet():
             break
     # Save file, we won't encrypt because if someone has access to the file, they will also have the salt and decrypt code at their disposal.
     save_text(validatorToolbox.passwordPath, password1)
+    passphraseStatus()
     return
 
 
