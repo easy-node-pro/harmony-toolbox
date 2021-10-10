@@ -290,6 +290,9 @@ def getNodeType(dotenv_file) -> None:
         else:
             if environ.get("VALIDATOR_WALLET"):
                 return
+            if environ.get("NODE_WALLET") == "true":
+                setWalletEnv(validatorToolbox.dotenv_file)
+                return
             getWalletAddress()
             return
     if not environ.get("NODE_TYPE"):
