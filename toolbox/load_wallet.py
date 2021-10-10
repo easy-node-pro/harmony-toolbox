@@ -16,6 +16,6 @@ if __name__ == "__main__":
             + "\n* Respond yes to recover your validator wallet via Mnemonic phrase now or say NO to create a new wallet post-install"
             + "\n* Restore an existing wallet now? (YES/NO) "
         )
-        if question:
-            passphraseStatus()
-            recoverWallet()
+    if question:
+        passphraseStatus()
+        recoverWallet()
