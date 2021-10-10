@@ -291,6 +291,8 @@ def getNodeType(dotenv_file) -> None:
         setWalletEnv()
     if not environ.get("NODE_TYPE"):
         dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
+    if not environ.get("NODE_WALLET"):
+        dotenv.set_key(dotenv_file, "NODE_WALLET", "true")
     return
 
 
