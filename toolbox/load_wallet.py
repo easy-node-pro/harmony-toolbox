@@ -1,10 +1,12 @@
+import os
 from os import environ
 from utils.config import validatorToolbox
-from utils.installer import firstSetup, printStars, recheckVars, passphraseStatus, recoverWallet
+from utils.installer import firstSetup, printStars, recheckVars, passphraseStatus, recoverWallet, passphraseSet
 from utils.shared import loaderIntro, setWalletEnv, askYesNo
 from utils.toolbox import runRegularNode, runFullNode
 
 if __name__ == "__main__":
+    os.system("clear")
     printStars()
     print(
         "* Harmony ONE Validator Wallet Import"
@@ -17,5 +19,6 @@ if __name__ == "__main__":
             + "\n* Restore an existing wallet now? (YES/NO) "
         )
     if question:
+        passphraseSet()
         passphraseStatus()
         recoverWallet()
