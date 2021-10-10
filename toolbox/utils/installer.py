@@ -292,7 +292,9 @@ def recoverWallet():
         f"{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}"
     )
     printStars()
-    validatorWallet = setWalletEnv(validatorToolbox.dotenv_file)
+    setWalletEnv(validatorToolbox.dotenv_file)
+    loadVarFile()
+    validatorWallet = environ.get("VALIDATOR_WALLET")
     print(
         "\n* Verify the address above matches the address below: "
         + "\n* Detected Wallet: "
