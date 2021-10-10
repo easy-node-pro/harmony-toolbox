@@ -24,4 +24,4 @@ if __name__ == "__main__":
         dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
         dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_WALLET")
         recoverWallet()
-        setWalletEnv(validatorToolbox.dotenv_file)
+        setWalletEnv()

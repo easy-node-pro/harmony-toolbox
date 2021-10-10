@@ -24,7 +24,7 @@ if __name__ == "__main__":
         passphraseStatus()
     if environ.get("NODE_TYPE") == "regular":
         if environ.get("VALIDATOR_WALLET") is None:
-            setWalletEnv(validatorToolbox.dotenv_file)
+            setWalletEnv()
         runRegularNode()
     if environ.get("NODE_TYPE") == "full":
         runFullNode()

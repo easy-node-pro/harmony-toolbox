@@ -4,7 +4,7 @@ import time
 from utils.config import validatorToolbox
 from os import environ
 from colorama import Fore, Style
-from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, setWalletEnv, firstRunMenu, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp, recoveryType, passphraseStatus, passphraseSet
+from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, firstRunMenu, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp, recoveryType, passphraseStatus, passphraseSet
 
 
 def firstSetup():
@@ -32,7 +32,6 @@ def recheckVars():
     getNodeType(validatorToolbox.dotenv_file)
     setMainOrTest(validatorToolbox.dotenv_file)
     setAPIPaths(validatorToolbox.dotenv_file)
-    setWalletEnv(validatorToolbox.dotenv_file)
     loadVarFile()
     return
 

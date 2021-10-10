@@ -79,13 +79,13 @@ def installHarmonyApp(harmonyDirPath, blsKeyFile):
     print(f"* Harmony {environ.get('NETWORK')} application installed & ~/harmony/harmony.conf created.")
 
 
-def setWalletEnv(dotenv_file):
+def setWalletEnv():
     if environ.get("NODE_WALLET") == "true":
         if environ.get("VALIDATOR_WALLET") is None:
             output = subprocess.getoutput(f"{validatorToolbox.hmyAppPath} keys list | grep {validatorToolbox.activeUserName}")
             outputStripped = output.lstrip(validatorToolbox.activeUserName)
             outputStripped = outputStripped.strip()
-            dotenv.set_key(dotenv_file, "VALIDATOR_WALLET", outputStripped)
+            dotenv.set_key(validatortoolbox.dotenv_file, "VALIDATOR_WALLET", outputStripped)
             return outputStripped
         else:
             loadVarFile()
