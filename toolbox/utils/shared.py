@@ -81,7 +81,8 @@ def installHarmonyApp(harmonyDirPath, blsKeyFile):
 
 def setWalletEnv():
     if environ.get("NODE_WALLET") == "true":
-        if environ.get("VALIDATOR_WALLET").startswith("one1"):
+        validatorWalletAddress = environ.get("VALIDATOR_WALLET")
+        if validatorWalletAddress.startswith("one1"):
             loadVarFile()
             validatorWallet = environ.get("VALIDATOR_WALLET")
             return validatorWallet            
