@@ -85,7 +85,7 @@ def setWalletEnv():
             output = subprocess.getoutput(f"{validatorToolbox.hmyAppPath} keys list | grep {validatorToolbox.activeUserName}")
             outputStripped = output.lstrip(validatorToolbox.activeUserName)
             outputStripped = outputStripped.strip()
-            dotenv.set_key(validatortoolbox.dotenv_file, "VALIDATOR_WALLET", outputStripped)
+            dotenv.set_key(validatorToolbox.dotenv_file, "VALIDATOR_WALLET", outputStripped)
             return outputStripped
         else:
             loadVarFile()
