@@ -112,7 +112,7 @@ def recoveryType():
         # Mnemonic Recovery Here
         os.system(f"{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}")
         printStars()
-        setWalletEnv(validatorToolbox.dotenv_file)
+        setWalletEnv()
         return
     if results == 1:
         # Private Key Recovery Here
@@ -120,7 +120,7 @@ def recoveryType():
         private = input("* Please enter your private key to restore your wallet: ")
         os.system(f"{validatorToolbox.hmyAppPath} keys import-private-key {private} {validatorToolbox.activeUserName} --passphrase")
         printStars()
-        setWalletEnv(validatorToolbox.dotenv_file)
+        setWalletEnv()
         return
 
 
@@ -291,7 +291,7 @@ def getNodeType(dotenv_file) -> None:
             if environ.get("VALIDATOR_WALLET"):
                 return
             if environ.get("NODE_WALLET") == "true":
-                setWalletEnv(validatorToolbox.dotenv_file)
+                setWalletEnv()
                 return
             getWalletAddress()
             return
