@@ -76,18 +76,20 @@ def checkForInstall() -> str:
             printStars()
             cloneShards()
             finish_node_install()
-    question = askYesNo(
-        "* You already have a harmony folder on this system, would you like to re-run installation and rclone? (YES/NO)"
-    )
-    if question:
-        installHarmony()
-        if environ.get('NODE_WALLET') == "true":
-            restoreWallet()
-        printStars()
-        print("* All harmony files now installed. Database download starting now...")
-        printStars()
-        cloneShards()
-        finish_node_install()
+    if environ.get("SETUP_STATUS") == "0":
+        question = askYesNo(
+            "* You already have a harmony folder on this system, would you like to re-run installation and rclone? (YES/NO)"
+        )
+        if question:
+            installHarmony()
+            if environ.get('NODE_WALLET') == "true":
+                restoreWallet()
+            printStars()
+            print("* All harmony files now installed. Database download starting now...")
+            printStars()
+            cloneShards()
+            finish_node_install()
+        return
     return
 
 
