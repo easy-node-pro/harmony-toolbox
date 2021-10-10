@@ -81,7 +81,7 @@ def installHarmonyApp(harmonyDirPath, blsKeyFile):
 
 def setWalletEnv():
     if environ.get("NODE_WALLET") == "true":
-        if environ.get("VALIDATOR_WALLET") is None:
+        if not environ.get("VALIDATOR_WALLET"):
             output = subprocess.getoutput(f"{validatorToolbox.hmyAppPath} keys list | grep {validatorToolbox.activeUserName}")
             outputStripped = output.lstrip(validatorToolbox.activeUserName)
             outputStripped = outputStripped.strip()
