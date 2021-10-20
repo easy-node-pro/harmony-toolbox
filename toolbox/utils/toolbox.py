@@ -54,7 +54,7 @@ def rewardsCollector() -> None:
 
 
 def menuTopperRegular() -> None:
-    current_epoch = blockchain.get_current_epoch(validatorToolbox.main_net_rpc)
+    current_epoch = getCurrentEpoch()
     os.system("clear")
     # Print Menu
     print(Style.RESET_ALL)
@@ -107,7 +107,7 @@ def menuTopperRegular() -> None:
 
 
 def menuTopperFull() -> None:
-    current_epoch = blockchain.get_current_epoch(validatorToolbox.main_net_rpc)
+    current_epoch = getCurrentEpoch()
     os.system("clear")
     # Print Menu
     print(Style.RESET_ALL)
@@ -714,6 +714,33 @@ def balanceCheckAny():
     print(f"* Your Validator Wallet Balance on Testnet is: {total_balance_test*0.000000000000000001} Harmony ONE Test Coins")
     printStars()
     input("Press ENTER to continue.")
+
+def getCurrentEpoch():
+    endpoints_count = len(validatorToolbox.rpc_endpoints)
+
+    for i in range(endpoints_count):
+        current_epoch = getCurrentEpochByEndpoint(validatorToolbox.rpc_endpoints[i])
+
+        if current_epoch != -1:
+            return current_epoch
+
+    raise ConnectionError("Couldn't fetch RPC data for current epoch.")
+
+
+def getCurrentEpochByEndpoint(endpoint):
+    current = 0
+    max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
+    current_epoch = -1
+
+    while current < max_tries:
+        try:
+            current_epoch = blockchain.get_current_epoch(endpoint)
+            return current_epoch
+        except Exception:
+            current += 1
+            continue
+
+    return current_epoch
 
 
 def finish_node():
