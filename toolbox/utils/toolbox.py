@@ -15,6 +15,7 @@ from requests.exceptions import HTTPError
 from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, return_txt, installHarmonyApp, installHmyApp, getSignPercent, loadVarFile
 from utils.allsysinfo import allSysInfo
 
+
 def collectRewards(networkCall):
     os.system(
         f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 2 {environ.get('PASS_SWITCH')}"
@@ -22,7 +23,7 @@ def collectRewards(networkCall):
     return
 
 
-def rewardsCollecter() -> None:
+def rewardsCollector() -> None:
     printStars()
     print("* Harmony ONE Rewards Collection")
     printStars()
@@ -157,6 +158,7 @@ def menuRegular() -> None:
         if x:
             print(x)
 
+
 def menuFull() -> None:
     menuTopperFull()
     print(Style.RESET_ALL)
@@ -267,7 +269,7 @@ def runRegularNode() -> None:
         1: runStats,
         2: menuActiveBLS,
         3: menuCheckBalance,
-        4: rewardsCollecter,
+        4: rewardsCollector,
         5: comingSoon,
         6: comingSoon,
         7: comingSoon,
@@ -387,8 +389,8 @@ def serverDriveCheck() -> None:
 
 def disk_partitions(all=False):
     disk_ntuple = namedtuple("partition", "device mountpoint fstype")
-    # Return all mountd partitions as a nameduple.
-    # If all == False return phyisical partitions only.
+    # Return all mounted partitions as a nameduple.
+    # If all == False return physical partitions only.
     phydevs = []
     f = open("/proc/filesystems", "r")
     for line in f:
@@ -442,7 +444,7 @@ def serviceMenuOption() -> None:
         print(
             "*  [8] "
             + Fore.RED
-            + "Stop Harmony Serivce      "
+            + "Stop Harmony Service      "
             + Fore.WHITE
             + "- "
             + Fore.YELLOW
