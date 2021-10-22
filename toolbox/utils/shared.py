@@ -387,12 +387,12 @@ def currentPrice():
 
 def getWalletBalance(validator_addr, endpoint):
     current = 0
-    max_tries = account.get_balance(validator_addr, endpoint)
+    max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
     validator_balance = -1
 
     while current < max_tries:
         try:
-            validator_balance = staking.get_validator_information(validator_addr, endpoint)
+            validator_balance = account.get_balance(validator_addr, endpoint)
             return validator_balance
         except Exception:
             current += 1
@@ -403,7 +403,7 @@ def getWalletBalance(validator_addr, endpoint):
 
 def getRewardsBalance(validator_addr, endpoint):
     current = 0
-    max_tries = account.get_balance(validator_addr, endpoint)
+    max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
     validator_rewards = -1
 
     while current < max_tries:
