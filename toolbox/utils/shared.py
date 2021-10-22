@@ -356,14 +356,18 @@ def setAPIPaths(dotenv_file):
     return 
 
 
-def getValidatorInfo(validator_addr, endpoint):
+def getValidatorInfo():
+    if environ.get("NETWORK") == "mainnet":
+        endpoint = len(validatorToolbox.rpc_endpoints)
+    if environ.get("NETWORK") == "testnet":
+        endpoint = len(validatorToolbox.rpc_endpoints_test)
     current = 0
     max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
     validator_data = -1
 
     while current < max_tries:
         try:
-            validator_data = staking.get_validator_information(validator_addr, endpoint)
+            validator_data = staking.get_validator_information(environ.get("VALIDATOR_WALLET"), endpoint)
             return validator_data
         except Exception:
             current += 1
@@ -385,14 +389,18 @@ def currentPrice():
     return (data_dict['lastPrice'][:-4])
 
 
-def getWalletBalance(validator_addr, endpoint):
+def getWalletBalance(wallet_addr):
+    if environ.get("NETWORK") == "mainnet":
+        endpoint = len(validatorToolbox.rpc_endpoints)
+    if environ.get("NETWORK") == "testnet":
+        endpoint = len(validatorToolbox.rpc_endpoints_test)
     current = 0
     max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
     validator_balance = -1
 
     while current < max_tries:
         try:
-            validator_balance = account.get_balance(validator_addr, endpoint)
+            validator_balance = account.get_balance(wallet_addr, endpoint)
             return validator_balance
         except Exception:
             current += 1
@@ -401,14 +409,18 @@ def getWalletBalance(validator_addr, endpoint):
     return validator_balance
 
 
-def getRewardsBalance(validator_addr, endpoint):
+def getRewardsBalance(wallet_addr):
+    if environ.get("NETWORK") == "mainnet":
+        endpoint = len(validatorToolbox.rpc_endpoints)
+    if environ.get("NETWORK") == "testnet":
+        endpoint = len(validatorToolbox.rpc_endpoints_test)
     current = 0
     max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
     validator_rewards = -1
 
     while current < max_tries:
         try:
-            validator_rewards = staking.get_delegations_by_delegator(delegator_addr, endpoint)
+            validator_rewards = staking.get_delegations_by_delegator(wallet_addr, endpoint)
             return validator_rewards
         except Exception:
             current += 1

@@ -675,8 +675,8 @@ def menuCheckBalance() -> None:
         printStarsReset()
         print("* Calling mainnet and testnet for balances...")
         printStars()
-        total_balance = getWalletBalance(validatorWallet, validatorToolbox.main_net_rpc)
-        total_balance_test = getWalletBalance(validatorWallet, validatorToolbox.main_net_rpc)
+        total_balance = getWalletBalance()
+        total_balance_test = getWalletBalance()
         print(f"* Your Validator Wallet Balance on Mainnet is: {total_balance*0.000000000000000001} Harmony ONE Coins")
         print(f"* Your Validator Wallet Balance on Testnet is: {total_balance_test*0.000000000000000001} Harmony ONE Test Coins")
         printStars()
@@ -711,8 +711,8 @@ def balanceCheckAny():
     )
     print("* Calling mainnet and testnet for balances...")
     printStarsReset()
-    total_balance = getWalletBalance(checkWallet, validatorToolbox.main_net_rpc)
-    total_balance_test = getWalletBalance(checkWallet, validatorToolbox.main_net_rpc)
+    total_balance = getWalletBalance()
+    total_balance_test = getWalletBalance()
     print(f"* The Wallet Balance is: {total_balance*0.000000000000000001} Harmony ONE Coins")
     print(f"* Your Validator Wallet Balance on Testnet is: {total_balance_test*0.000000000000000001} Harmony ONE Test Coins")
     printStars()
@@ -720,7 +720,10 @@ def balanceCheckAny():
 
 
 def getCurrentEpoch():
-    endpoints_count = len(validatorToolbox.rpc_endpoints)
+    if environ.get("NETWORK") == "mainnet":
+        endpoints_count = len(validatorToolbox.rpc_endpoints)
+    if environ.get("NETWORK") == "testnet":
+        endpoints_count = len(validatorToolbox.rpc_endpoints_test)
 
     for i in range(endpoints_count):
         current_epoch = getCurrentEpochByEndpoint(validatorToolbox.rpc_endpoints[i])
