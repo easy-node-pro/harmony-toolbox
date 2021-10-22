@@ -3,7 +3,7 @@ import socket
 import urllib.request
 
 class validatorToolbox:
-    easyVersion = "1.2.2"
+    easyVersion = "1.2.3"
     serverHostName = socket.gethostname()
     userHomeDir = os.path.expanduser("~")
     dotenv_file = f"{userHomeDir}/.easynode.env"
@@ -19,12 +19,9 @@ class validatorToolbox:
     validatorData = os.path.join(toolboxLocation, "toolbox", "metadata", "validator.json")
     passwordPath = os.path.join(harmonyDirPath, "passphrase.txt")
     toolboxLocation = os.path.join(userHomeDir, "validatortoolbox")
-    main_net_rpc = 'https://rpc.s0.t.hmny.io'
-    main_net_call = '/home/serviceharmony/harmony/hmy --node="https://api.s0.t.hmny.io"'
-    test_net_rpc = 'https://rpc.s0.b.hmny.io'
-    test_net_call = '/home/serviceharmony/harmony/hmy --node="https://api.s0.b.hmny.io"'
     ourExternalIPAddress = urllib.request.urlopen("https://ident.me").read().decode("utf8")
     mainMenuRegular = os.path.join(toolboxLocation, "toolbox", "messages", "regularmenu.txt")
     mainMenuFull = os.path.join(toolboxLocation, "toolbox", "messages", "fullmenu.txt")
     rpc_endpoints = ['https://rpc.s0.t.hmny.io', 'https://api.harmony.one']
+    rpc_endpoints_test = ['https://rpc.s0.b.hmny.io', 'https://api.s0.pops.one']
     rpc_endpoints_max_connection_retries = 10

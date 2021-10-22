@@ -12,7 +12,7 @@ from collections import namedtuple
 from colorama import Fore, Back, Style
 from pyhmy import blockchain, account
 from requests.exceptions import HTTPError
-from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, return_txt, installHarmonyApp, installHmyApp, getSignPercent, loadVarFile
+from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, return_txt, installHarmonyApp, installHmyApp, getSignPercent, loadVarFile, getWalletBalance, getRewardsBalance
 from utils.allsysinfo import allSysInfo
 
 
@@ -28,7 +28,7 @@ def rewardsCollector() -> None:
     print("* Harmony ONE Rewards Collection")
     printStars()
     question = askYesNo(
-        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
+        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {getRewardsBalance(validatorToolbox.rpc_endpoints, environ.get('VALIDATOR_WALLET'))} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
     )
     if question:
         collectRewards(validatorToolbox.main_net_call)
@@ -38,7 +38,7 @@ def rewardsCollector() -> None:
         )
         printStars()
     question = askYesNo(
-        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* Would you like to collect your rewards on the Harmony testnet? (YES/NO) "
+        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {getRewardsBalance(validatorToolbox.rpc_endpoints_test, environ.get('VALIDATOR_WALLET'))} $ONE pending.\n* Would you like to collect your rewards on the Harmony testnet? (YES/NO) "
     )
     if question:
         collectRewards(validatorToolbox.test_net_call)
@@ -55,6 +55,7 @@ def rewardsCollector() -> None:
 
 def menuTopperRegular() -> None:
     current_epoch = getCurrentEpoch()
+    sign_percentage = getSignPercent()
     os.system("clear")
     # Print Menu
     print(Style.RESET_ALL)
@@ -89,7 +90,7 @@ def menuTopperRegular() -> None:
         + Style.BRIGHT
         + Fore.GREEN
         + Back.BLUE
-        + getSignPercent()
+        + sign_percentage
         + " %"
         + Style.RESET_ALL
     )
@@ -672,10 +673,9 @@ def menuCheckBalance() -> None:
         printStarsReset()
         print("* Calling mainnet and testnet for balances...")
         printStars()
-        total_balance = account.get_total_balance(validatorWallet, endpoint=validatorToolbox.main_net_rpc)
-        total_balance_test = account.get_total_balance(validatorWallet, endpoint=validatorToolbox.test_net_rpc)
-        print(f"* Your Validator Wallet Balance on Mainnet is: {total_balance*0.000000000000000001} Harmony ONE Coins")
-        print(f"* Your Validator Wallet Balance on Testnet is: {total_balance_test*0.000000000000000001} Harmony ONE Test Coins")
+        total_balance, total_balance_test = getWalletBalance(validatorWallet)
+        print(f"* Your Validator Wallet Balance on Mainnet is: {total_balance} Harmony ONE Coins")
+        print(f"* Your Validator Wallet Balance on Testnet is: {total_balance_test} Harmony ONE Test Coins")
         printStars()
         i = 0
         while i < 1:
@@ -708,15 +708,17 @@ def balanceCheckAny():
     )
     print("* Calling mainnet and testnet for balances...")
     printStarsReset()
-    total_balance = account.get_total_balance(checkWallet, endpoint=validatorToolbox.main_net_rpc)
-    total_balance_test = account.get_total_balance(checkWallet, endpoint=validatorToolbox.test_net_rpc)
-    print(f"* The Wallet Balance is: {total_balance*0.000000000000000001} Harmony ONE Coins")
-    print(f"* Your Validator Wallet Balance on Testnet is: {total_balance_test*0.000000000000000001} Harmony ONE Test Coins")
+    total_balance, total_balance_test = getWalletBalance(checkWallet)
+    print(f"* The Mainnet Wallet Balance is: {total_balance} Harmony ONE Coins\n* The Testnet Wallet Balance is: {total_balance_test} Harmony ONE Test Coins")
     printStars()
     input("Press ENTER to continue.")
 
+
 def getCurrentEpoch():
-    endpoints_count = len(validatorToolbox.rpc_endpoints)
+    if environ.get("NETWORK") == "mainnet":
+        endpoints_count = len(validatorToolbox.rpc_endpoints)
+    if environ.get("NETWORK") == "testnet":
+        endpoints_count = len(validatorToolbox.rpc_endpoints_test)
 
     for i in range(endpoints_count):
         current_epoch = getCurrentEpochByEndpoint(validatorToolbox.rpc_endpoints[i])

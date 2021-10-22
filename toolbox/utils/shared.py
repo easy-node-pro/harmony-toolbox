@@ -2,12 +2,14 @@ import os
 import dotenv
 import subprocess
 import requests
+import pyhmy
 from utils.config import validatorToolbox
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
 from colorama import Style
 from pathlib import Path
+from pyhmy import validator, account, staking, numbers
 
 
 def loaderIntro():
@@ -355,35 +357,24 @@ def setAPIPaths(dotenv_file):
     return 
 
 
-def getValidatorInfo(
-    one_address: str, main_net_rpc: str, validatorData: str, save_data: bool = False, display: bool = False
-) -> dict:
+def getValidatorInfo():
+    if environ.get("NETWORK") == "mainnet":
+        endpoint = len(validatorToolbox.rpc_endpoints)
+    if environ.get("NETWORK") == "testnet":
+        endpoint = len(validatorToolbox.rpc_endpoints_test)
+    current = 0
+    max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
+    validator_data = -1
 
-    d = {
-        "jsonrpc": "2.0",
-        "method": "hmyv2_getValidatorInformation",
-        "params": [one_address],
-        "id": 1,
-    }
-    try:
-        response = post(main_net_rpc, json=d)
-    except Exception as e:
-        print("ERROR: <getValidatorInfo> Something went wrong with the RPC API.")
-        return False, {"Error": response.text}
+    while current < max_tries:
+        try:
+            validator_data = staking.get_validator_information(environ.get("VALIDATOR_WALLET"), endpoint)
+            return validator_data
+        except Exception:
+            current += 1
+            continue
 
-    if response.status_code == 200:
-        data = response.json()
-
-        if save_data:
-            save_json(validatorData, data)
-
-        if display:
-            print(dumps(data, indent=4))
-
-    else:
-        data = False, {f"Error [{response.status_code}]": response.text}
-
-    return True, data
+    return validator_data
 
 
 def currentPrice():
@@ -398,66 +389,61 @@ def currentPrice():
     return (data_dict['lastPrice'][:-4])
 
 
-def getWalletBalance(
-    wallet: str, save_data: bool = False, display: bool = False
-) -> dict:
+def getWalletBalance(wallet_addr):
+    endpoints_count = len(validatorToolbox.rpc_endpoints)
 
-    d = {
-        "jsonrpc": "2.0",
-        "method": "hmyv2_getBalance",
-        "params": [wallet],
-        "id": 1,
-    }
+    for i in range(endpoints_count):
+        wallet_balance = getWalletBalanceByEndpoint(validatorToolbox.rpc_endpoints[i], wallet_addr)
+        wallet_balance_test = getWalletBalanceByEndpoint(validatorToolbox.rpc_endpoints_test[i], wallet_addr)
+
+        if wallet_balance >= 0 and wallet_balance_test >= 0:
+            return wallet_balance, wallet_balance_test
+
+    raise ConnectionError("Couldn't fetch RPC data for current epoch.")
+
+
+def getWalletBalanceByEndpoint(endpoint, wallet_addr):
+    current = 0
+    max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
+    get_balance = 0
+
+    while current < max_tries:
+        try:
+            get_balance = pyhmy.numbers.convert_atto_to_one(account.get_balance(wallet_addr, endpoint))
+            return get_balance
+        except Exception:
+            current += 1
+            continue
+
+    return get_balance
+
+
+def getRewardsBalance(endpoint, wallet_addr):
+    endpoints_count = len(endpoint)
+    
+    for i in range(endpoints_count):
+        wallet_balance = getRewardsBalanceByEndpoint(endpoint[i], wallet_addr)
+
+        if wallet_balance >= 0:
+            return wallet_balance
+
+    raise ConnectionError("Couldn't fetch RPC data for current epoch.")
+
+
+def getRewardsBalanceByEndpoint(endpoint, wallet_addr):
+    current = 0
+    max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
+    totalRewards = 0
+
     try:
-        response = post(validatorToolbox.rpc_url, json=d)
-    except (ValueError, KeyError, TypeError):
-        return render_template("regular_wallet.html")
-
-    if response.status_code == 200:
-        data = response.json()
-
-        if save_data:
-            save_json(validatorToolbox.validatorData, data)
-
-        if display:
-            print(dumps(data, indent=4))
-
-    else:
-        data = False, {f"Error [{response.status_code}]": response.text}
-
-    return True, data
-
-
-def getRewardsBalance(
-    wallet: str, save_data: bool = False, display: bool = False
-) -> dict:
-
-    d = {
-        "jsonrpc": "2.0",
-        "method": "hmy_getDelegationsByDelegator",
-        "params": [wallet],
-        "id": 1,
-    }
-    try:
-        response = post(validatorToolbox.rpc_url, json=d)
-    except (ValueError, KeyError, TypeError):
-        input("* Something went wrong with the API, press ENTER to try again.")
-        getRewardsBalance(wallet)
-        return
-
-    if response.status_code == 200:
-        data = response.json()
-
-        if save_data:
-            save_json(validatorToolbox.validatorData, data)
-
-        if display:
-            print(dumps(data, indent=4))
-
-    else:
-        data = False, {f"Error [{response.status_code}]": response.text}
-
-    return True, data
+        validator_rewards = staking.get_delegations_by_delegator(wallet_addr, endpoint)
+    except Exception:
+        return totalRewards
+    
+    for i in validator_rewards:
+        totalRewards = totalRewards + i["reward"]
+    totalRewards = pyhmy.numbers.convert_atto_to_one(totalRewards)
+    return totalRewards
 
 
 def save_json(fn: str, data: dict) -> dict:
