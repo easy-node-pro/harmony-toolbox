@@ -425,12 +425,10 @@ def getRewardsBalance(wallet_addr):
         except Exception:
             current += 1
             continue
-        for i in validator_rewards:
-            totalRewards = totalRewards + i["reward"]
-        totalRewards = "{:,}".format(round(totalRewards * 0.000000000000000001, 2))
-        return totalRewards
-
-    raise ConnectionError("Couldn't fetch RPC data for current epoch.")
+    for i in validator_rewards:
+        totalRewards = totalRewards + i["reward"]
+    totalRewards = "{:,}".format(round(totalRewards * 0.000000000000000001, 2))
+    return totalRewards
 
 
 def save_json(fn: str, data: dict) -> dict:
