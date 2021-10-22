@@ -396,17 +396,18 @@ def getWalletBalance(wallet_addr):
         endpoint = len(validatorToolbox.rpc_endpoints_test)
     current = 0
     max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
-    validator_balance = -1
+    wallet_balance = -1
 
     while current < max_tries:
         try:
-            validator_balance = account.get_balance(wallet_addr, endpoint)
-            return validator_balance
+            wallet_balance = account.get_balance(wallet_addr, endpoint)
+            wallet_balance = pyhmy.numbers.convert_atto_to_one(wallet_balance)
+            return wallet_balance
         except Exception:
             current += 1
             continue
 
-    return validator_balance
+    return wallet_balance
 
 
 def getRewardsBalance(wallet_addr):
@@ -416,17 +417,20 @@ def getRewardsBalance(wallet_addr):
         endpoint = len(validatorToolbox.rpc_endpoints_test)
     current = 0
     max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
-    validator_rewards = -1
+    totalRewards = 0
 
     while current < max_tries:
         try:
             validator_rewards = staking.get_delegations_by_delegator(wallet_addr, endpoint)
-            return validator_rewards
         except Exception:
             current += 1
             continue
+        for i in validator_rewards:
+            totalRewards = totalRewards + i["reward"]
+        totalRewards = "{:,}".format(round(totalRewards * 0.000000000000000001, 2))
+        return totalRewards
 
-    return validator_rewards
+    raise ConnectionError("Couldn't fetch RPC data for current epoch.")
 
 
 def save_json(fn: str, data: dict) -> dict:
