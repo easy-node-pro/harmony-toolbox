@@ -389,25 +389,24 @@ def currentPrice():
 
 
 def getWalletBalance(wallet_addr):
-    if environ.get("NETWORK") == "mainnet":
-        endpoints_count = len(validatorToolbox.rpc_endpoints)
-    if environ.get("NETWORK") == "testnet":
-        endpoints_count = len(validatorToolbox.rpc_endpoints_test)
+    endpoints_count = len(validatorToolbox.rpc_endpoints)
+    endpoints_count_test = len(validatorToolbox.rpc_endpoints_test)
 
     for i in range(endpoints_count):
-        wallet_balance = getWalletBalanceByEndpoint(wallet_addr)
+        wallet_balance = getWalletBalanceByEndpoint(validatorToolbox.rpc_endpoints[i], wallet_addr)
 
         if wallet_balance >= 0:
-            return wallet_balance
+
+            for i in range(endpoints_count_test):
+                wallet_balance_test = getWalletBalanceByEndpoint(validatorToolbox.rpc_endpoints_test[i], wallet_addr)
+
+                if wallet_balance >= 0 and wallet_balance_test >= 0:
+                    return wallet_balance, wallet_balance_test
 
     raise ConnectionError("Couldn't fetch RPC data for current epoch.")
 
 
-def getWalletBalanceByEndpoint(wallet_addr):
-    if environ.get("NETWORK") == "mainnet":
-        endpoint = validatorToolbox.rpc_endpoints
-    if environ.get("NETWORK") == "testnet":
-        endpoint = validatorToolbox.rpc_endpoints_test
+def getWalletBalanceByEndpoint(endpoint, wallet_addr):
     current = 0
     max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
     wallet_balance = 0
