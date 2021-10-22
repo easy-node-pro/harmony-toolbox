@@ -376,7 +376,6 @@ def getValidatorInfo():
     return validator_data
 
 
-
 def currentPrice():
     try:
         response = requests.get(validatorToolbox.onePriceURL, timeout=5)
@@ -391,12 +390,27 @@ def currentPrice():
 
 def getWalletBalance(wallet_addr):
     if environ.get("NETWORK") == "mainnet":
-        endpoint = len(validatorToolbox.rpc_endpoints)
+        endpoints_count = len(validatorToolbox.rpc_endpoints)
     if environ.get("NETWORK") == "testnet":
-        endpoint = len(validatorToolbox.rpc_endpoints_test)
+        endpoints_count = len(validatorToolbox.rpc_endpoints_test)
+
+    for i in range(endpoints_count):
+        wallet_balance = getWalletBalanceByEndpoint(wallet_addr)
+
+        if wallet_balance => 0:
+            return wallet_balance
+
+    raise ConnectionError("Couldn't fetch RPC data for current epoch.")
+
+
+def getWalletBalanceByEndpoint(wallet_addr):
+    if environ.get("NETWORK") == "mainnet":
+        endpoint = validatorToolbox.rpc_endpoints
+    if environ.get("NETWORK") == "testnet":
+        endpoint = validatorToolbox.rpc_endpoints_test
     current = 0
     max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
-    wallet_balance = -1
+    wallet_balance = 0
 
     while current < max_tries:
         try:
@@ -429,6 +443,8 @@ def getRewardsBalance(wallet_addr):
         totalRewards = totalRewards + i["reward"]
     totalRewards = "{:,}".format(round(totalRewards * 0.000000000000000001, 2))
     return totalRewards
+
+    raise ConnectionError("Couldn't fetch RPC data for current epoch.")
 
 
 def save_json(fn: str, data: dict) -> dict:
