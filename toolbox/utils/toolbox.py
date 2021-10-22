@@ -670,12 +670,13 @@ def isfloat(value):
 
 
 def menuCheckBalance() -> None:
+    validatorWallet = environ.get('VALIDATOR_WALLET')
     if environ.get("NODE_TYPE") == "regular":
         printStarsReset()
         print("* Calling mainnet and testnet for balances...")
         printStars()
-        total_balance = getWalletBalance(environ.get('VALIDATOR_WALLET'))
-        total_balance_test = getWalletBalance(environ.get('VALIDATOR_WALLET'))
+        total_balance = getWalletBalance(validatorWallet)
+        total_balance_test = getWalletBalance(validatorWallet)
         print(f"* Your Validator Wallet Balance on Mainnet is: {total_balance*0.000000000000000001} Harmony ONE Coins")
         print(f"* Your Validator Wallet Balance on Testnet is: {total_balance_test*0.000000000000000001} Harmony ONE Test Coins")
         printStars()
