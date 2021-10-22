@@ -57,6 +57,7 @@ def rewardsCollector() -> None:
 
 def menuTopperRegular() -> None:
     current_epoch = getCurrentEpoch()
+    sign_percentage = getSignPercent()
     os.system("clear")
     # Print Menu
     print(Style.RESET_ALL)
@@ -91,7 +92,7 @@ def menuTopperRegular() -> None:
         + Style.BRIGHT
         + Fore.GREEN
         + Back.BLUE
-        + getSignPercent()
+        + sign_percentage
         + " %"
         + Style.RESET_ALL
     )
