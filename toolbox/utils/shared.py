@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
 from colorama import Style
 from pathlib import Path
+from pyhmy import validator, account
 
 
 def loaderIntro():
@@ -355,35 +356,21 @@ def setAPIPaths(dotenv_file):
     return 
 
 
-def getValidatorInfo(
-    one_address: str, main_net_rpc: str, validatorData: str, save_data: bool = False, display: bool = False
-) -> dict:
+def getValidatorInfo(validator_addr, endpoint):
+    current = 0
+    max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
+    validator_data = -1
 
-    d = {
-        "jsonrpc": "2.0",
-        "method": "hmyv2_getValidatorInformation",
-        "params": [one_address],
-        "id": 1,
-    }
-    try:
-        response = post(main_net_rpc, json=d)
-    except Exception as e:
-        print("ERROR: <getValidatorInfo> Something went wrong with the RPC API.")
-        return False, {"Error": response.text}
+    while current < max_tries:
+        try:
+            validator_data = staking.get_validator_information(validator_addr, endpoint)
+            return validator_data
+        except Exception:
+            current += 1
+            continue
 
-    if response.status_code == 200:
-        data = response.json()
+    return validator_data
 
-        if save_data:
-            save_json(validatorData, data)
-
-        if display:
-            print(dumps(data, indent=4))
-
-    else:
-        data = False, {f"Error [{response.status_code}]": response.text}
-
-    return True, data
 
 
 def currentPrice():
@@ -398,66 +385,36 @@ def currentPrice():
     return (data_dict['lastPrice'][:-4])
 
 
-def getWalletBalance(
-    wallet: str, save_data: bool = False, display: bool = False
-) -> dict:
+def getWalletBalance(validator_addr, endpoint):
+    current = 0
+    max_tries = account.get_balance(validator_addr, endpoint)
+    validator_balance = -1
 
-    d = {
-        "jsonrpc": "2.0",
-        "method": "hmyv2_getBalance",
-        "params": [wallet],
-        "id": 1,
-    }
-    try:
-        response = post(validatorToolbox.rpc_url, json=d)
-    except (ValueError, KeyError, TypeError):
-        return render_template("regular_wallet.html")
+    while current < max_tries:
+        try:
+            validator_balance = staking.get_validator_information(validator_addr, endpoint)
+            return validator_balance
+        except Exception:
+            current += 1
+            continue
 
-    if response.status_code == 200:
-        data = response.json()
-
-        if save_data:
-            save_json(validatorToolbox.validatorData, data)
-
-        if display:
-            print(dumps(data, indent=4))
-
-    else:
-        data = False, {f"Error [{response.status_code}]": response.text}
-
-    return True, data
+    return validator_balance
 
 
-def getRewardsBalance(
-    wallet: str, save_data: bool = False, display: bool = False
-) -> dict:
+def getRewardsBalance(validator_addr, endpoint):
+    current = 0
+    max_tries = account.get_balance(validator_addr, endpoint)
+    validator_rewards = -1
 
-    d = {
-        "jsonrpc": "2.0",
-        "method": "hmy_getDelegationsByDelegator",
-        "params": [wallet],
-        "id": 1,
-    }
-    try:
-        response = post(validatorToolbox.rpc_url, json=d)
-    except (ValueError, KeyError, TypeError):
-        input("* Something went wrong with the API, press ENTER to try again.")
-        getRewardsBalance(wallet)
-        return
+    while current < max_tries:
+        try:
+            validator_rewards = staking.get_delegations_by_delegator(delegator_addr, endpoint)
+            return validator_rewards
+        except Exception:
+            current += 1
+            continue
 
-    if response.status_code == 200:
-        data = response.json()
-
-        if save_data:
-            save_json(validatorToolbox.validatorData, data)
-
-        if display:
-            print(dumps(data, indent=4))
-
-    else:
-        data = False, {f"Error [{response.status_code}]": response.text}
-
-    return True, data
+    return validator_rewards
 
 
 def save_json(fn: str, data: dict) -> dict:

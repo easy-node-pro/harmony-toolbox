@@ -24,11 +24,13 @@ def collectRewards(networkCall):
 
 
 def rewardsCollector() -> None:
+    validator_rewards = getRewardsBalance(validatorWallet, validatorToolbox.rpc_endpoints)
+    validator_rewards_test = getRewardsBalance(validatorWallet, validatorToolbox.rpc_endpoints_test)
     printStars()
     print("* Harmony ONE Rewards Collection")
     printStars()
     question = askYesNo(
-        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
+        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {validator_rewards} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
     )
     if question:
         collectRewards(validatorToolbox.main_net_call)
@@ -38,7 +40,7 @@ def rewardsCollector() -> None:
         )
         printStars()
     question = askYesNo(
-        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* Would you like to collect your rewards on the Harmony testnet? (YES/NO) "
+        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {validator_rewards_test} $ONE pending.\n* Would you like to collect your rewards on the Harmony testnet? (YES/NO) "
     )
     if question:
         collectRewards(validatorToolbox.test_net_call)
@@ -672,8 +674,8 @@ def menuCheckBalance() -> None:
         printStarsReset()
         print("* Calling mainnet and testnet for balances...")
         printStars()
-        total_balance = account.get_total_balance(validatorWallet, endpoint=validatorToolbox.main_net_rpc)
-        total_balance_test = account.get_total_balance(validatorWallet, endpoint=validatorToolbox.test_net_rpc)
+        total_balance = getWalletBalance(validatorWallet, validatorToolbox.main_net_rpc)
+        total_balance_test = getWalletBalance(validatorWallet, validatorToolbox.main_net_rpc)
         print(f"* Your Validator Wallet Balance on Mainnet is: {total_balance*0.000000000000000001} Harmony ONE Coins")
         print(f"* Your Validator Wallet Balance on Testnet is: {total_balance_test*0.000000000000000001} Harmony ONE Test Coins")
         printStars()
@@ -708,12 +710,13 @@ def balanceCheckAny():
     )
     print("* Calling mainnet and testnet for balances...")
     printStarsReset()
-    total_balance = account.get_total_balance(checkWallet, endpoint=validatorToolbox.main_net_rpc)
-    total_balance_test = account.get_total_balance(checkWallet, endpoint=validatorToolbox.test_net_rpc)
+    total_balance = getWalletBalance(checkWallet, validatorToolbox.main_net_rpc)
+    total_balance_test = getWalletBalance(checkWallet, validatorToolbox.main_net_rpc)
     print(f"* The Wallet Balance is: {total_balance*0.000000000000000001} Harmony ONE Coins")
     print(f"* Your Validator Wallet Balance on Testnet is: {total_balance_test*0.000000000000000001} Harmony ONE Test Coins")
     printStars()
     input("Press ENTER to continue.")
+
 
 def getCurrentEpoch():
     endpoints_count = len(validatorToolbox.rpc_endpoints)
