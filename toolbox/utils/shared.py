@@ -405,41 +405,45 @@ def getWalletBalance(wallet_addr):
 def getWalletBalanceByEndpoint(endpoint, wallet_addr):
     current = 0
     max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
-    wallet_balance = 0
+    get_balance = 0
 
     while current < max_tries:
         try:
-            wallet_balance = account.get_balance(wallet_addr, endpoint)
-            wallet_balance = pyhmy.numbers.convert_atto_to_one(wallet_balance)
-            return wallet_balance
+            get_balance = pyhmy.numbers.convert_atto_to_one(account.get_balance(wallet_addr, endpoint))
+            return get_balance
         except Exception:
             current += 1
             continue
 
-    return wallet_balance
+    return get_balance
 
 
-def getRewardsBalance(wallet_addr):
-    if environ.get("NETWORK") == "mainnet":
-        endpoint = len(validatorToolbox.rpc_endpoints)
-    if environ.get("NETWORK") == "testnet":
-        endpoint = len(validatorToolbox.rpc_endpoints_test)
+def getRewardsBalance(endpoint, wallet_addr):
+    endpoints_count = len(endpoint)
+    
+    for i in range(endpoints_count):
+        wallet_balance = getRewardsBalanceByEndpoint(endpoint[i], wallet_addr)
+
+        if wallet_balance >= 0:
+            return wallet_balance
+
+    raise ConnectionError("Couldn't fetch RPC data for current epoch.")
+
+
+def getRewardsBalanceByEndpoint(endpoint, wallet_addr):
     current = 0
     max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
     totalRewards = 0
 
-    while current < max_tries:
-        try:
-            validator_rewards = staking.get_delegations_by_delegator(wallet_addr, endpoint)
-        except Exception:
-            current += 1
-            continue
+    try:
+        validator_rewards = staking.get_delegations_by_delegator(wallet_addr, endpoint)
+    except Exception:
+        return totalRewards
+    
     for i in validator_rewards:
         totalRewards = totalRewards + i["reward"]
-    totalRewards = "{:,}".format(round(totalRewards * 0.000000000000000001, 2))
+    totalRewards = pyhmy.numbers.convert_atto_to_one(totalRewards)
     return totalRewards
-
-    raise ConnectionError("Couldn't fetch RPC data for current epoch.")
 
 
 def save_json(fn: str, data: dict) -> dict:

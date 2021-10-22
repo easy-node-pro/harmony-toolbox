@@ -24,13 +24,11 @@ def collectRewards(networkCall):
 
 
 def rewardsCollector() -> None:
-    validator_rewards = getRewardsBalance(environ.get('VALIDATOR_WALLET'))
-    validator_rewards_test = getRewardsBalance(environ.get('VALIDATOR_WALLET'))
     printStars()
     print("* Harmony ONE Rewards Collection")
     printStars()
     question = askYesNo(
-        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {validator_rewards} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
+        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {getRewardsBalance(validatorToolbox.rpc_endpoints, environ.get('VALIDATOR_WALLET'))} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
     )
     if question:
         collectRewards(validatorToolbox.main_net_call)
@@ -40,7 +38,7 @@ def rewardsCollector() -> None:
         )
         printStars()
     question = askYesNo(
-        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {validator_rewards_test} $ONE pending.\n* Would you like to collect your rewards on the Harmony testnet? (YES/NO) "
+        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {getRewardsBalance(validatorToolbox.rpc_endpoints_test, environ.get('VALIDATOR_WALLET'))} $ONE pending.\n* Would you like to collect your rewards on the Harmony testnet? (YES/NO) "
     )
     if question:
         collectRewards(validatorToolbox.test_net_call)
@@ -711,8 +709,7 @@ def balanceCheckAny():
     print("* Calling mainnet and testnet for balances...")
     printStarsReset()
     total_balance, total_balance_test = getWalletBalance(checkWallet)
-    print(f"* The Wallet Balance is: {total_balance} Harmony ONE Coins")
-    print(f"* Your Validator Wallet Balance on Testnet is: {total_balance_test} Harmony ONE Test Coins")
+    print(f"* The Mainnet Wallet Balance is: {total_balance} Harmony ONE Coins\n* The Testnet Wallet Balance is: {total_balance_test} Harmony ONE Test Coins")
     printStars()
     input("Press ENTER to continue.")
 
