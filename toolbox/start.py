@@ -18,7 +18,6 @@ if __name__ == "__main__":
     if validatorToolbox.easyVersion != environ.get("EASY_VERSION"):
         dotenv.unset_key(validatorToolbox.dotenv_file, "EASY_VERSION")
         dotenv.set_key(validatorToolbox.dotenv_file, "EASY_VERSION", validatorToolbox.easyVersion)
-    time.sleep(1)
     if environ.get("SETUP_STATUS") != "2":
         recheckVars()
         passphraseStatus()
