@@ -677,8 +677,8 @@ def menuCheckBalance() -> None:
         printStars()
         total_balance = getWalletBalance(validatorWallet)
         total_balance_test = getWalletBalance(validatorWallet)
-        print(f"* Your Validator Wallet Balance on Mainnet is: {total_balance*0.000000000000000001} Harmony ONE Coins")
-        print(f"* Your Validator Wallet Balance on Testnet is: {total_balance_test*0.000000000000000001} Harmony ONE Test Coins")
+        print(f"* Your Validator Wallet Balance on Mainnet is: {total_balance} Harmony ONE Coins")
+        print(f"* Your Validator Wallet Balance on Testnet is: {total_balance_test} Harmony ONE Test Coins")
         printStars()
         i = 0
         while i < 1:
