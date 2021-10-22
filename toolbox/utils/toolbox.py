@@ -251,15 +251,19 @@ def runFullNode() -> None:
         menu_options[option]()
 
 
+def bingoChecker():
+    os.system("cat ~/harmony/latest/zerolog-harmony.log | grep BINGO")
+    input("* Press enter to return to the main menu.")
+    return
+
+
 def comingSoon():
     os.system("clear")
     printWhiteSpace()
     printStars()
     print("* This option isn't available on your system, yet!")
     printStars()
-    print("* Press enter to return to the main menu.")
-    printStars()
-    input()
+    input("* Press enter to return to the main menu.")
     return
 
 
@@ -271,7 +275,7 @@ def runRegularNode() -> None:
         2: menuActiveBLS,
         3: menuCheckBalance,
         4: rewardsCollector,
-        5: comingSoon,
+        5: bingoChecker,
         6: comingSoon,
         7: comingSoon,
         8: menuServiceStopStart,
