@@ -24,8 +24,8 @@ def collectRewards(networkCall):
 
 
 def rewardsCollector() -> None:
-    validator_rewards = getRewardsBalance(validatorWallet, validatorToolbox.rpc_endpoints)
-    validator_rewards_test = getRewardsBalance(validatorWallet, validatorToolbox.rpc_endpoints_test)
+    validator_rewards = getRewardsBalance(environ.get('VALIDATOR_WALLET'), validatorToolbox.rpc_endpoints)
+    validator_rewards_test = getRewardsBalance(environ.get('VALIDATOR_WALLET'), validatorToolbox.rpc_endpoints_test)
     printStars()
     print("* Harmony ONE Rewards Collection")
     printStars()
