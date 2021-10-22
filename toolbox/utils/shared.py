@@ -2,13 +2,14 @@ import os
 import dotenv
 import subprocess
 import requests
+import pyhmy
 from utils.config import validatorToolbox
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
 from colorama import Style
 from pathlib import Path
-from pyhmy import validator, account
+from pyhmy import validator, account, staking, numbers
 
 
 def loaderIntro():
@@ -390,18 +391,13 @@ def currentPrice():
 
 def getWalletBalance(wallet_addr):
     endpoints_count = len(validatorToolbox.rpc_endpoints)
-    endpoints_count_test = len(validatorToolbox.rpc_endpoints_test)
 
     for i in range(endpoints_count):
         wallet_balance = getWalletBalanceByEndpoint(validatorToolbox.rpc_endpoints[i], wallet_addr)
+        wallet_balance_test = getWalletBalanceByEndpoint(validatorToolbox.rpc_endpoints_test[i], wallet_addr)
 
-        if wallet_balance >= 0:
-
-            for i in range(endpoints_count_test):
-                wallet_balance_test = getWalletBalanceByEndpoint(validatorToolbox.rpc_endpoints_test[i], wallet_addr)
-
-                if wallet_balance >= 0 and wallet_balance_test >= 0:
-                    return wallet_balance, wallet_balance_test
+        if wallet_balance >= 0 and wallet_balance_test >= 0:
+            return wallet_balance, wallet_balance_test
 
     raise ConnectionError("Couldn't fetch RPC data for current epoch.")
 
