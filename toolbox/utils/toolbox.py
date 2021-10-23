@@ -252,7 +252,7 @@ def runFullNode() -> None:
 
 
 def bingoChecker():
-    os.system("cat ~/harmony/latest/*.log | grep BINGO")
+    os.system("grep BINGO ~/harmony/latest/zerolog-harmony.log | tail -10")
     input("* Press enter to return to the main menu.")
     return
 
