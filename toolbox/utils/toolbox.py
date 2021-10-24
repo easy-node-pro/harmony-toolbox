@@ -729,8 +729,8 @@ def getCurrentEpoch():
 
         if current_epoch != -1:
             return current_epoch
-
-    raise ConnectionError("Couldn't fetch RPC data for current epoch.")
+    current_epoch = 0
+    return current_epoch
 
 
 def getCurrentEpochByEndpoint(endpoint):
@@ -751,12 +751,6 @@ def getCurrentEpochByEndpoint(endpoint):
 
 def finish_node():
     printStars()
-    print("Don't forget to check for some BINGOs with:")
-    print()
-    print(
-        f"tail -f /home/{validatorToolbox.activeUserName}/harmony/latest/zerolog-harmony.log | grep BINGO"
-    )
-    print()
-    print("Thanks for using Easy Node - EZ Mode! Goodbye.")
+    print("* Thanks for using Easy Node - EZ Mode! Goodbye.")
     printStars()
     raise SystemExit(0)
