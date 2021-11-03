@@ -175,7 +175,7 @@ def cloneShards():
         print(f"* Now cloning shard {environ.get('SHARD')}")
         printStars()
         os.system(
-            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')}"
+            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 8 --transfers=16"
         )
         printStars()
         print(f"Shard {environ.get('SHARD')} completed.")
@@ -185,7 +185,7 @@ def cloneShards():
         print("* Now cloning Shard 0, kick back and relax for awhile...")
         printStars()
         os.system(
-            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0"
+            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0 --multi-thread-streams 8 --transfers=16"
         )
         return
     else:
