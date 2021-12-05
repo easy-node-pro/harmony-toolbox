@@ -41,7 +41,7 @@ def rewardsCollector() -> None:
         f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {getRewardsBalance(validatorToolbox.rpc_endpoints_test, environ.get('VALIDATOR_WALLET'))} $ONE pending.\n* Would you like to collect your rewards on the Harmony testnet? (YES/NO) "
     )
     if question:
-        collectRewards("/home/serviceharmony/harmony/hmy --node=\'https://api.s0.b.hmny.io\' ")
+        collectRewards(f"/home/{validatorToolbox.activeUserName}/harmony/hmy --node=\'https://api.s0.b.hmny.io\' ")
         print()
         printStars()
         print(
