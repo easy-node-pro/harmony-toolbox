@@ -14,7 +14,7 @@ This repository provides two functions in one application:
 
 ## Quickstart Guide
 ### Pre-Installation Requirements
-Digital Ocean users can use [this pre-installation quick guide](https://validator-toolbox-guide.easynode.one/full-manual/pre-installation-information/pre-installation/digital-ocean-validator-node-setup "this pre-installation quick guide").
+Digital Ocean users can use [this pre-installation quick guide](https://validator-toolbox-guide.easynode.one/quick-setup/quick-install.html "this pre-installation quick guide").
 
 **Operating System**
 -   Ubuntu 20.04LTS - The suggested operating system from harmony
