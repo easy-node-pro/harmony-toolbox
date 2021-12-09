@@ -581,6 +581,7 @@ def shardStats(ourShard) -> str:
 *
 * Harmony DB 0 Size  ::  {dbZeroSize}
 * Harmony DB {ourShard} Size  ::   {getDBSize(str(ourShard))}
+*
 * {ourVersion}
 *********************************************************************************************
         """)
