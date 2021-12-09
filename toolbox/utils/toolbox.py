@@ -2,8 +2,11 @@ import os
 import shutil
 import requests
 import time
-import subprocess
 import dotenv
+import json
+import subprocess
+from subprocess import Popen, PIPE, run
+from ast import literal_eval
 from utils.config import validatorToolbox
 from os import environ
 from dotenv import load_dotenv
@@ -523,21 +526,28 @@ def runStats() -> str:
     timeNow = datetime.now()
     ourShard = environ.get("SHARD")
     networkNumCall = environ.get("NETWORK_S_CALL")
+    remote_shard_0 = ['/home/serviceharmony/harmony/hmy', 'blockchain', 'latest-headers', f'--node=https://api.s0.t.hmny.io']
+    result_remote_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
+    remote_shard = ['/home/serviceharmony/harmony/hmy', 'blockchain', 'latest-headers', f'--node=https://api.s{ourShard}.t.hmny.io']
+    result_remote_shard = run(remote_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    remote_data_shard = json.loads(result_remote_shard.stdout)
+    local_shard = ['/home/serviceharmony/harmony/hmy', 'blockchain', 'latest-headers']
+    result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    local_data_shard = json.loads(result_local_shard.stdout)
     printStars()
-    print(
-        f"* Current Date & Time: {timeNow}\n* Current Status of our server {validatorToolbox.serverHostName} currently on Shard {environ.get('SHARD')}:\n"
-    )
-    os.system(
-        f"{validatorToolbox.hmyAppPath} blockchain latest-headers | grep epoch && {validatorToolbox.hmyAppPath} blockchain latest-headers | grep viewID && {validatorToolbox.hmyAppPath} blockchain latest-headers | grep shardID"
-    )
-    print(
-        f"\n* Current Status of the Harmony Blockchain Shard {environ.get('SHARD')}:\n"
-    )
-    os.system(
-        f"{networkNumCall} blockchain latest-headers | grep epoch && {networkNumCall} blockchain latest-headers | grep viewID && {networkNumCall} blockchain latest-headers | grep shardID"
-    )
+    print(f"* Current Date & Time: {timeNow}\n* Current Status of our server {validatorToolbox.serverHostName} currently on Shard {environ.get('SHARD')}:\n")
+    print(f"Shard {ourShard} Sync Status:")
+    print(f"Local Server  - Epoch {local_data_shard['result']['shard-chain-header']['epoch']} - Shard {local_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}")
+    print(f"Remote Server - Epoch {remote_data_shard['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}")
+    print()
+    print(f"Shard 0 Sync Status:")
+    print(f"Local Server  - Epoch {local_data_shard['result']['beacon-chain-header']['epoch']} - Shard {local_data_shard['result']['beacon-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['beacon-chain-header']['number'])}")
+    print(f"Remote Server - Epoch {remote_data_shard_0['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard_0['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}")
+    print()
     shardStats(ourShard)
     input("Validator stats completed, press ENTER to return to the main menu. ")
+    return
 
 
 def getDBSize(ourShard) -> str:
