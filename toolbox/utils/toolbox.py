@@ -525,6 +525,9 @@ def upgradeHarmonyApp(testOrMain):
 def runStats() -> str:
     timeNow = datetime.now()
     ourShard = environ.get("SHARD")
+    remote_shard_0 = ['/home/serviceharmony/harmony/hmy', 'blockchain', 'latest-headers', f'--node=https://api.s0.t.hmny.io']
+    result_remote_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
     remote_shard = ['/home/serviceharmony/harmony/hmy', 'blockchain', 'latest-headers', f'--node=https://api.s{ourShard}.t.hmny.io']
     result_remote_shard = run(remote_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     remote_data_shard = json.loads(result_remote_shard.stdout)
@@ -535,7 +538,7 @@ def runStats() -> str:
     print(f"* Current Date & Time: {timeNow}\n* Current Status of our server {validatorToolbox.serverHostName} currently on Shard {environ.get('SHARD')}:\n")
     print(f"Shard 0 Sync Status:")
     print(f"Local Server  - Epoch {local_data_shard['result']['beacon-chain-header']['epoch']} - Shard {local_data_shard['result']['beacon-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['beacon-chain-header']['number'])}")
-    print(f"Remote Server - Epoch {remote_data_shard['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}")
+    print(f"Remote Server - Epoch {remote_data_shard_0['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard_0['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}")
     print()
     if int(ourShard) > 0:
         print(f"Shard {ourShard} Sync Status:")
