@@ -534,7 +534,6 @@ def runStats() -> str:
     local_shard = ['/home/serviceharmony/harmony/hmy', 'blockchain', 'latest-headers']
     result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     local_data_shard = json.loads(result_local_shard.stdout)
-    printStars()
     print(f"""
 *********************************************************************************************
 * Current Date & Time: {timeNow}
@@ -556,7 +555,7 @@ def runStats() -> str:
 *
 *********************************************************************************************""")
     shardStats(ourShard)
-    input("Validator stats completed, press ENTER to return to the main menu. ")
+    input("* Validator stats completed, press ENTER to return to the main menu. ")
     return
 
 
