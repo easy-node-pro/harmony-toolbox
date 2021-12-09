@@ -573,12 +573,16 @@ def shardStats(ourShard) -> str:
         print(f"""
 * Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {dbZeroSize}
 * {ourVersion}
+*********************************************************************************************
         """)
     else:
         print(f"""
-* Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {dbZeroSize}\n Harmony DB {ourShard} Size  ::   {getDBSize(str(ourShard))}\n'
+* Uptime :: {ourUptime}
+*
+* Harmony DB 0 Size  ::  {dbZeroSize}
+* Harmony DB {ourShard} Size  ::   {getDBSize(str(ourShard))}
 * {ourVersion}
-{printStars()}
+*********************************************************************************************
         """)
     return
 
