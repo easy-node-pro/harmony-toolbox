@@ -533,7 +533,7 @@ def runStats() -> str:
     local_data_shard = json.loads(result_local_shard.stdout)
     printStars()
     print(f"* Current Date & Time: {timeNow}\n* Current Status of our server {validatorToolbox.serverHostName} currently on Shard {environ.get('SHARD')}:\n")
-    if ourShard > 0:
+    if int(ourShard) > 0:
         print(f"Shard {ourShard} Sync Status:")
         print(f"Local Server  - Epoch {local_data_shard['result']['shard-chain-header']['epoch']} - Shard {local_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}")
         print(f"Remote Server - Epoch {remote_data_shard['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}")
