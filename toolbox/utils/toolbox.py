@@ -543,7 +543,7 @@ def runStats() -> str:
     """)
     if int(ourShard) > 0:
         print(f"""
-{printStars}
+{printStars()}
 * Shard {ourShard} Sync Status:
 * Local Server  - Epoch {local_data_shard['result']['shard-chain-header']['epoch']} - Shard {local_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}
 * Remote Server - Epoch {remote_data_shard['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}
