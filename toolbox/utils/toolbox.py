@@ -541,7 +541,6 @@ def runStats() -> str:
         print(f"Shard {ourShard} Sync Status:")
         print(f"Local Server  - Epoch {local_data_shard['result']['shard-chain-header']['epoch']} - Shard {local_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}")
         print(f"Remote Server - Epoch {remote_data_shard['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}")
-        print()
     shardStats(ourShard)
     input("Validator stats completed, press ENTER to return to the main menu. ")
     return
