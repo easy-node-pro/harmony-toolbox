@@ -538,6 +538,7 @@ def runStats() -> str:
     print(f"""
 *********************************************************************************************
 * Current Date & Time: {timeNow}
+*
 *********************************************************************************************
 * Current Status of our server {validatorToolbox.serverHostName} currently on Shard {environ.get('SHARD')}:
 *
