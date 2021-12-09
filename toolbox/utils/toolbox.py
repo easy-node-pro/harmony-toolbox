@@ -567,16 +567,17 @@ def getDBSize(ourShard) -> str:
 
 def shardStats(ourShard) -> str:
     ourUptime = subprocess.getoutput("uptime")
+    ourVersion = subprocess.getoutput(f"{validatorToolbox.harmonyAppPath} -V")
     dbZeroSize = getDBSize('0')
     if ourShard == "0":
         print(f"""
 * Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {dbZeroSize}
-* {validatorToolbox.harmonyAppPath} -V
+* {ourVersion}
         """)
     else:
         print(f"""
 * Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {dbZeroSize}\n Harmony DB {ourShard} Size  ::   {getDBSize(str(ourShard))}\n'
-* {validatorToolbox.harmonyAppPath} -V
+* {ourVersion}
 {printStars()}
         """)
     return
