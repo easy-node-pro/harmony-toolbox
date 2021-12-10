@@ -38,7 +38,7 @@ def allSysInfo():
     # CPU usage
     print("CPU Usage Per Core:")
     
-    # TODO: Does a Core start from 0? or 1? enumerate starts from 0.. check!
+    # TODO: Does a Core start from 0? or 1? enumerate starts from 0.. check if we need i+1 to align !
     for i, percentage in enumerate(psutil.cpu_percent(percpu=True, interval=1)):
         print(f"Core {i}: {percentage}%")
     print(f"Total CPU Usage: {psutil.cpu_percent()}%")
