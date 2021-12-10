@@ -36,7 +36,7 @@ def recheckVars():
 
 def checkForInstall() -> str:
     loadVarFile()
-    if os.path.exists(validatorToolbox.harmonyDirPath) == False:
+    if not os.path.exists(validatorToolbox.harmonyDirPath):
         print(
             f"* You selected Shard: {environ.get('SHARD')}. "
         )

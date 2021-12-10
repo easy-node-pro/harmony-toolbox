@@ -11,7 +11,7 @@ from utils.toolbox import runRegularNode, runFullNode
 if __name__ == "__main__":
     os.system("clear")
     loaderIntro()
-    if os.path.exists(validatorToolbox.dotenv_file) == False:
+    if not os.path.exists(validatorToolbox.dotenv_file):
         firstSetup()
     print("* Configuration file detected, loading the validatortoolbox menu application.")
     printStars()
