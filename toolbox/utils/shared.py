@@ -10,27 +10,62 @@ from simple_term_menu import TerminalMenu
 from colorama import Style
 from pathlib import Path
 from pyhmy import validator, account, staking, numbers
+from json import load, dump
+
+class PrintStuff:
+
+    def __init__(self, reset: int=0):
+        self.reset = reset
+        self.print_stars = "*" * 93
+        self.reset_stars = self.print_stars + Style.RESET_ALL
+
+    def printStars(self) -> None:        
+        p = self.print_stars
+        if self.reset:
+            p = self.reset_stars
+        print(p)
+        
+    def stringStars(self) -> str:
+        p = self.print_stars
+        if self.reset:
+            p = self.reset_stars
+        return p
+
+    @classmethod
+    def printWhiteSpace(self) -> None:
+        print("\n" * 8)
+
+printWhiteSpace = PrintStuff.printWhiteSpace
+printStars = PrintStuff().printStars
+stringStars = PrintStuff().stringStars
+printStarsReset = PrintStuff(reset=1).printStars
+stringStarsReset = PrintStuff(reset=1).stringStars
 
 
 def loaderIntro():
-    printStars()
-    print(" ____ ____ ____ ____ _________ ____ ____ ____ ____           ")
-    print("||E |||a |||s |||y |||       |||N |||o |||d |||e ||          ")
-    print("||__|||__|||__|||__|||_______|||__|||__|||__|||__||          ")
-    print("|/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|          ")
-    print(" ____ ____ ____ ____ ____ ____ ____ _________ ____ ____ ____ ")
-    print("||H |||a |||r |||m |||o |||n |||y |||       |||O |||N |||E ||")
-    print("||__|||__|||__|||__|||__|||__|||__|||_______|||__|||__|||__||")
-    print("|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|")
-    print(" ____ ____ ____ ____ ____ ____ ____ ____ ____                ")
-    print("||v |||a |||l |||i |||d |||a |||t |||o |||r ||               ")
-    print("||__|||__|||__|||__|||__|||__|||__|||__|||__||               ")
-    print("|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|               ")
-    print(" ____ ____ ____ ____ ____ ____ ____                          ")
-    print("||T |||o |||o |||l |||b |||o |||x ||                         ")
-    print("||__|||__|||__|||__|||__|||__|||__||                         ")
-    print("|/__\|/__\|/__\|/__\|/__\|/__\|/__\|                         ")
-    printStars()
+    p = f"""
+    {stringStars()}
+                    ____ ____ ____ ____ _________ ____ ____ ____ ____           
+                    ||E |||a |||s |||y |||       |||N |||o |||d |||e ||          
+                    ||__|||__|||__|||__|||_______|||__|||__|||__|||__||          
+                    |/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|          
+                ____ ____ ____ ____ ____ ____ ____ _________ ____ ____ ____ 
+                ||H |||a |||r |||m |||o |||n |||y |||       |||O |||N |||E ||
+                ||__|||__|||__|||__|||__|||__|||__|||_______|||__|||__|||__||
+                |/__\|/__\|/__\|/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|
+                        ____ ____ ____ ____ ____ ____ ____ ____ ____                
+                        ||v |||a |||l |||i |||d |||a |||t |||o |||r ||               
+                        ||__|||__|||__|||__|||__|||__|||__|||__|||__||               
+                        |/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|               
+                            ____ ____ ____ ____ ____ ____ ____                          
+                            ||T |||o |||o |||l |||b |||o |||x ||                         
+                            ||__|||__|||__|||__|||__|||__|||__||                         
+                            |/__\|/__\|/__\|/__\|/__\|/__\|/__\|   
+                                            
+    {stringStars()}
+    
+    """
+    print(p)
 
 
 def installHmyApp(harmonyDirPath):
@@ -41,16 +76,15 @@ def installHmyApp(harmonyDirPath):
 
 
 def updateHarmonyConf(fileName, originalText, newText):
-    f = open(fileName,'r')
-    filedata = f.read()
-    f.close()
+
+    with open(fileName,'r') as f:
+        filedata = f.read()
 
     newdata = filedata.replace(originalText, newText)
 
-    f = open(fileName,'w')
-    f.write(newdata)
-    f.close()
-    return
+    with open(fileName, 'w') as f:
+        f.write(newdata)
+
 
 
 def installHarmonyApp(harmonyDirPath, blsKeyFile):
@@ -116,15 +150,13 @@ def recoveryType():
         os.system(f"{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}")
         printStars()
         setWalletEnv()
-        return
-    if results == 1:
+    elif results == 1:
         # Private Key Recovery Here
         print("* Private key recovery requires your private information in the command itself.")
         private = input("* Please enter your private key to restore your wallet: ")
         os.system(f"{validatorToolbox.hmyAppPath} keys import-private-key {private} {validatorToolbox.activeUserName} --passphrase")
         printStars()
         setWalletEnv()
-        return
 
 
 def passphraseStatus():
@@ -138,7 +170,6 @@ def passphraseStatus():
         dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
         dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH", "--passphrase")
     loadVarFile()
-    return
 
 
 def passphraseSet():
@@ -166,38 +197,12 @@ def passphraseSet():
     save_text(validatorToolbox.passwordPath, password1)
     loadVarFile()
     passphraseStatus()
-    return
+    
 
 
 def process_command(command: str) -> None:
     process = subprocess.Popen(command, shell=True)
     output, error = process.communicate()
-
-
-def printStars() -> str:
-    print(
-        "*********************************************************************************************"
-    )
-    return
-
-
-def printStarsReset() -> str:
-    print(
-        "*********************************************************************************************"
-        + Style.RESET_ALL
-    )
-    return
-
-
-def printWhiteSpace() -> str:
-    print()
-    print()
-    print()
-    print()
-    print()
-    print()
-    print()
-    print()
 
 
 def askYesNo(question: str) -> bool:
@@ -229,9 +234,8 @@ def return_txt(fn: str) -> list:
 
 
 def loadVarFile():
-    if os.path.exists(validatorToolbox.dotenv_file) == True:
+    if os.path.exists(validatorToolbox.dotenv_file):
         load_dotenv(validatorToolbox.dotenv_file)
-        return
 
 
 def firstRunMenu():
@@ -247,12 +251,10 @@ def firstRunMenu():
     setupStatus = str(terminal_menu.show())
     dotenv.unset_key(validatorToolbox.dotenv_file, "SETUP_STATUS", setupStatus)
     dotenv.set_key(validatorToolbox.dotenv_file, "SETUP_STATUS", setupStatus)
-    return
-
 
 
 def getShardMenu(dotenv_file) -> None:
-    if environ.get("SHARD") is None:
+    if not environ.get("SHARD"):
         os.system("clear")
         printStars()
         print("* First Boot - Gathering more information about your server                                 *")
@@ -295,11 +297,10 @@ def getNodeType(dotenv_file) -> None:
         dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
     if not environ.get("NODE_WALLET"):
         dotenv.set_key(dotenv_file, "NODE_WALLET", "true")
-    return
 
 
 def setMainOrTest(dotenv_file) -> None:
-    if environ.get("NETWORK") is None:
+    if not environ.get("NETWORK"):
         os.system("clear")
         printStars()
         print("* Setup config not found, which blockchain does this node run on?                           *")
@@ -320,7 +321,6 @@ def setMainOrTest(dotenv_file) -> None:
             dotenv.set_key(dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
         os.system("clear")
         loadVarFile()
-        return 
 
 
 def getExpressStatus(dotenv_file) -> None:
@@ -334,7 +334,6 @@ def getExpressStatus(dotenv_file) -> None:
         menuOptions = ["[0] - Express Install", "[1] - Manual Approval", ]
         terminal_menu = TerminalMenu(menuOptions, title="* Express Or Manual Setup")
         dotenv.set_key(dotenv_file, "EXPRESS", str(terminal_menu.show()))
-    return
 
 
 def getWalletAddress():
@@ -351,11 +350,9 @@ def getWalletAddress():
 
 
 def setAPIPaths(dotenv_file):
-    if environ.get("NETWORK_0_CALL") is None:
+    if not environ.get("NETWORK_0_CALL"):
         dotenv.set_key(dotenv_file, "NETWORK_0_CALL", f"{validatorToolbox.hmyAppPath} --node='https://api.s0.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
         dotenv.set_key(dotenv_file, "NETWORK_S_CALL", f"{validatorToolbox.hmyAppPath} --node='https://api.s{environ.get('SHARD')}.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
-    return 
-
 
 def getValidatorInfo():
     if environ.get("NETWORK") == "mainnet":
