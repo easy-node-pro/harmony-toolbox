@@ -547,13 +547,13 @@ def runStats() -> str:
     """)
     shardStats(ourShard)
     input("* Validator stats completed, press ENTER to return to the main menu. ")
-    return
 
 
 def getDBSize(ourShard) -> str:
     harmonyDBSize = subprocess.getoutput(f"du -h {validatorToolbox.harmonyDirPath}/harmony_db_{ourShard}")
     harmonyDBSize = harmonyDBSize.rstrip('\t')
-    return harmonyDBSize[:-41]
+    countTrim = len(validatorToolbox.harmonyDirPath) + 13
+    return harmonyDBSize[:-countTrim]
 
 
 def shardStats(ourShard) -> str:
