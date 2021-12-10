@@ -2,8 +2,11 @@ import os
 import shutil
 import requests
 import time
-import subprocess
 import dotenv
+import json
+import subprocess
+from subprocess import Popen, PIPE, run
+from ast import literal_eval
 from utils.config import validatorToolbox
 from os import environ
 from dotenv import load_dotenv
@@ -30,7 +33,7 @@ def rewardsCollector() -> None:
         f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {getRewardsBalance(validatorToolbox.rpc_endpoints, environ.get('VALIDATOR_WALLET'))} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
     )
     if question:
-        collectRewards("/home/serviceharmony/harmony/hmy --node=\'https://api.s0.t.hmny.io\' ")
+        collectRewards(f"/home/{validatorToolbox.activeUserName}/harmony/hmy --node=\'https://api.s0.t.hmny.io\' ")
         printStars()
         print(
             Fore.GREEN + f"* mainnet rewards for {environ.get('VALIDATOR_WALLET')} have been collected." + Style.RESET_ALL
@@ -40,7 +43,7 @@ def rewardsCollector() -> None:
         f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {getRewardsBalance(validatorToolbox.rpc_endpoints_test, environ.get('VALIDATOR_WALLET'))} $ONE pending.\n* Would you like to collect your rewards on the Harmony testnet? (YES/NO) "
     )
     if question:
-        collectRewards("/home/serviceharmony/harmony/hmy --node=\'https://api.s0.b.hmny.io\' ")
+        collectRewards(f"/home/{validatorToolbox.activeUserName}/harmony/hmy --node=\'https://api.s0.b.hmny.io\' ")
         print()
         printStars()
         print(
@@ -511,22 +514,38 @@ def upgradeHarmonyApp(testOrMain):
 def runStats() -> str:
     timeNow = datetime.now()
     ourShard = environ.get("SHARD")
-    networkNumCall = environ.get("NETWORK_S_CALL")
-    printStars()
-    print(
-        f"* Current Date & Time: {timeNow}\n* Current Status of our server {validatorToolbox.serverHostName} currently on Shard {environ.get('SHARD')}:\n"
-    )
-    os.system(
-        f"{validatorToolbox.hmyAppPath} blockchain latest-headers | grep epoch && {validatorToolbox.hmyAppPath} blockchain latest-headers | grep viewID && {validatorToolbox.hmyAppPath} blockchain latest-headers | grep shardID"
-    )
-    print(
-        f"\n* Current Status of the Harmony Blockchain Shard {environ.get('SHARD')}:\n"
-    )
-    os.system(
-        f"{networkNumCall} blockchain latest-headers | grep epoch && {networkNumCall} blockchain latest-headers | grep viewID && {networkNumCall} blockchain latest-headers | grep shardID"
-    )
+    remote_shard_0 = ['/home/serviceharmony/harmony/hmy', 'blockchain', 'latest-headers', f'--node=https://api.s0.t.hmny.io']
+    result_remote_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
+    remote_shard = ['/home/serviceharmony/harmony/hmy', 'blockchain', 'latest-headers', f'--node=https://api.s{ourShard}.t.hmny.io']
+    result_remote_shard = run(remote_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    remote_data_shard = json.loads(result_remote_shard.stdout)
+    local_shard = ['/home/serviceharmony/harmony/hmy', 'blockchain', 'latest-headers']
+    result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    local_data_shard = json.loads(result_local_shard.stdout)
+    print(f"""
+*********************************************************************************************
+* Current Date & Time: {timeNow}
+*
+*********************************************************************************************
+* Current Status of our server {validatorToolbox.serverHostName} currently on Shard {environ.get('SHARD')}:
+*
+* Shard 0 Sync Status:
+* Local Server  - Epoch {local_data_shard['result']['beacon-chain-header']['epoch']} - Shard {local_data_shard['result']['beacon-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['beacon-chain-header']['number'])}
+* Remote Server - Epoch {remote_data_shard_0['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard_0['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}
+*
+*********************************************************************************************""")
+    if int(ourShard) > 0:
+        print(f"""
+* Shard {ourShard} Sync Status:
+*
+* Local Server  - Epoch {local_data_shard['result']['shard-chain-header']['epoch']} - Shard {local_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}
+* Remote Server - Epoch {remote_data_shard['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}
+*
+*********************************************************************************************""")
     shardStats(ourShard)
-    input("Validator stats completed, press ENTER to return to the main menu. ")
+    input("* Validator stats completed, press ENTER to return to the main menu. ")
+    return
 
 
 def getDBSize(ourShard) -> str:
@@ -537,22 +556,25 @@ def getDBSize(ourShard) -> str:
 
 def shardStats(ourShard) -> str:
     ourUptime = subprocess.getoutput("uptime")
+    ourVersion = subprocess.getoutput(f"{validatorToolbox.harmonyAppPath} -V")
     dbZeroSize = getDBSize('0')
     if ourShard == "0":
-        os.system(
-            f"echo '\n* Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {dbZeroSize}\n'"
-        )
-        os.system(
-            f"{validatorToolbox.harmonyAppPath} -V"
-        )
+        print(f"""
+* Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {dbZeroSize}
+* {ourVersion}
+*********************************************************************************************
+        """)
     else:
-        os.system(
-            f"echo '\n* Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {dbZeroSize}\n Harmony DB {ourShard} Size  ::   {getDBSize(str(ourShard))}\n'"
-        )
-        os.system(
-            f"{validatorToolbox.harmonyAppPath} -V"
-        )
-    printStars()
+        print(f"""
+* Uptime :: {ourUptime}
+*
+* Harmony DB 0 Size  ::  {dbZeroSize}
+* Harmony DB {ourShard} Size  ::   {getDBSize(str(ourShard))}
+*
+* {ourVersion}
+*
+*********************************************************************************************
+        """)
 
 
 def menuBinaryUpdates():
