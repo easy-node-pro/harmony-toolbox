@@ -15,7 +15,7 @@ from collections import namedtuple
 from colorama import Fore, Back, Style
 from pyhmy import blockchain, account
 from requests.exceptions import HTTPError
-from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, return_txt, installHarmonyApp, installHmyApp, getSignPercent, loadVarFile, getWalletBalance, getRewardsBalance
+from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, return_txt, installHarmonyApp, installHmyApp, getSignPercent, loadVarFile, getWalletBalance, getRewardsBalance, stringStars
 from utils.allsysinfo import allSysInfo
 
 
@@ -514,27 +514,28 @@ def upgradeHarmonyApp(testOrMain):
 def runStats() -> str:
     timeNow = datetime.now()
     ourShard = environ.get("SHARD")
-    remote_shard_0 = ['/home/serviceharmony/harmony/hmy', 'blockchain', 'latest-headers', f'--node=https://api.s0.t.hmny.io']
+    remote_shard_0 = [f'{validatorToolbox.hmyAppPath}', 'blockchain', 'latest-headers', f'--node=https://api.s0.t.hmny.io']
     result_remote_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
-    remote_shard = ['/home/serviceharmony/harmony/hmy', 'blockchain', 'latest-headers', f'--node=https://api.s{ourShard}.t.hmny.io']
+    remote_shard = [f'{validatorToolbox.hmyAppPath}', 'blockchain', 'latest-headers', f'--node=https://api.s{ourShard}.t.hmny.io']
     result_remote_shard = run(remote_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     remote_data_shard = json.loads(result_remote_shard.stdout)
-    local_shard = ['/home/serviceharmony/harmony/hmy', 'blockchain', 'latest-headers']
+    local_shard = [f'{validatorToolbox.hmyAppPath}', 'blockchain', 'latest-headers']
     result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     local_data_shard = json.loads(result_local_shard.stdout)
     print(f"""
-*********************************************************************************************
+{stringStars()}
 * Current Date & Time: {timeNow}
 *
-*********************************************************************************************
+{stringStars()}
 * Current Status of our server {validatorToolbox.serverHostName} currently on Shard {environ.get('SHARD')}:
 *
 * Shard 0 Sync Status:
 * Local Server  - Epoch {local_data_shard['result']['beacon-chain-header']['epoch']} - Shard {local_data_shard['result']['beacon-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['beacon-chain-header']['number'])}
 * Remote Server - Epoch {remote_data_shard_0['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard_0['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}
 *
-*********************************************************************************************""")
+{stringStars()}
+    """)
     if int(ourShard) > 0:
         print(f"""
 * Shard {ourShard} Sync Status:
@@ -542,7 +543,8 @@ def runStats() -> str:
 * Local Server  - Epoch {local_data_shard['result']['shard-chain-header']['epoch']} - Shard {local_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}
 * Remote Server - Epoch {remote_data_shard['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}
 *
-*********************************************************************************************""")
+{stringStars()}
+    """)
     shardStats(ourShard)
     input("* Validator stats completed, press ENTER to return to the main menu. ")
     return
@@ -562,7 +564,7 @@ def shardStats(ourShard) -> str:
         print(f"""
 * Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {dbZeroSize}
 * {ourVersion}
-*********************************************************************************************
+{stringStars()}
         """)
     else:
         print(f"""
@@ -573,7 +575,7 @@ def shardStats(ourShard) -> str:
 *
 * {ourVersion}
 *
-*********************************************************************************************
+{stringStars()}
         """)
 
 
