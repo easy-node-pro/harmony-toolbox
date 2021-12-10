@@ -10,6 +10,7 @@ from simple_term_menu import TerminalMenu
 from colorama import Style
 from pathlib import Path
 from pyhmy import validator, account, staking, numbers
+from json import load, dump
 
 class PrintStuff:
 
@@ -149,15 +150,13 @@ def recoveryType():
         os.system(f"{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}")
         printStars()
         setWalletEnv()
-        return
-    if results == 1:
+    elif results == 1:
         # Private Key Recovery Here
         print("* Private key recovery requires your private information in the command itself.")
         private = input("* Please enter your private key to restore your wallet: ")
         os.system(f"{validatorToolbox.hmyAppPath} keys import-private-key {private} {validatorToolbox.activeUserName} --passphrase")
         printStars()
         setWalletEnv()
-        return
 
 
 def passphraseStatus():
@@ -171,7 +170,6 @@ def passphraseStatus():
         dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
         dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH", "--passphrase")
     loadVarFile()
-    return
 
 
 def passphraseSet():
@@ -238,7 +236,6 @@ def return_txt(fn: str) -> list:
 def loadVarFile():
     if os.path.exists(validatorToolbox.dotenv_file) == True:
         load_dotenv(validatorToolbox.dotenv_file)
-        return
 
 
 def firstRunMenu():
@@ -254,8 +251,6 @@ def firstRunMenu():
     setupStatus = str(terminal_menu.show())
     dotenv.unset_key(validatorToolbox.dotenv_file, "SETUP_STATUS", setupStatus)
     dotenv.set_key(validatorToolbox.dotenv_file, "SETUP_STATUS", setupStatus)
-    return
-
 
 
 def getShardMenu(dotenv_file) -> None:
@@ -302,7 +297,6 @@ def getNodeType(dotenv_file) -> None:
         dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
     if not environ.get("NODE_WALLET"):
         dotenv.set_key(dotenv_file, "NODE_WALLET", "true")
-    return
 
 
 def setMainOrTest(dotenv_file) -> None:
@@ -327,7 +321,6 @@ def setMainOrTest(dotenv_file) -> None:
             dotenv.set_key(dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
         os.system("clear")
         loadVarFile()
-        return 
 
 
 def getExpressStatus(dotenv_file) -> None:
@@ -341,7 +334,6 @@ def getExpressStatus(dotenv_file) -> None:
         menuOptions = ["[0] - Express Install", "[1] - Manual Approval", ]
         terminal_menu = TerminalMenu(menuOptions, title="* Express Or Manual Setup")
         dotenv.set_key(dotenv_file, "EXPRESS", str(terminal_menu.show()))
-    return
 
 
 def getWalletAddress():
@@ -361,8 +353,6 @@ def setAPIPaths(dotenv_file):
     if environ.get("NETWORK_0_CALL") is None:
         dotenv.set_key(dotenv_file, "NETWORK_0_CALL", f"{validatorToolbox.hmyAppPath} --node='https://api.s0.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
         dotenv.set_key(dotenv_file, "NETWORK_S_CALL", f"{validatorToolbox.hmyAppPath} --node='https://api.s{environ.get('SHARD')}.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
-    return 
-
 
 def getValidatorInfo():
     if environ.get("NETWORK") == "mainnet":

@@ -33,8 +33,6 @@ def recheckVars():
     setMainOrTest(validatorToolbox.dotenv_file)
     setAPIPaths(validatorToolbox.dotenv_file)
     loadVarFile()
-    return
-
 
 def checkForInstall() -> str:
     loadVarFile()
@@ -89,8 +87,7 @@ def checkForInstall() -> str:
             printStars()
             cloneShards()
             finish_node_install()
-        return
-    return
+
 
 
 def installHarmony() -> None:
@@ -187,7 +184,6 @@ def cloneShards():
         os.system(
             f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0 --multi-thread-streams 4 --transfers=8"
         )
-        return
     else:
         os.system("clear")
         question = askYesNo(
@@ -207,14 +203,11 @@ def cloneShards():
             os.system(
                 f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0"
             )
-        else:
-            return
-        return
 
 
 def restoreWallet() -> str:
     if environ.get("NODE_WALLET") == "true":
-        if os.path.exists(validatorToolbox.hmyWalletStorePath) == False:
+        if not os.path.exists(validatorToolbox.hmyWalletStorePath):
             os.system("clear")
             printStars()
             print(
@@ -238,8 +231,7 @@ def restoreWallet() -> str:
             return
         printStars()
         print("* Wallet already setup for this user account")
-        return
-    return
+
 
 
 def recoverWallet():
@@ -281,7 +273,6 @@ def setMountedPoint():
     else:
         dotenv.set_key(validatorToolbox.dotenv_file, "MOUNT_POINT",
                        f"{validatorToolbox.harmonyDirPath}")
-    return
 
 
 def finish_node_install():

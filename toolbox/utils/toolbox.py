@@ -20,7 +20,6 @@ def collectRewards(networkCall):
     os.system(
         f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 2 {environ.get('PASS_SWITCH')}"
     )
-    return
 
 
 def rewardsCollector() -> None:
@@ -50,7 +49,6 @@ def rewardsCollector() -> None:
         printStars()
         print()
         input("Press ENTER to return to the main menu.")
-    return
 
 
 def menuTopperRegular() -> None:
@@ -254,8 +252,6 @@ def runFullNode() -> None:
 def bingoChecker():
     os.system("grep BINGO ~/harmony/latest/zerolog-harmony.log | tail -10")
     input("* Press enter to return to the main menu.")
-    return
-
 
 def comingSoon():
     os.system("clear")
@@ -264,8 +260,6 @@ def comingSoon():
     print("* This option isn't available on your system, yet!")
     printStars()
     input("* Press enter to return to the main menu.")
-    return
-
 
 def runRegularNode() -> None:
     loadVarFile()
@@ -337,7 +331,6 @@ def harmonyServiceStatus() -> None:
             + "   Online  "
             + Style.RESET_ALL
         )
-        return
     else:
         print(
             "* Harmony Service is:               "
@@ -346,18 +339,17 @@ def harmonyServiceStatus() -> None:
             + "  *** Offline *** "
             + Style.RESET_ALL
         )
-        return
 
 
 def diskFreeSpace(mountPoint: str) -> str:
-    total, used, free = shutil.disk_usage(mountPoint)
+    _, _, free = shutil.disk_usage(mountPoint)
     free = str(convertedUnit(free))
     return free
 
 
 def freeSpaceCheck() -> str:
     ourDiskMount = get_mount_point(validatorToolbox.harmonyDirPath)
-    total, used, free = shutil.disk_usage(ourDiskMount)
+    _, _, free = shutil.disk_usage(ourDiskMount)
     free = diskFreeSpace(ourDiskMount)
     return free
 
@@ -474,8 +466,6 @@ def makeBackupDir() -> str:
         printStarsReset()
         print("Backup directory not found, creating folder")
         os.system(f"mkdir -p {validatorToolbox.harmonyDirPath}/harmony_backup")
-        return
-    return
 
 
 def hmyCLIUpgrade():
@@ -494,7 +484,6 @@ def hmyCLIUpgrade():
         os.system(f"{validatorToolbox.hmyAppPath} version")
         printStars()
         input("Update completed, press ENTER to return to the main menu. ")
-        return
 
 
 def upgradeHarmonyApp(testOrMain):
@@ -517,7 +506,6 @@ def upgradeHarmonyApp(testOrMain):
         "Harmony Service is restarting, wait 10 seconds and we'll check your stats..."
     )
     time.sleep(10)
-    return
 
 
 def runStats() -> str:
@@ -565,7 +553,6 @@ def shardStats(ourShard) -> str:
             f"{validatorToolbox.harmonyAppPath} -V"
         )
     printStars()
-    return
 
 
 def menuBinaryUpdates():
@@ -691,7 +678,6 @@ def menuCheckBalance() -> None:
                 balanceCheckAny()
             else:
                 i = 1
-        return
     else:
         i = 0
         while i < 1:
@@ -702,7 +688,6 @@ def menuCheckBalance() -> None:
                 balanceCheckAny()
             else:
                 i = 1
-    return
 
 
 def balanceCheckAny():
