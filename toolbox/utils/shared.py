@@ -11,26 +11,60 @@ from colorama import Style
 from pathlib import Path
 from pyhmy import validator, account, staking, numbers
 
+class PrintStuff:
+
+    def __init__(self, reset: int=0):
+        self.reset = reset
+        self.print_stars = "*" * 93
+        self.reset_stars = self.print_stars + Style.RESET_ALL
+
+    def printStars(self) -> None:        
+        p = self.print_stars
+        if self.reset:
+            p = self.reset_stars
+        print(p)
+        
+    def stringStars(self) -> str:
+        p = self.print_stars
+        if self.reset:
+            p = self.reset_stars
+        return p
+
+    @classmethod
+    def printWhiteSpace(self) -> None:
+        print("\n" * 8)
+
+printWhiteSpace = PrintStuff.printWhiteSpace
+printStars = PrintStuff().printStars
+stringStars = PrintStuff().stringStars
+printStarsReset = PrintStuff(reset=1).printStars
+stringStarsReset = PrintStuff(reset=1).stringStars
+
 
 def loaderIntro():
-    printStars()
-    print(" ____ ____ ____ ____ _________ ____ ____ ____ ____           ")
-    print("||E |||a |||s |||y |||       |||N |||o |||d |||e ||          ")
-    print("||__|||__|||__|||__|||_______|||__|||__|||__|||__||          ")
-    print("|/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|          ")
-    print(" ____ ____ ____ ____ ____ ____ ____ _________ ____ ____ ____ ")
-    print("||H |||a |||r |||m |||o |||n |||y |||       |||O |||N |||E ||")
-    print("||__|||__|||__|||__|||__|||__|||__|||_______|||__|||__|||__||")
-    print("|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|")
-    print(" ____ ____ ____ ____ ____ ____ ____ ____ ____                ")
-    print("||v |||a |||l |||i |||d |||a |||t |||o |||r ||               ")
-    print("||__|||__|||__|||__|||__|||__|||__|||__|||__||               ")
-    print("|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|               ")
-    print(" ____ ____ ____ ____ ____ ____ ____                          ")
-    print("||T |||o |||o |||l |||b |||o |||x ||                         ")
-    print("||__|||__|||__|||__|||__|||__|||__||                         ")
-    print("|/__\|/__\|/__\|/__\|/__\|/__\|/__\|                         ")
-    printStars()
+    p = f"""
+    {stringStars()}
+                    ____ ____ ____ ____ _________ ____ ____ ____ ____           
+                    ||E |||a |||s |||y |||       |||N |||o |||d |||e ||          
+                    ||__|||__|||__|||__|||_______|||__|||__|||__|||__||          
+                    |/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|          
+                ____ ____ ____ ____ ____ ____ ____ _________ ____ ____ ____ 
+                ||H |||a |||r |||m |||o |||n |||y |||       |||O |||N |||E ||
+                ||__|||__|||__|||__|||__|||__|||__|||_______|||__|||__|||__||
+                |/__\|/__\|/__\|/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|
+                        ____ ____ ____ ____ ____ ____ ____ ____ ____                
+                        ||v |||a |||l |||i |||d |||a |||t |||o |||r ||               
+                        ||__|||__|||__|||__|||__|||__|||__|||__|||__||               
+                        |/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|               
+                            ____ ____ ____ ____ ____ ____ ____                          
+                            ||T |||o |||o |||l |||b |||o |||x ||                         
+                            ||__|||__|||__|||__|||__|||__|||__||                         
+                            |/__\|/__\|/__\|/__\|/__\|/__\|/__\|   
+                                            
+    {stringStars()}
+    
+    """
+    print(p)
 
 
 def installHmyApp(harmonyDirPath):
@@ -41,16 +75,15 @@ def installHmyApp(harmonyDirPath):
 
 
 def updateHarmonyConf(fileName, originalText, newText):
-    f = open(fileName,'r')
-    filedata = f.read()
-    f.close()
+
+    with open(fileName,'r') as f:
+        filedata = f.read()
 
     newdata = filedata.replace(originalText, newText)
 
-    f = open(fileName,'w')
-    f.write(newdata)
-    f.close()
-    return
+    with open(fileName, 'w') as f:
+        f.write(newdata)
+
 
 
 def installHarmonyApp(harmonyDirPath, blsKeyFile):
@@ -166,38 +199,12 @@ def passphraseSet():
     save_text(validatorToolbox.passwordPath, password1)
     loadVarFile()
     passphraseStatus()
-    return
+    
 
 
 def process_command(command: str) -> None:
     process = subprocess.Popen(command, shell=True)
     output, error = process.communicate()
-
-
-def printStars() -> str:
-    print(
-        "*********************************************************************************************"
-    )
-    return
-
-
-def printStarsReset() -> str:
-    print(
-        "*********************************************************************************************"
-        + Style.RESET_ALL
-    )
-    return
-
-
-def printWhiteSpace() -> str:
-    print()
-    print()
-    print()
-    print()
-    print()
-    print()
-    print()
-    print()
 
 
 def askYesNo(question: str) -> bool:
