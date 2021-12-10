@@ -254,7 +254,7 @@ def firstRunMenu():
 
 
 def getShardMenu(dotenv_file) -> None:
-    if environ.get("SHARD") is None:
+    if not environ.get("SHARD"):
         os.system("clear")
         printStars()
         print("* First Boot - Gathering more information about your server                                 *")
@@ -300,7 +300,7 @@ def getNodeType(dotenv_file) -> None:
 
 
 def setMainOrTest(dotenv_file) -> None:
-    if environ.get("NETWORK") is None:
+    if not environ.get("NETWORK"):
         os.system("clear")
         printStars()
         print("* Setup config not found, which blockchain does this node run on?                           *")
@@ -350,7 +350,7 @@ def getWalletAddress():
 
 
 def setAPIPaths(dotenv_file):
-    if environ.get("NETWORK_0_CALL") is None:
+    if not environ.get("NETWORK_0_CALL"):
         dotenv.set_key(dotenv_file, "NETWORK_0_CALL", f"{validatorToolbox.hmyAppPath} --node='https://api.s0.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
         dotenv.set_key(dotenv_file, "NETWORK_S_CALL", f"{validatorToolbox.hmyAppPath} --node='https://api.s{environ.get('SHARD')}.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
 
