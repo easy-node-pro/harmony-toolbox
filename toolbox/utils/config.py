@@ -22,6 +22,6 @@ class validatorToolbox:
     ourExternalIPAddress = urllib.request.urlopen("https://ident.me").read().decode("utf8")
     mainMenuRegular = os.path.join(toolboxLocation, "toolbox", "messages", "regularmenu.txt")
     mainMenuFull = os.path.join(toolboxLocation, "toolbox", "messages", "fullmenu.txt")
-    rpc_endpoints = ['https://rpc.s0.t.hmny.io', 'https://api.harmony.one']
+    rpc_endpoints = ['https://api.s0.t.hmny.io', 'https://api.harmony.one', 'https://harmony-0-rpc.gateway.pokt.network']
     rpc_endpoints_test = ['https://rpc.s0.b.hmny.io', 'https://api.s0.pops.one']
     rpc_endpoints_max_connection_retries = 10
