@@ -33,7 +33,7 @@ def rewardsCollector() -> None:
         f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {getRewardsBalance(validatorToolbox.rpc_endpoints, environ.get('VALIDATOR_WALLET'))} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
     )
     if question:
-        collectRewards(f"/home/{validatorToolbox.activeUserName}/harmony/hmy --node=\'https://api.s0.t.hmny.io\' ")
+        collectRewards(f"{environ.get('NETWORK_0_CALL')}")
         printStars()
         print(
             Fore.GREEN + f"* mainnet rewards for {environ.get('VALIDATOR_WALLET')} have been collected." + Style.RESET_ALL
@@ -43,7 +43,7 @@ def rewardsCollector() -> None:
         f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {getRewardsBalance(validatorToolbox.rpc_endpoints_test, environ.get('VALIDATOR_WALLET'))} $ONE pending.\n* Would you like to collect your rewards on the Harmony testnet? (YES/NO) "
     )
     if question:
-        collectRewards(f"/home/{validatorToolbox.activeUserName}/harmony/hmy --node=\'https://api.s0.b.hmny.io\' ")
+        collectRewards(f"{environ.get('NETWORK_0_CALL')}")
         print()
         printStars()
         print(
