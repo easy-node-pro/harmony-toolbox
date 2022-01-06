@@ -21,7 +21,7 @@ from utils.allsysinfo import allSysInfo
 
 def collectRewards(networkCall):
     os.system(
-        f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 2 {environ.get('PASS_SWITCH')}"
+        f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 30 {environ.get('PASS_SWITCH')}"
     )
 
 
