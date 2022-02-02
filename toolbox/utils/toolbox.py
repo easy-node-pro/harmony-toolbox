@@ -590,7 +590,6 @@ def menuBinaryUpdates():
     )
     if question:
         upgradeHarmonyApp(testOrMain)
-        runStats()
 
 
 def menuUbuntuUpdates() -> str:
