@@ -514,10 +514,11 @@ def upgradeHarmonyApp(testOrMain):
 def runStats() -> str:
     timeNow = datetime.now()
     ourShard = environ.get("SHARD")
-    remote_shard_0 = environ.get("NETWORK_0_CALL")
+    ourNetwork = environ.get("NETWORK_SWITCH")
+    remote_shard_0 = [f'{validatorToolbox.hmyAppPath}', 'blockchain', 'latest-headers', f'--node=https://api.s0.{ourNetwork}.hmny.io']
     result_remote_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
-    remote_shard = environ.get("NETWORK_S_CALL")
+    remote_shard = [f'{validatorToolbox.hmyAppPath}', 'blockchain', 'latest-headers', f'--node=https://api.s{ourShard}.{ourNetwork}.hmny.io']
     result_remote_shard = run(remote_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     remote_data_shard = json.loads(result_remote_shard.stdout)
     local_shard = [f'{validatorToolbox.hmyAppPath}', 'blockchain', 'latest-headers']
