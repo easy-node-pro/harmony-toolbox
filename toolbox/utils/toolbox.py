@@ -506,7 +506,7 @@ def upgradeHarmonyApp(testOrMain):
     os.system("sudo service harmony restart")
     printStars()
     print(
-        "Harmony Service is restarting, wait 10 seconds and we'll check your stats..."
+        "Harmony Service is restarting, waiting 10 seconds for restart."
     )
     time.sleep(10)
 

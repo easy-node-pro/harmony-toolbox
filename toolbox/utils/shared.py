@@ -283,19 +283,26 @@ def getNodeType(dotenv_file) -> None:
             terminal_menu = TerminalMenu(menuOptions, title="Regular or Full Node Server")
             results = terminal_menu.show()
             if results == 0:
+                dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_TYPE")
+                dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_WALLET")
                 dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
                 dotenv.set_key(dotenv_file, "NODE_WALLET", "true")
             if results == 1:
+                dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_TYPE")
+                dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_WALLET")
                 dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
                 dotenv.set_key(dotenv_file, "NODE_WALLET", "false")
             if results == 2:
+                dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_TYPE")
                 dotenv.set_key(dotenv_file, "NODE_TYPE", "full")
             os.system("clear")
             return
         setWalletEnv()
     if not environ.get("NODE_TYPE"):
+        dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_TYPE")
         dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
     if not environ.get("NODE_WALLET"):
+        dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_WALLET")
         dotenv.set_key(dotenv_file, "NODE_WALLET", "true")
 
 
@@ -312,10 +319,16 @@ def setMainOrTest(dotenv_file) -> None:
         terminal_menu = TerminalMenu(menuOptions, title="Mainnet or Testnet")
         results = terminal_menu.show()
         if results == 0:
+            dotenv.unset_key(validatorToolbox.dotenv_file, "NETWORK")
+            dotenv.unset_key(validatorToolbox.dotenv_file, "NETWORK_SWITCH")
+            dotenv.unset_key(validatorToolbox.dotenv_file, "RPC_NET")
             dotenv.set_key(dotenv_file, "NETWORK", "mainnet")
             dotenv.set_key(dotenv_file, "NETWORK_SWITCH", "t")
             dotenv.set_key(dotenv_file, "RPC_NET", "https://rpc.s0.t.hmny.io")
         if results == 1:
+            dotenv.unset_key(validatorToolbox.dotenv_file, "NETWORK")
+            dotenv.unset_key(validatorToolbox.dotenv_file, "NETWORK_SWITCH")
+            dotenv.unset_key(validatorToolbox.dotenv_file, "RPC_NET")
             dotenv.set_key(dotenv_file, "NETWORK", "testnet")
             dotenv.set_key(dotenv_file, "NETWORK_SWITCH", "b")
             dotenv.set_key(dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
