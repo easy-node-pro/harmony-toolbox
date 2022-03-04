@@ -183,7 +183,7 @@ def cloneShards():
         printStars()
         if environ.get('SHARD') != '0':
             os.system(
-                f"rclone -P -L --checksum sync release:pub.harmony.one/mainnet.snap/harmony_db_0 harmony_db_0 --multi-thread-streams 4 --transfers=16"
+                f"rclone -P -L --checksum sync release:pub.harmony.one/{testOrMain}.snap/harmony_db_0 harmony_db_0 --multi-thread-streams 4 --transfers=16"
                 )
         else:
             os.system(
@@ -207,7 +207,7 @@ def cloneShards():
         if question:
             print("* Now cloning Shard 0, kick back and relax for awhile...")
             os.system(
-                f"rclone -P -L --checksum sync release:pub.harmony.one/mainnet.snap/harmony_db_0 harmony_db_0 --multi-thread-streams 4 --transfers=16"
+                f"rclone -P -L --checksum sync release:pub.harmony.one/{testOrMain}.snap/harmony_db_0 harmony_db_0 --multi-thread-streams 4 --transfers=16"
             )
 
 
