@@ -172,7 +172,7 @@ def cloneShards():
         print(f"* Now cloning shard {environ.get('SHARD')}")
         printStars()
         os.system(
-            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 4 --transfers=8"
+            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 4 --transfers=16"
         )
         printStars()
         print(f"Shard {environ.get('SHARD')} completed.")
@@ -181,9 +181,14 @@ def cloneShards():
             return
         print("* Now cloning Shard 0, kick back and relax for awhile...")
         printStars()
-        os.system(
-            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0 --multi-thread-streams 4 --transfers=8"
-        )
+        if environ.get('SHARD') != '0':
+            os.system(
+                f"rclone -P -L --checksum sync release:pub.harmony.one/mainnet.snap/harmony_db_0 harmony_db_0 --multi-thread-streams 4 --transfers=16"
+                )
+        else:
+            os.system(
+                f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0 --multi-thread-streams 4 --transfers=16"
+            )
     else:
         os.system("clear")
         question = askYesNo(
@@ -195,13 +200,14 @@ def cloneShards():
             os.system(
                 f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')}"
             )
+        if environ.get('SHARD') != '0':
         question = askYesNo(
             "* Would you like to download the shard 0 database now? (YES/NO) "
         )
         if question:
             print("* Now cloning Shard 0, kick back and relax for awhile...")
             os.system(
-                f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0"
+                f"rclone -P -L --checksum sync release:pub.harmony.one/mainnet.snap/harmony_db_0 harmony_db_0 --multi-thread-streams 4 --transfers=16"
             )
 
 
