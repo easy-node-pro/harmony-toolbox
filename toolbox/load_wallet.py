@@ -8,7 +8,7 @@ from utils.toolbox import runRegularNode, runFullNode
 
 if __name__ == "__main__":
     os.system("clear")
-    printStars()
+    loaderIntro()
     print(
         "* Harmony ONE Validator Wallet Import"
     )
