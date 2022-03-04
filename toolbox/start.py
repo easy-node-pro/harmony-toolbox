@@ -18,6 +18,7 @@ if __name__ == "__main__":
             "* You don't currently have a validator wallet address loaded in your .env file, please edit ~/.easynode.env and add a line with the following info: "
             + "* VALIDATOR_WALLET='validatorONEaddress' "
         )
+        raise SystemExit(0)
     print("* Configuration file detected, loading the validatortoolbox menu application.")
     printStars()
     if validatorToolbox.easyVersion != environ.get("EASY_VERSION"):
