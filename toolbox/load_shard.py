@@ -13,4 +13,5 @@ if __name__ == "__main__":
     print(
         "* Harmony ONE Validator Shard Downloader"
     )
+    loadVarFile()
     cloneShards()
