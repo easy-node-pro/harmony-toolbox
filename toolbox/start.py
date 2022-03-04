@@ -14,10 +14,11 @@ if __name__ == "__main__":
     if not os.path.exists(validatorToolbox.dotenv_file):
         firstSetup()
     if not environ.get("VALIDATOR_WALLET"):
-        question = askYesNo(
-            "* You don't currently have a validator wallet address loaded in your .env file, please edit ~/.easynode.env and add a line with the following info: "
+        print(
+            "* You don't currently have a validator wallet address loaded in your .env file, please edit ~/.easynode.env and add a line with the following info:\n "
             + "* VALIDATOR_WALLET='validatorONEaddress' "
         )
+        input("* Press any key to exit.")
         raise SystemExit(0)
     print("* Configuration file detected, loading the validatortoolbox menu application.")
     printStars()
