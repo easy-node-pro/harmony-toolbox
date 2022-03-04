@@ -13,7 +13,7 @@ if __name__ == "__main__":
     loaderIntro()
     if not os.path.exists(validatorToolbox.dotenv_file):
         firstSetup()
-    if environ.get("VALIDATOR_WALLET") is None:
+    if not environ.get("VALIDATOR_WALLET"):
         question = askYesNo(
             "* You don't currently have a validator wallet address loaded in your .env file, please edit ~/.easynode.env and add a line with the following info: "
             + "* VALIDATOR_WALLET='validatorONEaddress' "
