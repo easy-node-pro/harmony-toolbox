@@ -201,14 +201,14 @@ def cloneShards():
                 f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')}"
             )
         if environ.get('SHARD') != '0':
-        question = askYesNo(
-            "* Would you like to download the shard 0 database now? (YES/NO) "
-        )
-        if question:
-            print("* Now cloning Shard 0, kick back and relax for awhile...")
-            os.system(
-                f"rclone -P -L --checksum sync release:pub.harmony.one/{testOrMain}.snap/harmony_db_0 harmony_db_0 --multi-thread-streams 4 --transfers=16"
+            question = askYesNo(
+                "* Would you like to download the shard 0 database now? (YES/NO) "
             )
+            if question:
+                print("* Now cloning Shard 0, kick back and relax for awhile...")
+                os.system(
+                    f"rclone -P -L --checksum sync release:pub.harmony.one/{testOrMain}.snap/harmony_db_0 harmony_db_0 --multi-thread-streams 4 --transfers=16"
+                )
 
 
 def restoreWallet() -> str:
