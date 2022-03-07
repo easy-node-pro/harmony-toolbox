@@ -169,46 +169,40 @@ def cloneShards():
     if environ.get("EXPRESS") == "0":
         os.system("clear")
         printStars()
-        print(f"* Now cloning shard {environ.get('SHARD')}")
-        printStars()
-        os.system(
-            f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 4 --transfers=16"
-        )
-        printStars()
-        print(f"Shard {environ.get('SHARD')} completed.")
-        printStars()
-        if environ.get('SHARD') == '0':
-            return
+        if environ.get("SHARD") != "0":
+            print(f"* Now cloning shard {environ.get('SHARD')}")
+            printStars()
+            os.system(
+                f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 4 --transfers=16"
+            )
+            printStars()
+            print(f"Shard {environ.get('SHARD')} completed.")
+            printStars()
         print("* Now cloning Shard 0, kick back and relax for awhile...")
         printStars()
-        if environ.get('SHARD') != '0':
-            os.system(
-                f"rclone -P -L --checksum sync release:pub.harmony.one/{testOrMain}.snap/harmony_db_0 harmony_db_0 --multi-thread-streams 4 --transfers=16"
-                )
-        else:
-            os.system(
-                f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0 --multi-thread-streams 4 --transfers=16"
-            )
+        os.system(
+            f"rclone -P -L --checksum sync release:pub.harmony.one/{testOrMain}.snap/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0 --multi-thread-streams 4 --transfers=16"
+        )
     else:
         os.system("clear")
-        question = askYesNo(
-            "* We are now ready to rclone your databases.\n"
-            + f"* Would you like to download the shard {environ.get('SHARD')} database now? (YES/NO) "
-        )
-        if question:
-            print(f"* Now cloning shard {environ.get('SHARD')}")
-            os.system(
-                f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')}"
-            )
-        if environ.get('SHARD') != '0':
+        print(f"* We are now ready to rclone your database(s).\n")
+        if environ.get("SHARD") != "0":
             question = askYesNo(
-                "* Would you like to download the shard 0 database now? (YES/NO) "
+                f"* Would you like to download the shard {environ.get('SHARD')} database now? (YES/NO) "
             )
             if question:
-                print("* Now cloning Shard 0, kick back and relax for awhile...")
+                print(f"* Now cloning shard {environ.get('SHARD')}")
                 os.system(
-                    f"rclone -P -L --checksum sync release:pub.harmony.one/{testOrMain}.snap/harmony_db_0 harmony_db_0 --multi-thread-streams 4 --transfers=16"
+                    f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')}"
                 )
+        question = askYesNo(
+            "* Would you like to download the shard 0 database now? (YES/NO) "
+        )
+        if question:
+            print("* Now cloning Shard 0, kick back and relax for awhile...")
+            os.system(
+                f"rclone -P -L --checksum sync release:pub.harmony.one/{testOrMain}.snap/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0 --multi-thread-streams 4 --transfers=16"
+            )
 
 
 def restoreWallet() -> str:
