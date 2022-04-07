@@ -1,5 +1,3 @@
-import os
-import subprocess
 import json
 from os import environ
 from ast import literal_eval
@@ -7,7 +5,7 @@ from datetime import datetime
 from utils.config import validatorToolbox
 from utils.shared import loadVarFile, stringStars
 from utils.toolbox import shardStats
-from subprocess import Popen, PIPE, run
+from subprocess import PIPE, run
 
 def runStats() -> str:
     loadVarFile()
@@ -46,6 +44,5 @@ def runStats() -> str:
 {stringStars()}
     """)
     shardStats(ourShard)
-    input("* Validator stats completed, press ENTER to return to the main menu. ")
 
 runStats()
