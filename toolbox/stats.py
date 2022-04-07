@@ -4,9 +4,11 @@ import json
 from os import environ
 from datetime import datetime
 from utils.config import validatorToolbox
+from utils.shared import loadVarFile
 from subprocess import Popen, PIPE, run
 
 def runStats() -> str:
+    loadVarFile()
     timeNow = datetime.now()
     ourShard = environ.get("SHARD")
     ourNetwork = environ.get("NETWORK_SWITCH")
