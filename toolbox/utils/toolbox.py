@@ -526,7 +526,16 @@ def runStats() -> str:
     try:
         local_data_shard = json.loads(result_local_shard.stdout)
     except (ValueError, KeyError, TypeError):
+        {stringStars()}
+        print(f"""
+        * Current Date & Time: {timeNow}
+        *
+        """)
+        {stringStars()}
+        shardStats(ourShard)
+        {stringStars()}
         input(f"No local data detected, did you just restart Harmony? Press ENTER to return to the main menu.")
+        {stringStars()}
         return
     print(f"""
 {stringStars()}
