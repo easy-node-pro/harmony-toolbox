@@ -526,7 +526,7 @@ def runStats() -> str:
     try:
         local_data_shard = json.loads(result_local_shard.stdout)
     except (ValueError, KeyError, TypeError):
-        print(f"No local data detected, returning to menu.")
+        input(f"No local data detected, did you just restart Harmony? Press ENTER to return to the main menu.")
         return
     print(f"""
 {stringStars()}
