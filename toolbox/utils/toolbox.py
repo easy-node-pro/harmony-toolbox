@@ -523,7 +523,11 @@ def runStats() -> str:
     remote_data_shard = json.loads(result_remote_shard.stdout)
     local_shard = [f'{validatorToolbox.hmyAppPath}', 'blockchain', 'latest-headers']
     result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-    local_data_shard = json.loads(result_local_shard.stdout)
+    try:
+        local_data_shard = json.loads(result_local_shard.stdout)
+    except (ValueError, KeyError, TypeError):
+        print(f"No local data detected, returning to menu.")
+        return
     print(f"""
 {stringStars()}
 * Current Date & Time: {timeNow}
