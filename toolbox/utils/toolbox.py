@@ -324,7 +324,6 @@ def osUpgrades() -> None:
 
 
 def harmonyServiceStatus() -> None:
-    # Why use os.system here?
     status = subprocess.call(["systemctl", "is-active", "--quiet", "harmony"])
     if status == 0:
         print(
