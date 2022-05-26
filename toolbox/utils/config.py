@@ -6,7 +6,8 @@ def getUrl() -> None:
     try:
         result = urllib.request.urlopen("https://ident.me").read().decode("utf8")
     except (ValueError, KeyError, TypeError):
-        return '0.0.0.0'
+        result = '0.0.0.0'
+        return result
     return result
 
 class validatorToolbox:
