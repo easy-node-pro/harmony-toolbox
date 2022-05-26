@@ -5,9 +5,10 @@ import urllib.request
 def getUrl() -> None:
     try:
         result = urllib.request.urlopen("https://ident.me").read().decode("utf8")
-    except (ValueError, KeyError, TypeError):
+    except Exception as x:
+        print(type(x),x)
         result = '0.0.0.0'
-        return result
+        pass
     return result
 
 class validatorToolbox:
