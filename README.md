@@ -13,18 +13,20 @@ This repository provides two functions in one application:
 
 ## Quickstart Guide
 ### Pre-Installation Requirements
-Digital Ocean users can use [this pre-installation quick guide](https://validator-toolbox-guide.easynode.one/quick-setup/quick-install.html "this pre-installation quick guide").
+Experienced validators use [this pre-installation quick guide](https://guides.easynode.one/harmony/toolbox/quick-install "this pre-installation quick guide").
+
+New Validators should [read the companion guide](https://guides.easynode.one/harmony/companion) and manually configure a validator by hand before using the toolbox to install Harmony Validator software.
 
 **Operating System**
--   Ubuntu 20.04LTS - The suggested operating system from harmony
+Ubuntu 20.04LTS - The suggested operating system from harmony
 
 **Account**
 -   Be logged into any user account, we strongly suggest not using root.
-	-   Account must have sudoless root access (if not using the root account)
+	-   Account should have sudoless root access
 	-   If you skip this step, you will be prompted for your password during rclone setup but it will be hidden in the menu. If it pauses there type your user account password.
 
 **Storage Volume**
-	-   Mount your volume to any folder inside of /mnt and we'll detect a single mount point inside of that folder, install harmony in /mnt/yourfolder/harmony and symlink that folder to ~/harmony
+If you need to use a storage volume for any reason, we will detect and use any single disk mounted in `/mnt` for installation of all files. Otherwise all content is installed at `~/harmony`.
 
 ### Installation
 **After** completing the Pre-Instlalation Requirements pull the repository into your home directory.
@@ -44,4 +46,4 @@ python3 ~/validatortoolbox/toolbox/start.py
 ```
 
 ## Full Installation Guide & Documentation
-See the gitbook for validatortoolbox to [install our software here](https://validator-toolbox-guide.easynode.one/ "validatortoolbox gitbook guide").
+See [our guides page](https://guides.easynode.one/harmony) for full documentation on the validatortoolbox.
