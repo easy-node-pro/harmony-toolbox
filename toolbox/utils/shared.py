@@ -1,7 +1,3 @@
-import os
-import subprocess
-import requests
-import pyhmy
 from utils.config import validatorToolbox
 from os import environ
 from dotenv import load_dotenv
@@ -10,6 +6,11 @@ from colorama import Style
 from pathlib import Path
 from pyhmy import validator, account, staking, numbers
 from json import load, dump
+import os
+import subprocess
+import requests
+import pyhmy
+import dotenv
 
 load_dotenv("~/.easynode.env")
 
@@ -117,8 +118,8 @@ def installHarmonyApp(harmonyDirPath, blsKeyFile):
 
 
 def setWalletEnv():
-    if environ.get("NODE_WALLET") == "true":
-        if not environ.get("VALIDATOR_WALLET"):
+    if os.getenv("NODE_WALLET") == "true":
+        if not os.getenv("VALIDATOR_WALLET"):
             output = subprocess.getoutput(f"{validatorToolbox.hmyAppPath} keys list | grep {validatorToolbox.activeUserName}")
             outputStripped = output.lstrip(validatorToolbox.activeUserName)
             outputStripped = outputStripped.strip()
@@ -138,8 +139,6 @@ def new_wallet_recovery():
     passphraseStatus()
     passphraseSwitch = os.getenv("PASS_SWITCH")
     if os.path.exists(validatorToolbox.hmyWalletStorePath):
-        os.system(f"{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}")
-        printStars()
         setWalletEnv()
         return
     printStars()
