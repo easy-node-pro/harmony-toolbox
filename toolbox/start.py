@@ -18,10 +18,10 @@ if __name__ == "__main__":
     loadVarFile()
     if not environ.get("VALIDATOR_WALLET"):
         print(
-            "* You don't currently have a validator wallet address loaded in your .env file."
-            + "* If you have a wallet installed, press a key to continue and choose option 0 on the next menu to load your wallet (Yeah, it says Mnemonic Recovery but if it's loaded properly it won't ask)."
-            + "* If you don't want to load a wallet but still want to use the menu, please edit ~/.easynode.env and add a line with the following info:"
-            + "* VALIDATOR_WALLET='one1typevalidatorONEaddress' "
+            "* You don't currently have a validator wallet address loaded in your .env file.\n"
+            + "* If you have a wallet installed, press a key to continue and choose option 0 on the next menu to load your wallet (Yeah, it says Mnemonic Recovery but if it's loaded properly it won't ask).\n"
+            + "* If you don't want to load a wallet but still want to use the menu, please edit ~/.easynode.env and add a line with the following info:\n"
+            + "* VALIDATOR_WALLET='one1typevalidatorONEaddress' \n"
         )
         input("* Press any key to import or load a wallet.")
         recoverWallet()
