@@ -130,6 +130,38 @@ def setWalletEnv():
             return validatorWallet
 
 
+def new_wallet_recovery():
+    loadVarFile()
+    os.system("clear")
+    dotenv.set_key(validatorToolbox.dotenv_file, "NODE_WALLET", "true")
+    passphraseStatus()
+    passphraseSwitch = environ.get("PASS_SWITCH")
+    if os.path.exists(validatorToolbox.hmyWalletStorePath):
+        setWalletEnv()
+        return
+    printStars()
+    print("* Wallet Recovery Type!                                                                     *")
+    printStars()
+    print("* [0] = Mnemonic phrase recovery (aka seed phrase)                                          *")
+    print("* [1] = Private Key recovery                                                                *")
+    printStars()
+    menuOptions = ["[0] - Mnemonic Phrase Recovery", "[1] - Private Key Recovery", ]
+    terminal_menu = TerminalMenu(menuOptions, title="* Which type of restore method would you like to use for your validator wallet?")
+    results = terminal_menu.show()
+    if results == 0:
+        # Mnemonic Recovery Here
+        os.system(f"{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}")
+        printStars()
+        setWalletEnv()
+    elif results == 1:
+        # Private Key Recovery Here
+        print("* Private key recovery requires your private information in the command itself.")
+        private = input("* Please enter your private key to restore your wallet: ")
+        os.system(f"{validatorToolbox.hmyAppPath} keys import-private-key {private} {validatorToolbox.activeUserName} --passphrase")
+        printStars()
+        setWalletEnv()
+
+
 def recoveryType():
     loadVarFile()
     os.system("clear")
