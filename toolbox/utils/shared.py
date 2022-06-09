@@ -11,7 +11,7 @@ from pathlib import Path
 from pyhmy import validator, account, staking, numbers
 from json import load, dump
 
-load_dotenv()
+load_dotenv("~/.easynode.env")
 
 class PrintStuff:
 
