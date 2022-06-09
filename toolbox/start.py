@@ -1,5 +1,6 @@
 import os
 import time
+from wsgiref.validate import validator
 import dotenv
 from os import environ
 from dotenv import load_dotenv
@@ -8,6 +9,7 @@ from utils.installer import firstSetup, printStars, recheckVars, passphraseStatu
 from utils.shared import loaderIntro, new_wallet_recovery, setWalletEnv, askYesNo, loadVarFile
 from utils.toolbox import runRegularNode, runFullNode
 
+load_dotenv("~/.easynode.env")
 
 if __name__ == "__main__":
     os.system("clear")
@@ -15,9 +17,9 @@ if __name__ == "__main__":
     if not os.path.exists(validatorToolbox.dotenv_file):
         firstSetup()
     loadVarFile()
-    if not environ.get("VALIDATOR_WALLET"):
+    if not os.getenv("VALIDATOR_WALLET"):
         new_wallet_recovery()
-        if not environ.get("VALIDATOR_WALLET"):
+        if not os.getenv("VALIDATOR_WALLET"):
             print(
                 "* You don't currently have a validator wallet address loaded in your .env file, please edit ~/.easynode.env and add a line with the following info:\n "
                 + "* VALIDATOR_WALLET='validatorONEaddress' "
@@ -26,17 +28,16 @@ if __name__ == "__main__":
             raise SystemExit(0)
     print("* Configuration file detected, loading the validatortoolbox menu application.")
     printStars()
-    if validatorToolbox.easyVersion != environ.get("EASY_VERSION"):
-        dotenv.unset_key(validatorToolbox.dotenv_file, "EASY_VERSION")
-        dotenv.set_key(validatorToolbox.dotenv_file, "EASY_VERSION", validatorToolbox.easyVersion)
-    if environ.get("SETUP_STATUS") != "2":
+    if validatorToolbox.easyVersion != os.environ("EASY_VERSION"):
+        os.environ = validatorToolbox.easyVersion
+    if os.environ("SETUP_STATUS") != "2":
         recheckVars()
         passphraseStatus()
-    if environ.get("NODE_TYPE") == "regular":
-        if not environ.get("VALIDATOR_WALLET"):
+    if os.environ("NODE_TYPE") == "regular":
+        if not os.environ("VALIDATOR_WALLET"):
             setWalletEnv()
         runRegularNode()
-    if environ.get("NODE_TYPE") == "full":
+    if os.environ("NODE_TYPE") == "full":
         runFullNode()
     print("Uh oh, you broke me! Contact Easy Node")
     raise SystemExit(0)
