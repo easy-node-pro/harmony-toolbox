@@ -141,7 +141,6 @@ def recoveryType():
     printStars()
     print("* Wallet Recovery Type!                                                                     *")
     printStars()
-    print("* NOTE: If you loaded a wallet during setup, simply choose option 0 below and restart the toolbox to load your wallet. If you need to manually setup an option, choose you preference now.")
     print("* [0] = Mnemonic phrase recovery (aka seed phrase)                                          *")
     print("* [1] = Private Key recovery                                                                *")
     printStars()
