@@ -1,5 +1,4 @@
 import os
-import dotenv
 import subprocess
 import requests
 import pyhmy
@@ -11,6 +10,8 @@ from colorama import Style
 from pathlib import Path
 from pyhmy import validator, account, staking, numbers
 from json import load, dump
+
+load_dotenv()
 
 class PrintStuff:
 
@@ -135,7 +136,7 @@ def new_wallet_recovery():
     os.system("clear")
     dotenv.set_key(validatorToolbox.dotenv_file, "NODE_WALLET", "true")
     passphraseStatus()
-    passphraseSwitch = environ.get("PASS_SWITCH")
+    passphraseSwitch = os.getenv("PASS_SWITCH")
     if os.path.exists(validatorToolbox.hmyWalletStorePath):
         os.system(f"{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}")
         printStars()
