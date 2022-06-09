@@ -19,13 +19,7 @@ if __name__ == "__main__":
     loadVarFile()
     if not os.getenv("VALIDATOR_WALLET"):
         new_wallet_recovery()
-        if not os.getenv("VALIDATOR_WALLET"):
-            print(
-                "* You don't currently have a validator wallet address loaded in your .env file, please edit ~/.easynode.env and add a line with the following info:\n "
-                + "* VALIDATOR_WALLET='validatorONEaddress' "
-            )
-            input("* Press any key to exit.")
-            raise SystemExit(0)
+        pass
     print("* Configuration file detected, loading the validatortoolbox menu application.")
     printStars()
     if validatorToolbox.easyVersion != os.getenv("EASY_VERSION"):
