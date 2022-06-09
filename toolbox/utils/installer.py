@@ -144,7 +144,10 @@ def installHarmony() -> None:
     # install hmy files
     print("* Installing rclone application & rclone configuration files")
     printStars()
-    os.system("curl https://rclone.org/install.sh | sudo bash")
+    try:
+        os.system("curl https://rclone.org/install.sh | sudo bash")
+    except (ValueError, KeyError, TypeError):
+        input("* rclone site is offline, we can install rclone from the Ubuntu repo as a workaround, do you want to continue?")
     os.system(
         f"mkdir -p {validatorToolbox.userHomeDir}/.config/rclone && cp {validatorToolbox.toolboxLocation}/toolbox/bin/rclone.conf {validatorToolbox.userHomeDir}/.config/rclone/"
     )
@@ -173,7 +176,7 @@ def cloneShards():
             print(f"* Now cloning shard {environ.get('SHARD')}")
             printStars()
             os.system(
-                f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 4 --transfers=16"
+                f"rclone -P sync contabo:pub.harmony.one/{testOrMain}.snap/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 8 --transfers=32"
             )
             printStars()
             print(f"Shard {environ.get('SHARD')} completed.")
@@ -181,7 +184,7 @@ def cloneShards():
         print("* Now cloning Shard 0, kick back and relax for awhile...")
         printStars()
         os.system(
-            f"rclone -P -L --checksum sync release:pub.harmony.one/{testOrMain}.snap/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0 --multi-thread-streams 4 --transfers=16"
+            f"rclone -P -L --checksum sync contabo:pub.harmony.one/{testOrMain}.snap/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0 --multi-thread-streams 4 --transfers=16"
         )
     else:
         os.system("clear")
@@ -193,7 +196,7 @@ def cloneShards():
             if question:
                 print(f"* Now cloning shard {environ.get('SHARD')}")
                 os.system(
-                    f"rclone -P sync release:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')}"
+                    f"rclone -P sync contabo:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')}"
                 )
         question = askYesNo(
             "* Would you like to download the shard 0 database now? (YES/NO) "
@@ -201,7 +204,7 @@ def cloneShards():
         if question:
             print("* Now cloning Shard 0, kick back and relax for awhile...")
             os.system(
-                f"rclone -P -L --checksum sync release:pub.harmony.one/{testOrMain}.snap/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0 --multi-thread-streams 4 --transfers=16"
+                f"rclone -P -L --checksum sync contabo:pub.harmony.one/{testOrMain}.snap/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0 --multi-thread-streams 4 --transfers=16"
             )
 
 
