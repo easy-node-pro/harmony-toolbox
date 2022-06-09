@@ -28,16 +28,16 @@ if __name__ == "__main__":
             raise SystemExit(0)
     print("* Configuration file detected, loading the validatortoolbox menu application.")
     printStars()
-    if validatorToolbox.easyVersion != os.environ("EASY_VERSION"):
-        os.environ = validatorToolbox.easyVersion
-    if os.environ("SETUP_STATUS") != "2":
+    if validatorToolbox.easyVersion != os.getenv("EASY_VERSION"):
+        os.getenv = validatorToolbox.easyVersion
+    if os.getenv("SETUP_STATUS") != "2":
         recheckVars()
         passphraseStatus()
-    if os.environ("NODE_TYPE") == "regular":
-        if not os.environ("VALIDATOR_WALLET"):
+    if os.getenv("NODE_TYPE") == "regular":
+        if not os.getenv("VALIDATOR_WALLET"):
             setWalletEnv()
         runRegularNode()
-    if os.environ("NODE_TYPE") == "full":
+    if os.getenv("NODE_TYPE") == "full":
         runFullNode()
     print("Uh oh, you broke me! Contact Easy Node")
     raise SystemExit(0)
