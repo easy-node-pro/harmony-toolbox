@@ -137,6 +137,8 @@ def new_wallet_recovery():
     passphraseStatus()
     passphraseSwitch = environ.get("PASS_SWITCH")
     if os.path.exists(validatorToolbox.hmyWalletStorePath):
+        os.system(f"{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}")
+        printStars()
         setWalletEnv()
         return
     printStars()
