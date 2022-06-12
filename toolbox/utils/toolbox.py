@@ -65,7 +65,7 @@ def menuTopperRegular() -> None:
         "* "
         + Fore.GREEN
         + "validator-toolbox for Harmony ONE Validators by Easy Node   v"
-        + environ.get(validatorToolbox.easyVersion)
+        + str(environ.get(validatorToolbox.easyVersion))
         + Style.RESET_ALL
         + "   https://easynode.one *"
     )
