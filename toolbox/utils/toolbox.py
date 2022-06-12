@@ -58,6 +58,7 @@ def menuTopperRegular() -> None:
     current_epoch = getCurrentEpoch()
     sign_percentage = getSignPercent()
     os.system("clear")
+    loadVarFile()
     # Print Menu
     print(Style.RESET_ALL)
     printStars()
