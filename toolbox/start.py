@@ -27,9 +27,6 @@ if __name__ == "__main__":
             raise SystemExit(0)
     print("* Configuration file detected, loading the validatortoolbox menu application.")
     printStars()
-    if validatorToolbox.easyVersion != environ.get("EASY_VERSION"):
-        dotenv.unset_key(validatorToolbox.dotenv_file, "EASY_VERSION")
-        dotenv.set_key(validatorToolbox.dotenv_file, "EASY_VERSION", validatorToolbox.easyVersion)
     if environ.get("SETUP_STATUS") != "2":
         recheckVars()
         passphraseStatus()

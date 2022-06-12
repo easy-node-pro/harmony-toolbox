@@ -16,8 +16,6 @@ def firstSetup():
     dotenv.set_key(validatorToolbox.dotenv_file, "SETUP_STATUS", "2")
     if environ.get("EASY_VERSION"):
         dotenv.unset_key(validatorToolbox.dotenv_file, "EASY_VERSION")
-    dotenv.set_key(validatorToolbox.dotenv_file, "EASY_VERSION",
-                   str(validatorToolbox.easyVersion))
     firstRunMenu()
     recheckVars()
     getExpressStatus(validatorToolbox.dotenv_file)
