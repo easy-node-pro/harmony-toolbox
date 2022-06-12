@@ -58,7 +58,6 @@ def menuTopperRegular() -> None:
     current_epoch = getCurrentEpoch()
     sign_percentage = getSignPercent()
     os.system("clear")
-    loadVarFile()
     # Print Menu
     print(Style.RESET_ALL)
     printStars()
@@ -66,7 +65,7 @@ def menuTopperRegular() -> None:
         "* "
         + Fore.GREEN
         + "validator-toolbox for Harmony ONE Validators by Easy Node   v"
-        + str(environ.get("EASY_VERSION"))
+        + str(environ.get(validatorToolbox.easyVersion))
         + Style.RESET_ALL
         + "   https://easynode.one *"
     )
