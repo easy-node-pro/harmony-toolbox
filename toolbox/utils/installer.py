@@ -25,6 +25,9 @@ def firstSetup():
 
 
 def recheckVars():
+    if environ.get("EASY_VERSION") != (validatorToolbox.easyVersion):
+        dotenv.unset_key(validatorToolbox.dotenv_file, "EASY_VERSION")
+        dotenv.set_key(validatorToolbox.dotenv_file, "EASY_VERSION", validatorToolbox.easyVersion)
     loadVarFile()
     getShardMenu(validatorToolbox.dotenv_file)
     getNodeType(validatorToolbox.dotenv_file)
