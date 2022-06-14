@@ -94,11 +94,11 @@ def installHarmonyApp(harmonyDirPath, blsKeyFile):
     if environ.get("NETWORK") == "testnet":
         os.system("curl -LO https://harmony.one/binary_testnet && mv binary_testnet harmony && chmod +x harmony")
         os.system("./harmony config dump --network testnet harmony.conf")
-        updateHarmonyConf(validatorToolbox.harmonyConfPath, "MaxKeys = 10", "MaxKeys = 30")
+        updateHarmonyConf(validatorToolbox.harmonyConfPath, "MaxKeys = 10", "MaxKeys = 13")
     if environ.get("NETWORK") == "mainnet":
         os.system("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
         os.system("./harmony config dump harmony.conf")
-        updateHarmonyConf(validatorToolbox.harmonyConfPath, "MaxKeys = 10", "MaxKeys = 30")
+        updateHarmonyConf(validatorToolbox.harmonyConfPath, "MaxKeys = 10", "MaxKeys = 13")
     printStars()
     print("* harmony.conf MaxKeys modified to 30")
     # when we setup rasppi as an option, this is the install command for harmony
