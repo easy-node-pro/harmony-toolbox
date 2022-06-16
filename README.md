@@ -37,7 +37,8 @@ git clone https://github.com/easy-node-one/validatortoolbox.git
 Install requirements.
 ```bash
 cd validatortoolbox
-sudo apt-get install dnsutils git python3-pip python3-dotenv unzip -y
+sudo apt update && sudo apt upgrade -y
+sudo apt-get install bind9-dnsutils git python3-pip python3-dotenv unzip -y
 pip3 install -r requirements.txt
 ```
 Run the installer from anywhere. You'll be presented with our menu to grab configuration details.
