@@ -11,6 +11,7 @@ if __name__ == "__main__":
     if not os.path.exists(validatorToolbox.dotenv_file):
         print("Install Harmony First!!!")
         raise SystemExit(0)
+    loadVarFile()
     if not environ.get("VALIDATOR_WALLET"):
         recoverWallet()
         if not environ.get("VALIDATOR_WALLET"):
