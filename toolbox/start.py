@@ -2,6 +2,8 @@ import os
 from simple_term_menu import TerminalMenu
 from utils.shared import loaderIntro, setWalletEnv, askYesNo, loadVarFile, printStars
 
+# This is just a temp file to replace start.py to guide people to install.py or menu.py in the interim. 
+
 if __name__ == "__main__":
     os.system("clear")
     loaderIntro()
