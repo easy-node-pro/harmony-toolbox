@@ -1,7 +1,7 @@
 import os
 import time
 import dotenv
-from os import environ, execfile
+from os import environ
 from dotenv import load_dotenv
 from utils.config import validatorToolbox
 from utils.installer import firstSetup, printStars, recheckVars, passphraseStatus, recoverWallet
