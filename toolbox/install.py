@@ -1,14 +1,12 @@
 import os
 import time
 import dotenv
-from os import environ
+from os import environ, execfile
 from dotenv import load_dotenv
 from utils.config import validatorToolbox
 from utils.installer import firstSetup, printStars, recheckVars, passphraseStatus, recoverWallet
 from utils.shared import loaderIntro, setWalletEnv, askYesNo, loadVarFile
 from utils.toolbox import runRegularNode, runFullNode
-
-# load_dotenv("~/.easynode.env")
 
 if __name__ == "__main__":
     os.system("clear")
@@ -25,4 +23,4 @@ if __name__ == "__main__":
             )
             input("* Press any key to exit.")
             raise SystemExit(0)
-    print("* Harmony is installed, now you can run our management menu with python3 toolbox/menu.py")
+    execfile("menu.py")
