@@ -583,7 +583,7 @@ def runStats() -> str:
     * Current Status of our server {validatorToolbox.serverHostName} currently on Shard {environ.get('SHARD')}:
     *
     * Shard 0 Sync Status:
-    * Local Server  - Shard 0 not required on Shard {environ.get('SHARD')} - Local Epoch (Always 1 epoch behind Remote) {local_data_shard['result']['beacon-chain-header']['epoch']}
+    * Local Server  - Epoch {local_data_shard['result']['beacon-chain-header']['epoch']} (Always 1 epoch behind Remote Server) - Shard 0 not required on Shard {environ.get('SHARD')}
     * Remote Server - Epoch {remote_data_shard_0['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard_0['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}
     *
     {stringStars()}
@@ -614,20 +614,20 @@ def shardStats(ourShard) -> str:
     dbZeroSize = getDBSize('0')
     if ourShard == "0":
         print(f"""
-* Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {dbZeroSize}
-* {ourVersion}
-{stringStars()}
+    * Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {dbZeroSize}
+    * {ourVersion}
+    {stringStars()}
         """)
     else:
         print(f"""
-* Uptime :: {ourUptime}
-*
-* Harmony DB 0 Size  ::  {dbZeroSize}
-* Harmony DB {ourShard} Size  ::   {getDBSize(str(ourShard))}
-*
-* {ourVersion}
-*
-{stringStars()}
+    * Uptime :: {ourUptime}
+    *
+    * Harmony DB 0 Size  ::  {dbZeroSize}
+    * Harmony DB {ourShard} Size  ::   {getDBSize(str(ourShard))}
+    *
+    * {ourVersion}
+    *
+    {stringStars()}
         """)
 
 
