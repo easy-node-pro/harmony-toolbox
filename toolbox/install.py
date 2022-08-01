@@ -23,4 +23,4 @@ if __name__ == "__main__":
             )
             input("* Press any key to exit.")
             raise SystemExit(0)
-    execfile("menu.py")
+    exec(open("menu.py").read())
