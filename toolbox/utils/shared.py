@@ -45,7 +45,7 @@ stringStarsReset = PrintStuff(reset=1).stringStars
 
 def setVar(fileName, keyName, updateName):
     dotenv.unset_key(fileName, keyName)
-    setVar(fileName, keyName, updateName)
+    dotenv.set_key(fileName, keyName, updateName)
     return
 
 def loaderIntro():
