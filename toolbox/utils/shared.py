@@ -44,7 +44,8 @@ printStarsReset = PrintStuff(reset=1).printStars
 stringStarsReset = PrintStuff(reset=1).stringStars
 
 def setVar(fileName, keyName, updateName):
-    dotenv.unset_key(fileName, keyName)
+    if os.environ(keyName):
+        dotenv.unset_key(fileName, keyName)
     dotenv.set_key(fileName, keyName, updateName)
     return
 
