@@ -598,7 +598,7 @@ def runStats() -> str:
     {stringStars()}
         """)
         shardStats(ourShard)
-        input("* Validator stats completed, press ENTER to return to the main menu. ")
+        input("    * Validator stats completed, press ENTER to return to the main menu. ")
 
 
 def getDBSize(ourShard) -> str:
