@@ -4,4 +4,4 @@ from utils.shared import loaderIntro, setWalletEnv, askYesNo, loadVarFile, print
 if __name__ == "__main__":
     os.system("clear")
     loaderIntro()
-    print("We've split this into two applications, installer.py & menu.py - please update your startup commands.")
+    print("We've split this into two applications, installer.py & menu.py - please update your startup commands.\n\npython3 ~/validatortoolbox/toolbox/install.py\n\npython3 ~/validatortoolbox/toolbox/menu.py")
