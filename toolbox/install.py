@@ -1,12 +1,8 @@
 import os
-import time
-import dotenv
 from os import environ
-from dotenv import load_dotenv
 from utils.config import validatorToolbox
-from utils.installer import firstSetup, printStars, recheckVars, passphraseStatus, recoverWallet
-from utils.shared import loaderIntro, setWalletEnv, askYesNo, loadVarFile
-from utils.toolbox import runRegularNode, runFullNode
+from utils.installer import firstSetup, recoverWallet
+from utils.shared import loaderIntro, loadVarFile
 
 if __name__ == "__main__":
     os.system("clear")
