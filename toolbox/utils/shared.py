@@ -43,6 +43,10 @@ stringStars = PrintStuff().stringStars
 printStarsReset = PrintStuff(reset=1).printStars
 stringStarsReset = PrintStuff(reset=1).stringStars
 
+def setVar(fileName, keyName, updateName):
+    dotenv.unset_key(fileName, keyName)
+    setVar(fileName, keyName, updateName)
+    return
 
 def loaderIntro():
     p = f"""
@@ -123,8 +127,7 @@ def setWalletEnv():
             output = subprocess.getoutput(f"{validatorToolbox.hmyAppPath} keys list | grep {validatorToolbox.activeUserName}")
             outputStripped = output.lstrip(validatorToolbox.activeUserName)
             outputStripped = outputStripped.strip()
-            dotenv.unset_key(validatorToolbox.dotenv_file, "VALIDATOR_WALLET")
-            dotenv.set_key(validatorToolbox.dotenv_file, "VALIDATOR_WALLET", outputStripped)
+            setVar(validatorToolbox.dotenv_file, "VALIDATOR_WALLET", outputStripped)
             return outputStripped
         else:
             loadVarFile()
@@ -135,7 +138,7 @@ def setWalletEnv():
 def recoveryType():
     loadVarFile()
     os.system("clear")
-    dotenv.set_key(validatorToolbox.dotenv_file, "NODE_WALLET", "true")
+    setVar(validatorToolbox.dotenv_file, "NODE_WALLET", "true")
     passphraseStatus()
     passphraseSwitch = environ.get("PASS_SWITCH")
     printStars()
@@ -165,12 +168,10 @@ def passphraseStatus():
     loadVarFile()
     if environ.get("NODE_WALLET") == "true":
         passphraseSet()
-        dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
-        dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH",
+        setVar(validatorToolbox.dotenv_file, "PASS_SWITCH",
                        f"--passphrase-file {validatorToolbox.harmonyDirPath}/passphrase.txt")
     if environ.get("NODE_WALLET") == "false":
-        dotenv.unset_key(validatorToolbox.dotenv_file, "PASS_SWITCH")
-        dotenv.set_key(validatorToolbox.dotenv_file, "PASS_SWITCH", "--passphrase")
+        setVar(validatorToolbox.dotenv_file, "PASS_SWITCH", "--passphrase")
     loadVarFile()
 
 
@@ -251,8 +252,7 @@ def firstRunMenu():
     menuOptions = ["[0] - Install Harmony Validator Software", "[1] - Load Validator Toolbox Menu Setup", ]
     terminal_menu = TerminalMenu(menuOptions, title="* Is this a new server or an already existing harmony node?")
     setupStatus = str(terminal_menu.show())
-    dotenv.unset_key(validatorToolbox.dotenv_file, "SETUP_STATUS", setupStatus)
-    dotenv.set_key(validatorToolbox.dotenv_file, "SETUP_STATUS", setupStatus)
+    setVar(validatorToolbox.dotenv_file, "SETUP_STATUS", setupStatus)
 
 
 def getShardMenu(dotenv_file) -> None:
@@ -266,7 +266,7 @@ def getShardMenu(dotenv_file) -> None:
         menuOptions = ["[0] - Shard 0", "[1] - Shard 1", "[2] - Shard 2", "[3] - Shard 3", ]
         terminal_menu = TerminalMenu(menuOptions, title="* Which Shard will this node operate on? ")
         ourShard = str(terminal_menu.show())
-        dotenv.set_key(dotenv_file, "SHARD", ourShard)
+        setVar(dotenv_file, "SHARD", ourShard)
         return ourShard
 
 
@@ -285,27 +285,20 @@ def getNodeType(dotenv_file) -> None:
             terminal_menu = TerminalMenu(menuOptions, title="Regular or Full Node Server")
             results = terminal_menu.show()
             if results == 0:
-                dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_TYPE")
-                dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_WALLET")
-                dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
-                dotenv.set_key(dotenv_file, "NODE_WALLET", "true")
+                setVar(dotenv_file, "NODE_TYPE", "regular")
+                setVar(dotenv_file, "NODE_WALLET", "true")
             if results == 1:
-                dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_TYPE")
-                dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_WALLET")
-                dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
-                dotenv.set_key(dotenv_file, "NODE_WALLET", "false")
+                setVar(dotenv_file, "NODE_TYPE", "regular")
+                setVar(dotenv_file, "NODE_WALLET", "false")
             if results == 2:
-                dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_TYPE")
-                dotenv.set_key(dotenv_file, "NODE_TYPE", "full")
+                setVar(dotenv_file, "NODE_TYPE", "full")
             os.system("clear")
             return
         setWalletEnv()
     if not environ.get("NODE_TYPE"):
-        dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_TYPE")
-        dotenv.set_key(dotenv_file, "NODE_TYPE", "regular")
+        setVar(dotenv_file, "NODE_TYPE", "regular")
     if not environ.get("NODE_WALLET"):
-        dotenv.unset_key(validatorToolbox.dotenv_file, "NODE_WALLET")
-        dotenv.set_key(dotenv_file, "NODE_WALLET", "true")
+        setVar(dotenv_file, "NODE_WALLET", "true")
 
 
 def setMainOrTest(dotenv_file) -> None:
@@ -321,19 +314,13 @@ def setMainOrTest(dotenv_file) -> None:
         terminal_menu = TerminalMenu(menuOptions, title="Mainnet or Testnet")
         results = terminal_menu.show()
         if results == 0:
-            dotenv.unset_key(validatorToolbox.dotenv_file, "NETWORK")
-            dotenv.unset_key(validatorToolbox.dotenv_file, "NETWORK_SWITCH")
-            dotenv.unset_key(validatorToolbox.dotenv_file, "RPC_NET")
-            dotenv.set_key(dotenv_file, "NETWORK", "mainnet")
-            dotenv.set_key(dotenv_file, "NETWORK_SWITCH", "t")
-            dotenv.set_key(dotenv_file, "RPC_NET", "https://rpc.s0.t.hmny.io")
+            setVar(dotenv_file, "NETWORK", "mainnet")
+            setVar(dotenv_file, "NETWORK_SWITCH", "t")
+            setVar(dotenv_file, "RPC_NET", "https://rpc.s0.t.hmny.io")
         if results == 1:
-            dotenv.unset_key(validatorToolbox.dotenv_file, "NETWORK")
-            dotenv.unset_key(validatorToolbox.dotenv_file, "NETWORK_SWITCH")
-            dotenv.unset_key(validatorToolbox.dotenv_file, "RPC_NET")
-            dotenv.set_key(dotenv_file, "NETWORK", "testnet")
-            dotenv.set_key(dotenv_file, "NETWORK_SWITCH", "b")
-            dotenv.set_key(dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
+            setVar(dotenv_file, "NETWORK", "testnet")
+            setVar(dotenv_file, "NETWORK_SWITCH", "b")
+            setVar(dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
         os.system("clear")
         loadVarFile()
 
@@ -348,7 +335,7 @@ def getExpressStatus(dotenv_file) -> None:
         printStars()
         menuOptions = ["[0] - Express Install", "[1] - Manual Approval", ]
         terminal_menu = TerminalMenu(menuOptions, title="* Express Or Manual Setup")
-        dotenv.set_key(dotenv_file, "EXPRESS", str(terminal_menu.show()))
+        setVar(dotenv_file, "EXPRESS", str(terminal_menu.show()))
 
 
 def getWalletAddress():
@@ -366,8 +353,8 @@ def getWalletAddress():
 
 def setAPIPaths(dotenv_file):
     if not environ.get("NETWORK_0_CALL"):
-        dotenv.set_key(dotenv_file, "NETWORK_0_CALL", f"{validatorToolbox.hmyAppPath} --node='https://api.s0.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
-        dotenv.set_key(dotenv_file, "NETWORK_S_CALL", f"{validatorToolbox.hmyAppPath} --node='https://api.s{environ.get('SHARD')}.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
+        setVar(dotenv_file, "NETWORK_0_CALL", f"{validatorToolbox.hmyAppPath} --node='https://api.s0.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
+        setVar(dotenv_file, "NETWORK_S_CALL", f"{validatorToolbox.hmyAppPath} --node='https://api.s{environ.get('SHARD')}.{environ.get('NETWORK_SWITCH')}.hmny.io' ")
 
 def getValidatorInfo():
     if environ.get("NETWORK") == "mainnet":

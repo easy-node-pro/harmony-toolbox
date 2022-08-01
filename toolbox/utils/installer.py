@@ -235,7 +235,6 @@ def restoreWallet() -> str:
             return
         printStars()
         print("* Wallet already setup for this user account")
-
   
 
 def recoverWallet():
