@@ -25,16 +25,4 @@ if __name__ == "__main__":
             )
             input("* Press any key to exit.")
             raise SystemExit(0)
-    print("* Configuration file detected, loading the validatortoolbox menu application.")
-    printStars()
-    if environ.get("SETUP_STATUS") != "2":
-        recheckVars()
-        passphraseStatus()
-    if environ.get("NODE_TYPE") == "regular":
-        if not environ.get("VALIDATOR_WALLET"):
-            setWalletEnv()
-        runRegularNode()
-    if environ.get("NODE_TYPE") == "full":
-        runFullNode()
-    print("Uh oh, you broke me! Contact Easy Node")
-    raise SystemExit(0)
+    print("* Harmony is installed, now you can run our management menu with python3 toolbox/menu.py")
