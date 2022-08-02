@@ -11,17 +11,3 @@ if __name__ == "__main__":
     printStars()
     print("We've split this into two applications, installer.py & menu.py - please update your startup commands.\n\npython3 ~/validatortoolbox/toolbox/install.py\n\npython3 ~/validatortoolbox/toolbox/menu.py\n\n")
     printStars()
-    print("* Select an option below:")
-    printStars()
-    print("* [0] = install.py - Install Harmony Validator Software - For Brand NEW SERVERS ONLY           *")
-    print("* [1] = menu.py - Load Validator Toolbox Menu App    - For Servers Loaded with our Installer   *")
-    printStars()
-    menuOptions = ["[0] - install.py", "[1] - menu.py", ]
-    terminal_menu = TerminalMenu(menuOptions, title="* Run installer or menu?")
-    results = terminal_menu.show()
-    if results == 0:
-        exec(open("~/validatortoolbox/toolbox/install.py").read())
-    elif results == 1:
-        exec(open("~/validatortoolbox/toolbox/menu.py").read())
-    else:
-        print("* Bad Option, Thanks for playing!!!")
