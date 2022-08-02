@@ -20,8 +20,8 @@ if __name__ == "__main__":
     terminal_menu = TerminalMenu(menuOptions, title="* Run installer or menu?")
     results = terminal_menu.show()
     if results == 0:
-        exec(open("./toolbox/install.py").read())
+        exec(open("~/validatortoolbox/toolbox/install.py").read())
     elif results == 1:
-        exec(open("./toolbox/menu.py").read())
+        exec(open("~/validatortoolbox/toolbox/menu.py").read())
     else:
         print("* Bad Option, Thanks for playing!!!")
