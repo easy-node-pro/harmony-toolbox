@@ -1,40 +1,27 @@
 import os
-import time
-import dotenv
-from os import environ
-from dotenv import load_dotenv
-from utils.config import validatorToolbox
-from utils.installer import firstSetup, printStars, recheckVars, passphraseStatus, recoverWallet
-from utils.shared import loaderIntro, setWalletEnv, askYesNo, loadVarFile
-from utils.toolbox import runRegularNode, runFullNode
+from simple_term_menu import TerminalMenu
+from utils.shared import loaderIntro, setWalletEnv, askYesNo, loadVarFile, printStars
 
-# load_dotenv("~/.easynode.env")
+# This is just a temp file to replace start.py to guide people to install.py or menu.py in the interim. 
 
 if __name__ == "__main__":
     os.system("clear")
     loaderIntro()
-    if not os.path.exists(validatorToolbox.dotenv_file):
-        firstSetup()
-    loadVarFile()
-    if not environ.get("VALIDATOR_WALLET"):
-        recoverWallet()
-        if not environ.get("VALIDATOR_WALLET"):
-            print(
-                "* You don't currently have a validator wallet address loaded in your .env file, please edit ~/.easynode.env and add a line with the following info:\n "
-                + "* VALIDATOR_WALLET='validatorONEaddress' "
-            )
-            input("* Press any key to exit.")
-            raise SystemExit(0)
-    print("* Configuration file detected, loading the validatortoolbox menu application.")
+    os.system("clear")
     printStars()
-    if environ.get("SETUP_STATUS") != "2":
-        recheckVars()
-        passphraseStatus()
-    if environ.get("NODE_TYPE") == "regular":
-        if not environ.get("VALIDATOR_WALLET"):
-            setWalletEnv()
-        runRegularNode()
-    if environ.get("NODE_TYPE") == "full":
-        runFullNode()
-    print("Uh oh, you broke me! Contact Easy Node")
-    raise SystemExit(0)
+    print("We've split this into two applications, installer.py & menu.py - please update your startup commands.\n\npython3 ~/validatortoolbox/toolbox/install.py\n\npython3 ~/validatortoolbox/toolbox/menu.py\n\n")
+    printStars()
+    print("* Select an option below:")
+    printStars()
+    print("* [0] = install.py - Install Harmony Validator Software - For Brand NEW SERVERS ONLY           *")
+    print("* [1] = menu.py - Load Validator Toolbox Menu App    - For Servers Loaded with our Installer   *")
+    printStars()
+    menuOptions = ["[0] - install.py", "[1] - menu.py", ]
+    terminal_menu = TerminalMenu(menuOptions, title="* Run installer or menu?")
+    results = terminal_menu.show()
+    if results == 0:
+        exec(open("./toolbox/install.py").read())
+    elif results == 1:
+        exec(open("./toolbox/menu.py").read())
+    else:
+        print("* Bad Option, Thanks for playing!!!")

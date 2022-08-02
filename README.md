@@ -6,8 +6,8 @@
 by [EasyNode.ONE](http://EasyNode.ONE "EasyNode.ONE")
 
 This repository provides two functions in one application:
--   Harmony Validator Menu Driven Installer
--   Harmony Validator Management Interface Menu
+-   Harmony Validator Menu Driven Installer (install.py)
+-   Harmony Validator Management Interface Menu (menu.py)
 
 [![Easy Node - Harmony Validator Operations Toolbox](http://img.youtube.com/vi/mtlgZQc7BjM/0.jpg)](https://www.youtube.com/watch?v=mtlgZQc7BjM "Easy Node - Harmony Validator Operations Toolbox")
 
@@ -43,7 +43,13 @@ pip3 install -r requirements.txt
 ```
 Run the installer from anywhere. You'll be presented with our menu to grab configuration details.
 ```bash
-python3 ~/validatortoolbox/toolbox/start.py
+python3 ~/validatortoolbox/toolbox/install.py
+```
+
+### Management Menu
+After you've got harmony installed, you can run our management menu with the following command:
+```bash
+python3 ~/validatortoolbox/toolbox/menu.py
 ```
 
 ## Full Installation Guide & Documentation

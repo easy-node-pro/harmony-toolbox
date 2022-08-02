@@ -168,8 +168,6 @@ def installHarmony() -> None:
 def cloneShards():
     os.chdir(f"{validatorToolbox.harmonyDirPath}")
     testOrMain = environ.get("NETWORK")
-    if environ.get("NETWORK") == "rasppi_main":
-        testOrMain = "mainnet"
     if environ.get("EXPRESS") == "0":
         os.system("clear")
         printStars()
@@ -182,11 +180,12 @@ def cloneShards():
             printStars()
             print(f"Shard {environ.get('SHARD')} completed.")
             printStars()
-        print("* Now cloning Shard 0, kick back and relax for awhile...")
-        printStars()
-        os.system(
-            f"rclone -P -L --checksum sync storj:pub.harmony.one/{testOrMain}.snap/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0 --multi-thread-streams 4 --transfers=32"
-        )
+        else:
+            print("* Now cloning Shard 0, kick back and relax for awhile...")
+            printStars()
+            os.system(
+                f"rclone -P -L --checksum sync storj:pub.harmony.one/{testOrMain}.snap/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0 --multi-thread-streams 4 --transfers=32"
+            )
     else:
         os.system("clear")
         print(f"* We are now ready to rclone your database(s).\n")
@@ -199,14 +198,15 @@ def cloneShards():
                 os.system(
                     f"rclone -P sync storj:pub.harmony.one/{testOrMain}.min/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 4 --transfers=32"
                 )
-        question = askYesNo(
-            "* Would you like to download the shard 0 database now? (YES/NO) "
-        )
-        if question:
-            print("* Now cloning Shard 0, kick back and relax for awhile...")
-            os.system(
-                f"rclone -P -L --checksum sync storj:pub.harmony.one/{testOrMain}.snap/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0 --multi-thread-streams 4 --transfers=32"
+        else:
+            question = askYesNo(
+                "* Would you like to download the shard 0 database now? (YES/NO) "
             )
+            if question:
+                print("* Now cloning Shard 0, kick back and relax for awhile...")
+                os.system(
+                    f"rclone -P -L --checksum sync storj:pub.harmony.one/{testOrMain}.snap/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0 --multi-thread-streams 4 --transfers=32"
+                )
 
 
 def restoreWallet() -> str:
@@ -235,7 +235,6 @@ def restoreWallet() -> str:
             return
         printStars()
         print("* Wallet already setup for this user account")
-
   
 
 def recoverWallet():

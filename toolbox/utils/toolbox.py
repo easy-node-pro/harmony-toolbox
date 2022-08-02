@@ -549,30 +549,56 @@ def runStats() -> str:
         input(f"* No local data detected, did you just restart Harmony? Wait a few moments and try again. Press ENTER to return to the main menu.")
         {stringStars()}
         return
-    print(f"""
-{stringStars()}
-* Current Date & Time: {timeNow}
-*
-{stringStars()}
-* Current Status of our server {validatorToolbox.serverHostName} currently on Shard {environ.get('SHARD')}:
-*
-* Shard 0 Sync Status:
-* Local Server  - Epoch {local_data_shard['result']['beacon-chain-header']['epoch']} - Shard {local_data_shard['result']['beacon-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['beacon-chain-header']['number'])}
-* Remote Server - Epoch {remote_data_shard_0['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard_0['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}
-*
-{stringStars()}
-    """)
-    if int(ourShard) > 0:
+    if environ.get("SHARD") == "0":
         print(f"""
-* Shard {ourShard} Sync Status:
-*
-* Local Server  - Epoch {local_data_shard['result']['shard-chain-header']['epoch']} - Shard {local_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}
-* Remote Server - Epoch {remote_data_shard['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}
-*
-{stringStars()}
-    """)
-    shardStats(ourShard)
-    input("* Validator stats completed, press ENTER to return to the main menu. ")
+    {stringStars()}
+    * Current Date & Time: {timeNow}
+    *
+    {stringStars()}
+    * Current Status of our server {validatorToolbox.serverHostName} currently on Shard {environ.get('SHARD')}:
+    *
+    * Shard 0 Sync Status:
+    * Local Server  - Epoch {local_data_shard['result']['beacon-chain-header']['epoch']} - Shard {local_data_shard['result']['beacon-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['beacon-chain-header']['number'])}
+    * Remote Server - Epoch {remote_data_shard_0['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard_0['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}
+    *
+    {stringStars()}
+        """)
+        if int(ourShard) > 0:
+            print(f"""
+    * Shard {ourShard} Sync Status:
+    *
+    * Local Server  - Epoch {local_data_shard['result']['shard-chain-header']['epoch']} - Shard {local_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}
+    * Remote Server - Epoch {remote_data_shard['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}
+    *
+    {stringStars()}
+        """)
+        shardStats(ourShard)
+        input("* Validator stats completed, press ENTER to return to the main menu. ")
+    else:
+        print(f"""
+    {stringStars()}
+    * Current Date & Time: {timeNow}
+    *
+    {stringStars()}
+    * Current Status of our server {validatorToolbox.serverHostName} currently on Shard {environ.get('SHARD')}:
+    *
+    * Shard 0 Sync Status:
+    * Local Server  - Epoch {local_data_shard['result']['beacon-chain-header']['epoch']} (Always 1 epoch behind Remote Server) - Shard 0 not required on Shard {environ.get('SHARD')}
+    * Remote Server - Epoch {remote_data_shard_0['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard_0['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}
+    *
+    {stringStars()}
+        """)
+        if int(ourShard) > 0:
+            print(f"""
+    * Shard {ourShard} Sync Status:
+    *
+    * Local Server  - Epoch {local_data_shard['result']['shard-chain-header']['epoch']} - Shard {local_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}
+    * Remote Server - Epoch {remote_data_shard['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}
+    *
+    {stringStars()}
+        """)
+        shardStats(ourShard)
+        input("    * Validator stats completed, press ENTER to return to the main menu. ")
 
 
 def getDBSize(ourShard) -> str:
@@ -588,20 +614,20 @@ def shardStats(ourShard) -> str:
     dbZeroSize = getDBSize('0')
     if ourShard == "0":
         print(f"""
-* Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {dbZeroSize}
-* {ourVersion}
-{stringStars()}
+    * Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {dbZeroSize}
+    * {ourVersion}
+    {stringStars()}
         """)
     else:
         print(f"""
-* Uptime :: {ourUptime}
-*
-* Harmony DB 0 Size  ::  {dbZeroSize}
-* Harmony DB {ourShard} Size  ::   {getDBSize(str(ourShard))}
-*
-* {ourVersion}
-*
-{stringStars()}
+    * Uptime :: {ourUptime}
+    *
+    * Harmony DB 0 Size  ::  {dbZeroSize}
+    * Harmony DB {ourShard} Size  ::   {getDBSize(str(ourShard))}
+    *
+    * {ourVersion}
+    *
+    {stringStars()}
         """)
 
 
