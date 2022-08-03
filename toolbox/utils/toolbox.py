@@ -1,5 +1,6 @@
 import os
 import shutil
+from wsgiref.validate import validator
 import requests
 import time
 import dotenv
@@ -502,6 +503,24 @@ def upgradeHarmonyApp(testOrMain):
     printStars()
     print("Updated version: ")
     os.system("./harmony -V")
+    if environ.get("SHARD") != "0":
+        size = 0
+        for path, dirs, files in os.walk(f"{validatorToolbox.harmonyDirPath}/harmony_db_0"):
+            for f in files:
+                fp = os.path.join(path, f)
+                size += os.path.getsize(fp)
+            if size >= 200000000:
+                question = askYesNo(
+                    Fore.WHITE
+                    + "Are you sure you would like to proceed with Linux apt Upgrades?\n\nType 'Yes' or 'No' to continue"
+                    )
+                if question:
+                    os.system(f"rm -r {validatorToolbox.harmonyDirPath}/harmony_db_0")
+                else:
+                    print("Skipping removal of 0, but it's no longer required, fyi!")
+            else:
+                print("Your database 0 is already trimmed, enjoy!")
+        return
     os.system("sudo service harmony restart")
     printStars()
     print(
