@@ -504,6 +504,7 @@ def upgradeHarmonyApp(testOrMain):
     print("Updated version: ")
     os.system("./harmony -V")
     if environ.get("SHARD") != "0":
+        size = 0
         for path, dirs, files in os.walk(f"{validatorToolbox.harmonyDirPath}/harmony_db_0"):
             for f in files:
                 fp = os.path.join(path, f)
