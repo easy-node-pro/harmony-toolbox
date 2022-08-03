@@ -1,6 +1,7 @@
 import os
 import dotenv
 import time
+from toolbox.utils.shared import setVar
 from utils.config import validatorToolbox
 from os import environ
 from colorama import Fore, Style
@@ -238,27 +239,35 @@ def restoreWallet() -> str:
   
 
 def recoverWallet():
-    recoveryType()
-    loadVarFile()
-    validatorWallet = environ.get("VALIDATOR_WALLET")
-    passphraseSwitch = environ.get("PASS_SWITCH")
-    print(
-        "\n* Verify the address above matches the address below: "
-        + "\n* Detected Wallet: "
-        + Fore.GREEN
-        + f"{validatorWallet}"
-        + Style.RESET_ALL
-        + "\n* If a different wallet is showing you can remove it and retry it after installation."
-        + "\n*"
-        + f"\n* .{validatorToolbox.hmyAppPath} keys remove {validatorToolbox.activeUserName}"
-        + "\n*"
-        + "\n* To restore a wallet once again, run the following:"
-        + "\n*"
-        + f"\n* .{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}"
-        + "\n* "
-    )
-    printStars()
-    input("* Verify your wallet information above.\n* Press ENTER to continue Installation.")
+    question = askYesNo(
+        f"* Would you like to import a wallet? (YES/NO) "
+        )
+    if question:
+        recoveryType()
+        loadVarFile()
+        validatorWallet = environ.get("VALIDATOR_WALLET")
+        passphraseSwitch = environ.get("PASS_SWITCH")
+        print(
+            "\n* Verify the address above matches the address below: "
+            + "\n* Detected Wallet: "
+            + Fore.GREEN
+            + f"{validatorWallet}"
+            + Style.RESET_ALL
+            + "\n* If a different wallet is showing you can remove it and retry it after installation."
+            + "\n*"
+            + f"\n* .{validatorToolbox.hmyAppPath} keys remove {validatorToolbox.activeUserName}"
+            + "\n*"
+            + "\n* To restore a wallet once again, run the following:"
+            + "\n*"
+            + f"\n* .{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}"
+            + "\n* "
+        )
+        printStars()
+        input("* Verify your wallet information above.\n* Press ENTER to continue Installation.")
+    else:
+        wallet = input(f"* If you'd like to use the management menu, we need a one1 address, please input your address now: ")
+        setVar(validatorToolbox.dotenv_file, "VALIDATOR_WALLET", wallet)
+        return
 
 
 def setMountedPoint():
