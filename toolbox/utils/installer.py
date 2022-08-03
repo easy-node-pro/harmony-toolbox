@@ -1,7 +1,7 @@
 import os
 import dotenv
 import time
-from toolbox.utils.shared import setVar
+from utils.shared import setVar
 from utils.config import validatorToolbox
 from os import environ
 from colorama import Fore, Style
