@@ -520,7 +520,6 @@ def upgradeHarmonyApp(testOrMain):
                     print("Skipping removal of 0, but it's no longer required, fyi!")
             else:
                 print("Your database 0 is already trimmed, enjoy!")
-        return
     os.system("sudo service harmony restart")
     printStars()
     print(
