@@ -14,9 +14,9 @@ def firstSetup():
     print("* This is the first time you've launched start.py, loading config menus.")
     printStars()
     time.sleep(1)
-    dotenv.set_key(validatorToolbox.dotenv_file, "SETUP_STATUS", "2")
+    setVar(validatorToolbox.dotenv_file, "SETUP_STATUS", "2")
     if environ.get("EASY_VERSION"):
-        dotenv.unset_key(validatorToolbox.dotenv_file, "EASY_VERSION")
+        setVar(validatorToolbox.dotenv_file, "EASY_VERSION", validatorToolbox.easyVersion)
     firstRunMenu()
     recheckVars()
     getExpressStatus(validatorToolbox.dotenv_file)
@@ -26,9 +26,6 @@ def firstSetup():
 
 
 def recheckVars():
-    if environ.get("EASY_VERSION") != (validatorToolbox.easyVersion):
-        dotenv.unset_key(validatorToolbox.dotenv_file, "EASY_VERSION")
-        dotenv.set_key(validatorToolbox.dotenv_file, "EASY_VERSION", validatorToolbox.easyVersion)
     loadVarFile()
     getShardMenu(validatorToolbox.dotenv_file)
     getNodeType(validatorToolbox.dotenv_file)
