@@ -105,21 +105,13 @@ def installHarmonyApp(harmonyDirPath, blsKeyFile):
         os.system("./harmony config dump harmony.conf")
         updateHarmonyConf(validatorToolbox.harmonyConfPath, "MaxKeys = 10", "MaxKeys = 13")
     printStars()
-    print("* harmony.conf MaxKeys modified to 30")
-    # when we setup rasppi as an option, this is the install command for harmony
-    if environ.get("ARC") == "arm64":
-        if environ.get("NETWORK") == "testnet":
-            # no current testnet know for arm64, break for now
-            print("No known testnet for R Pi at this time, try mainnet")
-            raise SystemExit(0)
-        else:
-            os.system("curl -LO https://harmony.one/binary-arm64 && mv binary-arm64 harmony && chmod +x harmony")
-            os.system("./harmony config dump harmony.conf")
+    print("* harmony.conf MaxKeys modified to 13")
     if os.path.exists(blsKeyFile):
         updateHarmonyConf(validatorToolbox.harmonyConfPath, "PassFile = \"\"", f"PassFile = \"blskey.pass\"")
         print("* blskey.pass found, updated harmony.conf")
     printStars()
     print(f"* Harmony {environ.get('NETWORK')} application installed & ~/harmony/harmony.conf created.")
+    return
 
 
 def setWalletEnv():
