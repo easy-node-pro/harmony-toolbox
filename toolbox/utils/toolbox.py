@@ -515,12 +515,16 @@ def upgradeHarmonyApp(testOrMain):
                     + "Are you sure you would like to proceed with Linux apt Upgrades?\n\nType 'Yes' or 'No' to continue"
                     )
                 if question:
-                    os.system(f"rm -r {validatorToolbox.harmonyDirPath}/harmony_db_0")
+                    os.system("sudo service harmony stop")
+                    os.system(f"mv {validatorToolbox.harmonyDirPath}/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0_old")
+                    os.system("sudo service harmony start")
+                    os.system(f"rm -r {validatorToolbox.harmonyDirPath}/harmony_db_0_old")
                 else:
                     print("Skipping removal of 0, but it's no longer required, fyi!")
             else:
                 print("Your database 0 is already trimmed, enjoy!")
-    os.system("sudo service harmony restart")
+    else:
+        os.system("sudo service harmony restart")
     printStars()
     print(
         "Harmony Service is restarting, waiting 10 seconds for restart."
