@@ -512,7 +512,7 @@ def upgradeHarmonyApp(testOrMain):
             if size >= 200000000:
                 question = askYesNo(
                     Fore.WHITE
-                    + "Are you sure you would like to proceed with Linux apt Upgrades?\n\nType 'Yes' or 'No' to continue"
+                    + "Are you sure you would like to proceed with upgrading and trimming database 0?\n\nType 'Yes' or 'No' to continue"
                     )
                 if question:
                     os.system("sudo service harmony stop")
