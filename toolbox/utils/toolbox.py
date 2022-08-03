@@ -508,8 +508,8 @@ def upgradeHarmonyApp(testOrMain):
             for f in files:
                 fp = os.path.join(path, f)
                 size += os.path.getsize(fp)
-                print(f"Folder size is {size}")
-                input("break here.")
+            print(f"Folder size is {size}")
+            input("break here.")
         return
     os.system("sudo service harmony restart")
     printStars()
