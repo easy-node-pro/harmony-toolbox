@@ -1,5 +1,6 @@
 import os
 import shutil
+from wsgiref.validate import validator
 import requests
 import time
 import dotenv
@@ -502,6 +503,14 @@ def upgradeHarmonyApp(testOrMain):
     printStars()
     print("Updated version: ")
     os.system("./harmony -V")
+    if environ.get("SHARD") != "0":
+        for path, dirs, files in os.walk(f"{validatorToolbox.harmonyDirPath}/harmony_db_0"):
+            for f in files:
+                fp = os.path.join(path, f)
+                size += os.path.getsize(fp)
+                print(f"Folder size is {size}")
+                input("break here.")
+        return
     os.system("sudo service harmony restart")
     printStars()
     print(
