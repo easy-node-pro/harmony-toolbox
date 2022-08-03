@@ -509,8 +509,17 @@ def upgradeHarmonyApp(testOrMain):
             for f in files:
                 fp = os.path.join(path, f)
                 size += os.path.getsize(fp)
-            print(f"Folder size is {size}")
-            input("break here.")
+            if size >= 200000000:
+                question = askYesNo(
+                    Fore.WHITE
+                    + "Are you sure you would like to proceed with Linux apt Upgrades?\n\nType 'Yes' or 'No' to continue"
+                    )
+                if question:
+                    os.system(f"rm -r {validatorToolbox.harmonyDirPath}/harmony_db_0")
+                else:
+                    print("Skipping removal of 0, but it's no longer required, fyi!")
+            else:
+                print("Your database 0 is already trimmed, enjoy!")
         return
     os.system("sudo service harmony restart")
     printStars()
