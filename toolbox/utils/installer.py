@@ -11,9 +11,7 @@ from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, getNodeTyp
 def firstSetup():
     os.system("touch ~/.easynode.env")
     # first run stuff
-    print("* This is the first time you've launched start.py, loading config menus.")
-    printStars()
-    time.sleep(1)
+    time.sleep(2)
     if environ.get("EASY_VERSION"):
         setVar(validatorToolbox.dotenv_file, "EASY_VERSION", validatorToolbox.easyVersion)
     recheckVars()
