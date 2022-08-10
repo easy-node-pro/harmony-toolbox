@@ -14,15 +14,6 @@ def firstSetup():
     time.sleep(2)
     if environ.get("EASY_VERSION"):
         setVar(validatorToolbox.dotenv_file, "EASY_VERSION", validatorToolbox.easyVersion)
-    recheckVars()
-    setVar(validatorToolbox.dotenv_file, "SETUP_STATUS", "0")
-    getExpressStatus(validatorToolbox.dotenv_file)
-    checkForInstall()
-    printStars()
-    # load installer
-
-
-def recheckVars():
     loadVarFile()
     getShardMenu(validatorToolbox.dotenv_file)
     getNodeType(validatorToolbox.dotenv_file)
@@ -30,7 +21,12 @@ def recheckVars():
     setVar(validatorToolbox.dotenv_file, "NETWORK_SWITCH", "t")
     setVar(validatorToolbox.dotenv_file, "RPC_NET", "https://rpc.s0.t.hmny.io")
     setAPIPaths(validatorToolbox.dotenv_file)
+    setVar(validatorToolbox.dotenv_file, "SETUP_STATUS", "0")
     loadVarFile()
+    checkForInstall()
+    printStars()
+    # load installer
+
 
 def checkForInstall() -> str:
     loadVarFile()
