@@ -234,20 +234,6 @@ def loadVarFile():
         load_dotenv(validatorToolbox.dotenv_file)
 
 
-def firstRunMenu():
-    os.system("clear")
-    printStars()
-    print("* First run detected!                                                                       *")
-    printStars()
-    print("* [0] = Install Harmony Validator Software - For Brand NEW SERVERS ONLY                     *")
-    print("* [1] = Load Validator Toolbox Menu App    - For servers already running harmony validator  *")
-    printStars()
-    menuOptions = ["[0] - Install Harmony Validator Software", "[1] - Load Validator Toolbox Menu Setup", ]
-    terminal_menu = TerminalMenu(menuOptions, title="* Is this a new server or an already existing harmony node?")
-    setupStatus = str(terminal_menu.show())
-    setVar(validatorToolbox.dotenv_file, "SETUP_STATUS", setupStatus)
-
-
 def getShardMenu(dotenv_file) -> None:
     if not environ.get("SHARD"):
         os.system("clear")

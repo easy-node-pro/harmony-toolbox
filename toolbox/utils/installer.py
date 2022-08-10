@@ -5,7 +5,7 @@ from utils.shared import setVar
 from utils.config import validatorToolbox
 from os import environ
 from colorama import Fore, Style
-from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, firstRunMenu, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp, recoveryType, passphraseStatus, passphraseSet
+from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp, recoveryType, passphraseStatus, passphraseSet
 
 
 def firstSetup():
@@ -17,7 +17,7 @@ def firstSetup():
     setVar(validatorToolbox.dotenv_file, "SETUP_STATUS", "2")
     if environ.get("EASY_VERSION"):
         setVar(validatorToolbox.dotenv_file, "EASY_VERSION", validatorToolbox.easyVersion)
-    firstRunMenu()
+    setVar(validatorToolbox.dotenv_file, "SETUP_STATUS", "0")
     recheckVars()
     getExpressStatus(validatorToolbox.dotenv_file)
     checkForInstall()
