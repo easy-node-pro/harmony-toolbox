@@ -109,26 +109,27 @@ def installHarmony() -> None:
             )
             raise SystemExit(0)
         # Checks Passed at this point, only 1 folder in /mnt and it's probably our volume (can scope this down further later)
-        if mntCount == 1:
-            myLongHmyPath = myVolumePath + "/harmony"
-            dotenv.set_key(validatorToolbox.dotenv_file,
-                           "MOUNT_POINT", myLongHmyPath)
-            print("* Creating all Harmony Files & Folders")
-            os.system(
-                f"sudo chown {validatorToolbox.activeUserName} {myVolumePath}")
-            os.system(f"mkdir -p {myLongHmyPath}/.hmy/blskeys")
-            os.system(
-                f"ln -s {myLongHmyPath} {validatorToolbox.harmonyDirPath}")
-        # Let's make sure your volume is mounted
-        if mntCount == 0:
-            question = askYesNo(
-                "* You have a volume but it is not mounted.\n* Would you like to install Harmony in ~/harmony on your main disk instead of your volume? (Yes/No) "
-            )
-            if question:
+        if environ.get("SHARD") == "0":
+            if mntCount == 1:
+                myLongHmyPath = myVolumePath + "/harmony"
                 dotenv.set_key(validatorToolbox.dotenv_file,
-                               "MOUNT_POINT", validatorToolbox.harmonyDirPath)
-            else:
-                raise SystemExit(0)
+                            "MOUNT_POINT", myLongHmyPath)
+                print("* Creating all Harmony Files & Folders")
+                os.system(
+                    f"sudo chown {validatorToolbox.activeUserName} {myVolumePath}")
+                os.system(f"mkdir -p {myLongHmyPath}/.hmy/blskeys")
+                os.system(
+                    f"ln -s {myLongHmyPath} {validatorToolbox.harmonyDirPath}")
+            # Let's make sure your volume is mounted
+            if mntCount == 0:
+                question = askYesNo(
+                    "* You have a volume but it is not mounted.\n* Would you like to install Harmony in ~/harmony on your main disk instead of your volume? (Yes/No) "
+                )
+                if question:
+                    dotenv.set_key(validatorToolbox.dotenv_file,
+                                "MOUNT_POINT", validatorToolbox.harmonyDirPath)
+                else:
+                    raise SystemExit(0)
     # Setup folders now that symlink exists or we know we're using ~/harmony
     if not os.path.isdir(f"{validatorToolbox.userHomeDir}/.hmy_cli/account-keys/"):
         os.system(
