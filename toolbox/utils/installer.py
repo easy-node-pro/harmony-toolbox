@@ -16,6 +16,7 @@ def firstSetup():
         setVar(validatorToolbox.dotenv_file, "EASY_VERSION", validatorToolbox.easyVersion)
     loadVarFile()
     getShardMenu(validatorToolbox.dotenv_file)
+    setVar(validatorToolbox.dotenv_file, "EXPRESS", "0")
     getNodeType(validatorToolbox.dotenv_file)
     setVar(validatorToolbox.dotenv_file, "NETWORK", "mainnet")
     setVar(validatorToolbox.dotenv_file, "NETWORK_SWITCH", "t")
