@@ -5,7 +5,7 @@ from utils.shared import setVar
 from utils.config import validatorToolbox
 from os import environ
 from colorama import Fore, Style
-from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, getNodeType, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp, recoveryType, passphraseStatus, passphraseSet
+from utils.shared import setAPIPaths, getShardMenu, getNodeType, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp, recoveryType, passphraseStatus, passphraseSet
 
 
 def firstSetup():
