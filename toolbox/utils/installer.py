@@ -5,7 +5,7 @@ from utils.shared import setVar
 from utils.config import validatorToolbox
 from os import environ
 from colorama import Fore, Style
-from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, setMainOrTest, getNodeType, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp, recoveryType, passphraseStatus, passphraseSet
+from utils.shared import setAPIPaths, getShardMenu, getExpressStatus, getNodeType, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp, recoveryType, passphraseStatus, passphraseSet
 
 
 def firstSetup():
@@ -29,7 +29,9 @@ def recheckVars():
     loadVarFile()
     getShardMenu(validatorToolbox.dotenv_file)
     getNodeType(validatorToolbox.dotenv_file)
-    setMainOrTest(validatorToolbox.dotenv_file)
+    setVar(validatorToolbox.dotenv_file, "NETWORK", "mainnet")
+    setVar(validatorToolbox.dotenv_file, "NETWORK_SWITCH", "t")
+    setVar(validatorToolbox.dotenv_file, "RPC_NET", "https://rpc.s0.t.hmny.io")
     setAPIPaths(validatorToolbox.dotenv_file)
     loadVarFile()
 
