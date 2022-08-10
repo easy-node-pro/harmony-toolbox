@@ -14,11 +14,10 @@ def firstSetup():
     print("* This is the first time you've launched start.py, loading config menus.")
     printStars()
     time.sleep(1)
-    setVar(validatorToolbox.dotenv_file, "SETUP_STATUS", "2")
     if environ.get("EASY_VERSION"):
         setVar(validatorToolbox.dotenv_file, "EASY_VERSION", validatorToolbox.easyVersion)
-    setVar(validatorToolbox.dotenv_file, "SETUP_STATUS", "0")
     recheckVars()
+    setVar(validatorToolbox.dotenv_file, "SETUP_STATUS", "0")
     getExpressStatus(validatorToolbox.dotenv_file)
     checkForInstall()
     printStars()
@@ -75,7 +74,7 @@ def checkForInstall() -> str:
             printStars()
             cloneShards()
             finish_node_install()
-    if environ.get("SETUP_STATUS") == "0":
+    if os.path.exists(validatorToolbox.harmonyDirPath):
         question = askYesNo(
             "* You already have a harmony folder on this system, would you like to re-run installation and rclone? (YES/NO)"
         )
@@ -318,6 +317,5 @@ def finish_node_install():
     printStars()
     print("* Thanks for using Easy Node - Validator Node Server Software Installer!")
     printStars()
-    dotenv.unset_key(validatorToolbox.dotenv_file, "SETUP_STATUS")
-    dotenv.set_key(validatorToolbox.dotenv_file, "SETUP_STATUS", "1")
+    setVar(validatorToolbox.dotenv_file, "SETUP_STATUS", "1")
     raise SystemExit(0)
