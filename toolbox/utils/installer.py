@@ -29,6 +29,17 @@ def firstSetup():
     # load installer
 
 
+def recheckVars():
+    loadVarFile()
+    getShardMenu(validatorToolbox.dotenv_file)
+    getNodeType(validatorToolbox.dotenv_file)
+    setVar(validatorToolbox.dotenv_file, "NETWORK", "mainnet")
+    setVar(validatorToolbox.dotenv_file, "NETWORK_SWITCH", "t")
+    setVar(validatorToolbox.dotenv_file, "RPC_NET", "https://rpc.s0.t.hmny.io")
+    setAPIPaths(validatorToolbox.dotenv_file)
+    loadVarFile()
+
+
 def checkForInstall() -> str:
     loadVarFile()
     if not os.path.exists(validatorToolbox.harmonyDirPath):
