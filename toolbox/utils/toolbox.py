@@ -66,7 +66,7 @@ def menuTopperRegular() -> None:
     )
     total_balance, total_balance_test = getWalletBalance(environ.get('VALIDATOR_WALLET'))
     print(
-        "* Your $ONE balance is:           "
+        "* Your $ONE balance is:             "
         + Fore.GREEN
         + str(total_balance)
         + Style.RESET_ALL
