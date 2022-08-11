@@ -65,7 +65,7 @@ def menuTopperRegular() -> None:
         + Style.RESET_ALL
     )
     print(
-        "* Your pending $ONE rewards are: "
+        "* Your pending $ONE rewards are:    "
         + Fore.GREEN
         + str(getRewardsBalance(validatorToolbox.rpc_endpoints, environ.get('VALIDATOR_WALLET')))
         + Style.RESET_ALL
