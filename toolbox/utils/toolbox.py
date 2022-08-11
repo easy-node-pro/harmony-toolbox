@@ -46,6 +46,8 @@ def menuTopperRegular() -> None:
     current_epoch = getCurrentEpoch()
     sign_percentage = getSignPercent()
     os.system("clear")
+    # Get balances
+    total_balance, total_balance_test = getWalletBalance(environ.get('VALIDATOR_WALLET'))
     # Print Menu
     print(Style.RESET_ALL)
     printStars()
@@ -64,7 +66,6 @@ def menuTopperRegular() -> None:
         + str(environ.get("VALIDATOR_WALLET"))
         + Style.RESET_ALL
     )
-    total_balance, total_balance_test = getWalletBalance(environ.get('VALIDATOR_WALLET'))
     print(
         "* Your $ONE balance is:             "
         + Fore.GREEN
