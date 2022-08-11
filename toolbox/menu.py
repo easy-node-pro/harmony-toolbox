@@ -3,7 +3,7 @@ from os import environ
 from utils.config import validatorToolbox
 from utils.installer import printStars, recheckVars, passphraseStatus, recoverWallet
 from utils.shared import loaderIntro, setWalletEnv, askYesNo, loadVarFile
-from utils.toolbox import runRegularNode, runFullNode
+from utils.toolbox import runRegularNode
 
 if __name__ == "__main__":
     os.system("clear")
@@ -30,7 +30,5 @@ if __name__ == "__main__":
         if not environ.get("VALIDATOR_WALLET"):
             setWalletEnv()
         runRegularNode()
-    if environ.get("NODE_TYPE") == "full":
-        runFullNode()
     print("Uh oh, you broke me! Contact Easy Node")
     raise SystemExit(0)

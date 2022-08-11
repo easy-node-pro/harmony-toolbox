@@ -40,19 +40,6 @@ def rewardsCollector() -> None:
             Fore.GREEN + f"* mainnet rewards for {environ.get('VALIDATOR_WALLET')} have been collected." + Style.RESET_ALL
         )
         printStars()
-    question = askYesNo(
-        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {getRewardsBalance(validatorToolbox.rpc_endpoints_test, environ.get('VALIDATOR_WALLET'))} $ONE pending.\n* Would you like to collect your rewards on the Harmony testnet? (YES/NO) "
-    )
-    if question:
-        collectRewards(f"{environ.get('NETWORK_0_CALL')}")
-        print()
-        printStars()
-        print(
-            Fore.YELLOW + f"* testnet rewards for {environ.get('VALIDATOR_WALLET')} have been collected." + Style.RESET_ALL
-        )
-        printStars()
-        print()
-        input("Press ENTER to return to the main menu.")
 
 
 def menuTopperRegular() -> None:
@@ -77,6 +64,12 @@ def menuTopperRegular() -> None:
         + str(environ.get("VALIDATOR_WALLET"))
         + Style.RESET_ALL
     )
+    print(
+        "* Your pending $ONE rewards are: "
+        + Fore.GREEN
+        + getRewardsBalance(validatorToolbox.rpc_endpoints, environ.get('VALIDATOR_WALLET'))
+        + Style.RESET_ALL
+        )
     print(
         "* Server Hostname & IP:             "
         + validatorToolbox.serverHostName
