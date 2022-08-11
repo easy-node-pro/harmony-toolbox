@@ -43,11 +43,11 @@ def rewardsCollector() -> None:
 
 
 def menuTopperRegular() -> None:
+    # Get stats & balances
     current_epoch = getCurrentEpoch()
     sign_percentage = getSignPercent()
-    os.system("clear")
-    # Get balances
     total_balance, total_balance_test = getWalletBalance(environ.get('VALIDATOR_WALLET'))
+    os.system("clear")
     # Print Menu
     print(Style.RESET_ALL)
     printStars()
