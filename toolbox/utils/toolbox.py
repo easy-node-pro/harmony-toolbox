@@ -59,9 +59,11 @@ def rewardsCollector() -> None:
         )
         if question:
             wallet_balance, wallet_balance_test = getWalletBalance(environ.get('VALIDATOR_WALLET'))
-            sendAmount = input(f"* You have {wallet_balance} $ONE available to send. Remember to reserve some for future gas.\n* How much $ONE would you like to send to {rewardsWallet}? ")
-            if sendAmount != "0":
-                sendRewards(environ.get('NETWORK_0_CALL'), sendAmount, rewardsWallet)
+            suggestedSend = wallet_balance - float(environ.get("REWARDS_RESERVE"))
+            if suggestedSend > 0:
+                question = askYesNo(f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggestedSend} $ONE using your reservation settings.\n* Would you like to send {suggestedSend} $ONE to {rewardsWallet} now? ")
+                if question:
+                    sendRewards(environ.get('NETWORK_0_CALL'), suggestedSend, rewardsWallet)
             return
         else:
             return
@@ -238,7 +240,7 @@ def setRewardsWallet() -> None:
     rewardsWallet = environ.get("REWARDS_WALLET")
     if rewardsWallet is None:
         question = askYesNo(
-                "* Would you like to add an address to send your rewards too? (YES/NO)"
+                "* Would you like to add an address to send your rewards too? (YES/NO) "
             )
         if question:
             rewardsWallet = input(f"* Input your one1 address to send rewards into, please input your address now: ")
@@ -250,7 +252,7 @@ def setRewardsWallet() -> None:
         return
     else:
         question = askYesNo(
-            f"* Your current saved rewards wallet address is {rewardsWallet}\n* Would you like to update the address you send your rewards too? (YES/NO)"
+            f"* Your current saved rewards wallet address is {rewardsWallet}\n* Would you like to update the address you send your rewards too? (YES/NO) "
         )
         if question:
             rewardsWallet = input(f"* Input your one1 address to send rewards into, please input your address now: ")
@@ -260,6 +262,36 @@ def setRewardsWallet() -> None:
                 print("* Wallet does not start with one1, please try again.")
                 return
     return
+
+def setRewardsReserve() -> None:
+    rewardsReserve = environ.get("REWARDS_RESERVE")
+    if rewardsReserve:
+        question = askYesNo(
+            f"* Your current total of $ONE to reserve for fees is {rewardsReserve}\n* Would you like to update the reserve total? (YES/NO) "
+        )
+        if question:
+            askReserveTotal()
+        return
+        # list current reserve, ask if they want an update
+    else:
+        setReserveTotal("5")
+        question = askYesNo(
+            f"* You do not have a reserve set, we have set it to the default of 5 $ONE.\n* Would you like to update your reserve? (YES/NO) "
+        )
+        if question:
+            askReserveTotal()
+        # ask if they would like to set the reserve
+        return
+
+
+def askReserveTotal() -> None:
+    reserveTotal = input("* How much $ONE would you like to keep reserved for fees? ")
+    setReserveTotal(reserveTotal)
+    return
+
+
+def setReserveTotal(reserveTotal):
+    setVar(validatorToolbox.dotenv_file, "REWARDS_RESERVE", reserveTotal)
 
 
 def runFullNode() -> None:
