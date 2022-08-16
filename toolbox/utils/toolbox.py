@@ -518,7 +518,7 @@ def serviceMenuOption() -> None:
             "*   8 - "
             + Fore.RED
             + "Stop Harmony Service      "
-            + Fore.WHITE
+            + Fore.GREEN
             + "- "
             + Fore.YELLOW
             + Back.RED
