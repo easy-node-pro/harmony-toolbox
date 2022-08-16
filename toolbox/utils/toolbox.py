@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 from datetime import datetime
 from collections import namedtuple
 from colorama import Fore, Back, Style
-from pyhmy import blockchain, account
+from pyhmy import blockchain, transaction
 from requests.exceptions import HTTPError
 from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, return_txt, installHarmonyApp, installHmyApp, getSignPercent, loadVarFile, getWalletBalance, getRewardsBalance, stringStars, setVar
 from utils.allsysinfo import allSysInfo
@@ -23,6 +23,13 @@ from utils.allsysinfo import allSysInfo
 def collectRewards(networkCall):
     os.system(
         f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 100 {environ.get('PASS_SWITCH')}"
+    )
+
+
+def sendRewards(networkCall, sendAmount):
+    os.system(
+        # --amount 1
+        f"transfer {networkCall} --amount {sendAmount} --from {environ.get('VALIDATOR_WALLET')} --from-shard 0 --to {environ.get('REWARDS_WALLET')} --to-shard 0 --gas-price 100 {environ.get('PASS_SWITCH')}"
     )
 
 
@@ -40,6 +47,19 @@ def rewardsCollector() -> None:
             Fore.GREEN + f"* mainnet rewards for {environ.get('VALIDATOR_WALLET')} have been collected." + Style.RESET_ALL
         )
         printStars()
+    if environ.get("REWARDS_WALLET"):
+        wallet_balance, wallet_balance_test = getWalletBalance(environ.get('VALIDATOR_WALLET'))
+        question = askYesNo(
+            f"* Would you like to send your rewards to {environ.get('REWARDS_WALLET')} now?"
+        )
+        if question:
+            sendAmount = input(f"* You have {wallet_balance} $ONE available to send. Remember to reserve some for future gas.\n* How much $ONE would you like to send to {environ.get('REWARD_WALLET')}?")
+            if sendAmount > 0:
+                sendRewards(environ.get('NETWORK_0_CALL', sendAmount))
+            return
+        else:
+            return
+    return
 
 
 def menuTopperRegular() -> None:
@@ -209,27 +229,27 @@ def tmiServerInfo() -> None:
 
 
 def setRewardsWallet() -> None:
-    wallet = environ.get("REWARDS_WALLET")
-    if wallet is None:
+    rewardsWallet = environ.get("REWARDS_WALLET")
+    if rewardsWallet is None:
         question = askYesNo(
                 "* Would you like to add an address to send your rewards too? (YES/NO)"
             )
         if question:
-            wallet = input(f"* Input your one1 address to send rewards into, please input your address now: ")
-            if wallet.startswith("one1"):
-                setVar(validatorToolbox.dotenv_file, "REWARDS_WALLET", wallet)
+            rewardsWallet = input(f"* Input your one1 address to send rewards into, please input your address now: ")
+            if rewardsWallet.startswith("one1"):
+                setVar(validatorToolbox.dotenv_file, "REWARDS_WALLET", rewardsWallet)
             else:
                 print("* Wallet does not start with one1, please try again.")
                 return
         return
     else:
         question = askYesNo(
-            f"* Your current saved rewards wallet address is {wallet}\n* Would you like to update the address you send your rewards too? (YES/NO)"
+            f"* Your current saved rewards wallet address is {rewardsWallet}\n* Would you like to update the address you send your rewards too? (YES/NO)"
         )
         if question:
-            wallet = input(f"* Input your one1 address to send rewards into, please input your address now: ")
-            if wallet.startswith("one1"):
-                setVar(validatorToolbox.dotenv_file, "REWARDS_WALLET", wallet)
+            rewardsWallet = input(f"* Input your one1 address to send rewards into, please input your address now: ")
+            if rewardsWallet.startswith("one1"):
+                setVar(validatorToolbox.dotenv_file, "REWARDS_WALLET", rewardsWallet)
             else:
                 print("* Wallet does not start with one1, please try again.")
                 return
