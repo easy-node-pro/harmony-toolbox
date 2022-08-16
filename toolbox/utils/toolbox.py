@@ -28,7 +28,7 @@ def collectRewards(networkCall):
 
 def sendRewards(networkCall, sendAmount, rewardsWallet):
     os.system(
-        f"transfer {networkCall} --amount {sendAmount} --from {environ.get('VALIDATOR_WALLET')} --from-shard 0 --to {rewardsWallet} --to-shard 0 --gas-price 100 {environ.get('PASS_SWITCH')}"
+        f"{networkCall} transfer --amount {sendAmount} --from {environ.get('VALIDATOR_WALLET')} --from-shard 0 --to {rewardsWallet} --to-shard 0 --gas-price 100 {environ.get('PASS_SWITCH')}"
     )
 
 
