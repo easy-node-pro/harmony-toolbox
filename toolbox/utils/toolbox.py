@@ -51,7 +51,7 @@ def rewardsCollector() -> None:
         return
     if rewardsWallet:
         question = askYesNo(
-            f"*\n*\n*\n* COLLECT REWARDS\n* Would you like to send your rewards to {rewardsWallet} now?"
+            f"*\n*\n{printStars()}\n* COLLECT REWARDS\n{printStars()}\n*\n* Would you like to send your rewards to {rewardsWallet} now?"
         )
         if question:
             wallet_balance, wallet_balance_test = getWalletBalance(environ.get('VALIDATOR_WALLET'))
