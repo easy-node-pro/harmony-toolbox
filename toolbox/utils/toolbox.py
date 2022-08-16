@@ -515,7 +515,7 @@ def serviceMenuOption() -> None:
     status = os.system("systemctl is-active --quiet harmony")
     if status == 0:
         print(
-            "*  [8] "
+            "*   8 - "
             + Fore.RED
             + "Stop Harmony Service      "
             + Fore.WHITE
@@ -526,7 +526,7 @@ def serviceMenuOption() -> None:
             + Style.RESET_ALL
         )
         print(
-            "*  [9] Restart Harmony Service   - "
+            "*   9 - Restart Harmony Service   - "
             + Back.RED
             + Fore.YELLOW
             + "WARNING: You will miss blocks during a restart!"
