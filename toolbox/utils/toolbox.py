@@ -50,11 +50,11 @@ def rewardsCollector() -> None:
     else:
         return
     if environ.get("REWARDS_WALLET"):
-        wallet_balance, wallet_balance_test = getWalletBalance(environ.get('VALIDATOR_WALLET'))
         question = askYesNo(
             f"* Would you like to send your rewards to {environ.get('REWARDS_WALLET')} now?"
         )
         if question:
+            wallet_balance, wallet_balance_test = getWalletBalance(environ.get('VALIDATOR_WALLET'))
             sendAmount = input(f"* You have {wallet_balance} $ONE available to send. Remember to reserve some for future gas.\n* How much $ONE would you like to send to {environ.get('REWARD_WALLET')}?")
             if sendAmount > 0:
                 sendRewards(environ.get('NETWORK_0_CALL', sendAmount))
