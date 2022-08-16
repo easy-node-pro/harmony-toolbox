@@ -273,7 +273,7 @@ def setRewardsReserve() -> None:
         return
         # list current reserve, ask if they want an update
     else:
-        setReserveTotal(5)
+        setReserveTotal("5")
         question = askYesNo(
             f"* You do not have a reserve set, we have set it to the default of 5 $ONE.\n* Would you like to update your reserve? (YES/NO) "
         )
