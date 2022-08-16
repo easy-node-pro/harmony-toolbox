@@ -3,7 +3,7 @@ from os import environ
 from utils.config import validatorToolbox
 from utils.installer import printStars, recheckVars, recoverWallet
 from utils.shared import loaderIntro, setWalletEnv, askYesNo, loadVarFile, passphraseStatus
-from utils.toolbox import runRegularNode, setReserveTotal
+from utils.toolbox import runRegularNode, setGasReserve
 
 if __name__ == "__main__":
     os.system("clear")
@@ -13,7 +13,7 @@ if __name__ == "__main__":
         raise SystemExit(0)
     loadVarFile()
     if environ.get("GAS_RESERVE") is None:
-        setReserveTotal("5")
+        setGasReserve("5")
     if environ.get("VALIDATOR_WALLET") is None:
         recoverWallet()
         if environ.get("VALIDATOR_WALLET") is None:

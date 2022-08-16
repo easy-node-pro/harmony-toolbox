@@ -57,7 +57,7 @@ def rewardsCollector() -> None:
         print("\n* Send your Harmony ONE Rewards?")
         printStars()
         if suggestedSend >= 1:
-            question = askYesNo(f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggestedSend} $ONE using your reservation settings.\n* Would you like to send {suggestedSend} $ONE to {rewardsWallet} now? ")
+            question = askYesNo(f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggestedSend} $ONE using your reservation settings.\n* Would you like to send {suggestedSend} $ONE to {rewardsWallet} now? (YES/NO)")
             if question:
                 sendRewards(environ.get('NETWORK_0_CALL'), suggestedSend, rewardsWallet)
             return
@@ -256,17 +256,17 @@ def setRewardsWallet() -> None:
             else:
                 print("* Wallet does not start with one1, please try again.")
                 return
-            setgasReserve()
+            setGasReserve()
             return
         else:
             question = askYesNo(f"* Your current wallet gas reservation is {gasReserve} $ONE\n* Would you like to update your reservation total? (YES/NO)")
             if question:
-                setgasReserve()
+                setGasReserve()
                 return
     return
 
 
-def setgasReserve() -> None:
+def setGasReserve() -> None:
     gasReserve = environ.get("GAS_RESERVE")    
     question = askYesNo(
         f"* Your current total of $ONE to reserve for fees is {gasReserve}\n* Would you like to update the reserve total? (YES/NO)"
