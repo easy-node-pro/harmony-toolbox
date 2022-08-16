@@ -50,8 +50,16 @@ def rewardsCollector() -> None:
     else:
         return
     if rewardsWallet:
+        print(
+            f"*\n*\n"
+         )
+        printStars()
+        print(
+            "\n* Send your Harmony ONE Rewards?"
+         )
+        printStars()
         question = askYesNo(
-            f"*\n*\n" + printStars() + "\n* COLLECT REWARDS" + printStars() + "\n*\n* Would you like to send your rewards to {rewardsWallet} now?"
+            f"\n* Would you like to send your rewards to {rewardsWallet} now?"
         )
         if question:
             wallet_balance, wallet_balance_test = getWalletBalance(environ.get('VALIDATOR_WALLET'))
