@@ -209,7 +209,8 @@ def tmiServerInfo() -> None:
 
 
 def setRewardsWallet() -> None:
-    if environ.get("REWARDS_WALLET") is None:
+    wallet = environ.get("REWARDS_WALLET")
+    if wallet is None:
         question = askYesNo(
                 "* Would you like to add an address to send your rewards too? (YES/NO)"
             )
@@ -222,7 +223,6 @@ def setRewardsWallet() -> None:
                 return
         return
     else:
-        wallet = environ.get("REWARDS_WALLET")
         question = askYesNo(
             f"* Your current saved rewards wallet address is {wallet}\n* Would you like to update the address you send your rewards too? (YES/NO)"
         )
