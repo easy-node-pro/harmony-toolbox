@@ -235,7 +235,7 @@ def setRewardsWallet() -> None:
     rewardsReserve = environ.get("REWARDS_RESERVE")
     if rewardsWallet is None:
         question = askYesNo(
-                "* Would you like to add an address to send your rewards too? (YES/NO) "
+                "* Would you like to add an address to send your rewards too? (YES/NO)"
             )
         if question:
             rewardsWallet = input(f"* Input your one1 address to send rewards into, please input your address now: ")
@@ -247,7 +247,7 @@ def setRewardsWallet() -> None:
         return
     else:
         question = askYesNo(
-            f"* Your current saved rewards wallet address is {rewardsWallet}\n* Would you like to update the address you send your rewards too? (YES/NO) "
+            f"* Your current saved rewards wallet address is {rewardsWallet}\n* Would you like to update the address you send your rewards too? (YES/NO)"
         )
         if question:
             rewardsWallet = input(f"* Input your one1 address to send rewards into, please input your address now: ")
@@ -258,16 +258,18 @@ def setRewardsWallet() -> None:
                 return
             setRewardsReserve()
             return
-    if rewardsReserve is None:
-        setRewardsReserve()
+        else:
+            question = askYesNo(f"* Your current wallet gas reservation is {rewardsReserve} $ONE\n* Would you like to update your reservation total? (YES/NO)")
+            if question:
+                setRewardsReserve()
+                return
     return
 
 
 def setRewardsReserve() -> None:
-    rewardsReserve = environ.get("REWARDS_RESERVE")
-    
+    rewardsReserve = environ.get("REWARDS_RESERVE")    
     question = askYesNo(
-        f"* Your current total of $ONE to reserve for fees is {rewardsReserve}\n* Would you like to update the reserve total? (YES/NO) "
+        f"* Your current total of $ONE to reserve for fees is {rewardsReserve}\n* Would you like to update the reserve total? (YES/NO)"
     )
     if question:
         askReserveTotal()
