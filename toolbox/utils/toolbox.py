@@ -47,6 +47,8 @@ def rewardsCollector() -> None:
             Fore.GREEN + f"* mainnet rewards for {environ.get('VALIDATOR_WALLET')} have been collected." + Style.RESET_ALL
         )
         printStars()
+    else:
+        return
     if environ.get("REWARDS_WALLET"):
         wallet_balance, wallet_balance_test = getWalletBalance(environ.get('VALIDATOR_WALLET'))
         question = askYesNo(
