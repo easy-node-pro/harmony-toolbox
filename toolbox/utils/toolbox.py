@@ -232,7 +232,7 @@ def tmiServerInfo() -> None:
 
 def setRewardsWallet() -> None:
     rewardsWallet = environ.get("REWARDS_WALLET")
-    rewardsReserve = environ.get("GAS_RESERVE")
+    gasReserve = environ.get("GAS_RESERVE")
     if rewardsWallet is None:
         question = askYesNo(
                 "* Would you like to add an address to send your rewards too? (YES/NO)"
@@ -256,20 +256,20 @@ def setRewardsWallet() -> None:
             else:
                 print("* Wallet does not start with one1, please try again.")
                 return
-            setRewardsReserve()
+            setgasReserve()
             return
         else:
-            question = askYesNo(f"* Your current wallet gas reservation is {rewardsReserve} $ONE\n* Would you like to update your reservation total? (YES/NO)")
+            question = askYesNo(f"* Your current wallet gas reservation is {gasReserve} $ONE\n* Would you like to update your reservation total? (YES/NO)")
             if question:
-                setRewardsReserve()
+                setgasReserve()
                 return
     return
 
 
-def setRewardsReserve() -> None:
-    rewardsReserve = environ.get("GAS_RESERVE")    
+def setgasReserve() -> None:
+    gasReserve = environ.get("GAS_RESERVE")    
     question = askYesNo(
-        f"* Your current total of $ONE to reserve for fees is {rewardsReserve}\n* Would you like to update the reserve total? (YES/NO)"
+        f"* Your current total of $ONE to reserve for fees is {gasReserve}\n* Would you like to update the reserve total? (YES/NO)"
     )
     if question:
         askReserveTotal()
