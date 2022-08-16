@@ -262,19 +262,7 @@ def runFullNode() -> None:
         try:
             option = int(input("Enter your option: "))
         except ValueError:
-                os.system("clear")
-                printWhiteSpace()
-                printStarsReset()
-                print(
-                    "* "
-                    + Fore.RED
-                    + "WARNING"
-                    + Style.RESET_ALL
-                    + ": Only numbers are possible, please try your selection on the main menu once again."
-                )
-                printStarsReset()
-                printWhiteSpace()
-                input("* Press ENTER to return to the main menu")
+                menuError()
                 runFullNode(environ.get("NODE_TYPE"))
         if option == 0:
             return finish_node()
@@ -304,7 +292,7 @@ def runRegularNode() -> None:
         4: rewardsCollector,
         5: bingoChecker,
         6: comingSoon,
-        7: comingSoon,
+        7: setRewardsWallet,
         8: menuServiceStopStart,
         9: menuServiceRestart,
         10: menuBinaryUpdates,
@@ -320,24 +308,29 @@ def runRegularNode() -> None:
         try:
             option = int(input("Enter your option: "))
         except ValueError:
-                os.system("clear")
-                printWhiteSpace()
-                printStarsReset()
-                print(
-                    "* "
-                    + Fore.RED
-                    + "WARNING"
-                    + Style.RESET_ALL
-                    + ": Only numbers are possible, please try your selection on the main menu once again."
-                )
-                printStarsReset()
-                printWhiteSpace()
-                input("* Press ENTER to return to the main menu")
+                menuError()
                 runRegularNode()
         if option == 0:
             return finish_node()
         os.system("clear")
         menu_options[option]()
+
+
+def menuError() -> None:
+    os.system("clear")
+    printWhiteSpace()
+    printStarsReset()
+    print(
+        "* "
+        + Fore.RED
+        + "WARNING"
+        + Style.RESET_ALL
+        + ": Only numbers are possible, please try your selection on the main menu once again."
+    )
+    printStarsReset()
+    printWhiteSpace()
+    input("* Press ENTER to return to the main menu")
+    return
 
 
 def osUpgrades() -> None:
