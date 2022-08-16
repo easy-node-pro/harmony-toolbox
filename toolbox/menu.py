@@ -12,7 +12,7 @@ if __name__ == "__main__":
         print("Install Harmony First!!!\nRun python3 ~/validatortoolbox/toolbox/install.py")
         raise SystemExit(0)
     loadVarFile()
-    if environ.get("REWARDS_RESERVE") is None:
+    if environ.get("GAS_RESERVE") is None:
         setReserveTotal("5")
     if environ.get("VALIDATOR_WALLET") is None:
         recoverWallet()

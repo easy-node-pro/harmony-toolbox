@@ -51,7 +51,7 @@ def rewardsCollector() -> None:
         return
     if rewardsWallet:
         wallet_balance, wallet_balance_test = getWalletBalance(environ.get('VALIDATOR_WALLET'))
-        suggestedSend = wallet_balance - int(environ.get("REWARDS_RESERVE"))
+        suggestedSend = wallet_balance - int(environ.get("GAS_RESERVE"))
         print("*\n*\n")
         printStars()
         print("\n* Send your Harmony ONE Rewards?")
@@ -232,7 +232,7 @@ def tmiServerInfo() -> None:
 
 def setRewardsWallet() -> None:
     rewardsWallet = environ.get("REWARDS_WALLET")
-    rewardsReserve = environ.get("REWARDS_RESERVE")
+    rewardsReserve = environ.get("GAS_RESERVE")
     if rewardsWallet is None:
         question = askYesNo(
                 "* Would you like to add an address to send your rewards too? (YES/NO)"
@@ -267,7 +267,7 @@ def setRewardsWallet() -> None:
 
 
 def setRewardsReserve() -> None:
-    rewardsReserve = environ.get("REWARDS_RESERVE")    
+    rewardsReserve = environ.get("GAS_RESERVE")    
     question = askYesNo(
         f"* Your current total of $ONE to reserve for fees is {rewardsReserve}\n* Would you like to update the reserve total? (YES/NO)"
     )
@@ -283,7 +283,7 @@ def askReserveTotal() -> None:
 
 
 def setReserveTotal(reserveTotal):
-    setVar(validatorToolbox.dotenv_file, "REWARDS_RESERVE", reserveTotal)
+    setVar(validatorToolbox.dotenv_file, "GAS_RESERVE", reserveTotal)
 
 
 def runFullNode() -> None:
