@@ -33,7 +33,7 @@ def sendRewards(networkCall, sendAmount):
 
 
 def rewardsCollector() -> None:
-    rewardsWallet = environ.get('REWARD_WALLET')
+    rewardsWallet = environ.get('REWARDS_WALLET')
     printStars()
     print("* Harmony ONE Rewards Collection")
     printStars()
