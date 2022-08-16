@@ -232,6 +232,7 @@ def tmiServerInfo() -> None:
 
 def setRewardsWallet() -> None:
     rewardsWallet = environ.get("REWARDS_WALLET")
+    rewardsReserve = environ.get("REWARDS_RESERVE")
     if rewardsWallet is None:
         question = askYesNo(
                 "* Would you like to add an address to send your rewards too? (YES/NO) "
@@ -255,6 +256,10 @@ def setRewardsWallet() -> None:
             else:
                 print("* Wallet does not start with one1, please try again.")
                 return
+            setRewardsReserve()
+            return
+    if rewardsReserve is None:
+        setRewardsReserve()
     return
 
 def setRewardsReserve() -> None:
