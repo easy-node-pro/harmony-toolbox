@@ -16,7 +16,7 @@ from collections import namedtuple
 from colorama import Fore, Back, Style
 from pyhmy import blockchain, account
 from requests.exceptions import HTTPError
-from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, return_txt, installHarmonyApp, installHmyApp, getSignPercent, loadVarFile, getWalletBalance, getRewardsBalance, stringStars
+from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, return_txt, installHarmonyApp, installHmyApp, getSignPercent, loadVarFile, getWalletBalance, getRewardsBalance, stringStars, setVar
 from utils.allsysinfo import allSysInfo
 
 
@@ -208,6 +208,34 @@ def tmiServerInfo() -> None:
     input("Press ENTER to return to the main menu.")
 
 
+def setRewardsWallet() -> None:
+    if environ.get("REWARDS_WALLET") is None:
+        question = askYesNo(
+                "* Would you like to add an address to send your rewards too? (YES/NO)"
+            )
+        if question:
+            wallet = input(f"* Input your one1 address to send rewards into, please input your address now: ")
+            if wallet.startswith("one1"):
+                setVar(validatorToolbox.dotenv_file, "REWARDS_WALLET", wallet)
+            else:
+                print("* Wallet does not start with one1, please try again.")
+                return
+        return
+    else:
+        wallet = environ.get("REWARDS_WALLET")
+        question = askYesNo(
+            f"* Your current saved rewards wallet address is {wallet}\n* Would you like to update the address you send your rewards too? (YES/NO)"
+        )
+        if question:
+            wallet = input(f"* Input your one1 address to send rewards into, please input your address now: ")
+            if wallet.startswith("one1"):
+                setVar(validatorToolbox.dotenv_file, "REWARDS_WALLET", wallet)
+            else:
+                print("* Wallet does not start with one1, please try again.")
+                return
+    return
+
+
 def runFullNode() -> None:
     loadVarFile()
     menu_options = {
@@ -218,7 +246,7 @@ def runFullNode() -> None:
         4: comingSoon,
         5: comingSoon,
         6: comingSoon,
-        7: comingSoon,
+        7: setRewardsWallet,
         8: menuServiceStopStart,
         9: menuServiceRestart,
         10: menuBinaryUpdates,
