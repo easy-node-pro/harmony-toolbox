@@ -26,9 +26,9 @@ def collectRewards(networkCall):
     )
 
 
-def sendRewards(networkCall, sendAmount):
+def sendRewards(networkCall, sendAmount, rewardsWallet):
     os.system(
-        f"transfer {networkCall} --amount {sendAmount} --from {environ.get('VALIDATOR_WALLET')} --from-shard 0 --to {environ.get('REWARDS_WALLET')} --to-shard 0 --gas-price 100 {environ.get('PASS_SWITCH')}"
+        f"transfer {networkCall} --amount {sendAmount} --from {environ.get('VALIDATOR_WALLET')} --from-shard 0 --to {rewardsWallet} --to-shard 0 --gas-price 100 {environ.get('PASS_SWITCH')}"
     )
 
 
@@ -50,13 +50,9 @@ def rewardsCollector() -> None:
     else:
         return
     if rewardsWallet:
-        print(
-            f"*\n*\n"
-         )
+        print("*\n*\n")
         printStars()
-        print(
-            "\n* Send your Harmony ONE Rewards?"
-         )
+        print("\n* Send your Harmony ONE Rewards?")
         printStars()
         question = askYesNo(
             f"\n* Would you like to send your rewards to {rewardsWallet} now?"
@@ -65,7 +61,7 @@ def rewardsCollector() -> None:
             wallet_balance, wallet_balance_test = getWalletBalance(environ.get('VALIDATOR_WALLET'))
             sendAmount = input(f"* You have {wallet_balance} $ONE available to send. Remember to reserve some for future gas.\n* How much $ONE would you like to send to {rewardsWallet}? ")
             if sendAmount > 0:
-                sendRewards(environ.get('NETWORK_0_CALL', sendAmount))
+                sendRewards(environ.get('NETWORK_0_CALL', sendAmount, rewardsWallet))
             return
         else:
             return
