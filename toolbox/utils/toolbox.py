@@ -262,26 +262,17 @@ def setRewardsWallet() -> None:
         setRewardsReserve()
     return
 
+
 def setRewardsReserve() -> None:
     rewardsReserve = environ.get("REWARDS_RESERVE")
-    if rewardsReserve:
-        question = askYesNo(
-            f"* Your current total of $ONE to reserve for fees is {rewardsReserve}\n* Would you like to update the reserve total? (YES/NO) "
-        )
-        if question:
-            askReserveTotal()
-        return
-        # list current reserve, ask if they want an update
-    else:
-        setReserveTotal("5")
-        question = askYesNo(
-            f"* You do not have a reserve set, we have set it to the default of 5 $ONE.\n* Would you like to update your reserve? (YES/NO) "
-        )
-        if question:
-            askReserveTotal()
-        # ask if they would like to set the reserve
-        return
-
+    
+    question = askYesNo(
+        f"* Your current total of $ONE to reserve for fees is {rewardsReserve}\n* Would you like to update the reserve total? (YES/NO) "
+    )
+    if question:
+        askReserveTotal()
+    return
+    
 
 def askReserveTotal() -> None:
     reserveTotal = input("* How much $ONE would you like to keep reserved for fees? ")
