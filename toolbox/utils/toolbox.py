@@ -51,7 +51,7 @@ def rewardsCollector() -> None:
         return
     if rewardsWallet:
         wallet_balance, wallet_balance_test = getWalletBalance(environ.get('VALIDATOR_WALLET'))
-        suggestedSend = wallet_balance - environ.get("REWARDS_RESERVE")
+        suggestedSend = wallet_balance - int(environ.get("REWARDS_RESERVE"))
         print("*\n*\n")
         printStars()
         print("\n* Send your Harmony ONE Rewards?")
