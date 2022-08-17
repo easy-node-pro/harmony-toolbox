@@ -35,7 +35,7 @@ def installVstats(vstatsToken, validatorAddress) -> None:
         os.system(
         f"sudo cp {validatorToolbox.toolboxLocation}/toolbox/bin/harmony_node_stats.service . && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony_node_stats.service' && sudo mv harmony_node_stats.service /etc/systemd/system/harmony_node_stats.service && sudo chmod a-x /etc/systemd/system/harmony_node_stats.service && sudo systemctl enable harmony_node_stats.service && sudo service harmony_node_stats start"
     )
-    print("* Installer has finished, run `sudo service harmon_node_stats status` to verify you are online and running!")
+    return
     
 
 
@@ -82,3 +82,6 @@ if __name__ == '__main__':
 
     # install once we have the info to customize
     installVstats(vstatsToken, validatorAddress)
+
+    # Goodbye!
+    print("* Installer has finished, run `sudo service harmon_node_stats status` to verify you are online and running!")
