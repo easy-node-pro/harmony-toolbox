@@ -44,6 +44,10 @@ def installVstats(vstatsToken) -> None:
     
 
 def getToken():
+    if len(sys.argv) > 1:
+            vstatsToken = sys.argv[1]
+            setVar(validatorToolbox.dotenv_file, "VSTATSBOT_TOKEN", vstatsToken)
+            loadVarFile()
     if environ.get("VSTATSBOT_TOKEN") is None:
         question = askYesNo(
             f"* No token found, please run /token on vStats Bot to obtain your token. Would you like to enter one now? (YES/NO)"
@@ -66,11 +70,7 @@ if __name__ == '__main__':
     # check if it exists, load anyway if it does
     if os.path.exists(validatorToolbox.dotenv_file) is None:
         # ask a bunch of questions to gather data since we don't have env
-        if len(sys.argv) > 1:
-            vstatsToken = sys.argv[1]
-            setVar(validatorToolbox.dotenv_file, "VSTATSBOT_TOKEN", vstatsToken)
-        else: 
-            vstatsToken = getToken()
+        vstatsToken = getToken()
     
     else:
         loadVarFile()
