@@ -1,7 +1,7 @@
 import os
 from os import environ
 from utils.config import validatorToolbox
-from utils.shared import loaderIntro, loadVarFile, askYesNo, setVar, updateTextFile
+from utils.shared import loaderIntro, loadVarFile, askYesNo, setVar, updateTextFile, printStars
 
 def installVstats(vstatsToken, validatorAddress) -> None:
     # Check if it exists already
@@ -84,4 +84,6 @@ if __name__ == '__main__':
     installVstats(vstatsToken, validatorAddress)
 
     # Goodbye!
-    print("* Installer has finished, run `sudo service harmon_node_stats status` to verify you are online and running!")
+    printStars()
+    print("\n*\n* Installer has finished, run `sudo service harmon_node_stats status` to verify you are online and running!\n*")
+    printStars()
