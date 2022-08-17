@@ -9,6 +9,10 @@ def installVstats(vstatsToken, validatorAddress) -> None:
         question = askYesNo("* You already have vstats installed, would you like to update & reinstall vstats? (YES/NO)")
         if question is False:
             raise SystemExit(0)
+        else:
+            # stop and wipe for re-install if yes
+            os.system("sudo service harmony_note_stats stop")
+            os.system("sudo rm -r ~/harmony_node_stats")
         
     # Install it bud, pull git repo
     os.chdir(f"{validatorToolbox.userHomeDir}")
