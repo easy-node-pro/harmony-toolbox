@@ -85,5 +85,5 @@ if __name__ == '__main__':
 
     # Goodbye!
     printStars()
-    print("\n*\n* Installer has finished, run `sudo service harmon_node_stats status` to verify you are online and running!\n*")
+    print("\n*\n* Installer has finished, run `sudo service harmony_node_stats status` to verify you are online and running!\n*")
     printStars()
