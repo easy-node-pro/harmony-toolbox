@@ -30,27 +30,27 @@ If you need to use a storage volume for any reason, we will detect and use any s
 
 ### Installation
 **After** completing the Pre-Instlalation Requirements pull the repository into your home directory.
-```bash
+```text
 cd ~/ && git clone https://github.com/easy-node-one/validatortoolbox.git
 ```
 Install requirements.
-```bash
+```text
 cd validatortoolbox && sudo apt update && sudo apt upgrade -y && sudo apt-get install bind9-dnsutils git python3-pip python3-dotenv unzip -y && pip3 install -r requirements.txt
 ```
 Run the installer from anywhere. You'll be presented with our menu to grab configuration details.
-```bash
+```text
 python3 ~/validatortoolbox/toolbox/install.py
 ```
 
 ## Management Menu
 After you've got harmony installed, you can run our management menu with the following command:
-```bash
+```text
 python3 ~/validatortoolbox/toolbox/menu.py
 ```
 
 ## vStats Bot Installer
 Install vStats bot on your server (toolbox not required but suggested) by running the following command:
-```bash
+```text
 python3 ~/validatortoolbox/toolbox/vstats_install.py
 ```
 
