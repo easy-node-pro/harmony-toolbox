@@ -9,22 +9,24 @@ def installVstats(vstatsToken, validatorAddress) -> None:
         print("* You already have vstats installed, exiting for now")
         return
     else:
-        # Install it bud.
+        # Install it bud, pull git repo
         os.chdir(f"{validatorToolbox.userHomeDir}")
         os.system("git clone https://github.com/FortuneV13/harmony_node_stats")
         os.chdir(f"{validatorToolbox.userHomeDir}/harmony_node_stats")
+        # setup python stuff
         os.system("sudo apt install python3-pip -y")
         os.system("pip3 install -r requirements.txt")
+        # customize config file
         os.system("cp config.example.py config.py")
         updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", 'VSTATS_TOKEN=""', f'VSTATS_TOKEN="{vstatsToken}"')
         updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", 'VALIDATOR_ADDRESS=""', f'VALIDATOR_ADDRESS="{validatorAddress}"')
         if os.path.isdir(f"{validatorToolbox.userHomeDir}/harmony"):
             updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", '"harmony_folder":"/home/serviceharmony/harmony"', f'"harmony_folder":"{validatorToolbox.userHomeDir}/harmony"')
-            return
         else:
             if os.path.isfile(f"{validatorToolbox.userHomeDir}/harmony"):
                 updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", '"harmony_folder":"/home/serviceharmony/harmony"', f'"harmony_folder":"{validatorToolbox.userHomeDir}"')
-        return
+        # Do service stuff here
+        
 
 
 def getValidatorAddress():
