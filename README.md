@@ -42,10 +42,16 @@ Run the installer from anywhere. You'll be presented with our menu to grab confi
 python3 ~/validatortoolbox/toolbox/install.py
 ```
 
-### Management Menu
+## Management Menu
 After you've got harmony installed, you can run our management menu with the following command:
 ```bash
 python3 ~/validatortoolbox/toolbox/menu.py
+```
+
+## vStats Bot Installer
+Install vStats bot on your server (toolbox not required but suggested) by running the following command:
+```bash
+python3 ~/validatortoolbox/toolbox/vstats_install.py
 ```
 
 ## Full Installation Guide & Documentation
