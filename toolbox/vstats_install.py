@@ -61,10 +61,11 @@ if __name__ == '__main__':
         print('stuff')
     
     else:
+        loadVarFile()
         # load env configuration
         vstatsToken = getToken()
         validatorAddress = getValidatorAddress()
-        loadVarFile()
+        
 
     # install once we have the info to customize
     installVstats(vstatsToken, validatorAddress)
