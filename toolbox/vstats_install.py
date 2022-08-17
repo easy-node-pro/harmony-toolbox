@@ -10,9 +10,9 @@ def installVstats(vstatsToken) -> None:
         if question is False:
             raise SystemExit(0)
         else:
-            # stop and wipe for re-install if yes
+            # Start install by stopping and wipe for re-install if yes
             os.system("sudo service harmony_node_stats stop")
-            os.system("sudo rm -r ~/harmony_node_stats")
+            os.system(f"sudo rm -r {validatorToolbox.userHomeDir}/harmony_node_stats")
         
     # Install it bud, pull git repo
     os.chdir(f"{validatorToolbox.userHomeDir}")
