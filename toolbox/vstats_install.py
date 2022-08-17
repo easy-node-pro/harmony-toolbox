@@ -26,6 +26,14 @@ def installVstats(vstatsToken, validatorAddress) -> None:
             if os.path.isfile(f"{validatorToolbox.userHomeDir}/harmony"):
                 updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", '"harmony_folder":"/home/serviceharmony/harmony"', f'"harmony_folder":"{validatorToolbox.userHomeDir}"')
         # Do service stuff here
+        if validatorToolbox.activeUserName == 'root':
+            os.system(
+            f"sudo cp {validatorToolbox.toolboxLocation}/toolbox/bin/harmony_node_stats.service . && sed -i 's/home\/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony_node_stats.service' && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony_node_stats.service' && sudo mv harmony_node_stats.service /etc/systemd/system/harmony_node_stats.service && sudo chmod a-x /etc/systemd/system/harmony_node_stats.service && sudo systemctl enable harmony_node_stats.service && rm harmony_node_stats.service"
+        )
+        else:
+            os.system(
+            f"sudo cp {validatorToolbox.toolboxLocation}/toolbox/bin/harmony_node_stats.service . && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony_node_stats.service' && sudo mv harmony_node_stats.service /etc/systemd/system/harmony_node_stats.service && sudo chmod a-x /etc/systemd/system/harmony_node_stats.service && sudo systemctl enable harmony_node_stats.service && rm harmony_node_stats.service"
+        )
         
 
 
