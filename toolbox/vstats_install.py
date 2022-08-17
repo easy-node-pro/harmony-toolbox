@@ -19,6 +19,7 @@ def installVstats(vstatsToken, validatorAddress) -> None:
         updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", 'VSTATS_TOKEN=""', f'VSTATS_TOKEN="{vstatsToken}"')
         updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", 'VALIDATOR_ADDRESS=""', f'VALIDATOR_ADDRESS="{validatorAddress}"')
         if os.path.isdir(f"{validatorToolbox.userHomeDir}/harmony"):
+            updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", '"harmony_folder":"/home/serviceharmony/harmony"', f'"harmony_folder":"{validatorToolbox.userHomeDir}/harmony"')
             return
         else:
             if os.path.isfile(f"{validatorToolbox.userHomeDir}/harmony"):
@@ -58,7 +59,7 @@ if __name__ == '__main__':
         # ask a bunch of questions to gather data since we don't have env
         vstatsToken = getToken()
         validatorAddress = getValidatorAddress()
-        print('stuff')
+        
     
     else:
         loadVarFile()
