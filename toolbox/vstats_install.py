@@ -7,7 +7,7 @@ def installVstats(vstatsToken, validatorAddress) -> None:
     # Check if it exists already
     if os.path.isdir(f"{validatorToolbox.userHomeDir}/harmony_node_stats"):
         question = askYesNo("* You already have vstats installed, would you like to update & reinstall vstats? (YES/NO)")
-        if question:
+        if question is False:
             raise SystemExit(0)
         
     # Install it bud, pull git repo
