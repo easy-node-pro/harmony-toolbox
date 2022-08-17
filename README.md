@@ -49,7 +49,9 @@ python3 ~/validatortoolbox/toolbox/menu.py
 ```
 
 ## vStats Bot Installer
-Install vStats bot on your server (toolbox not required but suggested) by running the following command:
+First grab your token from the [Telegram vStats Bot](https://t.me/vstatsbot) by sending the command `/token` (or have your already created token handy)
+
+Next install vStats bot on your server (toolbox not required but suggested) by running the following command:
 ```text
 python3 ~/validatortoolbox/toolbox/vstats_install.py
 ```
