@@ -8,7 +8,7 @@ from utils.toolbox import runRegularNode
 if __name__ == "__main__":
     os.system("clear")
     loaderIntro()
-    if not os.path.exists(validatorToolbox.dotenv_file):
+    if os.path.exists(validatorToolbox.dotenv_file) is None:
         print("Install Harmony First!!!\nRun python3 ~/validatortoolbox/toolbox/install.py")
         raise SystemExit(0)
     loadVarFile()

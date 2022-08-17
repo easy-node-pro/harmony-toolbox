@@ -82,7 +82,7 @@ def installHmyApp(harmonyDirPath):
     print("* hmy application installed.")
 
 
-def updateHarmonyConf(fileName, originalText, newText):
+def updateTextFile(fileName, originalText, newText):
 
     with open(fileName,'r') as f:
         filedata = f.read()
@@ -93,21 +93,52 @@ def updateHarmonyConf(fileName, originalText, newText):
         f.write(newdata)
 
 
+def recoverWallet():
+    question = askYesNo(
+        f"* Would you like to import a wallet? (YES/NO) "
+        )
+    if question:
+        recoveryType()
+        loadVarFile()
+        validatorWallet = environ.get("VALIDATOR_WALLET")
+        passphraseSwitch = environ.get("PASS_SWITCH")
+        print(
+            "\n* Verify the address above matches the address below: "
+            + "\n* Detected Wallet: "
+            + Fore.GREEN
+            + f"{validatorWallet}"
+            + Style.RESET_ALL
+            + "\n* If a different wallet is showing you can remove it and retry it after installation."
+            + "\n*"
+            + f"\n* .{validatorToolbox.hmyAppPath} keys remove {validatorToolbox.activeUserName}"
+            + "\n*"
+            + "\n* To restore a wallet once again, run the following:"
+            + "\n*"
+            + f"\n* .{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}"
+            + "\n* "
+        )
+        printStars()
+        input("* Verify your wallet information above.\n* Press ENTER to continue Installation.")
+    else:
+        wallet = input(f"* If you'd like to use the management menu, we need a one1 address, please input your address now: ")
+        setVar(validatorToolbox.dotenv_file, "VALIDATOR_WALLET", wallet)
+        return
+
 
 def installHarmonyApp(harmonyDirPath, blsKeyFile):
     os.chdir(f"{harmonyDirPath}")
     if environ.get("NETWORK") == "testnet":
         os.system("curl -LO https://harmony.one/binary_testnet && mv binary_testnet harmony && chmod +x harmony")
         os.system("./harmony config dump --network testnet harmony.conf")
-        updateHarmonyConf(validatorToolbox.harmonyConfPath, "MaxKeys = 10", "MaxKeys = 13")
+        updateTextFile(validatorToolbox.harmonyConfPath, "MaxKeys = 10", "MaxKeys = 13")
     if environ.get("NETWORK") == "mainnet":
         os.system("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
         os.system("./harmony config dump harmony.conf")
-        updateHarmonyConf(validatorToolbox.harmonyConfPath, "MaxKeys = 10", "MaxKeys = 13")
+        updateTextFile(validatorToolbox.harmonyConfPath, "MaxKeys = 10", "MaxKeys = 13")
     printStars()
     print("* harmony.conf MaxKeys modified to 13")
     if os.path.exists(blsKeyFile):
-        updateHarmonyConf(validatorToolbox.harmonyConfPath, "PassFile = \"\"", f"PassFile = \"blskey.pass\"")
+        updateTextFile(validatorToolbox.harmonyConfPath, "PassFile = \"\"", f"PassFile = \"blskey.pass\"")
         print("* blskey.pass found, updated harmony.conf")
     printStars()
     print(f"* Harmony {environ.get('NETWORK')} application installed & ~/harmony/harmony.conf created.")
