@@ -6,35 +6,36 @@ from utils.shared import loaderIntro, loadVarFile, askYesNo, setVar, updateTextF
 def installVstats(vstatsToken, validatorAddress) -> None:
     # Check if it exists already
     if os.path.isdir(f"{validatorToolbox.userHomeDir}/harmony_node_stats"):
-        print("* You already have vstats installed, exiting for now")
-        return
-    else:
-        # Install it bud, pull git repo
-        os.chdir(f"{validatorToolbox.userHomeDir}")
-        os.system("git clone https://github.com/FortuneV13/harmony_node_stats")
-        os.chdir(f"{validatorToolbox.userHomeDir}/harmony_node_stats")
-        # setup python stuff
-        os.system("sudo apt install python3-pip -y")
-        os.system("pip3 install -r requirements.txt")
-        # customize config file
-        os.system("cp config.example.py config.py")
-        updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", 'VSTATS_TOKEN=""', f'VSTATS_TOKEN="{vstatsToken}"')
-        updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", 'VALIDATOR_ADDRESS=""', f'VALIDATOR_ADDRESS="{validatorAddress}"')
-        if os.path.isdir(f"{validatorToolbox.userHomeDir}/harmony"):
-            updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", '"harmony_folder":"/home/serviceharmony/harmony"', f'"harmony_folder":"{validatorToolbox.userHomeDir}/harmony"')
-        else:
-            if os.path.isfile(f"{validatorToolbox.userHomeDir}/harmony"):
-                updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", '"harmony_folder":"/home/serviceharmony/harmony"', f'"harmony_folder":"{validatorToolbox.userHomeDir}"')
-        # Do service stuff here
-        if validatorToolbox.activeUserName == 'root':
-            os.system(
-            f"sudo cp {validatorToolbox.toolboxLocation}/toolbox/bin/harmony_node_stats.service . && sed -i 's/home\/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony_node_stats.service' && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony_node_stats.service' && sudo mv harmony_node_stats.service /etc/systemd/system/harmony_node_stats.service && sudo chmod a-x /etc/systemd/system/harmony_node_stats.service && sudo systemctl enable harmony_node_stats.service && rm harmony_node_stats.service"
-        )
-        else:
-            os.system(
-            f"sudo cp {validatorToolbox.toolboxLocation}/toolbox/bin/harmony_node_stats.service . && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony_node_stats.service' && sudo mv harmony_node_stats.service /etc/systemd/system/harmony_node_stats.service && sudo chmod a-x /etc/systemd/system/harmony_node_stats.service && sudo systemctl enable harmony_node_stats.service && rm harmony_node_stats.service"
-        )
+        question = askYesNo("* You already have vstats installed, would you like to update & reinstall vstats? (YES/NO)")
+        if question:
+            raise SystemExit(0)
         
+    # Install it bud, pull git repo
+    os.chdir(f"{validatorToolbox.userHomeDir}")
+    os.system("git clone https://github.com/FortuneV13/harmony_node_stats")
+    os.chdir(f"{validatorToolbox.userHomeDir}/harmony_node_stats")
+    # setup python stuff
+    os.system("sudo apt install python3-pip -y")
+    os.system("pip3 install -r requirements.txt")
+    # customize config file
+    os.system("cp config.example.py config.py")
+    updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", 'VSTATS_TOKEN=""', f'VSTATS_TOKEN="{vstatsToken}"')
+    updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", 'VALIDATOR_ADDRESS=""', f'VALIDATOR_ADDRESS="{validatorAddress}"')
+    if os.path.isdir(f"{validatorToolbox.userHomeDir}/harmony"):
+        updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", '"harmony_folder":"/home/serviceharmony/harmony"', f'"harmony_folder":"{validatorToolbox.userHomeDir}/harmony"')
+    else:
+        if os.path.isfile(f"{validatorToolbox.userHomeDir}/harmony"):
+            updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", '"harmony_folder":"/home/serviceharmony/harmony"', f'"harmony_folder":"{validatorToolbox.userHomeDir}"')
+    # Do service stuff here
+    if validatorToolbox.activeUserName == 'root':
+        os.system(
+        f"sudo cp {validatorToolbox.toolboxLocation}/toolbox/bin/harmony_node_stats.service . && sed -i 's/home\/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony_node_stats.service' && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony_node_stats.service' && sudo mv harmony_node_stats.service /etc/systemd/system/harmony_node_stats.service && sudo chmod a-x /etc/systemd/system/harmony_node_stats.service && sudo systemctl enable harmony_node_stats.service && rm harmony_node_stats.service"
+    )
+    else:
+        os.system(
+        f"sudo cp {validatorToolbox.toolboxLocation}/toolbox/bin/harmony_node_stats.service . && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony_node_stats.service' && sudo mv harmony_node_stats.service /etc/systemd/system/harmony_node_stats.service && sudo chmod a-x /etc/systemd/system/harmony_node_stats.service && sudo systemctl enable harmony_node_stats.service && rm harmony_node_stats.service"
+    )
+    
 
 
 def getValidatorAddress():
