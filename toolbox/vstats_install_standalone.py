@@ -75,6 +75,8 @@ def getToken():
             vstatsToken = input(
                 f"* Please input your vStats token here: "
             )
+        else:
+            raise SystemExit(0)
     else:
         vstatsToken = environ.get("VSTATSBOT_TOKEN")
     return vstatsToken
