@@ -3,7 +3,7 @@ from os import environ
 from utils.config import validatorToolbox
 from utils.shared import loaderIntro, loadVarFile, askYesNo, setVar, updateTextFile, printStars
 
-def installVstats(vstatsToken, validatorAddress) -> None:
+def installVstats(vstatsToken) -> None:
     # Check if it exists already
     if os.path.isdir(f"{validatorToolbox.userHomeDir}/harmony_node_stats"):
         question = askYesNo("* You already have vstats installed, would you like to update & reinstall vstats? (YES/NO)")
