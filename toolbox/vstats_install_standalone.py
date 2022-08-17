@@ -64,7 +64,9 @@ def installVstats(vstatsToken) -> None:
     
 
 def getToken():
-    if environ.get("VSTATSBOT_TOKEN") is None:
+    if len(sys.argv) > 1:
+        vstatsToken = sys.argv[1]
+    else:
         question = askYesNo(
             f"* No token found, please run /token on vStats Bot to obtain your token. Would you like to enter one now? (YES/NO)"
         )
@@ -74,19 +76,13 @@ def getToken():
             )
         else:
             raise SystemExit(0)
-    else:
-        vstatsToken = environ.get("VSTATSBOT_TOKEN")
     return vstatsToken
 
 
 if __name__ == '__main__':
     os.system("clear")
-    # Check for argument token
-    if len(sys.argv) > 1:
-        vstatsToken = sys.argv[1]
-    # check if it exists, load anyway if it does
-    else:
-        vstatsToken = getToken()
+    # Check for argument token or ask for one!
+    vstatsToken = getToken()
     
     # install once we have the info to customize
     installVstats(vstatsToken)
