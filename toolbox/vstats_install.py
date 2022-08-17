@@ -89,5 +89,5 @@ if __name__ == '__main__':
 
     # Goodbye!
     printStars()
-    print("\n*\n* Installer has finished, run `sudo service harmony_node_stats status` to verify you are online and running!\n*")
+    print("\n*\n* Installer has finished, you should have a ping waiting on vStats if everything was input correctly\n* You can also run `sudo service harmony_node_stats status` to verify your service is online and running!\n*")
     printStars()
