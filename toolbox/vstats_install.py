@@ -24,7 +24,6 @@ def installVstats(vstatsToken, validatorAddress) -> None:
     # customize config file
     os.system("cp config.example.py config.py")
     updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", 'VSTATS_TOKEN=""', f'VSTATS_TOKEN="{vstatsToken}"')
-    updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", 'VALIDATOR_ADDRESS=""', f'VALIDATOR_ADDRESS="{validatorAddress}"')
     if os.path.isdir(f"{validatorToolbox.userHomeDir}/harmony"):
         updateTextFile(f"{validatorToolbox.userHomeDir}/harmony_node_stats/config.py", '"harmony_folder":"/home/serviceharmony/harmony"', f'"harmony_folder":"{validatorToolbox.userHomeDir}/harmony"')
     else:
@@ -41,16 +40,6 @@ def installVstats(vstatsToken, validatorAddress) -> None:
     )
     return
     
-
-
-def getValidatorAddress():
-    if environ.get("VALIDATOR_WALLET") is None:
-        # ask info to get wallet here.
-        validatorAddress = input("* Validator one1 wallet address not found in our env file.\n* Please input your Validator's one1 wallet address now: ")
-    else:
-        validatorAddress = environ.get("VALIDATOR_WALLET")
-    return validatorAddress
-
 
 def getToken():
     if environ.get("VSTATSBOT_TOKEN") is None:
@@ -74,18 +63,18 @@ if __name__ == '__main__':
     if os.path.exists(validatorToolbox.dotenv_file) is None:
         # ask a bunch of questions to gather data since we don't have env
         vstatsToken = getToken()
-        validatorAddress = getValidatorAddress()
+        
         
     
     else:
         loadVarFile()
         # load env configuration
         vstatsToken = getToken()
-        validatorAddress = getValidatorAddress()
+        
         
 
     # install once we have the info to customize
-    installVstats(vstatsToken, validatorAddress)
+    installVstats(vstatsToken)
 
     # Goodbye!
     printStars()
