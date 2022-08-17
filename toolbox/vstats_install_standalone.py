@@ -1,8 +1,12 @@
 import os
+import sys
 from os import environ
 
 userHomeDir = os.path.expanduser("~")
 activeUserName = os.path.split(userHomeDir)[-1]
+
+if len(sys.argv) > 1:
+    vstatsToken = sys.argv[1]
 
 def askYesNo(question: str) -> bool:
     YesNoAnswer = ""
@@ -22,7 +26,7 @@ def updateTextFile(fileName, originalText, newText):
 
     with open(fileName, 'w') as f:
         f.write(newdata)
-        
+
 
 def installVstats(vstatsToken) -> None:
     # Check if it exists already
