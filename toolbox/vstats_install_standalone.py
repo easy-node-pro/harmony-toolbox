@@ -1,10 +1,28 @@
 import os
 from os import environ
-from utils.config import validatorToolbox
-from utils.shared import loaderIntro, loadVarFile, askYesNo, setVar, updateTextFile
 
 userHomeDir = os.path.expanduser("~")
 activeUserName = os.path.split(userHomeDir)[-1]
+
+def askYesNo(question: str) -> bool:
+    YesNoAnswer = ""
+    while not YesNoAnswer.startswith(("Y", "N")):
+        YesNoAnswer = input(f"{question}: ").upper()
+    if YesNoAnswer.startswith("Y"):
+        return True
+    return False
+
+
+def updateTextFile(fileName, originalText, newText):
+
+    with open(fileName,'r') as f:
+        filedata = f.read()
+
+    newdata = filedata.replace(originalText, newText)
+
+    with open(fileName, 'w') as f:
+        f.write(newdata)
+        
 
 def installVstats(vstatsToken) -> None:
     # Check if it exists already
