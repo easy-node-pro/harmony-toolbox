@@ -1,7 +1,9 @@
 import os
+import sys
 from os import environ
 from utils.config import validatorToolbox
 from utils.shared import loaderIntro, loadVarFile, askYesNo, setVar, updateTextFile, printStars
+
 
 def installVstats(vstatsToken) -> None:
     # Check if it exists already
@@ -51,6 +53,8 @@ def getToken():
                 f"* Please input your vStats token here: "
             )
             setVar(validatorToolbox.dotenv_file, "VSTATSBOT_TOKEN", vstatsToken)
+        else:
+            raise SystemExit(0)
     else:
         vstatsToken = environ.get("VSTATSBOT_TOKEN")
     return vstatsToken
@@ -62,16 +66,17 @@ if __name__ == '__main__':
     # check if it exists, load anyway if it does
     if os.path.exists(validatorToolbox.dotenv_file) is None:
         # ask a bunch of questions to gather data since we don't have env
-        vstatsToken = getToken()
-        
-        
+        if len(sys.argv) > 1:
+            vstatsToken = sys.argv[1]
+            setVar(validatorToolbox.dotenv_file, "VSTATSBOT_TOKEN", vstatsToken)
+        else: 
+            vstatsToken = getToken()
     
     else:
         loadVarFile()
         # load env configuration
         vstatsToken = getToken()
-        
-        
+
 
     # install once we have the info to customize
     installVstats(vstatsToken)
