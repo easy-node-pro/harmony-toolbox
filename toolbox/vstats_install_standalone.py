@@ -85,7 +85,8 @@ def getToken():
 if __name__ == '__main__':
     os.system("clear")
     # check if it exists, load anyway if it does
-    vstatsToken = getToken()
+    if vstatsToken is None:
+        vstatsToken = getToken()
     
     # install once we have the info to customize
     installVstats(vstatsToken)
