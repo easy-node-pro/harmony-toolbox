@@ -5,9 +5,6 @@ from os import environ
 userHomeDir = os.path.expanduser("~")
 activeUserName = os.path.split(userHomeDir)[-1]
 
-if len(sys.argv) > 1:
-    vstatsToken = sys.argv[1]
-
 def askYesNo(question: str) -> bool:
     YesNoAnswer = ""
     while not YesNoAnswer.startswith(("Y", "N")):
@@ -84,8 +81,11 @@ def getToken():
 
 if __name__ == '__main__':
     os.system("clear")
+    # Check for argument token
+    if len(sys.argv) > 1:
+        vstatsToken = sys.argv[1]
     # check if it exists, load anyway if it does
-    if vstatsToken is None:
+    else:
         vstatsToken = getToken()
     
     # install once we have the info to customize
