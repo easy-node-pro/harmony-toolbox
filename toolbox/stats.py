@@ -21,14 +21,14 @@ if __name__ == "__main__":
         remote_data_shard = json.loads(result_remote_shard.stdout)
     except (ValueError, KeyError, TypeError):
         print(f'Remote API not responding')
-        return
+        raise SystemExit(0)
     local_shard = [f'{validatorToolbox.hmyAppPath}', 'blockchain', 'latest-headers']
     try:
         result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data_shard = json.loads(result_local_shard.stdout)
     except (ValueError, KeyError, TypeError):
         print(f'Local client not running')
-        return
+        raise SystemExit(0)
     print(f"""
     {stringStars()}
     * Current Date & Time: {timeNow}
