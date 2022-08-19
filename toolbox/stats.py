@@ -42,7 +42,7 @@ if __name__ == "__main__":
     *
     {stringStars()}
         """)
-        if int(ourShard) > 0:
+    if int(ourShard) > 0:
             print(f"""
     * Shard {ourShard} Sync Status:
     *
@@ -51,4 +51,4 @@ if __name__ == "__main__":
     *
     {stringStars()}
         """)
-        shardStats(ourShard)
+    shardStats(ourShard)
