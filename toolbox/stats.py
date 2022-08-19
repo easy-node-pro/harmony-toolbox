@@ -29,7 +29,11 @@ if __name__ == "__main__":
     except (ValueError, KeyError, TypeError):
         print(f'Local client not running')
         raise SystemExit(0)
-    print(f"""
+    
+    # print out
+    
+    if int(ourShard) > 0:
+        print(f"""
     {stringStars()}
     * Current Date & Time: {timeNow}
     *
@@ -37,27 +41,24 @@ if __name__ == "__main__":
     * Current Status of our server {validatorToolbox.serverHostName} currently on Shard {environ.get('SHARD')}:
     *
     * Shard 0 Sync Status:
-    """)
-    if int(ourShard) > 0:
-        print(f"""
     * Local Server  - Epoch {local_data_shard['result']['beacon-chain-header']['epoch']} (Always 1 epoch behind Remote Server) - Shard 0 not required on Shard {environ.get('SHARD')}
-    """)
-    else:
-        print(f"""
-    * Local Server  - Epoch {local_data_shard['result']['beacon-chain-header']['epoch']} - Shard {local_data_shard['result']['beacon-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['beacon-chain-header']['number'])}
-    """)
-    print(f"""
     * Remote Server - Epoch {remote_data_shard_0['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard_0['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}
     *
     {stringStars()}
     """)
-    if int(ourShard) > 0:
-            print(f"""
-    * Shard {ourShard} Sync Status:
+    else:
+        print(f"""
+    {stringStars()}
+    * Current Date & Time: {timeNow}
     *
-    * Local Server  - Epoch {local_data_shard['result']['shard-chain-header']['epoch']} - Shard {local_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}
-    * Remote Server - Epoch {remote_data_shard['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}
+    {stringStars()}
+    * Current Status of our server {validatorToolbox.serverHostName} currently on Shard {environ.get('SHARD')}:
+    *
+    * Shard 0 Sync Status:
+    * Local Server  - Epoch {local_data_shard['result']['beacon-chain-header']['epoch']} - Shard {local_data_shard['result']['beacon-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['beacon-chain-header']['number'])}
+    * Remote Server - Epoch {remote_data_shard_0['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard_0['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}
     *
     {stringStars()}
     """)
+
     shardStats(ourShard)
