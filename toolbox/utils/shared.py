@@ -2,7 +2,7 @@ from utils.config import validatorToolbox
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
-from colorama import Style
+from colorama import Fore, Style
 from pathlib import Path
 from pyhmy import validator, account, staking, numbers
 from json import load, dump
