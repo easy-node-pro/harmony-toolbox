@@ -2,11 +2,12 @@ import os
 from os import environ
 from utils.config import validatorToolbox
 from utils.installer import printStars, recheckVars, recoverWallet
-from utils.shared import loaderIntro, setWalletEnv, askYesNo, loadVarFile, passphraseStatus, setVar
+from utils.shared import loaderIntro, setWalletEnv, askYesNo, loadVarFile, passphraseStatus, setVar, get_version
 from utils.toolbox import runRegularNode
 
 if __name__ == "__main__":
     os.system("clear")
+    validatorToolbox.easyVersion = get_version("setup.cfg")
     loaderIntro()
     if os.path.exists(validatorToolbox.dotenv_file) is None:
         print("Install Harmony First!!!\nRun python3 ~/validatortoolbox/toolbox/install.py")

@@ -1,4 +1,3 @@
-from utils.shared import get_version
 import os
 import socket
 import urllib.request
@@ -13,7 +12,7 @@ def getUrl() -> None:
     return result
 
 class validatorToolbox:
-    easyVersion = get_version("setup.cfg")
+    easyVersion = "1.0.0"
     serverHostName = socket.gethostname()
     userHomeDir = os.path.expanduser("~")
     dotenv_file = f"{userHomeDir}/.easynode.env"
