@@ -5,15 +5,14 @@ from utils.shared import setVar
 from utils.config import validatorToolbox
 from os import environ
 from colorama import Fore, Style
-from utils.shared import setAPIPaths, getShardMenu, getNodeType, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp, recoveryType, passphraseStatus, passphraseSet, recoverWallet
+from utils.shared import setAPIPaths, getShardMenu, getNodeType, printStars, loadVarFile, askYesNo, save_text, installHarmonyApp, installHmyApp, recoveryType, passphraseStatus, passphraseSet, recoverWallet, get_version
 
 
 def firstSetup():
     os.system("touch ~/.easynode.env")
     # first run stuff
     time.sleep(2)
-    if environ.get("EASY_VERSION"):
-        setVar(validatorToolbox.dotenv_file, "EASY_VERSION", validatorToolbox.easyVersion)
+    validatorToolbox.easyVersion = get_version("setup.cfg")
     loadVarFile()
     getShardMenu(validatorToolbox.dotenv_file)
     setVar(validatorToolbox.dotenv_file, "EXPRESS", "0")
