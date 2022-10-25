@@ -1,4 +1,4 @@
-from shared import get_version
+from utils.shared import get_version
 import os
 import socket
 import urllib.request
