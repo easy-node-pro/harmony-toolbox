@@ -16,7 +16,7 @@ from collections import namedtuple
 from colorama import Fore, Back, Style
 from pyhmy import blockchain, transaction
 from requests.exceptions import HTTPError
-from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, return_txt, installHarmonyApp, installHmyApp, getSignPercent, loadVarFile, getWalletBalance, getRewardsBalance, stringStars, setVar
+from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, return_txt, installHarmonyApp, installHmyApp, getSignPercent, loadVarFile, getWalletBalance, getRewardsBalance, stringStars, setVar, get_version
 from utils.allsysinfo import allSysInfo
 
 
@@ -77,7 +77,7 @@ def menuTopperRegular() -> None:
         "* "
         + Fore.GREEN
         + "validator-toolbox for Harmony ONE Validators by Easy Node   v"
-        + validatorToolbox.easyVersion
+        + get_version("setup.cfg")
         + Style.RESET_ALL
         + "   https://easynode.one *"
     )

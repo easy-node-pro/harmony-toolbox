@@ -12,7 +12,8 @@ def firstSetup():
     os.system("touch ~/.easynode.env")
     # first run stuff
     time.sleep(2)
-    validatorToolbox.easyVersion = get_version("setup.cfg")
+    if environ.get("EASY_VERSION"):
+        setVar(validatorToolbox.dotenv_file, "EASY_VERSION", get_version("setup.cfg"))
     loadVarFile()
     getShardMenu(validatorToolbox.dotenv_file)
     setVar(validatorToolbox.dotenv_file, "EXPRESS", "0")
