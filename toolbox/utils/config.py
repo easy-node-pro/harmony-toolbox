@@ -1,3 +1,4 @@
+from shared import get_version
 import os
 import socket
 import urllib.request
@@ -12,7 +13,7 @@ def getUrl() -> None:
     return result
 
 class validatorToolbox:
-    easyVersion = "1.6.3"
+    easyVersion = get_version("setup.cfg")
     serverHostName = socket.gethostname()
     userHomeDir = os.path.expanduser("~")
     dotenv_file = f"{userHomeDir}/.easynode.env"
@@ -27,7 +28,6 @@ class validatorToolbox:
     toolboxLocation = os.path.join(userHomeDir, "validatortoolbox")
     validatorData = os.path.join(toolboxLocation, "toolbox", "metadata", "validator.json")
     passwordPath = os.path.join(harmonyDirPath, "passphrase.txt")
-    toolboxLocation = os.path.join(userHomeDir, "validatortoolbox")
     ourExternalIPAddress = getUrl()
     mainMenuRegular = os.path.join(toolboxLocation, "toolbox", "messages", "regularmenu.txt")
     mainMenuFull = os.path.join(toolboxLocation, "toolbox", "messages", "fullmenu.txt")

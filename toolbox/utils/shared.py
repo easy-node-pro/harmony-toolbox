@@ -11,6 +11,7 @@ import subprocess
 import requests
 import pyhmy
 import dotenv
+import codecs
 
 load_dotenv("~/.easynode.env")
 
@@ -496,3 +497,16 @@ def getSignPercent() -> str:
     except (OSError, ValueError):
         outputStripped = "0"
         return str(outputStripped)
+
+def read(config_path):
+    here = os.path.abspath(os.path.dirname(__file__))
+    with codecs.open(os.path.join(validatorToolbox.toolboxLocation, config_path), 'r') as fp:
+        return fp.read()
+    
+def get_version(config_path):
+    for line in read(config_path).splitlines():
+        if line.startswith('__version__'):
+            delim = '"' if '"' in line else "'"
+            return line.split(delim)[1]
+    else:
+        raise RuntimeError("Unable to find version string.")
