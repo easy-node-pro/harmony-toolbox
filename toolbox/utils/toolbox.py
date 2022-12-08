@@ -341,7 +341,6 @@ def runRegularNode() -> None:
 
 def menuError() -> None:
     os.system("clear")
-    printWhiteSpace()
     printStarsReset()
     print(
         "* "
@@ -351,7 +350,6 @@ def menuError() -> None:
         + ": Only numbers are possible, please try your selection on the main menu once again."
     )
     printStarsReset()
-    printWhiteSpace()
     input("* Press ENTER to return to the main menu")
     return
 
