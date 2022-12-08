@@ -51,15 +51,10 @@ def setVar(fileName, keyName, updateName):
 
 def loaderIntro():
     p = f"""
-    {stringStars()}
                     ____ ____ ____ ____ _________ ____ ____ ____ ____           
                     ||E |||a |||s |||y |||       |||N |||o |||d |||e ||          
                     ||__|||__|||__|||__|||_______|||__|||__|||__|||__||          
                     |/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|/__\|          
-                ____ ____ ____ ____ ____ ____ ____ _________ ____ ____ ____ 
-                ||H |||a |||r |||m |||o |||n |||y |||       |||O |||N |||E ||
-                ||__|||__|||__|||__|||__|||__|||__|||_______|||__|||__|||__||
-                |/__\|/__\|/__\|/__\|/__\|/__\|/__\|/_______\|/__\|/__\|/__\|
                         ____ ____ ____ ____ ____ ____ ____ ____ ____                
                         ||v |||a |||l |||i |||d |||a |||t |||o |||r ||               
                         ||__|||__|||__|||__|||__|||__|||__|||__|||__||               
@@ -69,10 +64,10 @@ def loaderIntro():
                             ||__|||__|||__|||__|||__|||__|||__||                         
                             |/__\|/__\|/__\|/__\|/__\|/__\|/__\|   
                                             
-    {stringStars()}
-    
     """
+    printStars()
     print(p)
+    return
 
 
 def installHmyApp(harmonyDirPath):
@@ -80,6 +75,7 @@ def installHmyApp(harmonyDirPath):
     os.system("curl -LO https://harmony.one/hmycli && mv hmycli hmy && chmod +x hmy")
     printStars()
     print("* hmy application installed.")
+    return
 
 
 def updateTextFile(fileName, originalText, newText):
