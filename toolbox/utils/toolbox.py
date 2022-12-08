@@ -334,6 +334,7 @@ def runRegularNode() -> None:
             option = int(input("Enter your option: "))
         except ValueError:
             menuError()
+            refreshStats()
             runRegularNode()
         if option == 0:
             return finish_node()
