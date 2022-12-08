@@ -355,6 +355,12 @@ def runRegularNode() -> None:
     }
     while True:
         menuRegular()
+        if environ.get("HARMONY_UPGRADE_AVAILABLE") == "True":
+            print(f'* The harmony binary has an update available, Option #10 will upgrade you but you may miss a block while it restarts.\n')
+            printStars()
+        if environ.get("HMY_UPGRADE_AVAILABLE") == "True":
+            print(f'* The hmy binary has an update available, Option #11 will upgrade you but you may miss a block while it restarts.\n')
+            printStars()
         try:
             option = int(input("Enter your option: "))
         except ValueError:
@@ -558,6 +564,7 @@ def hmyCLIUpgrade():
         print("Harmony cli has been updated to: ")
         os.system(f"{validatorToolbox.hmyAppPath} version")
         printStars()
+        setVar(validatorToolbox.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
         input("Update completed, press ENTER to return to the main menu. ")
 
 
@@ -601,6 +608,7 @@ def upgradeHarmonyApp(testOrMain):
     print(
         "Harmony Service is restarting, waiting 10 seconds for restart."
     )
+    setVar(validatorToolbox.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
     time.sleep(10)
 
 

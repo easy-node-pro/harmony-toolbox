@@ -2,7 +2,7 @@ import os
 from os import environ
 from utils.config import validatorToolbox
 from utils.installer import printStars, recheckVars, recoverWallet
-from utils.shared import loaderIntro, setWalletEnv, askYesNo, loadVarFile, passphraseStatus, setVar
+from utils.shared import loaderIntro, setWalletEnv, askYesNo, loadVarFile, passphraseStatus, setVar, getVersions, checkForUpdates
 from utils.toolbox import runRegularNode
 
 if __name__ == "__main__":
@@ -23,6 +23,17 @@ if __name__ == "__main__":
             )
             input("* Press any key to exit.")
             raise SystemExit(0)
+    harmonyVersion, hmyVersion = getVersions()
+    onlineVersion, onlineHmyVersion = checkForUpdates()
+    if harmonyVersion != onlineVersion:
+        # here we would set the upgrade harmony flag in env
+        setVar(validatorToolbox.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "True")
+    if harmonyVersion == onlineVersion:
+        setVar(validatorToolbox.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
+    if hmyVersion != onlineHmyVersion:
+        setVar(validatorToolbox.dotenv_file, "HMY_UPGRADE_AVAILABLE", "True")
+    if hmyVersion == onlineHmyVersion:
+        setVar(validatorToolbox.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
     if environ.get("SETUP_STATUS") != "2":
         recheckVars()
         passphraseStatus()

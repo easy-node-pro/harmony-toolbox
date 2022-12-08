@@ -12,7 +12,7 @@ def getUrl() -> None:
     return result
 
 class validatorToolbox:
-    easyVersion = "1.6.3"
+    easyVersion = "1.6.4"
     serverHostName = socket.gethostname()
     userHomeDir = os.path.expanduser("~")
     dotenv_file = f"{userHomeDir}/.easynode.env"
@@ -33,3 +33,5 @@ class validatorToolbox:
     rpc_endpoints = ['https://api.s0.t.hmny.io', 'https://api.harmony.one', 'https://harmony-0-rpc.gateway.pokt.network']
     rpc_endpoints_test = ['https://rpc.s0.b.hmny.io', 'https://api.s0.pops.one']
     rpc_endpoints_max_connection_retries = 10
+    hmyTmpPath = '/tmp/hmy'
+    harmonyTmpPath = '/tmp/harmony'
