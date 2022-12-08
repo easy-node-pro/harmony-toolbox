@@ -113,9 +113,8 @@ def menuTopperFull() -> None:
     remote_data_shard_0, local_data_shard, remote_data_shard = menuValidatorStats()
     os.system("clear")
     # Print Menu
-    print(Style.RESET_ALL)
     printStars()
-    print(f'* {Fore.GREEN}validator-toolbox for Harmony ONE Validators by Easy Node   v{str(environ.get("EASY_VERSION"))}{Style.RESET_ALL}   https://easynode.one *')
+    print(f'{Style.RESET_ALL}* {Fore.GREEN}validator-toolbox for Harmony ONE Validators by Easy Node   v{str(environ.get("EASY_VERSION"))}{Style.RESET_ALL}   https://easynode.one *')
     printStars()
     print(f'* Server Hostname & IP:             {validatorToolbox.serverHostName}{Style.RESET_ALL} - {Fore.YELLOW}{validatorToolbox.ourExternalIPAddress}{Style.RESET_ALL}')
     harmonyServiceStatus()
@@ -140,7 +139,6 @@ def menuRegular() -> None:
 
 def menuFull() -> None:
     menuTopperFull()
-    print(Style.RESET_ALL)
     for x in return_txt(validatorToolbox.mainMenuFull):
         x = x.strip()
         try:
