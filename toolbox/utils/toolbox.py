@@ -87,27 +87,21 @@ def menuTopperRegular() -> None:
     current_epoch = getCurrentEpoch()
     sign_percentage = getSignPercent()
     total_balance, total_balance_test = getWalletBalance(environ.get("VALIDATOR_WALLET"))
+    remote_data_shard_0, remote_data_shard, local_data_shard = menuValidatorStats()
     os.system("clear")
     # Print Menu
     print(Style.RESET_ALL)
     printStars()
-    print(
-        "* "
-        + Fore.GREEN
-        + "validator-toolbox for Harmony ONE Validators by Easy Node   v"
-        + validatorToolbox.easyVersion
-        + Style.RESET_ALL
-        + "   https://easynode.one *"
-    )
+    print(f'* {Fore.GREEN}validator-toolbox for Harmony ONE Validators by Easy Node   v{validatorToolbox.easyVersion}{Style.RESET_ALL}   https://easynode.one *')
     printStars()
-    print(
-        f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Style.RESET_ALL}\n* Your $ONE balance is:             {Fore.GREEN}{str(total_balance)}{Style.RESET_ALL}\n* Your pending $ONE rewards are:    {Fore.GREEN}{str(getRewardsBalance(validatorToolbox.rpc_endpoints, environ.get("VALIDATOR_WALLET")))}{Style.RESET_ALL}\n* Server Hostname & IP:             {validatorToolbox.serverHostName}{Style.RESET_ALL} - {Fore.YELLOW}{validatorToolbox.ourExternalIPAddress}{Style.RESET_ALL}'
-    )
+    print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Style.RESET_ALL}\n* Your $ONE balance is:             {Fore.GREEN}{str(total_balance)}{Style.RESET_ALL}\n* Your pending $ONE rewards are:    {Fore.GREEN}{str(getRewardsBalance(validatorToolbox.rpc_endpoints, environ.get("VALIDATOR_WALLET")))}{Style.RESET_ALL}\n* Server Hostname & IP:             {validatorToolbox.serverHostName}{Style.RESET_ALL} - {Fore.YELLOW}{validatorToolbox.ourExternalIPAddress}{Style.RESET_ALL}')
     harmonyServiceStatus()
-    print(
-        f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}\n* Current disk space free: {Fore.CYAN}{freeSpaceCheck(): >6}{Style.RESET_ALL}   Current Epoch: {Fore.GREEN}{str(current_epoch)}{Style.RESET_ALL}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}'
-    )
-    printStarsReset()
+    print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}\n* Current disk space free: {Fore.CYAN}{freeSpaceCheck(): >6}{Style.RESET_ALL}   Current Epoch: {Fore.GREEN}{str(current_epoch)}{Style.RESET_ALL}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}')
+    printStars()
+    print(f"* Shard 0 Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}")
+    if environ.get("SHARD") != "0":
+        print(f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}")
+        print(f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}")
 
 
 def menuTopperFull() -> None:
@@ -580,6 +574,36 @@ def upgradeHarmonyApp(testOrMain):
     print("Harmony Service is restarting, waiting 10 seconds for restart.")
     setVar(validatorToolbox.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
     time.sleep(10)
+
+def menuValidatorStats():
+    remote_shard_0 = [
+        f"{validatorToolbox.hmyAppPath}",
+        "blockchain",
+        "latest-headers",
+        f"--node=https://api.s0.{environ.get("NETWORK_SWITCH")}.hmny.io",
+    ]
+    result_remote_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
+    if environ.get("SHARD") != "0":
+        remote_shard = [
+            f"{validatorToolbox.hmyAppPath}",
+            "blockchain",
+            "latest-headers",
+            f"--node=https://api.s{environ.get("SHARD")}.{environ.get("NETWORK_SWITCH")}.hmny.io",
+        ]
+        try:
+            result_remote_shard = run(remote_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+            remote_data_shard = json.loads(result_remote_shard.stdout)
+        except (ValueError, KeyError, TypeError):
+            return
+        local_shard = [f"{validatorToolbox.hmyAppPath}", "blockchain", "latest-headers"]
+        try:
+            result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+            local_data_shard = json.loads(result_local_shard.stdout)
+            return remote_data_shard_0, remote_data_shard, local_data_shard
+        except (ValueError, KeyError, TypeError):
+            return
+    return remote_data_shard_0
 
 
 def runStats() -> str:
