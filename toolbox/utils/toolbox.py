@@ -593,7 +593,7 @@ def refreshStats(clear=0) -> str:
     if clear == 0:
         os.system("clear")
     printStars()
-    print(f'* Getting the latest local & blockchain information now, one moment while we load...')s
+    print(f'* Getting the latest local & blockchain information now, one moment while we load...')
     printStars()
     return
 
