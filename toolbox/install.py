@@ -1,8 +1,7 @@
 import os
 from os import environ
 from utils.config import validatorToolbox
-from utils.installer import firstSetup, recoverWallet
-from utils.shared import loaderIntro, loadVarFile
+from utils.library import loaderIntro, loadVarFile, firstSetup, recoverWallet
 
 if __name__ == "__main__":
     os.system("clear")

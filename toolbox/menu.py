@@ -1,8 +1,7 @@
 import os
 from os import environ
 from utils.config import validatorToolbox
-from utils.installer import recheckVars, recoverWallet
-from utils.library import loaderIntro, setWalletEnv, loadVarFile, passphraseStatus, setVar, versionChecks
+from utils.library import loaderIntro, setWalletEnv, loadVarFile, passphraseStatus, setVar, versionChecks, recheckVars, recoverWallet
 from utils.toolbox import runRegularNode, runFullNode, refreshStats
 
 if __name__ == "__main__":
