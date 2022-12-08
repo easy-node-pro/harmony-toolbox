@@ -14,7 +14,7 @@ import subprocess
 import requests
 import pyhmy
 
-load_dotenv("~/.easynode.env")
+load_dotenv(validatorToolbox.dotenv_file)
 
 class PrintStuff:
 
