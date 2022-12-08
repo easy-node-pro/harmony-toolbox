@@ -15,7 +15,7 @@ from collections import namedtuple
 from colorama import Fore, Back, Style
 from pyhmy import blockchain, transaction
 from requests.exceptions import HTTPError
-from library import (
+from utils.library import (
     process_command,
     printStars,
     printStarsReset,
