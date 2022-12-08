@@ -15,7 +15,22 @@ from collections import namedtuple
 from colorama import Fore, Back, Style
 from pyhmy import blockchain, transaction
 from requests.exceptions import HTTPError
-from utils.shared import process_command, printStars, printStarsReset, printWhiteSpace, askYesNo, return_txt, installHarmonyApp, installHmyApp, getSignPercent, loadVarFile, getWalletBalance, getRewardsBalance, stringStars, setVar
+from utils.shared import (
+    process_command,
+    printStars,
+    printStarsReset,
+    printWhiteSpace,
+    askYesNo,
+    return_txt,
+    installHarmonyApp,
+    installHmyApp,
+    getSignPercent,
+    loadVarFile,
+    getWalletBalance,
+    getRewardsBalance,
+    stringStars,
+    setVar,
+)
 from utils.allsysinfo import allSysInfo
 
 
@@ -32,7 +47,7 @@ def sendRewards(networkCall, sendAmount, rewardsWallet):
 
 
 def rewardsCollector() -> None:
-    rewardsWallet = environ.get('REWARDS_WALLET')
+    rewardsWallet = environ.get("REWARDS_WALLET")
     printStars()
     print("* Harmony ONE Rewards Collection")
     printStars()
@@ -43,93 +58,56 @@ def rewardsCollector() -> None:
         collectRewards(f"{environ.get('NETWORK_0_CALL')}")
         printStars()
         print(
-            Fore.GREEN + f"* mainnet rewards for {environ.get('VALIDATOR_WALLET')} have been collected." + Style.RESET_ALL
+            Fore.GREEN
+            + f"* mainnet rewards for {environ.get('VALIDATOR_WALLET')} have been collected."
+            + Style.RESET_ALL
         )
         printStars()
     else:
         return
     if rewardsWallet:
-        wallet_balance, wallet_balance_test = getWalletBalance(environ.get('VALIDATOR_WALLET'))
+        wallet_balance, wallet_balance_test = getWalletBalance(environ.get("VALIDATOR_WALLET"))
         suggestedSend = wallet_balance - int(environ.get("GAS_RESERVE"))
         print("*\n*\n")
         printStars()
         print("\n* Send your Harmony ONE Rewards?")
         printStars()
         if suggestedSend >= 1:
-            question = askYesNo(f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggestedSend} $ONE using your reservation settings.\n* Would you like to send {suggestedSend} $ONE to {rewardsWallet} now? (YES/NO)")
+            question = askYesNo(
+                f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggestedSend} $ONE using your reservation settings.\n* Would you like to send {suggestedSend} $ONE to {rewardsWallet} now? (YES/NO)"
+            )
             if question:
-                sendRewards(environ.get('NETWORK_0_CALL'), suggestedSend, rewardsWallet)
+                sendRewards(environ.get("NETWORK_0_CALL"), suggestedSend, rewardsWallet)
             return
     return
 
 
 def menuTopperRegular() -> None:
     # Get stats & balances
+    Load1, Load5, Load15 = os.getloadavg()
     current_epoch = getCurrentEpoch()
     sign_percentage = getSignPercent()
-    total_balance, total_balance_test = getWalletBalance(environ.get('VALIDATOR_WALLET'))
+    total_balance, total_balance_test = getWalletBalance(environ.get("VALIDATOR_WALLET"))
+    remote_data_shard_0, local_data_shard, remote_data_shard = menuValidatorStats()
     os.system("clear")
     # Print Menu
     print(Style.RESET_ALL)
     printStars()
-    print(
-        "* "
-        + Fore.GREEN
-        + "validator-toolbox for Harmony ONE Validators by Easy Node   v"
-        + validatorToolbox.easyVersion
-        + Style.RESET_ALL
-        + "   https://easynode.one *"
-    )
+    print(f'* {Fore.GREEN}validator-toolbox for Harmony ONE Validators by Easy Node   v{validatorToolbox.easyVersion}{Style.RESET_ALL}   https://easynode.one *')
     printStars()
-    print(
-        "* Your validator wallet address is: "
-        + Fore.RED
-        + str(environ.get("VALIDATOR_WALLET"))
-        + Style.RESET_ALL
-    )
-    print(
-        "* Your $ONE balance is:             "
-        + Fore.GREEN
-        + str(total_balance)
-        + Style.RESET_ALL
-    )
-    print(
-        "* Your pending $ONE rewards are:    "
-        + Fore.GREEN
-        + str(getRewardsBalance(validatorToolbox.rpc_endpoints, environ.get('VALIDATOR_WALLET')))
-        + Style.RESET_ALL
-        )
-    print(
-        "* Server Hostname & IP:             "
-        + validatorToolbox.serverHostName
-        + Style.RESET_ALL
-        + " - "
-        + Fore.YELLOW
-        + validatorToolbox.ourExternalIPAddress
-        + Style.RESET_ALL
-    )
+    print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Style.RESET_ALL}\n* Your $ONE balance is:             {Fore.GREEN}{str(total_balance)}{Style.RESET_ALL}\n* Your pending $ONE rewards are:    {Fore.GREEN}{str(getRewardsBalance(validatorToolbox.rpc_endpoints, environ.get("VALIDATOR_WALLET")))}{Style.RESET_ALL}\n* Server Hostname & IP:             {validatorToolbox.serverHostName}{Style.RESET_ALL} - {Fore.YELLOW}{validatorToolbox.ourExternalIPAddress}{Style.RESET_ALL}')
     harmonyServiceStatus()
-    print(
-        "* Epoch Signing Percentage:         "
-        + Style.BRIGHT
-        + Fore.GREEN
-        + Back.BLUE
-        + sign_percentage
-        + " %"
-        + Style.RESET_ALL
-    )
-    print(
-        "* Current disk space free: "
-        + Fore.CYAN
-        + f"{freeSpaceCheck(): >6}"
-        + Style.RESET_ALL
-        + "   Current Epoch: "
-        + Fore.GREEN
-        + str(current_epoch)
-        + Style.RESET_ALL
-    )
-    printStarsReset()
-
+    print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}\n* Current disk space free: {Fore.CYAN}{freeSpaceCheck(): >6}{Style.RESET_ALL}   Current Epoch: {Fore.GREEN}{str(current_epoch)}{Style.RESET_ALL}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}')
+    printStars()
+    if environ.get("SHARD") != "0":
+        print(f"\n* Please note, being on shard {environ.get('SHARD')}, Shard 0 local is no longer needed\n* Remote Shard 0 Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}, Local Shard 0 Size: {getDBSize('0')}")
+        print(f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}")
+        print(f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}, Local Shard {environ.get('SHARD')} Size: {getDBSize(environ.get('SHARD'))}")
+    if environ.get("SHARD") == "0":
+        print(f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}")
+        print(f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}")
+    print(f"* CPU Load Averages: {round(Load1, 2)} over 1 min, {round(Load5, 2)} over 5 min, {round(Load15, 2)} over 15 min")
+    printStars()
 
 def menuTopperFull() -> None:
     current_epoch = getCurrentEpoch()
@@ -171,10 +149,7 @@ def menuTopperFull() -> None:
 
 def menuRegular() -> None:
     menuTopperRegular()
-    print(Style.RESET_ALL)
-    for x in return_txt(
-        validatorToolbox.mainMenuRegular
-    ):
+    for x in return_txt(validatorToolbox.mainMenuRegular):
         x = x.strip()
         try:
             x = eval(x)
@@ -187,9 +162,7 @@ def menuRegular() -> None:
 def menuFull() -> None:
     menuTopperFull()
     print(Style.RESET_ALL)
-    for x in return_txt(
-        validatorToolbox.mainMenuFull
-    ):
+    for x in return_txt(validatorToolbox.mainMenuFull):
         x = x.strip()
         try:
             x = eval(x)
@@ -202,26 +175,28 @@ def menuFull() -> None:
 def getWalletJSON(wallet: str) -> str:
     testOrMain = environ.get("NETWORK")
     try:
-            response = requests.get(f"https://api.stake.hmny.io/networks/{testOrMain}/validators/{wallet}")
-            response.raise_for_status()
-            # access JSOn content
-            jsonResponse = response.json()
+        response = requests.get(f"https://api.stake.hmny.io/networks/{testOrMain}/validators/{wallet}")
+        response.raise_for_status()
+        # access JSOn content
+        jsonResponse = response.json()
     #        print("Entire JSON response")
     #        print(jsonResponse)
     except HTTPError as http_err:
-            print(f'HTTP error occurred: {http_err}')
-            print(f'* You have not created your validator yet, try again after you add one!\n* cd ~/harmony\n* ./hmy keys recover-from-mnemonic {validatorToolbox.activeUserName} {environ.get("PASS_SWITCH")}')
-            input("Press ENTER to return to the main menu.")
-            return
+        print(f"HTTP error occurred: {http_err}")
+        print(
+            f'* You have not created your validator yet, try again after you add one!\n* cd ~/harmony\n* ./hmy keys recover-from-mnemonic {validatorToolbox.activeUserName} {environ.get("PASS_SWITCH")}'
+        )
+        input("Press ENTER to return to the main menu.")
+        return
     except Exception as err:
-            print(f'Other error occurred: {err}')
-            input("Press ENTER to return to the main menu.")
-            return
-    return(jsonResponse)
+        print(f"Other error occurred: {err}")
+        input("Press ENTER to return to the main menu.")
+        return
+    return jsonResponse
 
 
 def tmiServerInfo() -> None:
-    validatorWallet = environ.get('VALIDATOR_WALLET')
+    validatorWallet = environ.get("VALIDATOR_WALLET")
     jsonResponse = getWalletJSON(validatorWallet)
     for key, value in jsonResponse.items():
         print(key, ":", value)
@@ -233,9 +208,7 @@ def setRewardsWallet() -> None:
     rewardsWallet = environ.get("REWARDS_WALLET")
     gasReserve = environ.get("GAS_RESERVE")
     if rewardsWallet is None:
-        question = askYesNo(
-                "* Would you like to add an address to send your rewards too? (YES/NO)"
-            )
+        question = askYesNo("* Would you like to add an address to send your rewards too? (YES/NO)")
         if question:
             rewardsWallet = input(f"* Input your one1 address to send rewards into, please input your address now: ")
             if rewardsWallet.startswith("one1"):
@@ -258,7 +231,9 @@ def setRewardsWallet() -> None:
             setGasReserve()
             return
         else:
-            question = askYesNo(f"* Your current wallet gas reservation is {gasReserve} $ONE\n* Would you like to update your reservation total? (YES/NO)")
+            question = askYesNo(
+                f"* Your current wallet gas reservation is {gasReserve} $ONE\n* Would you like to update your reservation total? (YES/NO)"
+            )
             if question:
                 setGasReserve()
                 return
@@ -266,14 +241,14 @@ def setRewardsWallet() -> None:
 
 
 def setGasReserve() -> None:
-    gasReserve = environ.get("GAS_RESERVE")    
+    gasReserve = environ.get("GAS_RESERVE")
     question = askYesNo(
         f"* Your current total of $ONE to reserve for fees is {gasReserve}\n* Would you like to update the reserve total? (YES/NO)"
     )
     if question:
         askReserveTotal()
     return
-    
+
 
 def askReserveTotal() -> None:
     reserveTotal = input("* How much $ONE would you like to keep reserved for fees? ")
@@ -288,7 +263,7 @@ def setReserveTotal(reserveTotal):
 def runFullNode() -> None:
     menu_options = {
         # 0: finish_node,
-        1: runStats,
+        1: refreshStats,
         2: menuCheckBalance,
         3: comingSoon,
         4: comingSoon,
@@ -309,16 +284,20 @@ def runFullNode() -> None:
         loadVarFile()
         menuFull()
         if environ.get("HARMONY_UPGRADE_AVAILABLE") == "True":
-            print(f'* The harmony binary has an update available, Option #10 will upgrade you but you may miss a block while it restarts.\n')
+            print(
+                f"* The harmony binary has an update available, Option #10 will upgrade you but you may miss a block while it restarts.\n"
+            )
             printStars()
         if environ.get("HMY_UPGRADE_AVAILABLE") == "True":
-            print(f'* The hmy binary has an update available, Option #11 will upgrade you but you may miss a block while it restarts.\n')
+            print(
+                f"* The hmy binary has an update available, Option #11 will upgrade you but you may miss a block while it restarts.\n"
+            )
             printStars()
         try:
             option = int(input("Enter your option: "))
         except ValueError:
-                menuError()
-                runFullNode(environ.get("NODE_TYPE"))
+            menuError()
+            runFullNode(environ.get("NODE_TYPE"))
         if option == 0:
             return finish_node()
         os.system("clear")
@@ -329,6 +308,7 @@ def bingoChecker():
     os.system("grep BINGO ~/harmony/latest/zerolog-harmony.log | tail -10")
     input("* Press enter to return to the main menu.")
 
+
 def comingSoon():
     os.system("clear")
     printWhiteSpace()
@@ -337,10 +317,11 @@ def comingSoon():
     printStars()
     input("* Press enter to return to the main menu.")
 
+
 def runRegularNode() -> None:
     menu_options = {
-        # 0: finish_node, 
-        1: runStats,
+        # 0: finish_node,
+        1: refreshStats,
         2: menuActiveBLS,
         3: menuCheckBalance,
         4: rewardsCollector,
@@ -361,16 +342,20 @@ def runRegularNode() -> None:
         loadVarFile()
         menuRegular()
         if environ.get("HARMONY_UPGRADE_AVAILABLE") == "True":
-            print(f'* The harmony binary has an update available to version {environ.get("ONLINE_HARMONY_VERSION")}\n* Option #10 will upgrade you, but you may miss a block while it upgrades & restarts.\n* Currently installed version {environ.get("HARMONY_VERSION")}\n')
+            print(
+                f'* The harmony binary has an update available to version {environ.get("ONLINE_HARMONY_VERSION")}\n* Option #10 will upgrade you, but you may miss a block while it upgrades & restarts.\n* Currently installed version {environ.get("HARMONY_VERSION")}\n'
+            )
             printStars()
         if environ.get("HMY_UPGRADE_AVAILABLE") == "True":
-            print(f'* The hmy binary has an update available to version {environ.get("ONLINE_HMY_VERSION")}\n* Option #11 will upgrade you.\n* Currently installed version {environ.get("HMY_VERSION")}\n')
+            print(
+                f'* The hmy binary has an update available to version {environ.get("ONLINE_HMY_VERSION")}\n* Option #11 will upgrade you.\n* Currently installed version {environ.get("HMY_VERSION")}\n'
+            )
             printStars()
         try:
             option = int(input("Enter your option: "))
         except ValueError:
-                menuError()
-                runRegularNode()
+            menuError()
+            runRegularNode()
         if option == 0:
             return finish_node()
         os.system("clear")
@@ -410,21 +395,9 @@ def osUpgrades() -> None:
 def harmonyServiceStatus() -> None:
     status = subprocess.call(["systemctl", "is-active", "--quiet", "harmony"])
     if status == 0:
-        print(
-            "* Harmony Service is:               "
-            + Fore.BLACK
-            + Back.GREEN
-            + "   Online  "
-            + Style.RESET_ALL
-        )
+        print("* Harmony Service is:               " + Fore.BLACK + Back.GREEN + "   Online  " + Style.RESET_ALL)
     else:
-        print(
-            "* Harmony Service is:               "
-            + Fore.WHITE
-            + Back.RED
-            + "  *** Offline *** "
-            + Style.RESET_ALL
-        )
+        print("* Harmony Service is:               " + Fore.WHITE + Back.RED + "  *** Offline *** " + Style.RESET_ALL)
 
 
 def diskFreeSpace(mountPoint: str) -> str:
@@ -455,17 +428,7 @@ def serverDriveCheck() -> None:
     total, used, free = shutil.disk_usage(ourDiskMount)
     total = str(convertedUnit(total))
     used = str(convertedUnit(used))
-    print(
-        "Disk: "
-        + str(ourDiskMount)
-        + "\n"
-        + freeSpaceCheck()
-        + " Free\n"
-        + used
-        + " Used\n"
-        + total
-        + " Total"
-    )
+    print("Disk: " + str(ourDiskMount) + "\n" + freeSpaceCheck() + " Free\n" + used + " Used\n" + total + " Total")
     printStars()
     input("Disk check complete, press ENTER to return to the main menu. ")
 
@@ -597,10 +560,12 @@ def upgradeHarmonyApp(testOrMain):
                 question = askYesNo(
                     Fore.WHITE
                     + "Are you sure you would like to proceed with upgrading and trimming database 0?\n\nType 'Yes' or 'No' to continue"
-                    )
+                )
                 if question:
                     os.system("sudo service harmony stop")
-                    os.system(f"mv {validatorToolbox.harmonyDirPath}/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0_old")
+                    os.system(
+                        f"mv {validatorToolbox.harmonyDirPath}/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0_old"
+                    )
                     os.system("sudo service harmony start")
                     os.system(f"rm -r {validatorToolbox.harmonyDirPath}/harmony_db_0_old")
                 else:
@@ -610,107 +575,52 @@ def upgradeHarmonyApp(testOrMain):
     else:
         os.system("sudo service harmony restart")
     printStars()
-    print(
-        "Harmony Service is restarting, waiting 10 seconds for restart."
-    )
+    print("Harmony Service is restarting, waiting 10 seconds for restart.")
     setVar(validatorToolbox.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
     time.sleep(10)
 
-
-def runStats() -> str:
-    timeNow = datetime.now()
-    ourShard = environ.get("SHARD")
-    ourNetwork = environ.get("NETWORK_SWITCH")
-    remote_shard_0 = [f'{validatorToolbox.hmyAppPath}', 'blockchain', 'latest-headers', f'--node=https://api.s0.{ourNetwork}.hmny.io']
+def menuValidatorStats():
+    loadVarFile()
+    remote_shard_0 = [
+        f"{validatorToolbox.hmyAppPath}",
+        "blockchain",
+        "latest-headers",
+        f'--node=https://api.s0.{environ.get("NETWORK_SWITCH")}.hmny.io',
+    ]
     result_remote_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
-    remote_shard = [f'{validatorToolbox.hmyAppPath}', 'blockchain', 'latest-headers', f'--node=https://api.s{ourShard}.{ourNetwork}.hmny.io']
-    try:
-        result_remote_shard = run(remote_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-        remote_data_shard = json.loads(result_remote_shard.stdout)
-    except (ValueError, KeyError, TypeError):
-        print(f"""
-        {stringStars()}
-        * Current Date & Time: {timeNow}
-        *
-        {stringStars()}
-        """)
-        shardStats(ourShard)
-        {stringStars()}
-        input(f"* No remote data returned, RPC may be unresponsive. Wait few moments and try again. Press ENTER to return to the main menu.")
-        {stringStars()}
-        return
-    local_shard = [f'{validatorToolbox.hmyAppPath}', 'blockchain', 'latest-headers']
-    try:
-        result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-        local_data_shard = json.loads(result_local_shard.stdout)
-    except (ValueError, KeyError, TypeError):
-        print(f"""
-        {stringStars()}
-        * Current Date & Time: {timeNow}
-        *
-        {stringStars()}
-        """)
-        shardStats(ourShard)
-        {stringStars()}
-        input(f"* No local data detected, did you just restart Harmony? Wait a few moments and try again. Press ENTER to return to the main menu.")
-        {stringStars()}
-        return
-    if environ.get("SHARD") == "0":
-        print(f"""
-    {stringStars()}
-    * Current Date & Time: {timeNow}
-    *
-    {stringStars()}
-    * Current Status of our server {validatorToolbox.serverHostName} currently on Shard {environ.get('SHARD')}:
-    *
-    * Shard 0 Sync Status:
-    * Local Server  - Epoch {local_data_shard['result']['beacon-chain-header']['epoch']} - Shard {local_data_shard['result']['beacon-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['beacon-chain-header']['number'])}
-    * Remote Server - Epoch {remote_data_shard_0['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard_0['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}
-    *
-    {stringStars()}
-        """)
-        if int(ourShard) > 0:
-            print(f"""
-    * Shard {ourShard} Sync Status:
-    *
-    * Local Server  - Epoch {local_data_shard['result']['shard-chain-header']['epoch']} - Shard {local_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}
-    * Remote Server - Epoch {remote_data_shard['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}
-    *
-    {stringStars()}
-        """)
-        shardStats(ourShard)
-        input("* Validator stats completed, press ENTER to return to the main menu. ")
-    else:
-        print(f"""
-    {stringStars()}
-    * Current Date & Time: {timeNow}
-    *
-    {stringStars()}
-    * Current Status of our server {validatorToolbox.serverHostName} currently on Shard {environ.get('SHARD')}:
-    *
-    * Shard 0 Sync Status:
-    * Local Server  - Epoch {local_data_shard['result']['beacon-chain-header']['epoch']} (Always 1 epoch behind Remote Server) - Shard 0 not required on Shard {environ.get('SHARD')}
-    * Remote Server - Epoch {remote_data_shard_0['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard_0['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}
-    *
-    {stringStars()}
-        """)
-        if int(ourShard) > 0:
-            print(f"""
-    * Shard {ourShard} Sync Status:
-    *
-    * Local Server  - Epoch {local_data_shard['result']['shard-chain-header']['epoch']} - Shard {local_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}
-    * Remote Server - Epoch {remote_data_shard['result']['shard-chain-header']['epoch']} - Shard {remote_data_shard['result']['shard-chain-header']['shardID']} - Block {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}
-    *
-    {stringStars()}
-        """)
-        shardStats(ourShard)
-        input("    * Validator stats completed, press ENTER to return to the main menu. ")
+    local_shard = [f"{validatorToolbox.hmyAppPath}", "blockchain", "latest-headers"]
+    result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    local_data_shard = json.loads(result_local_shard.stdout)
+            
+    if environ.get("SHARD") != "0":
+        remote_shard = [
+            f"{validatorToolbox.hmyAppPath}",
+            "blockchain",
+            "latest-headers",
+            f'--node=https://api.s{environ.get("SHARD")}.{environ.get("NETWORK_SWITCH")}.hmny.io',
+        ]
+        try:
+            result_remote_shard = run(remote_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+            remote_data_shard = json.loads(result_remote_shard.stdout)
+            return remote_data_shard_0, local_data_shard, remote_data_shard
+        except (ValueError, KeyError, TypeError):
+            return
+        
+    return remote_data_shard_0, local_data_shard, None
+
+
+def refreshStats() -> str:
+    os.system("clear")
+    printStars()
+    print(f'* Refeshing menu information now, one moment...')
+    printStars()
+    return
 
 
 def getDBSize(ourShard) -> str:
     harmonyDBSize = subprocess.getoutput(f"du -h {validatorToolbox.harmonyDirPath}/harmony_db_{ourShard}")
-    harmonyDBSize = harmonyDBSize.rstrip('\t')
+    harmonyDBSize = harmonyDBSize.rstrip("\t")
     countTrim = len(validatorToolbox.harmonyDirPath) + 13
     return harmonyDBSize[:-countTrim]
 
@@ -718,15 +628,18 @@ def getDBSize(ourShard) -> str:
 def shardStats(ourShard) -> str:
     ourUptime = subprocess.getoutput("uptime")
     ourVersion = subprocess.getoutput(f"{validatorToolbox.harmonyAppPath} -V")
-    dbZeroSize = getDBSize('0')
+    dbZeroSize = getDBSize("0")
     if ourShard == "0":
-        print(f"""
+        print(
+            f"""
     * Uptime :: {ourUptime}\n\n Harmony DB 0 Size  ::  {dbZeroSize}
     * {ourVersion}
     {stringStars()}
-        """)
+        """
+        )
     else:
-        print(f"""
+        print(
+            f"""
     * Uptime :: {ourUptime}
     *
     * Harmony DB 0 Size  ::  {dbZeroSize}
@@ -735,7 +648,8 @@ def shardStats(ourShard) -> str:
     * {ourVersion}
     *
     {stringStars()}
-        """)
+        """
+        )
 
 
 def menuBinaryUpdates():
@@ -754,8 +668,7 @@ def menuBinaryUpdates():
 def menuUbuntuUpdates() -> str:
     printStarsReset()
     question = askYesNo(
-        Fore.WHITE
-        + "Are you sure you would like to proceed with Linux apt Upgrades?\n\nType 'Yes' or 'No' to continue"
+        Fore.WHITE + "Are you sure you would like to proceed with Linux apt Upgrades?\n\nType 'Yes' or 'No' to continue"
     )
     if question:
         osUpgrades()
@@ -823,7 +736,7 @@ def menuServiceRestart() -> str:
 
 
 def menuActiveBLS() -> str:
-    validatorWallet = environ.get('VALIDATOR_WALLET')
+    validatorWallet = environ.get("VALIDATOR_WALLET")
     jsonResponse = getWalletJSON(validatorWallet)
     printStarsReset()
     print("* This is a list of your BLS Keys that are active for the next election.")
@@ -834,15 +747,15 @@ def menuActiveBLS() -> str:
 
 
 def isfloat(value):
-  try:
-    float(value)
-    return True
-  except ValueError:
-    return False
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
 
 
 def menuCheckBalance() -> None:
-    validatorWallet = environ.get('VALIDATOR_WALLET')
+    validatorWallet = environ.get("VALIDATOR_WALLET")
     if environ.get("NODE_TYPE") == "regular":
         printStarsReset()
         print("* Calling mainnet and testnet for balances...")
@@ -853,9 +766,7 @@ def menuCheckBalance() -> None:
         printStars()
         i = 0
         while i < 1:
-            question = askYesNo(
-                "* Would you like to check another Harmony ONE Address? (YES/NO) "
-            )
+            question = askYesNo("* Would you like to check another Harmony ONE Address? (YES/NO) ")
             if question:
                 balanceCheckAny()
             else:
@@ -863,9 +774,7 @@ def menuCheckBalance() -> None:
     else:
         i = 0
         while i < 1:
-            question = askYesNo(
-                "* Would you like to check a Harmony ONE Address? (YES/NO) "
-            )
+            question = askYesNo("* Would you like to check a Harmony ONE Address? (YES/NO) ")
             if question:
                 balanceCheckAny()
             else:
@@ -881,7 +790,9 @@ def balanceCheckAny():
     print("* Calling mainnet and testnet for balances...")
     printStarsReset()
     total_balance, total_balance_test = getWalletBalance(checkWallet)
-    print(f"* The Mainnet Wallet Balance is: {total_balance} Harmony ONE Coins\n* The Testnet Wallet Balance is: {total_balance_test} Harmony ONE Test Coins")
+    print(
+        f"* The Mainnet Wallet Balance is: {total_balance} Harmony ONE Coins\n* The Testnet Wallet Balance is: {total_balance_test} Harmony ONE Test Coins"
+    )
     printStars()
     input("Press ENTER to continue.")
 
