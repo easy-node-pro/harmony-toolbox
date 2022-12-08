@@ -98,9 +98,12 @@ def menuTopperRegular() -> None:
     harmonyServiceStatus()
     print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}\n* Current disk space free: {Fore.CYAN}{freeSpaceCheck(): >6}{Style.RESET_ALL}   Current Epoch: {Fore.GREEN}{str(current_epoch)}{Style.RESET_ALL}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}')
     printStars()
-    print(f"* Shard 0 Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}")
     if environ.get("SHARD") != "0":
+        print(f"\n* Please note, being on shard {environ.get('SHARD')}, Shard 0 local is no longer needed\n* Remote Shard 0 Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}")
         print(f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}")
+        print(f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}")
+    if envrion.get("SHARD") == "0":
+        print(f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}")
         print(f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}")
 
 
@@ -584,6 +587,10 @@ def menuValidatorStats():
     ]
     result_remote_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
+    local_shard = [f"{validatorToolbox.hmyAppPath}", "blockchain", "latest-headers"]
+    result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    local_data_shard = json.loads(result_local_shard.stdout)
+            
     if environ.get("SHARD") != "0":
         remote_shard = [
             f"{validatorToolbox.hmyAppPath}",
@@ -595,15 +602,9 @@ def menuValidatorStats():
             result_remote_shard = run(remote_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
             remote_data_shard = json.loads(result_remote_shard.stdout)
         except (ValueError, KeyError, TypeError):
-            return
-        local_shard = [f"{validatorToolbox.hmyAppPath}", "blockchain", "latest-headers"]
-        try:
-            result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-            local_data_shard = json.loads(result_local_shard.stdout)
             return remote_data_shard_0, remote_data_shard, local_data_shard
-        except (ValueError, KeyError, TypeError):
-            return
-    return remote_data_shard_0
+        
+    return remote_data_shard_0, None, local_data_shard
 
 
 def runStats() -> str:
