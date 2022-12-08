@@ -30,7 +30,7 @@ if __name__ == "__main__":
             input("* Press any key to exit.")
             raise SystemExit(0)
     # Check online versions of harmony & hmy and compare to our local copy.
-    refreshStats()
+    refreshStats(1)
     versionChecks()
     # Last check on setup status, if it never finished it will try again here.
     if environ.get("SETUP_STATUS") != "2":
