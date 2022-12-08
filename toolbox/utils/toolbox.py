@@ -610,6 +610,10 @@ def menuValidatorStats():
 
 
 def runStats() -> str:
+    os.system("clear")
+    printStars()
+    print(f'* Refeshing menu information now, one moment...')
+    printStars()
     return
 
 
