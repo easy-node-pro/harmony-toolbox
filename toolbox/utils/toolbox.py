@@ -106,7 +106,8 @@ def menuTopperRegular() -> None:
     if environ.get("SHARD") == "0":
         print(f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}")
         print(f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}")
-    print(f"* CPU Load Averages: {Load1} over 1 min, {Load5} over 5 min, {Load15} over 15 min")
+    print(f"* CPU Load Averages: {round(Load1, 2)} over 1 min, {round(Load5, 2)} over 5 min, {round(Load15, 2)} over 15 min")
+    printStars()
 
 def menuTopperFull() -> None:
     current_epoch = getCurrentEpoch()
@@ -148,7 +149,6 @@ def menuTopperFull() -> None:
 
 def menuRegular() -> None:
     menuTopperRegular()
-    print(Style.RESET_ALL)
     for x in return_txt(validatorToolbox.mainMenuRegular):
         x = x.strip()
         try:
