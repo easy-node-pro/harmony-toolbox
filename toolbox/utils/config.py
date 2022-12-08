@@ -12,7 +12,7 @@ def getUrl() -> None:
     return result
 
 class validatorToolbox:
-    easyVersion = "1.6.4"
+    easyVersion = "1.6.5"
     serverHostName = socket.gethostname()
     userHomeDir = os.path.expanduser("~")
     dotenv_file = f"{userHomeDir}/.easynode.env"
