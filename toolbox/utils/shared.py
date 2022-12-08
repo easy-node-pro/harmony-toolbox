@@ -67,7 +67,6 @@ def loaderIntro():
     """
     printStars()
     print(p)
-    printStars()
     return
 
 
