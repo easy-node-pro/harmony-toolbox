@@ -579,6 +579,7 @@ def upgradeHarmonyApp(testOrMain):
     time.sleep(10)
 
 def menuValidatorStats():
+    loadVarFile()
     remote_shard_0 = [
         f"{validatorToolbox.hmyAppPath}",
         "blockchain",
