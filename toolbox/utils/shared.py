@@ -496,3 +496,21 @@ def getSignPercent() -> str:
     except (OSError, ValueError):
         outputStripped = "0"
         return str(outputStripped)
+
+def getVersions():
+    output = subprocess.getoutput(f'{validatorToolbox.harmonyAppPath} -V')
+    output2 = subprocess.getoutput(f'{validatorToolbox.hmyAppPath} version')
+    return output[35:-35], output2[62:-15]
+
+def setModX(file):
+    subprocess.run(['chmod', '+x', file])
+
+def checkForUpdates():
+    subprocess.check_output(['wget', 'https://harmony.one/binary', '-O', validatorToolbox.hmyTmpPath], stderr=subprocess.STDOUT)
+    setModX(validatorToolbox.hmyTmpPath)
+    subprocess.check_output([validatorToolbox.hmyTmpPath, 'config', 'dump', 'harmony.conf'], stderr=subprocess.STDOUT)
+    output = subprocess.getoutput(f'{validatorToolbox.hmyTmpPath} -V')
+    subprocess.check_output(['wget', 'https://harmony.one/hmycli', '-O', validatorToolbox.hmyTmpPath], stderr=subprocess.STDOUT)
+    setModX(validatorToolbox.hmyTmpPath)
+    output2 = subprocess.getoutput(f"{validatorToolbox.hmyTmpPath} version")
+    return output[35:-35], output2[62:-15]

@@ -355,6 +355,12 @@ def runRegularNode() -> None:
     }
     while True:
         menuRegular()
+        if environ.get("HARMONY_UPGRADE_AVAILABLE") == "True":
+            print(f'* The harmony binary has an update available, Option #10 will upgrade you but you may miss a block while it restarts.\n')
+            printStars()
+        if environ.get("HMY_UPGRADE_AVAILABLE" == "True"):
+            print(f'* The hmy binary has an update available, Option #11 will upgrade you but you may miss a block while it restarts.\n')
+            printStars()
         try:
             option = int(input("Enter your option: "))
         except ValueError:
