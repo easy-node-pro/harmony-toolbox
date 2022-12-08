@@ -602,8 +602,9 @@ def menuValidatorStats():
         try:
             result_remote_shard = run(remote_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
             remote_data_shard = json.loads(result_remote_shard.stdout)
-        except (ValueError, KeyError, TypeError):
             return remote_data_shard_0, local_data_shard, remote_data_shard
+        except (ValueError, KeyError, TypeError):
+            return
         
     return remote_data_shard_0, local_data_shard, None
 
