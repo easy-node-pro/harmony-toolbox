@@ -117,9 +117,7 @@ def menuTopperRegular() -> None:
         + sign_percentage
         + " %"
         + Style.RESET_ALL
-    )
-    print(
-        "* Current disk space free: "
+        + "\n* Current disk space free: "
         + Fore.CYAN
         + f"{freeSpaceCheck(): >6}"
         + Style.RESET_ALL
@@ -127,6 +125,7 @@ def menuTopperRegular() -> None:
         + Fore.GREEN
         + str(current_epoch)
         + Style.RESET_ALL
+        + f'\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}\n* Current hmy version: {environ.get("HMY_VERSION")}'
     )
     printStarsReset()
 
