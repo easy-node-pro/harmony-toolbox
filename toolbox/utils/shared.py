@@ -262,7 +262,7 @@ def return_txt(fn: str) -> list:
 
 def loadVarFile():
     if os.path.exists(validatorToolbox.dotenv_file):
-        load_dotenv(validatorToolbox.dotenv_file)
+        load_dotenv(validatorToolbox.dotenv_file, override=True)
 
 
 def getShardMenu(dotenv_file) -> None:
