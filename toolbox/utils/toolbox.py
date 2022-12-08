@@ -10,7 +10,6 @@ from subprocess import Popen, PIPE, run
 from ast import literal_eval
 from utils.config import validatorToolbox
 from os import environ
-from dotenv import load_dotenv
 from datetime import datetime
 from collections import namedtuple
 from colorama import Fore, Back, Style
@@ -287,7 +286,6 @@ def setReserveTotal(reserveTotal):
 
 
 def runFullNode() -> None:
-    loadVarFile()
     menu_options = {
         # 0: finish_node,
         1: runStats,
@@ -308,7 +306,14 @@ def runFullNode() -> None:
         999: menuRebootServer,
     }
     while True:
+        loadVarFile()
         menuFull()
+        if environ.get("HARMONY_UPGRADE_AVAILABLE") == "True":
+            print(f'* The harmony binary has an update available, Option #10 will upgrade you but you may miss a block while it restarts.\n')
+            printStars()
+        if environ.get("HMY_UPGRADE_AVAILABLE") == "True":
+            print(f'* The hmy binary has an update available, Option #11 will upgrade you but you may miss a block while it restarts.\n')
+            printStars()
         try:
             option = int(input("Enter your option: "))
         except ValueError:
@@ -333,7 +338,6 @@ def comingSoon():
     input("* Press enter to return to the main menu.")
 
 def runRegularNode() -> None:
-    loadVarFile()
     menu_options = {
         # 0: finish_node, 
         1: runStats,
@@ -354,6 +358,7 @@ def runRegularNode() -> None:
         999: menuRebootServer,
     }
     while True:
+        loadVarFile()
         menuRegular()
         if environ.get("HARMONY_UPGRADE_AVAILABLE") == "True":
             print(f'* The harmony binary has an update available, Option #10 will upgrade you but you may miss a block while it restarts.\n')
@@ -440,7 +445,7 @@ def serverDriveCheck() -> None:
         ourDiskMount = environ.get("MOUNT_POINT")
     else:
         dotenv.set_key(validatorToolbox.dotenv_file, "MOUNT_POINT", validatorToolbox.harmonyDirPath)
-        load_dotenv(validatorToolbox.dotenv_file)
+        loadVarFile()
         ourDiskMount = environ.get("MOUNT_POINT")
     printStarsReset()
     print("Here are all of your mount points: ")
@@ -565,7 +570,6 @@ def hmyCLIUpgrade():
         os.system(f"{validatorToolbox.hmyAppPath} version")
         printStars()
         setVar(validatorToolbox.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
-        load_dotenv(validatorToolbox.dotenv_file)
         input("Update completed, press ENTER to return to the main menu. ")
 
 
@@ -610,7 +614,6 @@ def upgradeHarmonyApp(testOrMain):
         "Harmony Service is restarting, waiting 10 seconds for restart."
     )
     setVar(validatorToolbox.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
-    load_dotenv(validatorToolbox.dotenv_file)
     time.sleep(10)
 
 
