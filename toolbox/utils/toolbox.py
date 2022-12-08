@@ -604,7 +604,7 @@ def menuValidatorStats():
         except (ValueError, KeyError, TypeError):
             return remote_data_shard_0, local_data_shard, remote_data_shard
         
-    return remote_data_shard_0, local_data_shard
+    return remote_data_shard_0, local_data_shard, None
 
 
 def runStats() -> str:
