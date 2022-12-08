@@ -87,7 +87,7 @@ def menuTopperRegular() -> None:
     current_epoch = getCurrentEpoch()
     sign_percentage = getSignPercent()
     total_balance, total_balance_test = getWalletBalance(environ.get("VALIDATOR_WALLET"))
-    remote_data_shard_0, remote_data_shard, local_data_shard = menuValidatorStats()
+    remote_data_shard_0, local_data_shard, remote_data_shard = menuValidatorStats()
     os.system("clear")
     # Print Menu
     print(Style.RESET_ALL)
@@ -602,9 +602,9 @@ def menuValidatorStats():
             result_remote_shard = run(remote_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
             remote_data_shard = json.loads(result_remote_shard.stdout)
         except (ValueError, KeyError, TypeError):
-            return remote_data_shard_0, remote_data_shard, local_data_shard
+            return remote_data_shard_0, local_data_shard, remote_data_shard
         
-    return remote_data_shard_0, None, local_data_shard
+    return remote_data_shard_0, local_data_shard
 
 
 def runStats() -> str:
