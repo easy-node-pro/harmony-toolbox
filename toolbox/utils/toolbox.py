@@ -358,7 +358,7 @@ def runRegularNode() -> None:
         if environ.get("HARMONY_UPGRADE_AVAILABLE") == "True":
             print(f'* The harmony binary has an update available, Option #10 will upgrade you but you may miss a block while it restarts.\n')
             printStars()
-        if environ.get("HMY_UPGRADE_AVAILABLE" == "True"):
+        if environ.get("HMY_UPGRADE_AVAILABLE") == "True":
             print(f'* The hmy binary has an update available, Option #11 will upgrade you but you may miss a block while it restarts.\n')
             printStars()
         try:

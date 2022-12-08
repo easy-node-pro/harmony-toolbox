@@ -33,7 +33,7 @@ if __name__ == "__main__":
     if hmyVersion != onlineHmyVersion:
         setVar(validatorToolbox.dotenv_file, "HMY_UPGRADE_AVAILABLE", "True")
     if hmyVersion == onlineHmyVersion:
-        setVar(validatorToolbox.dotenv_file, "HMY_UPGRADE_AVAILABLE", "false")
+        setVar(validatorToolbox.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
     if environ.get("SETUP_STATUS") != "2":
         recheckVars()
         passphraseStatus()
