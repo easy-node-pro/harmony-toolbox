@@ -2,7 +2,7 @@ import os
 from os import environ
 from utils.config import validatorToolbox
 from utils.installer import printStars, recheckVars, recoverWallet
-from utils.shared import loaderIntro, setWalletEnv, askYesNo, loadVarFile, passphraseStatus, setVar, getVersions, checkForUpdates
+from utils.shared import loaderIntro, setWalletEnv, askYesNo, loadVarFile, passphraseStatus, setVar, getVersions, checkForUpdates, refreshStats
 from utils.toolbox import runRegularNode
 
 if __name__ == "__main__":
@@ -23,6 +23,7 @@ if __name__ == "__main__":
             )
             input("* Press any key to exit.")
             raise SystemExit(0)
+    refreshStats()
     harmonyVersion, hmyVersion = getVersions()
     onlineVersion, onlineHmyVersion = checkForUpdates()
     if harmonyVersion != onlineVersion:
