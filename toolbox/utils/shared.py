@@ -514,3 +514,17 @@ def checkForUpdates():
     output2 = subprocess.getoutput(f"{validatorToolbox.hmyTmpPath} version")
     setVar(validatorToolbox.dotenv_file, "ONLINE_HMY_VERSION", output2[62:-15])
     return output[35:-35], output2[62:-15]
+
+def versionChecks():
+    harmonyVersion, hmyVersion = getVersions()
+    onlineVersion, onlineHmyVersion = checkForUpdates()
+    if harmonyVersion != onlineVersion:
+        # here we would set the upgrade harmony flag in env
+        setVar(validatorToolbox.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "True")
+    if harmonyVersion == onlineVersion:
+        setVar(validatorToolbox.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
+    if hmyVersion != onlineHmyVersion:
+        setVar(validatorToolbox.dotenv_file, "HMY_UPGRADE_AVAILABLE", "True")
+    if hmyVersion == onlineHmyVersion:
+        setVar(validatorToolbox.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
+    return
