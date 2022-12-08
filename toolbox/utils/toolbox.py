@@ -580,7 +580,7 @@ def menuValidatorStats():
         f"{validatorToolbox.hmyAppPath}",
         "blockchain",
         "latest-headers",
-        f"--node=https://api.s0.{environ.get("NETWORK_SWITCH")}.hmny.io",
+        f'--node=https://api.s0.{environ.get("NETWORK_SWITCH")}.hmny.io',
     ]
     result_remote_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
@@ -589,7 +589,7 @@ def menuValidatorStats():
             f"{validatorToolbox.hmyAppPath}",
             "blockchain",
             "latest-headers",
-            f"--node=https://api.s{environ.get("SHARD")}.{environ.get("NETWORK_SWITCH")}.hmny.io",
+            f'--node=https://api.s{environ.get("SHARD")}.{environ.get("NETWORK_SWITCH")}.hmny.io',
         ]
         try:
             result_remote_shard = run(remote_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
