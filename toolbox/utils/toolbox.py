@@ -125,7 +125,7 @@ def menuTopperRegular() -> None:
         + Fore.GREEN
         + str(current_epoch)
         + Style.RESET_ALL
-        + f'\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}'
+        + f'\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}, is updated: {environ.get("HMY_VERSION")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, is updated: {environ.get("HMY_VERSION")}'
     )
     printStarsReset()
 
