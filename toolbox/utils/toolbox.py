@@ -565,6 +565,7 @@ def hmyCLIUpgrade():
         os.system(f"{validatorToolbox.hmyAppPath} version")
         printStars()
         setVar(validatorToolbox.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
+        load_dotenv(validatorToolbox.dotenv_file)
         input("Update completed, press ENTER to return to the main menu. ")
 
 
@@ -609,6 +610,7 @@ def upgradeHarmonyApp(testOrMain):
         "Harmony Service is restarting, waiting 10 seconds for restart."
     )
     setVar(validatorToolbox.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
+    load_dotenv(validatorToolbox.dotenv_file)
     time.sleep(10)
 
 
