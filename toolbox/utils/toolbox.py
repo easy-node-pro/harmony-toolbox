@@ -84,6 +84,7 @@ def rewardsCollector() -> None:
 
 def menuTopperRegular() -> None:
     # Get stats & balances
+    Load1, Load5, Load15 = os.getloadavg()
     current_epoch = getCurrentEpoch()
     sign_percentage = getSignPercent()
     total_balance, total_balance_test = getWalletBalance(environ.get("VALIDATOR_WALLET"))
@@ -105,7 +106,7 @@ def menuTopperRegular() -> None:
     if environ.get("SHARD") == "0":
         print(f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}")
         print(f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}")
-
+    print(f"* CPU Load Averages: {Load1} over 1 min, {Load5} over 5 min, {Load15} over 15 min")
 
 def menuTopperFull() -> None:
     current_epoch = getCurrentEpoch()
@@ -262,7 +263,7 @@ def setReserveTotal(reserveTotal):
 def runFullNode() -> None:
     menu_options = {
         # 0: finish_node,
-        1: runStats,
+        1: refreshStats,
         2: menuCheckBalance,
         3: comingSoon,
         4: comingSoon,
@@ -320,7 +321,7 @@ def comingSoon():
 def runRegularNode() -> None:
     menu_options = {
         # 0: finish_node,
-        1: runStats,
+        1: refreshStats,
         2: menuActiveBLS,
         3: menuCheckBalance,
         4: rewardsCollector,
@@ -609,7 +610,7 @@ def menuValidatorStats():
     return remote_data_shard_0, local_data_shard, None
 
 
-def runStats() -> str:
+def refreshStats() -> str:
     os.system("clear")
     printStars()
     print(f'* Refeshing menu information now, one moment...')
