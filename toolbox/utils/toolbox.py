@@ -331,7 +331,7 @@ def runRegularNode() -> None:
             option = int(input("Enter your option: "))
         except ValueError:
             menuError()
-            refreshStats()
+            refreshStats(1)
             runRegularNode()
         if option == 0:
             return finish_node()
@@ -349,8 +349,6 @@ def menuError() -> None:
         + Style.RESET_ALL
         + ": Only numbers are possible, please try your selection on the main menu once again."
     )
-    printStarsReset()
-    input("* Press ENTER to return to the main menu")
     return
 
 
