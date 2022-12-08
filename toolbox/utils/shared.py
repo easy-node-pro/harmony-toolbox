@@ -500,6 +500,8 @@ def getSignPercent() -> str:
 def getVersions():
     output = subprocess.getoutput(f'{validatorToolbox.harmonyAppPath} -V')
     output2 = subprocess.getoutput(f'{validatorToolbox.hmyAppPath} version')
+    setVar(validatorToolbox.dotenv_file, "HARMONY_VERSION", output[35:-35])
+    setVar(validatorToolbox.dotenv_file, "HMY_VERSION", output2[62:-15])
     return output[35:-35], output2[62:-15]
 
 def setModX(file):
@@ -510,7 +512,9 @@ def checkForUpdates():
     setModX(validatorToolbox.hmyTmpPath)
     subprocess.check_output([validatorToolbox.hmyTmpPath, 'config', 'dump', 'harmony.conf'], stderr=subprocess.STDOUT)
     output = subprocess.getoutput(f'{validatorToolbox.hmyTmpPath} -V')
+    setVar(validatorToolbox.dotenv_file, "ONLINE_HARMONY_VERSION", output[35:-35])
     subprocess.check_output(['wget', 'https://harmony.one/hmycli', '-O', validatorToolbox.hmyTmpPath], stderr=subprocess.STDOUT)
     setModX(validatorToolbox.hmyTmpPath)
     output2 = subprocess.getoutput(f"{validatorToolbox.hmyTmpPath} version")
+    setVar(validatorToolbox.dotenv_file, "ONLINE_HMY_VERSION", output2[62:-15])
     return output[35:-35], output2[62:-15]

@@ -361,10 +361,9 @@ def runRegularNode() -> None:
         loadVarFile()
         menuRegular()
         if environ.get("HARMONY_UPGRADE_AVAILABLE") == "True":
-            print(f'* The harmony binary has an update available, Option #10 will upgrade you but you may miss a block while it restarts.\n')
-            printStars()
+            print(f'* The harmony binary has an update available to version {environ.get("ONLINE_HARMONY_VERSION")}\n* Option #10 will upgrade you but you may miss a block while it upgrading & restarting.\n* Currently installed version {environ.get("HARMONY_VERSION")}{printStars}')
         if environ.get("HMY_UPGRADE_AVAILABLE") == "True":
-            print(f'* The hmy binary has an update available, Option #11 will upgrade you.\n')
+            print(f'* The hmy binary has an update available to version {environ.get("ONLINE_HMY_VERSION")}\n* Option #11 will upgrade you.\n* Currently installed version {environ.get("HMY_VERSION")}{printStars}')
             printStars()
         try:
             option = int(input("Enter your option: "))
