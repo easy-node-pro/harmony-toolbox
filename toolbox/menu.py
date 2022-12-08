@@ -23,7 +23,7 @@ if __name__ == "__main__":
             )
             input("* Press any key to exit.")
             raise SystemExit(0)
-    refreshStats()
+    refreshStats(1)
     harmonyVersion, hmyVersion = getVersions()
     onlineVersion, onlineHmyVersion = checkForUpdates()
     if harmonyVersion != onlineVersion:

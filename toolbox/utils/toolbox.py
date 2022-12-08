@@ -589,8 +589,9 @@ def menuValidatorStats():
     return remote_data_shard_0, local_data_shard, None
 
 
-def refreshStats() -> str:
-    os.system("clear")
+def refreshStats(clear=0) -> str:
+    if clear == 0:
+        os.system("clear")
     printStars()
     print(f'* Refeshing menu information now, one moment...')
     printStars()
