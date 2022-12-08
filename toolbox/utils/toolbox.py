@@ -467,26 +467,10 @@ def convertedUnit(n):
 def serviceMenuOption() -> None:
     status = os.system("systemctl is-active --quiet harmony")
     if status == 0:
-        print(
-            "*   8 - "
-            + Fore.RED
-            + "Stop Harmony Service      "
-            + Fore.GREEN
-            + "- "
-            + Fore.YELLOW
-            + Back.RED
-            + "WARNING: You will miss blocks while stopped!   "
-            + Style.RESET_ALL
-        )
-        print(
-            "*   9 - Restart Harmony Service   - "
-            + Back.RED
-            + Fore.YELLOW
-            + "WARNING: You will miss blocks during a restart!"
-            + Style.RESET_ALL
-        )
+        print(f'*   8 - {Fore.RED}Stop Harmony Service      {Fore.GREEN}- {Fore.YELLOW}{Back.RED}WARNING: You will miss blocks while stopped!   {Style.RESET_ALL}')
+        print(f'*   9 - Restart Harmony Service   - {Back.RED}{Fore.YELLOW}WARNING: You will miss blocks during a restart!{Style.RESET_ALL}')
     else:
-        print("*  [8] " + Fore.GREEN + "Start Harmony Service" + Style.RESET_ALL)
+        print(f'*   8 - {Fore.GREEN}Start Harmony Service{Style.RESET_ALL}')
 
 
 def makeBackupDir() -> str:
