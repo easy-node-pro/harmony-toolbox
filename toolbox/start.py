@@ -1,5 +1,5 @@
 import os
-from utils.shared import loaderIntro, printStars
+from utils.library import loaderIntro, printStars
 
 # This is just a temp file to replace start.py to guide people to install.py or menu.py in the interim. 
 

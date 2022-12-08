@@ -2,7 +2,7 @@ import os
 import sys
 from os import environ
 from utils.config import validatorToolbox
-from utils.shared import loaderIntro, loadVarFile, askYesNo, setVar, updateTextFile, printStars
+from utils.library import loaderIntro, loadVarFile, askYesNo, setVar, updateTextFile, printStars
 
 
 def installVstats(vstatsToken) -> None:
