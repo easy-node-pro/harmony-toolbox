@@ -3,7 +3,7 @@ from os import environ
 from utils.config import validatorToolbox
 from utils.installer import recheckVars, recoverWallet
 from utils.shared import loaderIntro, setWalletEnv, loadVarFile, passphraseStatus, setVar, versionChecks
-from utils.toolbox import runRegularNode, runFullNode
+from utils.toolbox import runRegularNode, runFullNode, refreshStats
 
 if __name__ == "__main__":
     # clear screen, show logo
@@ -30,6 +30,7 @@ if __name__ == "__main__":
             input("* Press any key to exit.")
             raise SystemExit(0)
     # Check online versions of harmony & hmy and compare to our local copy.
+    refreshStats()
     versionChecks()
     # Last check on setup status, if it never finished it will try again here.
     if environ.get("SETUP_STATUS") != "2":
