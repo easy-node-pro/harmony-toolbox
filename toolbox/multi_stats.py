@@ -62,11 +62,11 @@ def statsOutputRegular() -> None:
     printStars()
     while count < 4:
         try:
-            count += 1
             remote_data, local_data = multiValidatorStats(count)
             print(f"* Remote Shard {count} Epoch: {remote_data['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data['result']['shard-chain-header']['number'])}")
             print(f"*  Local Shard {count} Epoch: {local_data['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data['result']['shard-chain-header']['number'])}, Local Shard {environ.get('SHARD')} Size: {getDBSize(environ.get('SHARD'))}")
             printStars()
+            count += 1
         except (ValueError, KeyError, TypeError):
             print(f'Shard {count} not found.')
         
