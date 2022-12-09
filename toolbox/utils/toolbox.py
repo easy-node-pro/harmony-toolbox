@@ -1,9 +1,6 @@
 import os
-import shutil
-from wsgiref.validate import validator
 import requests
 import time
-import dotenv
 import json
 import subprocess
 from subprocess import Popen, PIPE, run
@@ -11,7 +8,6 @@ from ast import literal_eval
 from utils.config import validatorToolbox
 from os import environ
 from datetime import datetime
-from collections import namedtuple
 from colorama import Fore, Back, Style
 from pyhmy import blockchain, transaction
 from requests.exceptions import HTTPError
@@ -30,6 +26,7 @@ from utils.library import (
     getRewardsBalance,
     stringStars,
     setVar,
+    freeSpaceCheck
 )
 from utils.allsysinfo import allSysInfo
 
@@ -371,91 +368,6 @@ def harmonyServiceStatus() -> None:
         print("* Harmony Service is:               " + Fore.BLACK + Back.GREEN + "   Online  " + Style.RESET_ALL)
     else:
         print("* Harmony Service is:               " + Fore.WHITE + Back.RED + "  *** Offline *** " + Style.RESET_ALL)
-
-
-def diskFreeSpace(mountPoint: str) -> str:
-    _, _, free = shutil.disk_usage(mountPoint)
-    free = str(convertedUnit(free))
-    return free
-
-
-def freeSpaceCheck() -> str:
-    ourDiskMount = get_mount_point(validatorToolbox.harmonyDirPath)
-    _, _, free = shutil.disk_usage(ourDiskMount)
-    free = diskFreeSpace(ourDiskMount)
-    return free
-
-
-def serverDriveCheck() -> None:
-    if environ.get("MOUNT_POINT") is not None:
-        ourDiskMount = environ.get("MOUNT_POINT")
-    else:
-        dotenv.set_key(validatorToolbox.dotenv_file, "MOUNT_POINT", validatorToolbox.harmonyDirPath)
-        loadVarFile()
-        ourDiskMount = environ.get("MOUNT_POINT")
-    printStarsReset()
-    print("Here are all of your mount points: ")
-    for part in disk_partitions():
-        print(part)
-    printStars()
-    total, used, free = shutil.disk_usage(ourDiskMount)
-    total = str(convertedUnit(total))
-    used = str(convertedUnit(used))
-    print("Disk: " + str(ourDiskMount) + "\n" + freeSpaceCheck() + " Free\n" + used + " Used\n" + total + " Total")
-    printStars()
-    input("Disk check complete, press ENTER to return to the main menu. ")
-
-
-def disk_partitions(all=False):
-    disk_ntuple = namedtuple("partition", "device mountpoint fstype")
-    # Return all mounted partitions as a nameduple.
-    # If all == False return physical partitions only.
-    phydevs = []
-    with open("/proc/filesystems", "r") as f:
-        for line in f:
-            if not line.startswith("nodev"):
-                phydevs.append(line.strip())
-
-    retlist = []
-    with open("/etc/mtab", "r") as f:
-        for line in f:
-            if not all and line.startswith("none"):
-                continue
-            fields = line.split()
-            device = fields[0]
-            mountpoint = fields[1]
-            fstype = fields[2]
-            if not all and fstype not in phydevs:
-                continue
-            if device == "none":
-                device = ""
-            ntuple = disk_ntuple(device, mountpoint, fstype)
-            retlist.append(ntuple)
-    return retlist
-
-
-def get_mount_point(pathname):
-    pathname = os.path.normcase(os.path.realpath(pathname))
-    parent_device = path_device = os.stat(pathname).st_dev
-    while parent_device == path_device:
-        mount_point = pathname
-        pathname = os.path.dirname(pathname)
-        if pathname == mount_point:
-            break
-        parent_device = os.stat(pathname).st_dev
-    return mount_point
-
-
-def convertedUnit(n):
-    symbols = ("K", "M", "G", "T", "P", "E", "Z", "Y")
-    prefix = {}
-    for i, s in enumerate(symbols):
-        prefix[s] = 1 << (i + 1) * 10
-    for s in reversed(symbols):
-        if n >= prefix[s]:
-            value = float(n) / prefix[s]
-            return "%.1f%s" % (value, s)
-    return "%sB" % n
 
 
 def serviceMenuOption() -> None:
