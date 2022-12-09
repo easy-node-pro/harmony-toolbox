@@ -47,7 +47,7 @@ if not environ.get("NETWORK_SWITCH"):
 
 # Search harmony.conf for the proper port to hit
 def findPort(folder):
-    with open(f'{validatorToolbox.harmonyDirPath}/{folder}/harmony.conf') as f:
+    with open(f'{user_home}/{folder}/harmony.conf') as f:
         datafile = f.readlines()
     count = 0
     for line in datafile:
