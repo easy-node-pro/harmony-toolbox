@@ -82,7 +82,7 @@ def getFolders():
         print(f'Found ~/harmony3 folder, on port {port}')
     for folder in folders:
         #let's figure out what shards here.
-        local_server = [f"{user_home}/{folder}/hmy blockchain latest-headers --node='http://localhost:{folders[folder]}'"]
+        local_server = [f"{user_home}/{folder}/hmy blockchain latest-headers --node=http://localhost:{folders[folder]}"]
         result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         print(result_local_server)
     return folders
@@ -132,7 +132,7 @@ def multiValidatorStats(folder):
         result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data = json.loads(result_local_shard.stdout)
     else:
-        local_shard = [f"{validatorToolbox.userHomeDir}/{folder}/hmy", "blockchain", "latest-headers", f"--node='http://localhost:{folder[1]}"]
+        local_shard = [f"{validatorToolbox.userHomeDir}/{folder}/hmy", "blockchain", "latest-headers", f"--node=http://localhost:{folder[1]}"]
         
     return remote_data, local_data
 
