@@ -105,7 +105,7 @@ def statsOutputRegular(folders) -> None:
     print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}\n* Current disk space free: {Fore.CYAN}{freeSpaceCheck(): >6}{Style.RESET_ALL}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}')
     print(f"* CPU Load Averages: {round(Load1, 2)} over 1 min, {round(Load5, 2)} over 5 min, {round(Load15, 2)} over 15 min")
     printStars()
-    remote_shard_0 = [f"{user_home}/{folders[0][0]}/hmy", "utility", "metadata", f"--node=https://api.s0.t.hmny.io"]
+    remote_shard_0 = [f"{user_home}/{list(folders.items())[0][0]}/hmy", "utility", "metadata", f"--node=https://api.s0.t.hmny.io"]
     result_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     remote_0_data = json.loads(result_shard_0.stdout)
     print(f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}")
