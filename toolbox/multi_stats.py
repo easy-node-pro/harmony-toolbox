@@ -83,7 +83,7 @@ def multiValidatorStats(shard):
     remote_data = json.loads(result_remote_shard.stdout)
 
     # local stuff
-    local_shard = [f"{validatorToolbox.hmyAppPath}", "blockchain", "latest-headers", f'--node=https://localhost:950{shard}']
+    local_shard = [f"{validatorToolbox.hmyAppPath}", "blockchain", "latest-headers", f'--node=http://localhost:950{shard}']
     result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     local_data = json.loads(result_local_shard.stdout)
         
