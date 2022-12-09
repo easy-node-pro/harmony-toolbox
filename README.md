@@ -1,6 +1,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/215c4479f0304b40a535f7e84ce75f55)](https://www.codacy.com/gh/easy-node-one/validatortoolbox/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=easy-node-one/validatortoolbox&amp;utm_campaign=Badge_Grade)
 [![Discord Badge](https://img.shields.io/badge/chat-discord-purple?logo=discord)](https://discord.gg/Rcz5T6D9CV)
 [![Stake Now Badge](https://img.shields.io/badge/stake-harmony-brightgreen)](https://bit.ly/easynode)
+[![Codacy Security Scan](https://github.com/easy-node-pro/validatortoolbox/actions/workflows/codacy.yml/badge.svg?branch=main)](https://github.com/easy-node-pro/validatortoolbox/actions/workflows/codacy.yml)
 
 # Easy Node - Validator Toolbox
 by [EasyNode.ONE](http://EasyNode.ONE "EasyNode.ONE")
