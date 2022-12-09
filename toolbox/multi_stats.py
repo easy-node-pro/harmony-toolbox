@@ -11,6 +11,10 @@ from simple_term_menu import TerminalMenu
 
 loadVarFile()
 
+user_home = f'{os.path.expanduser("~")}'
+
+validatorToolbox.harmonyDirPath
+
 if not environ.get("VALIDATOR_WALLET"):
     # ask for wallet, save to env.
     address = input(f'No Harmony $ONE address found, please input a one1 or 0x address: ')
@@ -56,7 +60,7 @@ def findPort(folder):
             count += 1
 
 # build list of installs
-if not os.path.exists(f"{validatorToolbox.harmonyDirPath}"):
+if not os.path.exists(f"{}"):
     print(f'* Checking for custom folders.')
     folders = {}
     if os.path.exists(f"{validatorToolbox.harmonyDirPath}"):
