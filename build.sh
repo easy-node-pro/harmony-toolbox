@@ -1,3 +1,3 @@
-#!/bin/bash
-python3 setup.py sdist bdist_wheel &&
+#!//src/bin/bash
+python3 -m build &&
 twine upload dist/* --skip-existing
