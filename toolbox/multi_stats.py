@@ -74,12 +74,11 @@ if not os.path.exists(f"{validatorToolbox.harmonyDirPath}"):
     if os.path.exists(f"{validatorToolbox.harmonyDirPath}3"):
         port = findPort(f'harmony3')
         folders['harmony4'] = port
-
-for folder in folders:
-    #let's figure out what shards here.
-    local_server = [f"{validatorToolbox.userHomeDir}/{folder}/hmy blockchain latest-headers --node='https://localhost:{folders[folder]}'"]
-    result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-    print(result_local_server)
+    for folder in folders:
+        #let's figure out what shards here.
+        local_server = [f"{validatorToolbox.userHomeDir}/{folder}/hmy blockchain latest-headers --node='https://localhost:{folders[folder]}'"]
+        result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+        print(result_local_server)
 
 def statsOutputRegular() -> None:
     # Get server stats & wallet balances
