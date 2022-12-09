@@ -1,9 +1,12 @@
 import os
+import json
 from os import environ
+from ast import literal_eval
 from utils.config import validatorToolbox
 from utils.library import loadVarFile, getSignPercent, getWalletBalance, printStars, setVar
-from utils.toolbox import menuTopperRegular, freeSpaceCheck
+from utils.toolbox import menuTopperRegular, freeSpaceCheck, harmonyServiceStatus
 from subprocess import PIPE, run
+from colorama import Fore, Back, Style
 
 loadVarFile()
 
@@ -39,7 +42,7 @@ def menuTopperRegular() -> None:
     print(f"* CPU Load Averages: {round(Load1, 2)} over 1 min, {round(Load5, 2)} over 5 min, {round(Load15, 2)} over 15 min")
     printStars()
 
-    def menuValidatorStats():
+def menuValidatorStats():
     loadVarFile()
     remote_shard_0 = [
         f"{validatorToolbox.hmyAppPath}",
