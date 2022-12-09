@@ -70,6 +70,5 @@ def menuTopperRegular() -> None:
     return remote_data_shard_0, local_data_shard, None
 
 if __name__ == "__main__":
-    loadVarFile()
     menuValidatorStats()
     
