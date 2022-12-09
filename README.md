@@ -14,7 +14,7 @@ This repository provides two functions in one application:
 
 ## Quickstart Guide
 ### Pre-Installation Requirements
-Experienced validators use [this pre-installation quick guide](https://guides.easynode.one/harmony/toolbox/quick-install "this pre-installation quick guide").
+Experienced validators use [this pre-installation quick guide](https://guides.easynode.one/harmonyquick-install "this pre-installation quick guide").
 
 New Validators should [read the companion guide](https://guides.easynode.one/harmony/companion) and manually configure a validator by hand before using the toolbox to install Harmony Validator software.
 
@@ -40,13 +40,13 @@ cd validatortoolbox && sudo apt update && sudo apt upgrade -y && sudo apt-get in
 ```
 Run the installer from anywhere. You'll be presented with our menu to grab configuration details.
 ```text
-python3 ~/validatortoolbox/toolbox/install.py
+python3 ~/validatortoolboxinstall.py
 ```
 
 ## Management Menu
 After you've got harmony installed, you can run our management menu with the following command:
 ```text
-python3 ~/validatortoolbox/toolbox/menu.py
+python3 ~/validatortoolboxmenu.py
 ```
 
 ## vStats Bot Installer
@@ -54,7 +54,7 @@ First grab your token from the [Telegram vStats Bot](https://t.me/vstatsbot) by 
 
 Next install vStats bot on your server (toolbox not required but suggested) by running the following command:
 ```text
-python3 ~/validatortoolbox/toolbox/vstats_install.py
+python3 ~/validatortoolboxvstats_install.py
 ```
 
 ## Full Installation Guide & Documentation

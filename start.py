@@ -8,5 +8,5 @@ if __name__ == "__main__":
     loaderIntro()
     os.system("clear")
     printStars()
-    print("We've split this into two applications, installer.py & menu.py - please update your startup commands.\n\npython3 ~/validatortoolbox/toolbox/install.py\n\npython3 ~/validatortoolbox/toolbox/menu.py\n\n")
+    print("We've split this into two applications, installer.py & menu.py - please update your startup commands.\n\npython3 ~/validatortoolboxinstall.py\n\npython3 ~/validatortoolboxmenu.py\n\n")
     printStars()
