@@ -552,7 +552,7 @@ def menuRebootServer() -> str:
     question = askYesNo(
         Fore.RED
         + "WARNING: YOU WILL MISS BLOCKS WHILE YOU REBOOT YOUR ENTIRE SERVER.\n\n"
-        + "Reconnect after a few moments & Run the Validator Toolbox Menu again with: python3 ~/validator-toolbox/toolbox/start.py\n"
+        + "Reconnect after a few moments & Run the Validator Toolbox Menu again with: python3 ~/validator-toolboxstart.py\n"
         + Fore.WHITE
         + "Are you sure you would like to proceed with rebooting your server?\n\nType 'Yes' or 'No' to continue"
     )

@@ -697,18 +697,18 @@ def installHarmony() -> None:
             subprocess.run('sudo apt install rclone -y')
 
     os.system(
-        f"mkdir -p {validatorToolbox.userHomeDir}/.config/rclone && cp {validatorToolbox.toolboxLocation}/toolbox/bin/rclone.conf {validatorToolbox.userHomeDir}/.config/rclone/"
+        f"mkdir -p {validatorToolbox.userHomeDir}/.config/rclone && cp {validatorToolbox.toolboxLocation}bin/rclone.conf {validatorToolbox.userHomeDir}/.config/rclone/"
     )
     printStars()
     # Setup the harmony service file
     print("* Customizing, Moving & Enabling your harmony.service systemd file")
     if validatorToolbox.activeUserName == "root":
         os.system(
-            f"sudo cp {validatorToolbox.toolboxLocation}/toolbox/bin/harmony.service . && sed -i 's/home\/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony.service' && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
+            f"sudo cp {validatorToolbox.toolboxLocation}bin/harmony.service . && sed -i 's/home\/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony.service' && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
         )
     else:
         os.system(
-            f"sudo cp {validatorToolbox.toolboxLocation}/toolbox/bin/harmony.service . && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
+            f"sudo cp {validatorToolbox.toolboxLocation}bin/harmony.service . && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
         )
 
 # Database Downloader
@@ -791,7 +791,7 @@ def finish_node_install():
         print(
             "* Post installation quick tips:"
             + "\n* To recover your wallet on this server run:"
-            + f"\n* python3 ~/validatortoolbox/toolbox/load_wallet.py"
+            + f"\n* python3 ~/validatortoolboxload_wallet.py"
             + "\n*"
             + "\n* To create BLS keys run:"
             + f'\n* ./hmy keys generate-bls-keys --count 1 --shard {environ.get("SHARD")} --passphrase'
@@ -801,7 +801,7 @@ def finish_node_install():
         print(
             "* Post installation quick tips:"
             + "\n* To recover your wallet again, run:"
-            + f"\n* python3 ~/validatortoolbox/toolbox/load_wallet.py"
+            + f"\n* python3 ~/validatortoolboxload_wallet.py"
             + "\n*"
             + "\n* To create BLS keys run:"
             + f'\n* ./hmy keys generate-bls-keys --count 1 --shard {environ.get("SHARD")} {environ.get("PASS_SWITCH")}'

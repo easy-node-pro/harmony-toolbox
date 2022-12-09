@@ -10,7 +10,7 @@ if __name__ == "__main__":
     # check for .env file, if none we have a first timer.
     if os.path.exists(validatorToolbox.dotenv_file) is None:
         # they should run the installer, goodbye!
-        print("Install Harmony First!!!\nRun python3 ~/validatortoolbox/toolbox/install.py")
+        print("Install Harmony First!!!\nRun python3 ~/validatortoolboxinstall.py")
         raise SystemExit(0)
     # passed .env check, let's load it!
     loadVarFile()
