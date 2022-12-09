@@ -105,9 +105,9 @@ def statsOutputRegular() -> None:
     print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}\n* Current disk space free: {Fore.CYAN}{freeSpaceCheck(): >6}{Style.RESET_ALL}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}')
     print(f"* CPU Load Averages: {round(Load1, 2)} over 1 min, {round(Load5, 2)} over 5 min, {round(Load15, 2)} over 15 min")
     printStars()
-    for i in folders:
+    for folder in folders:
         try:
-            remote_data, local_data = multiValidatorStats(i)
+            remote_data, local_data = multiValidatorStats(folder)
             print(f"* Remote Shard {count} Epoch: {remote_data['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data['result']['shard-chain-header']['number'])}")
             print(f"*  Local Shard {count} Epoch: {local_data['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data['result']['shard-chain-header']['number'])}, Local Shard {count} Size: {getDBSize(str(count))}")
             printStars()
@@ -118,7 +118,7 @@ def statsOutputRegular() -> None:
 def multiValidatorStats(folder):
     loadVarFile()
     remote_shard = [
-        f"{validatorToolbox.userHomeDir}/{folder[0]}/hmy",
+        f"{validatorToolbox.userHomeDir}/{folders[folder]}/hmy",
         "blockchain",
         "latest-headers",
         f'--node=https://api.s{shard}.{environ.get("NETWORK_SWITCH")}.hmny.io',
