@@ -103,12 +103,15 @@ def statsOutputRegular(folders) -> None:
 
     for folder in folders:
         #let's figure out what shards here.
-        local_server = [f"{user_home}/{folder}/hmy", "blockchain", "latest-headers", f"--node=http://localhost:{folders[folder]}"]
-        remote_server = [f"{user_home}/{folder}/hmy", "blockchain", "latest-headers", f"--node=http://rpc.s0.t.hmny"]
+        local_server = [f"{user_home}/{folder}/hmy", "utility", "metadata", f"--node=http://localhost:{folders[folder]}"]
         result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data = json.loads(result_local_server.stdout)
-        print(f"* Remote Shard {count} Epoch: {remote_data['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data['result']['shard-chain-header']['number'])}")
-        print(f"*  Local Shard {count} Epoch: {local_data['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data['result']['shard-chain-header']['number'])}, Local Shard {count} Size: {getDBSize(str(count))}")
+        remote_server = [f"{user_home}/{folder}/hmy", "utility", "metadata", f"--node=https://api.s{local_data['result']['shard-id']}.t.hmny.io"]
+        result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+        remote_data = json.loads(result_remote_server.stdout)
+
+        print(f"* Remote Shard {count} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}")
+        print(f"*  Local Shard {count} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}, Local Shard {local_data['result']['shard-id']} Size: {getDBSize(str(count))}")
         printStars()
         
 
