@@ -2,8 +2,7 @@ import os
 import dotenv
 from os import environ
 from utils.config import validatorToolbox
-from utils.library import loaderIntro, setWalletEnv, askYesNo, passphraseStatus, firstSetup, printStars, recheckVars, recoverWallet, passphraseSet
-from utils.toolbox import runRegularNode, runFullNode
+from utils.library import loaderIntro, setWalletEnv, askYesNo, printStars, recoverWallet
 
 if __name__ == "__main__":
     os.system("clear")
