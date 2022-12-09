@@ -82,7 +82,7 @@ def getFolders():
         print(f'Found ~/harmony3 folder, on port {port}')
     for folder in folders:
         #let's figure out what shards here.
-        local_server = f"{user_home}/{folder}/hmy blockchain latest-headers --node='https://localhost:{folders[folder]}'"
+        local_server = [f"{user_home}/{folder}/hmy blockchain latest-headers --node='http://localhost:{folders[folder]}'"]
         result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         print(result_local_server)
     return folders
