@@ -4,7 +4,7 @@ from os import environ
 from ast import literal_eval
 from utils.config import validatorToolbox
 from utils.library import loadVarFile, getSignPercent, getWalletBalance, printStars, setVar
-from utils.toolbox import menuTopperRegular, freeSpaceCheck, harmonyServiceStatus
+from utils.toolbox import freeSpaceCheck, harmonyServiceStatus
 from subprocess import PIPE, run
 from colorama import Fore, Back, Style
 
@@ -17,7 +17,7 @@ if not environ.get("VALIDATOR_WALLET"):
     if address == address2:
         setVar(validatorToolbox.dot_env, "VALIDATOR_WALLET", address2)
 
-def menuTopperRegular() -> None:
+def statsOutputRegular() -> None:
     # Get stats & balances
     Load1, Load5, Load15 = os.getloadavg()
     sign_percentage = getSignPercent()
@@ -73,5 +73,5 @@ def menuValidatorStats():
     return remote_data_shard_0, local_data_shard, None
 
 if __name__ == "__main__":
-    menuValidatorStats()
+    statsOutputRegular()
     
