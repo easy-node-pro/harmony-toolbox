@@ -3,8 +3,8 @@ import json
 from os import environ
 from ast import literal_eval
 from utils.config import validatorToolbox
-from utils.library import loadVarFile, getSignPercent, getWalletBalance, printStars, setVar
-from utils.toolbox import freeSpaceCheck, harmonyServiceStatus, getRewardsBalance
+from utils.library import loadVarFile, getSignPercent, getWalletBalance, printStars, setVar, loaderIntro
+from utils.toolbox import freeSpaceCheck, harmonyServiceStatus, getRewardsBalance, getDBSize, refreshStats
 from subprocess import PIPE, run
 from colorama import Fore, Back, Style
 
@@ -73,5 +73,7 @@ def menuValidatorStats():
     return remote_data_shard_0, local_data_shard, None
 
 if __name__ == "__main__":
+    loaderIntro()
+    refreshStats(1)
     statsOutputRegular()
     
