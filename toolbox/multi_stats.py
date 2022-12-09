@@ -13,8 +13,6 @@ loadVarFile()
 
 user_home = f'{os.path.expanduser("~")}'
 
-validatorToolbox.harmonyDirPath
-
 if not environ.get("VALIDATOR_WALLET"):
     # ask for wallet, save to env.
     address = input(f'No Harmony $ONE address found, please input a one1 or 0x address: ')
@@ -60,34 +58,35 @@ def findPort(folder):
             count += 1
 
 # build list of installs
-if not os.path.exists(f"{}"):
-    print(f'* Checking for custom folders.')
+def getFolders():
     folders = {}
-    if os.path.exists(f"{validatorToolbox.harmonyDirPath}"):
+    if os.path.exists(f"{user_home}/harmony"):
         port = findPort(f'harmony')
         folders['harmony'] = port
         print(f'Found ~/harmony folder, on port {port}')
-    if os.path.exists(f"{validatorToolbox.harmonyDirPath}0"):
+    if os.path.exists(f"{user_home}/harmony0"):
         port = findPort(f'harmony0')
         folders['harmony1'] = port
         print(f'Found ~/harmony1 folder, on port {port}')
-    if os.path.exists(f"{validatorToolbox.harmonyDirPath}1"):
+    if os.path.exists(f"{user_home}/harmony1"):
         port = findPort(f'harmony1')
         folders['harmony2'] = port
         print(f'Found ~/harmony1 folder, on port {port}')
-    if os.path.exists(f"{validatorToolbox.harmonyDirPath}2"):
+    if os.path.exists(f"{user_home}/harmony2"):
         port = findPort(f'harmony2')
         folders['harmony3'] = port
         print(f'Found ~/harmony2 folder, on port {port}')
-    if os.path.exists(f"{validatorToolbox.harmonyDirPath}3"):
+    if os.path.exists(f"{user_home}/harmony3"):
         port = findPort(f'harmony3')
         folders['harmony4'] = port
         print(f'Found ~/harmony3 folder, on port {port}')
     for folder in folders:
         #let's figure out what shards here.
-        local_server = [f"{validatorToolbox.userHomeDir}/{folder}/hmy blockchain latest-headers --node='https://localhost:{folders[folder]}'"]
+        local_server = [f"{}/{folder}/hmy blockchain latest-headers --node='https://localhost:{folders[folder]}'"]
         result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         print(result_local_server)
+    return folders
+
 
 def statsOutputRegular() -> None:
     # Get server stats & wallet balances
@@ -141,4 +140,5 @@ if __name__ == "__main__":
     # loaderIntro()
     # refreshStats(1)
     # statsOutputRegular()
+    folders = getFolders()
     print('The end.')
