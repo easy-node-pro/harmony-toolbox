@@ -113,28 +113,6 @@ def statsOutputRegular(folders) -> None:
         print(f"* Remote Shard {count} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}")
         print(f"*  Local Shard {count} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}, Local Shard {local_data['result']['shard-id']} Size: {getDBSize(str(count))}")
         printStars()
-        
-
-def multiValidatorStats(folder):
-    loadVarFile()
-    remote_shard = [
-        f"{validatorToolbox.userHomeDir}/{folders[folder]}/hmy",
-        "blockchain",
-        "latest-headers",
-        f'--node=https://api.s{shard}.{environ.get("NETWORK_SWITCH")}.hmny.io',
-    ]
-    result_remote_shard = run(remote_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-    remote_data = json.loads(result_remote_shard.stdout)
-
-    # local stuff
-    if folder == "harmony":
-        local_shard = [f"{validatorToolbox.harmonyDirPath}/hmy", "blockchain", "latest-headers"]
-        result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-        local_data = json.loads(result_local_shard.stdout)
-    else:
-        local_shard = [f"{validatorToolbox.userHomeDir}/{folder}/hmy", "blockchain", "latest-headers", f"--node=http://localhost:{folder[1]}"]
-        
-    return remote_data, local_data
 
 if __name__ == "__main__":
     loaderIntro()
