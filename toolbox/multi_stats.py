@@ -63,23 +63,28 @@ def getFolders():
     if os.path.exists(f"{user_home}/harmony"):
         port = findPort(f'harmony')
         folders['harmony'] = port
-        print(f'Found ~/harmony folder, on port {port}')
+        print(f'* Found ~/harmony folder, on port {port}')
+        printStars()
     if os.path.exists(f"{user_home}/harmony0"):
         port = findPort(f'harmony0')
         folders['harmony1'] = port
-        print(f'Found ~/harmony1 folder, on port {port}')
+        print(f'* Found ~/harmony1 folder, on port {port}')
+        printStars()
     if os.path.exists(f"{user_home}/harmony1"):
         port = findPort(f'harmony1')
         folders['harmony2'] = port
-        print(f'Found ~/harmony1 folder, on port {port}')
+        print(f'* Found ~/harmony1 folder, on port {port}')
+        printStars()
     if os.path.exists(f"{user_home}/harmony2"):
         port = findPort(f'harmony2')
         folders['harmony3'] = port
-        print(f'Found ~/harmony2 folder, on port {port}')
+        print(f'* Found ~/harmony2 folder, on port {port}')
+        printStars()
     if os.path.exists(f"{user_home}/harmony3"):
         port = findPort(f'harmony3')
         folders['harmony4'] = port
-        print(f'Found ~/harmony3 folder, on port {port}')
+        print(f'* Found ~/harmony3 folder, on port {port}')
+        printStars()
     return folders
 
 
@@ -118,4 +123,3 @@ if __name__ == "__main__":
     refreshStats(1)
     folders = getFolders()
     statsOutputRegular(folders)
-    print('The end.')
