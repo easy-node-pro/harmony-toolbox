@@ -4,7 +4,7 @@ from os import environ
 from ast import literal_eval
 from utils.config import validatorToolbox
 from utils.library import loadVarFile, getSignPercent, getWalletBalance, printStars, setVar
-from utils.toolbox import freeSpaceCheck, harmonyServiceStatus
+from utils.toolbox import freeSpaceCheck, harmonyServiceStatus, getRewardsBalance
 from subprocess import PIPE, run
 from colorama import Fore, Back, Style
 
