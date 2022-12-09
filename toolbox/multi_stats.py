@@ -62,18 +62,23 @@ if not os.path.exists(f"{validatorToolbox.harmonyDirPath}"):
     if os.path.exists(f"{validatorToolbox.harmonyDirPath}"):
         port = findPort(f'harmony')
         folders['harmony'] = port
+        print(f'Found ~/harmony folder, on port {port}')
     if os.path.exists(f"{validatorToolbox.harmonyDirPath}0"):
         port = findPort(f'harmony0')
         folders['harmony1'] = port
+        print(f'Found ~/harmony1 folder, on port {port}')
     if os.path.exists(f"{validatorToolbox.harmonyDirPath}1"):
         port = findPort(f'harmony1')
         folders['harmony2'] = port
+        print(f'Found ~/harmony1 folder, on port {port}')
     if os.path.exists(f"{validatorToolbox.harmonyDirPath}2"):
         port = findPort(f'harmony2')
         folders['harmony3'] = port
+        print(f'Found ~/harmony2 folder, on port {port}')
     if os.path.exists(f"{validatorToolbox.harmonyDirPath}3"):
         port = findPort(f'harmony3')
         folders['harmony4'] = port
+        print(f'Found ~/harmony3 folder, on port {port}')
     for folder in folders:
         #let's figure out what shards here.
         local_server = [f"{validatorToolbox.userHomeDir}/{folder}/hmy blockchain latest-headers --node='https://localhost:{folders[folder]}'"]
