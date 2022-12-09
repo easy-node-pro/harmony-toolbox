@@ -80,12 +80,6 @@ def getFolders():
         port = findPort(f'harmony3')
         folders['harmony4'] = port
         print(f'Found ~/harmony3 folder, on port {port}')
-    for folder in folders:
-        #let's figure out what shards here.
-        local_server = [f"{user_home}/{folder}/hmy", "blockchain", "latest-headers", f"--node=http://localhost:{folders[folder]}"]
-        result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-        local_data = json.loads(result_local_server.stdout)
-        print(result_local_server)
     return folders
 
 
@@ -106,14 +100,15 @@ def statsOutputRegular() -> None:
     print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}\n* Current disk space free: {Fore.CYAN}{freeSpaceCheck(): >6}{Style.RESET_ALL}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}')
     print(f"* CPU Load Averages: {round(Load1, 2)} over 1 min, {round(Load5, 2)} over 5 min, {round(Load15, 2)} over 15 min")
     printStars()
+
     for folder in folders:
-        try:
-            remote_data, local_data = multiValidatorStats(folder)
-            print(f"* Remote Shard {count} Epoch: {remote_data['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data['result']['shard-chain-header']['number'])}")
-            print(f"*  Local Shard {count} Epoch: {local_data['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data['result']['shard-chain-header']['number'])}, Local Shard {count} Size: {getDBSize(str(count))}")
-            printStars()
-        except (ValueError, KeyError, TypeError):
-            print(f'Shard {count} not found.')
+        #let's figure out what shards here.
+        local_server = [f"{user_home}/{folder}/hmy", "blockchain", "latest-headers", f"--node=http://localhost:{folders[folder]}"]
+        result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+        local_data = json.loads(result_local_server.stdout)
+        print(f"* Remote Shard {count} Epoch: {remote_data['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data['result']['shard-chain-header']['number'])}")
+        print(f"*  Local Shard {count} Epoch: {local_data['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data['result']['shard-chain-header']['number'])}, Local Shard {count} Size: {getDBSize(str(count))}")
+        printStars()
         
 
 def multiValidatorStats(folder):
@@ -138,8 +133,8 @@ def multiValidatorStats(folder):
     return remote_data, local_data
 
 if __name__ == "__main__":
-    # loaderIntro()
-    # refreshStats(1)
-    # statsOutputRegular()
+    loaderIntro()
+    refreshStats(1)
     folders = getFolders()
+    statsOutputRegular(folders)
     print('The end.')
