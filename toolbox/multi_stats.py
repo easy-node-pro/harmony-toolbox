@@ -3,7 +3,7 @@ import json
 from os import environ
 from ast import literal_eval
 from utils.config import validatorToolbox
-from utils.library import loadVarFile, getSignPercent, getWalletBalance, printStars, setVar, loaderIntro
+from utils.library import loadVarFile, getSignPercent, getWalletBalance, printStars, setVar, loaderIntro, askYesNo
 from utils.toolbox import freeSpaceCheck, harmonyServiceStatus, getRewardsBalance, getDBSize, refreshStats
 from subprocess import PIPE, run
 from colorama import Fore, Back, Style
@@ -43,6 +43,44 @@ if not environ.get("NETWORK_SWITCH"):
         setVar(validatorToolbox.dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
     os.system("clear")
 
+# Search harmony.conf for the proper port to hit
+def findPort(folder):
+    with open(f'{validatorToolbox.harmonyDirPath}/{folder}/harmony.conf') as f:
+        datafile = f.readlines()
+    count = 0
+    for line in datafile:
+        line = line.rstrip()
+        if 'Port =' in line:
+            if count == 3:
+                return line[9:]
+            count += 1
+
+# build list of installs
+if not os.path.exists(f"{validatorToolbox.harmonyDirPath}"):
+    print(f'* Checking for custom folders.')
+    folders = {}
+    if os.path.exists(f"{validatorToolbox.harmonyDirPath}"):
+        port = findPort(f'harmony')
+        folders['harmony'] = port
+    if os.path.exists(f"{validatorToolbox.harmonyDirPath}0"):
+        port = findPort(f'harmony0')
+        folders['harmony1'] = port
+    if os.path.exists(f"{validatorToolbox.harmonyDirPath}1"):
+        port = findPort(f'harmony1')
+        folders['harmony2'] = port
+    if os.path.exists(f"{validatorToolbox.harmonyDirPath}2"):
+        port = findPort(f'harmony2')
+        folders['harmony3'] = port
+    if os.path.exists(f"{validatorToolbox.harmonyDirPath}3"):
+        port = findPort(f'harmony3')
+        folders['harmony4'] = port
+
+for folder in folders:
+    #let's figure out what shards here.
+    local_server = [f"{validatorToolbox.userHomeDir}/{folder}/hmy blockchain latest-headers --node='https://localhost:{folders[folder]}'"]
+    result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    print(result_local_server)
+
 def statsOutputRegular() -> None:
     # Get server stats & wallet balances
     Load1, Load5, Load15 = os.getloadavg()
@@ -60,22 +98,20 @@ def statsOutputRegular() -> None:
     print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}\n* Current disk space free: {Fore.CYAN}{freeSpaceCheck(): >6}{Style.RESET_ALL}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}')
     print(f"* CPU Load Averages: {round(Load1, 2)} over 1 min, {round(Load5, 2)} over 5 min, {round(Load15, 2)} over 15 min")
     printStars()
-    while count < 4:
+    for i in folders:
         try:
-            remote_data, local_data = multiValidatorStats(str(count))
+            remote_data, local_data = multiValidatorStats(i)
             print(f"* Remote Shard {count} Epoch: {remote_data['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data['result']['shard-chain-header']['number'])}")
             print(f"*  Local Shard {count} Epoch: {local_data['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data['result']['shard-chain-header']['number'])}, Local Shard {count} Size: {getDBSize(str(count))}")
             printStars()
-            count += 1
         except (ValueError, KeyError, TypeError):
             print(f'Shard {count} not found.')
-            count += 1
         
 
-def multiValidatorStats(shard):
+def multiValidatorStats(folder):
     loadVarFile()
     remote_shard = [
-        f"{validatorToolbox.hmyAppPath}",
+        f"{validatorToolbox.userHomeDir}/{folder[0]}/hmy",
         "blockchain",
         "latest-headers",
         f'--node=https://api.s{shard}.{environ.get("NETWORK_SWITCH")}.hmny.io',
@@ -84,14 +120,17 @@ def multiValidatorStats(shard):
     remote_data = json.loads(result_remote_shard.stdout)
 
     # local stuff
-    local_shard = [f"{validatorToolbox.hmyAppPath}", "blockchain", "latest-headers", f'--node=http://localhost:950{shard}']
-    result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-    local_data = json.loads(result_local_shard.stdout)
+    if folder == "harmony":
+        local_shard = [f"{validatorToolbox.harmonyDirPath}/hmy", "blockchain", "latest-headers"]
+        result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+        local_data = json.loads(result_local_shard.stdout)
+    else:
+        local_shard = [f"{validatorToolbox.userHomeDir}/{folder}/hmy", "blockchain", "latest-headers", f"--node='http://localhost:{folder[1]}"]
         
     return remote_data, local_data
 
 if __name__ == "__main__":
-    loaderIntro()
-    refreshStats(1)
-    statsOutputRegular()
+    # loaderIntro()
+    # refreshStats(1)
+    # statsOutputRegular()
     
