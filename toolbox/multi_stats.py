@@ -69,6 +69,7 @@ def statsOutputRegular() -> None:
             count += 1
         except (ValueError, KeyError, TypeError):
             print(f'Shard {count} not found.')
+            count += 1
         
 
 def multiValidatorStats(shard):
