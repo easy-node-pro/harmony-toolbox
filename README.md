@@ -1,4 +1,4 @@
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/215c4479f0304b40a535f7e84ce75f55)](https://www.codacy.com/gh/easy-node-one/validatortoolbox/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=easy-node-one/validatortoolbox&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/215c4479f0304b40a535f7e84ce75f55)](https://www.codacy.com/gh/easy-node-pro/validatortoolbox/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=easy-node-pro/validatortoolbox&amp;utm_campaign=Badge_Grade)
 [![Codacy Security Scan](https://github.com/easy-node-pro/validatortoolbox/actions/workflows/codacy.yml/badge.svg?branch=main)](https://github.com/easy-node-pro/validatortoolbox/actions/workflows/codacy.yml)
 [![Discord Badge](https://img.shields.io/badge/chat-discord-purple?logo=discord)](https://discord.gg/Rcz5T6D9CV)
 [![Stake Now Badge](https://img.shields.io/badge/stake-harmony-brightgreen)](https://bit.ly/easynode)
@@ -32,7 +32,7 @@ If you need to use a storage volume for any reason, we will detect and use any s
 ### Installation
 **After** completing the Pre-Instlalation Requirements pull the repository into your home directory.
 ```text
-cd ~/ && git clone https://github.com/easy-node-one/validatortoolbox.git
+cd ~/ && git clone https://github.com/easy-node-pro/validatortoolbox.git
 ```
 Install requirements.
 ```text
@@ -40,13 +40,13 @@ cd validatortoolbox && sudo apt update && sudo apt upgrade -y && sudo apt-get in
 ```
 Run the installer from anywhere. You'll be presented with our menu to grab configuration details.
 ```text
-python3 ~/validatortoolboxinstall.py
+python3 ~/validatortoolbox/src/install.py
 ```
 
 ## Management Menu
 After you've got harmony installed, you can run our management menu with the following command:
 ```text
-python3 ~/validatortoolboxmenu.py
+python3 ~/validatortoolbox/src/menu.py
 ```
 
 ## vStats Bot Installer
@@ -54,7 +54,7 @@ First grab your token from the [Telegram vStats Bot](https://t.me/vstatsbot) by 
 
 Next install vStats bot on your server (toolbox not required but suggested) by running the following command:
 ```text
-python3 ~/validatortoolboxvstats_install.py
+python3 ~/validatortoolbox/src/vstats_install.py
 ```
 
 ## Full Installation Guide & Documentation
