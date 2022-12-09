@@ -42,7 +42,6 @@ if not environ.get("NETWORK_SWITCH"):
         setVar(validatorToolbox.dotenv_file, "NETWORK_SWITCH", "b")
         setVar(validatorToolbox.dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
     os.system("clear")
-    return
 
 def statsOutputRegular() -> None:
     # Get server stats & wallet balances
