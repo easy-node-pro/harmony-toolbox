@@ -59,6 +59,7 @@ def setVar(fileName, keyName, updateName):
 
 # loader intro splash screen
 def loaderIntro():
+    os.system("clear")
     p = f"""
                     ____ ____ ____ ____ _________ ____ ____ ____ ____           
                     ||E |||a |||s |||y |||       |||N |||o |||d |||e ||          

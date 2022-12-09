@@ -6,7 +6,6 @@ from utils.toolbox import runRegularNode, runFullNode, refreshStats
 
 if __name__ == "__main__":
     # clear screen, show logo
-    os.system("clear")
     loaderIntro()
     # check for .env file, if none we have a first timer.
     if os.path.exists(validatorToolbox.dotenv_file) is None:
