@@ -25,11 +25,11 @@ class validatorToolbox:
     blskeyDirPath = os.path.join(hmyAppPath, ".hmy", "blskeys")
     hmyWalletStorePath = os.path.join(userHomeDir, ".hmy_cli", "account-keys", activeUserName)
     toolboxLocation = os.path.join(userHomeDir, "validatortoolbox")
-    validatorData = os.path.join(toolboxLocation, "toolbox", "metadata", "validator.json")
+    validatorData = os.path.join(toolboxLocation, "metadata", "validator.json")
     passwordPath = os.path.join(harmonyDirPath, "passphrase.txt")
     ourExternalIPAddress = getUrl()
-    mainMenuRegular = os.path.join(toolboxLocation, "toolbox", "messages", "regularmenu.txt")
-    mainMenuFull = os.path.join(toolboxLocation, "toolbox", "messages", "fullmenu.txt")
+    mainMenuRegular = os.path.join(toolboxLocation, "messages", "regularmenu.txt")
+    mainMenuFull = os.path.join(toolboxLocation, "messages", "fullmenu.txt")
     rpc_endpoints = ['https://api.s0.t.hmny.io', 'https://api.harmony.one', 'https://harmony-0-rpc.gateway.pokt.network']
     rpc_endpoints_test = ['https://rpc.s0.b.hmny.io', 'https://api.s0.pops.one']
     rpc_endpoints_max_connection_retries = 10
