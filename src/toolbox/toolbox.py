@@ -5,13 +5,13 @@ import json
 import subprocess
 from subprocess import Popen, PIPE, run
 from ast import literal_eval
-from utils.config import validatorToolbox
+from toolbox.config import validatorToolbox
 from os import environ
 from datetime import datetime
 from colorama import Fore, Back, Style
 from pyhmy import blockchain, transaction
 from requests.exceptions import HTTPError
-from utils.library import (
+from toolbox.library import (
     process_command,
     printStars,
     printStarsReset,
@@ -29,7 +29,7 @@ from utils.library import (
     freeSpaceCheck,
     serverDriveCheck
 )
-from utils.allsysinfo import allSysInfo
+from toolbox.allsysinfo import allSysInfo
 
 
 def collectRewards(networkCall):

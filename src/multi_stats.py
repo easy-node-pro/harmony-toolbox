@@ -2,9 +2,9 @@ import os
 import json
 from os import environ
 from ast import literal_eval
-from utils.config import validatorToolbox
-from utils.library import loadVarFile, getSignPercent, getWalletBalance, printStars, setVar, loaderIntro, askYesNo
-from utils.toolbox import freeSpaceCheck, harmonyServiceStatus, getRewardsBalance, getDBSize, refreshStats
+from toolbox.config import validatorToolbox
+from toolbox.library import loadVarFile, getSignPercent, getWalletBalance, printStars, setVar, loaderIntro, askYesNo
+from toolbox.toolbox import freeSpaceCheck, harmonyServiceStatus, getRewardsBalance, getDBSize, refreshStats
 from subprocess import PIPE, run
 from colorama import Fore, Back, Style
 from simple_term_menu import TerminalMenu

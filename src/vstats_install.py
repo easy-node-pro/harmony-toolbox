@@ -1,8 +1,8 @@
 import os
 import sys
 from os import environ
-from utils.config import validatorToolbox
-from utils.library import loaderIntro, loadVarFile, askYesNo, setVar, updateTextFile, printStars
+from toolbox.config import validatorToolbox
+from toolbox.library import loaderIntro, loadVarFile, askYesNo, setVar, updateTextFile, printStars
 
 
 def installVstats(vstatsToken) -> None:

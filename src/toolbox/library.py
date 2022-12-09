@@ -1,4 +1,4 @@
-from utils.config import validatorToolbox
+from toolbox.config import validatorToolbox
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
@@ -6,7 +6,7 @@ from colorama import Fore, Style
 from pathlib import Path
 from pyhmy import validator, account, staking, numbers
 from json import load, dump
-from utils.config import validatorToolbox
+from toolbox.config import validatorToolbox
 from collections import namedtuple
 import dotenv
 import time

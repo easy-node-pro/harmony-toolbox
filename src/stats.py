@@ -1,5 +1,5 @@
-from utils.library import loadVarFile
-from utils.toolbox import menuTopperRegular
+from toolbox.library import loadVarFile
+from toolbox.toolbox import menuTopperRegular
 from subprocess import PIPE, run
 
 if __name__ == "__main__":

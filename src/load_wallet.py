@@ -1,8 +1,8 @@
 import os
 import dotenv
 from os import environ
-from utils.config import validatorToolbox
-from utils.library import loaderIntro, setWalletEnv, askYesNo, printStars, recoverWallet
+from toolbox.config import validatorToolbox
+from toolbox.library import loaderIntro, setWalletEnv, askYesNo, printStars, recoverWallet
 
 if __name__ == "__main__":
     os.system("clear")

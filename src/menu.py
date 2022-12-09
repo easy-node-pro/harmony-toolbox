@@ -1,8 +1,8 @@
 import os
 from os import environ
-from utils.config import validatorToolbox
-from utils.library import loaderIntro, setWalletEnv, loadVarFile, passphraseStatus, setVar, versionChecks, recheckVars, recoverWallet
-from utils.toolbox import runRegularNode, runFullNode, refreshStats
+from toolbox.config import validatorToolbox
+from toolbox.library import loaderIntro, setWalletEnv, loadVarFile, passphraseStatus, setVar, versionChecks, recheckVars, recoverWallet
+from toolbox.toolbox import runRegularNode, runFullNode, refreshStats
 
 if __name__ == "__main__":
     # clear screen, show logo
