@@ -83,7 +83,7 @@ def getFolders():
     return folders
 
 
-def statsOutputRegular() -> None:
+def statsOutputRegular(folders) -> None:
     # Get server stats & wallet balances
     Load1, Load5, Load15 = os.getloadavg()
     sign_percentage = getSignPercent()
@@ -104,6 +104,7 @@ def statsOutputRegular() -> None:
     for folder in folders:
         #let's figure out what shards here.
         local_server = [f"{user_home}/{folder}/hmy", "blockchain", "latest-headers", f"--node=http://localhost:{folders[folder]}"]
+        remote_server = [f"{user_home}/{folder}/hmy", "blockchain", "latest-headers", f"--node=http://rpc.s0.t.hmny"]
         result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data = json.loads(result_local_server.stdout)
         print(f"* Remote Shard {count} Epoch: {remote_data['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data['result']['shard-chain-header']['number'])}")
