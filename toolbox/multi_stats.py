@@ -117,7 +117,7 @@ def statsOutputRegular(folders) -> None:
         remote_server = [f"{user_home}/{folder}/hmy", "utility", "metadata", f"--node=https://api.s{local_data['result']['shard-id']}.t.hmny.io"]
         result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         remote_data = json.loads(result_remote_server.stdout)
-        print(f"* Results for folder {user_home}{folder}:")
+        print(f"* Results for folder {user_home}/{folder}:")
         print(f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}")
         print(f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}\n*   Local Shard 0 Size: {getDBSize('0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {getDBSize(local_data['result']['shard-id'])}")
         printStars()
