@@ -109,7 +109,7 @@ def statsOutputRegular(folders) -> None:
     result_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     remote_0_data = json.loads(result_shard_0.stdout)
     print(f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}")
-    print(f"* Local Shard 0 Storage: {getDBSize("0")}")
+    print(f"* Local Shard 0 Storage: {getDBSize('0')}")
     for folder in folders:
         local_server = [f"{user_home}/{folder}/hmy", "utility", "metadata", f"--node=http://localhost:{folders[folder]}"]
         result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
