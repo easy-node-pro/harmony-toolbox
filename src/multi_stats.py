@@ -3,7 +3,7 @@ import json
 from os import environ
 from ast import literal_eval
 from toolbox.config import easy_env
-from toolbox.library import load_var_file, get_sign_pct, get_wallet_balance, print_stars, set_var, loader_intro, ask_yes_no
+from toolbox.library import load_var_file, get_sign_pct, get_wallet_balance, printStars, set_var, loader_intro, ask_yes_no
 from toolbox.toolbox import free_space_check, harmony_service_status, get_rewards_balance, get_db_size, refresh_stats
 from subprocess import PIPE, run
 from colorama import Fore, Back, Style
@@ -23,12 +23,12 @@ if not environ.get("VALIDATOR_WALLET"):
 if not environ.get("NETWORK_SWITCH"):
     # ask for mainnet or testnet
     os.system("clear")
-    print_stars()
+    printStars()
     print("* Setup config not found, which blockchain does this node run on?                           *")
-    print_stars()
+    printStars()
     print("* [0] - Mainnet                                                                             *")
     print("* [1] - Testnet                                                                             *")
-    print_stars()
+    printStars()
     menu_options = [
         "[0] Mainnet",
         "[1] Testnet",
@@ -64,27 +64,27 @@ def get_folders():
         port = find_port(f'harmony')
         folders['harmony'] = port
         print(f'* Found ~/harmony folder, on port {port}')
-        print_stars()
+        printStars()
     if os.path.exists(f"{user_home}/harmony0"):
         port = find_port(f'harmony0')
         folders['harmony1'] = port
         print(f'* Found ~/harmony1 folder, on port {port}')
-        print_stars()
+        printStars()
     if os.path.exists(f"{user_home}/harmony1"):
         port = find_port(f'harmony1')
         folders['harmony2'] = port
         print(f'* Found ~/harmony1 folder, on port {port}')
-        print_stars()
+        printStars()
     if os.path.exists(f"{user_home}/harmony2"):
         port = find_port(f'harmony2')
         folders['harmony3'] = port
         print(f'* Found ~/harmony2 folder, on port {port}')
-        print_stars()
+        printStars()
     if os.path.exists(f"{user_home}/harmony3"):
         port = find_port(f'harmony3')
         folders['harmony4'] = port
         print(f'* Found ~/harmony3 folder, on port {port}')
-        print_stars()
+        printStars()
     return folders
 
 
@@ -97,19 +97,19 @@ def stats_output_regular(folders) -> None:
     count = 0
     os.system("clear")
     # Print Menu
-    print_stars()
+    printStars()
     print(f'{Style.RESET_ALL}* {Fore.GREEN}validator-toolbox for Harmony ONE Validators by Easy Node   v{easy_env.easy_version}{Style.RESET_ALL}   https://easynode.one *')
-    print_stars()
+    printStars()
     print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Style.RESET_ALL}\n* Your $ONE balance is:             {Fore.GREEN}{str(total_balance)}{Style.RESET_ALL}\n* Your pending $ONE rewards are:    {Fore.GREEN}{str(get_rewards_balance(easy_env.rpc_endpoints, environ.get("VALIDATOR_WALLET")))}{Style.RESET_ALL}\n* Server Hostname & IP:             {easy_env.server_host_name}{Style.RESET_ALL} - {Fore.YELLOW}{easy_env.external_ip}{Style.RESET_ALL}')
     harmony_service_status()
     print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}\n* Current disk space free: {Fore.CYAN}{free_space_check(easy_env.harmony_dir): >6}{Style.RESET_ALL}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}')
     print(f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min")
-    print_stars()
+    printStars()
     remote_shard_0 = [f"{user_home}/{list(folders.items())[0][0]}/hmy", "utility", "metadata", f"--node=https://api.s0.t.hmny.io"]
     result_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     remote_0_data = json.loads(result_shard_0.stdout)
     print(f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}")
-    print_stars()
+    printStars()
     for folder in folders:
         local_server = [f"{user_home}/{folder}/hmy", "utility", "metadata", f"--node=http://localhost:{folders[folder]}"]
         result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
@@ -120,7 +120,7 @@ def stats_output_regular(folders) -> None:
         print(f"* Results for folder {user_home}/{folder}:")
         print(f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}")
         print(f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}\n*   Local Shard 0 Size: {get_db_size('0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(local_data['result']['shard-id'])}")
-        print_stars()
+        printStars()
 
 if __name__ == "__main__":
     loader_intro()

@@ -13,7 +13,7 @@ from pyhmy import blockchain, transaction
 from requests.exceptions import HTTPError
 from toolbox.library import (
     process_command,
-    print_stars,
+    printStars,
     print_stars_reset,
     print_whitespace,
     ask_yes_no,
@@ -24,7 +24,7 @@ from toolbox.library import (
     load_var_file,
     get_wallet_balance,
     get_rewards_balance,
-    string_stars,
+    stringStars,
     set_var,
     free_space_check,
     server_drive_check,
@@ -46,30 +46,30 @@ def send_rewards(networkCall, sendAmount, rewards_wallet):
 
 def rewards_collector() -> None:
     rewards_wallet = environ.get("REWARDS_WALLET")
-    print_stars()
+    printStars()
     print("* Harmony ONE Rewards Collection")
-    print_stars()
+    printStars()
     question = ask_yes_no(
         f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {get_rewards_balance(easy_env.rpc_endpoints, environ.get('VALIDATOR_WALLET'))} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
     )
     if question:
         collect_rewards(f"{environ.get('NETWORK_0_CALL')}")
-        print_stars()
+        printStars()
         print(
             Fore.GREEN
             + f"* mainnet rewards for {environ.get('VALIDATOR_WALLET')} have been collected."
             + Style.RESET_ALL
         )
-        print_stars()
+        printStars()
     else:
         return
     if rewards_wallet:
         wallet_balance, wallet_balance_test = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
         suggested_send = wallet_balance - int(environ.get("GAS_RESERVE"))
         print("*\n*\n")
-        print_stars()
+        printStars()
         print("\n* Send your Harmony ONE Rewards?")
-        print_stars()
+        printStars()
         if suggested_send >= 1:
             question = ask_yes_no(
                 f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
@@ -88,13 +88,13 @@ def menu_topper_regular() -> None:
     remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
     os.system("clear")
     # Print Menu
-    print_stars()
+    printStars()
     print(f'{Style.RESET_ALL}* {Fore.GREEN}validator-toolbox for Harmony ONE Validators by Easy Node   v{easy_env.easy_version}{Style.RESET_ALL}   https://easynode.pro *')
-    print_stars()
+    printStars()
     print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Style.RESET_ALL}\n* Your $ONE balance is:             {Fore.GREEN}{str(total_balance)}{Style.RESET_ALL}\n* Your pending $ONE rewards are:    {Fore.GREEN}{str(get_rewards_balance(easy_env.rpc_endpoints, environ.get("VALIDATOR_WALLET")))}{Style.RESET_ALL}\n* Server Hostname & IP:             {easy_env.server_host_name}{Style.RESET_ALL} - {Fore.YELLOW}{easy_env.external_ip}{Style.RESET_ALL}')
     harmony_service_status()
     print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}\n* Current disk space free: {Fore.CYAN}{free_space_check(easy_env.harmony_dir): >6}{Style.RESET_ALL}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}')
-    print_stars()
+    printStars()
     if environ.get("SHARD") != "0":
         print(f"\n* Note: Running on shard {environ.get('SHARD')}, Shard 0 is no longer needed locally and should be under 200MB\n* Remote Shard 0 Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}, Local Shard 0 Size: {get_db_size('0')}")
         print(f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}")
@@ -103,16 +103,16 @@ def menu_topper_regular() -> None:
         print(f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}")
         print(f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}")
     print(f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min")
-    print_stars()
+    printStars()
 
 def menu_topper_full() -> None:
     load_1, load_5, load_15 = os.getloadavg()
     remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
     os.system("clear")
     # Print Menu
-    print_stars()
+    printStars()
     print(f'{Style.RESET_ALL}* {Fore.GREEN}validator-toolbox for Harmony ONE Validators by Easy Node   v{str(environ.get("EASY_VERSION"))}{Style.RESET_ALL}   https://easynode.one *')
-    print_stars()
+    printStars()
     print(f'* Server Hostname & IP:             {easy_env.server_host_name}{Style.RESET_ALL} - {Fore.YELLOW}{easy_env.external_ip}{Style.RESET_ALL}')
     harmony_service_status()
     print(f'* Current disk space free: {Fore.CYAN}{free_space_check(easy_env.harmony_dir): >6}{Style.RESET_ALL}{Style.RESET_ALL}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}')
@@ -261,12 +261,12 @@ def run_full_node() -> None:
             print(
                 f"* The harmony binary has an update available, Option #10 will upgrade you but you may miss a block while it restarts.\n"
             )
-            print_stars()
+            printStars()
         if environ.get("HMY_UPGRADE_AVAILABLE") == "True":
             print(
                 f"* The hmy binary has an update available, Option #11 will upgrade you but you may miss a block while it restarts.\n"
             )
-            print_stars()
+            printStars()
         try:
             option = int(input("Enter your option: "))
         except ValueError:
@@ -286,9 +286,9 @@ def bingo_checker():
 def coming_soon():
     os.system("clear")
     print_whitespace()
-    print_stars()
+    printStars()
     print("* This option isn't available on your system, yet!")
-    print_stars()
+    printStars()
     input("* Press enter to return to the main menu.")
 
 
@@ -319,12 +319,12 @@ def run_regular_node() -> None:
             print(
                 f'* The harmony binary has an update available to version {environ.get("ONLINE_HARMONY_VERSION")}\n* Option #10 will upgrade you, but you may miss a block while it upgrades & restarts.\n* Currently installed version {environ.get("HARMONY_VERSION")}\n'
             )
-            print_stars()
+            printStars()
         if environ.get("HMY_UPGRADE_AVAILABLE") == "True":
             print(
                 f'* The hmy binary has an update available to version {environ.get("ONLINE_HMY_VERSION")}\n* Option #11 will upgrade you.\n* Currently installed version {environ.get("HMY_VERSION")}\n'
             )
-            print_stars()
+            printStars()
         try:
             option = int(input("Enter your option: "))
         except ValueError:
@@ -351,7 +351,7 @@ def menu_error() -> None:
 
 
 def os_upgrades() -> None:
-    print_stars()
+    printStars()
     upgrades = (
         "sudo apt update",
         "sudo apt upgrade -y",
@@ -360,7 +360,7 @@ def os_upgrades() -> None:
     )
     for x in upgrades:
         process_command(x)
-    print_stars()
+    printStars()
 
 
 def harmony_service_status() -> None:
@@ -396,12 +396,12 @@ def hmy_cli_upgrade():
         os.chdir(f"{easy_env.harmony_dir}")
         make_backup_dir()
         os.system(f"cp {easy_env.hmy_app} {easy_env.harmony_dir}/harmony_backup")
-        print_stars()
+        printStars()
         install_hmy(easy_env.harmony_dir)
-        print_stars()
+        printStars()
         print("Harmony cli has been updated to: ")
         os.system(f"{easy_env.hmy_app} version")
-        print_stars()
+        printStars()
         set_var(easy_env.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
         input("Update completed, press ENTER to return to the main menu. ")
 
@@ -413,11 +413,11 @@ def update_harmony_app(test_or_main):
     os.system("./harmony -V")
     make_backup_dir()
     os.system(f"cp {easy_env.harmony_dir}/harmony {easy_env.harmony_dir}/harmony_backup")
-    print_stars()
+    printStars()
     print("Downloading current harmony binary file from harmony.one: ")
-    print_stars()
+    printStars()
     install_harmony(easy_env.harmony_dir, easy_env.bls_key_file)
-    print_stars()
+    printStars()
     print("Updated version: ")
     os.system("./harmony -V")
     if environ.get("SHARD") != "0":
@@ -444,7 +444,7 @@ def update_harmony_app(test_or_main):
                 print("Your database 0 is already trimmed, enjoy!")
     else:
         os.system("sudo service harmony restart")
-    print_stars()
+    printStars()
     print("Harmony Service is restarting, waiting 10 seconds for restart.")
     set_var(easy_env.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
     time.sleep(10)
@@ -483,9 +483,9 @@ def menu_validator_stats():
 def refresh_stats(clear=0) -> str:
     if clear == 0:
         os.system("clear")
-    print_stars()
+    printStars()
     print(f'* Getting the latest local & blockchain information now, one moment while we load...')
-    print_stars()
+    printStars()
     return
 
 
@@ -505,7 +505,7 @@ def shard_stats(our_shard) -> str:
             f"""
     * Uptime :: {our_uptime}\n\n Harmony DB 0 Size  ::  {db_0_size}
     * {our_ver}
-    {string_stars()}
+    {stringStars()}
         """
         )
     else:
@@ -518,7 +518,7 @@ def shard_stats(our_shard) -> str:
     *
     * {our_ver}
     *
-    {string_stars()}
+    {stringStars()}
         """
         )
 
@@ -613,7 +613,7 @@ def menu_active_bls() -> str:
     print("* This is a list of your BLS Keys that are active for the next election.")
     for i, x in enumerate(json_response["bls-public-keys"]):
         print(f"BLS Key {i+1} {x}")
-    print_stars()
+    printStars()
     input("Press ENTER to return to the main menu.")
 
 
@@ -631,11 +631,11 @@ def menu_check_balance() -> None:
     if environ.get("NODE_TYPE") == "regular":
         print_stars_reset()
         print("* Calling mainnet and testnet for balances...")
-        print_stars()
+        printStars()
         total_balance, total_balance_test = get_wallet_balance(validator_wallet)
         print(f"* Your Validator Wallet Balance on Mainnet is: {total_balance} Harmony ONE Coins")
         print(f"* Your Validator Wallet Balance on Testnet is: {total_balance_test} Harmony ONE Test Coins")
-        print_stars()
+        printStars()
         i = 0
         while i < 1:
             question = ask_yes_no("* Would you like to check another Harmony ONE Address? (YES/NO) ")
@@ -665,7 +665,7 @@ def balanceCheckAny():
     print(
         f"* The Mainnet Wallet Balance is: {total_balance} Harmony ONE Coins\n* The Testnet Wallet Balance is: {total_balance_test} Harmony ONE Test Coins"
     )
-    print_stars()
+    printStars()
     input("Press ENTER to continue.")
 
 
@@ -701,7 +701,7 @@ def get_current_epochByEndpoint(endpoint):
 
 
 def finish_node():
-    print_stars()
+    printStars()
     print("* Thanks for using Easy Node - EZ Mode! Goodbye.")
-    print_stars()
+    printStars()
     raise SystemExit(0)
