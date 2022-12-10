@@ -18,6 +18,7 @@ import subprocess
 import requests
 import pyhmy
 import shutil
+import docker
 
 load_dotenv(easy_env.dotenv_file)
 
@@ -1008,6 +1009,18 @@ def docker_check():
         print("* Install docker on this server and give the user access to continue.")
         print_stars()
         raise SystemExit(0)
+
+def container_running(container_name) -> None:
+    # create client object to connect
+    client = docker.from_env()
+    # Get a list of all containers
+    containers = client.containers.list()
+    # Search for the container by name
+    container = next(filter(lambda c: c.name == container_name, containers), None)
+    if container is not None and container.status == "running":
+        return True
+    else:
+        return False
 
 def coming_soon():
     os.system("clear")
