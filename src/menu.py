@@ -1,6 +1,6 @@
 import os
 from os import environ
-from toolbox.config import validatorToolbox
+from toolbox.config import easy_env
 from toolbox.library import loaderIntro, setWalletEnv, loadVarFile, passphraseStatus, setVar, versionChecks, recheckVars, recoverWallet
 from toolbox.toolbox import runRegularNode, runFullNode, refreshStats
 
@@ -8,7 +8,7 @@ if __name__ == "__main__":
     # clear screen, show logo
     loaderIntro()
     # check for .env file, if none we have a first timer.
-    if os.path.exists(validatorToolbox.dotenv_file) is None:
+    if os.path.exists(easy_env.dotenv_file) is None:
         # they should run the installer, goodbye!
         print("Install Harmony First!!!\nRun python3 ~/validatortoolboxinstall.py")
         raise SystemExit(0)
@@ -16,7 +16,7 @@ if __name__ == "__main__":
     loadVarFile()
     # This section is for hard coding new settings for current users.
     if environ.get("GAS_RESERVE") is None:
-        setVar(validatorToolbox.dotenv_file, "GAS_RESERVE", "5")
+        setVar(easy_env.dotenv_file, "GAS_RESERVE", "5")
     # Make sure they have a wallet or wallet address in the .env file, if none, get one.
     if environ.get("VALIDATOR_WALLET") is None:
         recoverWallet()

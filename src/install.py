@@ -1,12 +1,12 @@
 import os
 from os import environ
-from toolbox.config import validatorToolbox
+from toolbox.config import easy_env
 from toolbox.library import loaderIntro, loadVarFile, firstSetup, recoverWallet
 
 if __name__ == "__main__":
     os.system("clear")
     loaderIntro()
-    if not os.path.exists(validatorToolbox.dotenv_file):
+    if not os.path.exists(easy_env.dotenv_file):
         firstSetup()
     loadVarFile()
     if not environ.get("VALIDATOR_WALLET"):
@@ -18,4 +18,4 @@ if __name__ == "__main__":
             )
             input("* Press any key to exit.")
             raise SystemExit(0)
-    exec(open(f"{validatorToolbox.toolboxLocation}menu.py").read())
+    exec(open(f"{easy_env.toolbox_location}menu.py").read())

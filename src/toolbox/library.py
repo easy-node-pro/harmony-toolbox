@@ -1,4 +1,4 @@
-from toolbox.config import validatorToolbox
+from toolbox.config import easy_env
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
@@ -6,7 +6,7 @@ from colorama import Fore, Style
 from pathlib import Path
 from pyhmy import validator, account, staking, numbers
 from json import load, dump
-from toolbox.config import validatorToolbox
+from toolbox.config import easy_env
 from collections import namedtuple
 import dotenv
 import time
@@ -16,7 +16,7 @@ import requests
 import pyhmy
 import shutil
 
-load_dotenv(validatorToolbox.dotenv_file)
+load_dotenv(easy_env.dotenv_file)
 
 
 class PrintStuff:
@@ -82,7 +82,7 @@ def loaderIntro():
 
 # Install Harmony ONE
 def installHmyApp():
-    os.chdir(f"{validatorToolbox.harmonyDirPath}")
+    os.chdir(f"{easy_env.harmony_dir}")
     os.system("curl -LO https://harmony.one/hmycli && mv hmycli hmy && chmod +x hmy")
     printStars()
     print("* hmy application installed.")
@@ -109,7 +109,7 @@ def recoverWallet():
         recoveryType()
         loadVarFile()
         print(
-            f'\n* Verify the address above matches the address below:\n* Detected Wallet: {Fore.GREEN}{environ.get("VALIDATOR_WALLET")}{Style.RESET_ALL}\n* If a different wallet is showing you can remove it and retry it after installation.\n*\n* .{validatorToolbox.hmyAppPath} keys remove {validatorToolbox.activeUserName}\n*\n* To restore a wallet once again, run the following:\n*\n* .{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {environ.get("PASS_SWITCH")}\n*'
+            f'\n* Verify the address above matches the address below:\n* Detected Wallet: {Fore.GREEN}{environ.get("VALIDATOR_WALLET")}{Style.RESET_ALL}\n* If a different wallet is showing you can remove it and retry it after installation.\n*\n* .{easy_env.hmy_app} keys remove {easy_env.active_user}\n*\n* To restore a wallet once again, run the following:\n*\n* .{easy_env.hmy_app} keys recover-from-mnemonic {easy_env.active_user} {environ.get("PASS_SWITCH")}\n*'
         )
         printStars()
         input("* Verify your wallet information above.\n* Press ENTER to continue Installation.")
@@ -117,24 +117,24 @@ def recoverWallet():
         wallet = input(
             f"* If you'd like to use the management menu, we need a one1 address, please input your address now: "
         )
-        setVar(validatorToolbox.dotenv_file, "VALIDATOR_WALLET", wallet)
+        setVar(easy_env.dotenv_file, "VALIDATOR_WALLET", wallet)
         return
 
 
 def installHarmonyApp():
-    os.chdir(f"{validatorToolbox.harmonyDirPath}")
+    os.chdir(f"{easy_env.harmony_dir}")
     if environ.get("NETWORK") == "testnet":
         os.system("curl -LO https://harmony.one/binary_testnet && mv binary_testnet harmony && chmod +x harmony")
         os.system("./harmony config dump --network testnet harmony.conf")
-        updateTextFile(validatorToolbox.harmonyConfPath, "MaxKeys = 10", "MaxKeys = 13")
+        updateTextFile(easy_env.harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
     if environ.get("NETWORK") == "mainnet":
         os.system("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
         os.system("./harmony config dump harmony.conf")
-        updateTextFile(validatorToolbox.harmonyConfPath, "MaxKeys = 10", "MaxKeys = 13")
+        updateTextFile(easy_env.harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
     printStars()
     print("* harmony.conf MaxKeys modified to 13")
-    if os.path.exists(validatorToolbox.blsKeyFile):
-        updateTextFile(validatorToolbox.harmonyConfPath, 'PassFile = ""', f'PassFile = "blskey.pass"')
+    if os.path.exists(easy_env.bls_key_file):
+        updateTextFile(easy_env.harmony_conf, 'PassFile = ""', f'PassFile = "blskey.pass"')
         print("* blskey.pass found, updated harmony.conf")
     printStars()
     print(f"* Harmony {environ.get('NETWORK')} application installed & ~/harmony/harmony.conf created.")
@@ -145,11 +145,11 @@ def setWalletEnv():
     if environ.get("NODE_WALLET") == "true":
         if not environ.get("VALIDATOR_WALLET"):
             output = subprocess.getoutput(
-                f"{validatorToolbox.hmyAppPath} keys list | grep {validatorToolbox.activeUserName}"
+                f"{easy_env.hmy_app} keys list | grep {easy_env.active_user}"
             )
-            outputStripped = output.lstrip(validatorToolbox.activeUserName)
+            outputStripped = output.lstrip(easy_env.active_user)
             outputStripped = outputStripped.strip()
-            setVar(validatorToolbox.dotenv_file, "VALIDATOR_WALLET", outputStripped)
+            setVar(easy_env.dotenv_file, "VALIDATOR_WALLET", outputStripped)
             return outputStripped
         else:
             loadVarFile()
@@ -159,7 +159,7 @@ def setWalletEnv():
 
 def recoveryType():
     os.system("clear")
-    setVar(validatorToolbox.dotenv_file, "NODE_WALLET", "true")
+    setVar(easy_env.dotenv_file, "NODE_WALLET", "true")
     passphraseStatus()
     passphraseSwitch = environ.get("PASS_SWITCH")
     printStars()
@@ -179,7 +179,7 @@ def recoveryType():
     if results == 0:
         # Mnemonic Recovery Here
         os.system(
-            f"{validatorToolbox.hmyAppPath} keys recover-from-mnemonic {validatorToolbox.activeUserName} {passphraseSwitch}"
+            f"{easy_env.hmy_app} keys recover-from-mnemonic {easy_env.active_user} {passphraseSwitch}"
         )
         printStars()
         setWalletEnv()
@@ -188,7 +188,7 @@ def recoveryType():
         print("* Private key recovery requires your private information in the command itself.")
         private = input("* Please enter your private key to restore your wallet: ")
         os.system(
-            f"{validatorToolbox.hmyAppPath} keys import-private-key {private} {validatorToolbox.activeUserName} --passphrase"
+            f"{easy_env.hmy_app} keys import-private-key {private} {easy_env.active_user} --passphrase"
         )
         printStars()
         setWalletEnv()
@@ -199,16 +199,16 @@ def passphraseStatus():
     if environ.get("NODE_WALLET") == "true":
         passphraseSet()
         setVar(
-            validatorToolbox.dotenv_file,
+            easy_env.dotenv_file,
             "PASS_SWITCH",
-            f"--passphrase-file {validatorToolbox.harmonyDirPath}/passphrase.txt",
+            f"--passphrase-file {easy_env.harmony_dir}/passphrase.txt",
         )
     if environ.get("NODE_WALLET") == "false":
-        setVar(validatorToolbox.dotenv_file, "PASS_SWITCH", "--passphrase")
+        setVar(easy_env.dotenv_file, "PASS_SWITCH", "--passphrase")
 
 
 def passphraseSet():
-    if os.path.exists(validatorToolbox.passwordPath):
+    if os.path.exists(easy_env.password_path):
         return
     import getpass
 
@@ -229,7 +229,7 @@ def passphraseSet():
             print("* Passwords Match!")
             break
     # Save file, we won't encrypt because if someone has access to the file, they will also have the salt and decrypt code at their disposal.
-    save_text(validatorToolbox.passwordPath, password1)
+    save_text(easy_env.password_path, password1)
     loadVarFile()
     passphraseStatus()
 
@@ -268,8 +268,8 @@ def return_txt(fn: str) -> list:
 
 
 def loadVarFile():
-    if os.path.exists(validatorToolbox.dotenv_file):
-        load_dotenv(validatorToolbox.dotenv_file, override=True)
+    if os.path.exists(easy_env.dotenv_file):
+        load_dotenv(easy_env.dotenv_file, override=True)
 
 
 def getShardMenu() -> None:
@@ -288,12 +288,12 @@ def getShardMenu() -> None:
         ]
         terminal_menu = TerminalMenu(menuOptions, title="* Which Shard will this node operate on? ")
         ourShard = str(terminal_menu.show())
-        setVar(validatorToolbox.dotenv_file, "SHARD", ourShard)
+        setVar(easy_env.dotenv_file, "SHARD", ourShard)
         return ourShard
 
 
 def getNodeType() -> None:
-    if not os.path.exists(validatorToolbox.hmyWalletStorePath):
+    if not os.path.exists(easy_env.hmy_wallet_store):
         if environ.get("NODE_TYPE") == None:
             os.system("clear")
             printStars()
@@ -311,20 +311,20 @@ def getNodeType() -> None:
             terminal_menu = TerminalMenu(menuOptions, title="Regular or Full Node Server")
             results = terminal_menu.show()
             if results == 0:
-                setVar(validatorToolbox.dotenv_file, "NODE_TYPE", "regular")
-                setVar(validatorToolbox.dotenv_file, "NODE_WALLET", "true")
+                setVar(easy_env.dotenv_file, "NODE_TYPE", "regular")
+                setVar(easy_env.dotenv_file, "NODE_WALLET", "true")
             if results == 1:
-                setVar(validatorToolbox.dotenv_file, "NODE_TYPE", "regular")
-                setVar(validatorToolbox.dotenv_file, "NODE_WALLET", "false")
+                setVar(easy_env.dotenv_file, "NODE_TYPE", "regular")
+                setVar(easy_env.dotenv_file, "NODE_WALLET", "false")
             if results == 2:
-                setVar(validatorToolbox.dotenv_file, "NODE_TYPE", "full")
+                setVar(easy_env.dotenv_file, "NODE_TYPE", "full")
             os.system("clear")
             return
         setWalletEnv()
     if not environ.get("NODE_TYPE"):
-        setVar(validatorToolbox.dotenv_file, "NODE_TYPE", "regular")
+        setVar(easy_env.dotenv_file, "NODE_TYPE", "regular")
     if not environ.get("NODE_WALLET"):
-        setVar(validatorToolbox.dotenv_file, "NODE_WALLET", "true")
+        setVar(easy_env.dotenv_file, "NODE_WALLET", "true")
 
 def setMainOrTest() -> None:
     if not environ.get("NETWORK"):
@@ -342,15 +342,15 @@ def setMainOrTest() -> None:
         terminal_menu = TerminalMenu(menuOptions, title="Mainnet or Testnet")
         results = terminal_menu.show()
         if results == 0:
-            setVar(validatorToolbox.dotenv_file, "NETWORK", "mainnet")
-            setVar(validatorToolbox.dotenv_file, "NETWORK_SWITCH", "t")
-            setVar(validatorToolbox.dotenv_file, "RPC_NET", "https://rpc.s0.t.hmny.io")
-            setVar(validatorToolbox.dotenv_file, "RPC_NET_SHARD", f"https://rpc.s{environ.get('SHARD')}.t.hmny.io")
+            setVar(easy_env.dotenv_file, "NETWORK", "mainnet")
+            setVar(easy_env.dotenv_file, "NETWORK_SWITCH", "t")
+            setVar(easy_env.dotenv_file, "RPC_NET", "https://rpc.s0.t.hmny.io")
+            setVar(easy_env.dotenv_file, "RPC_NET_SHARD", f"https://rpc.s{environ.get('SHARD')}.t.hmny.io")
         if results == 1:
-            setVar(validatorToolbox.dotenv_file, "NETWORK", "testnet")
-            setVar(validatorToolbox.dotenv_file, "NETWORK_SWITCH", "b")
-            setVar(validatorToolbox.dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
-            setVar(validatorToolbox.dotenv_file, "RPC_NET_SHARD", f"https://rpc.s{environ.get('SHARD')}.b.hmny.io")
+            setVar(easy_env.dotenv_file, "NETWORK", "testnet")
+            setVar(easy_env.dotenv_file, "NETWORK_SWITCH", "b")
+            setVar(easy_env.dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
+            setVar(easy_env.dotenv_file, "RPC_NET_SHARD", f"https://rpc.s{environ.get('SHARD')}.b.hmny.io")
         os.system("clear")
     return
 
@@ -367,7 +367,7 @@ def getExpressStatus() -> None:
             "[1] - Manual Approval",
         ]
         terminal_menu = TerminalMenu(menuOptions, title="* Express Or Manual Setup")
-        setVar(validatorToolbox.dotenv_file, "EXPRESS", str(terminal_menu.show()))
+        setVar(easy_env.dotenv_file, "EXPRESS", str(terminal_menu.show()))
 
 
 def getWalletAddress():
@@ -386,24 +386,24 @@ def getWalletAddress():
 def setAPIPaths():
     if not environ.get("NETWORK_0_CALL"):
         setVar(
-            validatorToolbox.dotenv_file,
+            easy_env.dotenv_file,
             "NETWORK_0_CALL",
-            f"{validatorToolbox.hmyAppPath} --node='https://api.s0.{environ.get('NETWORK_SWITCH')}.hmny.io' ",
+            f"{easy_env.hmy_app} --node='https://api.s0.{environ.get('NETWORK_SWITCH')}.hmny.io' ",
         )
         setVar(
-            validatorToolbox.dotenv_file,
+            easy_env.dotenv_file,
             "NETWORK_S_CALL",
-            f"{validatorToolbox.hmyAppPath} --node='https://api.s{environ.get('SHARD')}.{environ.get('NETWORK_SWITCH')}.hmny.io' ",
+            f"{easy_env.hmy_app} --node='https://api.s{environ.get('SHARD')}.{environ.get('NETWORK_SWITCH')}.hmny.io' ",
         )
 
 
 def getValidatorInfo():
     if environ.get("NETWORK") == "mainnet":
-        endpoint = len(validatorToolbox.rpc_endpoints)
+        endpoint = len(easy_env.rpc_endpoints)
     if environ.get("NETWORK") == "testnet":
-        endpoint = len(validatorToolbox.rpc_endpoints_test)
+        endpoint = len(easy_env.rpc_endpoints_test)
     current = 0
-    max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
+    max_tries = easy_env.rpc_endpoints_max_connection_retries
     validator_data = -1
 
     while current < max_tries:
@@ -419,7 +419,7 @@ def getValidatorInfo():
 
 def currentPrice():
     try:
-        response = requests.get(validatorToolbox.onePriceURL, timeout=5)
+        response = requests.get(easy_env.onePriceURL, timeout=5)
     except (ValueError, KeyError, TypeError):
         response = "0.0000"
         return response
@@ -430,11 +430,11 @@ def currentPrice():
 
 
 def getWalletBalance(wallet_addr):
-    endpoints_count = len(validatorToolbox.rpc_endpoints)
+    endpoints_count = len(easy_env.rpc_endpoints)
 
     for i in range(endpoints_count):
-        wallet_balance = getWalletBalanceByEndpoint(validatorToolbox.rpc_endpoints[i], wallet_addr)
-        wallet_balance_test = getWalletBalanceByEndpoint(validatorToolbox.rpc_endpoints_test[i], wallet_addr)
+        wallet_balance = getWalletBalanceByEndpoint(easy_env.rpc_endpoints[i], wallet_addr)
+        wallet_balance_test = getWalletBalanceByEndpoint(easy_env.rpc_endpoints_test[i], wallet_addr)
 
         if wallet_balance >= 0 and wallet_balance_test >= 0:
             return wallet_balance, wallet_balance_test
@@ -444,7 +444,7 @@ def getWalletBalance(wallet_addr):
 
 def getWalletBalanceByEndpoint(endpoint, wallet_addr):
     current = 0
-    max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
+    max_tries = easy_env.rpc_endpoints_max_connection_retries
     get_balance = 0
 
     while current < max_tries:
@@ -472,7 +472,7 @@ def getRewardsBalance(endpoint, wallet_addr):
 
 def getRewardsBalanceByEndpoint(endpoint, wallet_addr):
     current = 0
-    max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
+    max_tries = easy_env.rpc_endpoints_max_connection_retries
     totalRewards = 0
 
     try:
@@ -528,10 +528,10 @@ def getSignPercent() -> str:
 
 
 def getVersions():
-    output = subprocess.getoutput(f"{validatorToolbox.harmonyAppPath} -V")
-    output2 = subprocess.getoutput(f"{validatorToolbox.hmyAppPath} version")
-    setVar(validatorToolbox.dotenv_file, "HARMONY_VERSION", output[35:-35])
-    setVar(validatorToolbox.dotenv_file, "HMY_VERSION", output2[62:-15])
+    output = subprocess.getoutput(f"{easy_env.harmony_app} -V")
+    output2 = subprocess.getoutput(f"{easy_env.hmy_app} version")
+    setVar(easy_env.dotenv_file, "HARMONY_VERSION", output[35:-35])
+    setVar(easy_env.dotenv_file, "HMY_VERSION", output2[62:-15])
     return output[35:-35], output2[62:-15]
 
 
@@ -541,18 +541,18 @@ def setModX(file):
 
 def checkForUpdates():
     subprocess.check_output(
-        ["wget", "https://harmony.one/binary", "-O", validatorToolbox.hmyTmpPath], stderr=subprocess.STDOUT
+        ["wget", "https://harmony.one/binary", "-O", easy_env.hmy_tmp_path], stderr=subprocess.STDOUT
     )
-    setModX(validatorToolbox.hmyTmpPath)
-    subprocess.check_output([validatorToolbox.hmyTmpPath, "config", "dump", "harmony.conf"], stderr=subprocess.STDOUT)
-    output = subprocess.getoutput(f"{validatorToolbox.hmyTmpPath} -V")
-    setVar(validatorToolbox.dotenv_file, "ONLINE_HARMONY_VERSION", output[35:-35])
+    setModX(easy_env.hmy_tmp_path)
+    subprocess.check_output([easy_env.hmy_tmp_path, "config", "dump", "harmony.conf"], stderr=subprocess.STDOUT)
+    output = subprocess.getoutput(f"{easy_env.hmy_tmp_path} -V")
+    setVar(easy_env.dotenv_file, "ONLINE_HARMONY_VERSION", output[35:-35])
     subprocess.check_output(
-        ["wget", "https://harmony.one/hmycli", "-O", validatorToolbox.hmyTmpPath], stderr=subprocess.STDOUT
+        ["wget", "https://harmony.one/hmycli", "-O", easy_env.hmy_tmp_path], stderr=subprocess.STDOUT
     )
-    setModX(validatorToolbox.hmyTmpPath)
-    output2 = subprocess.getoutput(f"{validatorToolbox.hmyTmpPath} version")
-    setVar(validatorToolbox.dotenv_file, "ONLINE_HMY_VERSION", output2[62:-15])
+    setModX(easy_env.hmy_tmp_path)
+    output2 = subprocess.getoutput(f"{easy_env.hmy_tmp_path} version")
+    setVar(easy_env.dotenv_file, "ONLINE_HMY_VERSION", output2[62:-15])
     return output[35:-35], output2[62:-15]
 
 
@@ -561,13 +561,13 @@ def versionChecks():
     onlineVersion, onlineHmyVersion = checkForUpdates()
     if harmonyVersion != onlineVersion:
         # here we would set the upgrade harmony flag in env
-        setVar(validatorToolbox.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "True")
+        setVar(easy_env.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "True")
     if harmonyVersion == onlineVersion:
-        setVar(validatorToolbox.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
+        setVar(easy_env.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
     if hmyVersion != onlineHmyVersion:
-        setVar(validatorToolbox.dotenv_file, "HMY_UPGRADE_AVAILABLE", "True")
+        setVar(easy_env.dotenv_file, "HMY_UPGRADE_AVAILABLE", "True")
     if hmyVersion == onlineHmyVersion:
-        setVar(validatorToolbox.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
+        setVar(easy_env.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
     return
 
 
@@ -577,7 +577,7 @@ def firstSetup():
     time.sleep(2)
     # Update version if newer from conf file to .easynode.env
     if environ.get("EASY_VERSION"):
-        setVar(validatorToolbox.dotenv_file, "EASY_VERSION", validatorToolbox.easyVersion)
+        setVar(easy_env.dotenv_file, "EASY_VERSION", easy_env.easy_version)
     # Find Shard #
     getShardMenu()
     # Express - no prompts for each step, Manual - prompts for each step
@@ -589,7 +589,7 @@ def firstSetup():
     # Set the API for previous choices
     setAPIPaths()
     # Setup status done
-    setVar(validatorToolbox.dotenv_file, "SETUP_STATUS", "0")
+    setVar(easy_env.dotenv_file, "SETUP_STATUS", "0")
     # Look for a harmony install or install.
     checkForInstall()
     printStars()
@@ -609,7 +609,7 @@ def recheckVars():
 # looks for ~/harmony or installs it if it's not there. Asks to overwrite if it finds it, run at your own risk.
 def checkForInstall() -> str:
     loadVarFile()
-    if not os.path.exists(validatorToolbox.harmonyDirPath):
+    if not os.path.exists(easy_env.harmony_dir):
         print(f"* You selected Shard: {environ.get('SHARD')}. ")
         installHarmony()
         if environ.get("NODE_WALLET") == "true":
@@ -654,28 +654,28 @@ def installHarmony() -> None:
         if environ.get("SHARD") == "0":
             if mntCount == 1:
                 myLongHmyPath = myVolumePath + "/harmony"
-                dotenv.set_key(validatorToolbox.dotenv_file, "MOUNT_POINT", myLongHmyPath)
+                dotenv.set_key(easy_env.dotenv_file, "MOUNT_POINT", myLongHmyPath)
                 print("* Creating all Harmony Files & Folders")
-                os.system(f"sudo chown {validatorToolbox.activeUserName} {myVolumePath}")
+                os.system(f"sudo chown {easy_env.active_user} {myVolumePath}")
                 os.system(f"mkdir -p {myLongHmyPath}/.hmy/blskeys")
-                os.system(f"ln -s {myLongHmyPath} {validatorToolbox.harmonyDirPath}")
+                os.system(f"ln -s {myLongHmyPath} {easy_env.harmony_dir}")
             # Let's make sure your volume is mounted
             if mntCount == 0:
                 question = askYesNo(
                     "* You have a volume but it is not mounted.\n* Would you like to install Harmony in ~/harmony on your main disk instead of your volume? (Yes/No) "
                 )
                 if question:
-                    dotenv.set_key(validatorToolbox.dotenv_file, "MOUNT_POINT", validatorToolbox.harmonyDirPath)
+                    dotenv.set_key(easy_env.dotenv_file, "MOUNT_POINT", easy_env.harmony_dir)
                 else:
                     raise SystemExit(0)
     # Setup folders now that symlink exists or we know we're using ~/harmony
-    if not os.path.isdir(f"{validatorToolbox.userHomeDir}/.hmy_cli/account-keys/"):
-        os.system(f"mkdir -p {validatorToolbox.userHomeDir}/.hmy_cli/account-keys/")
-    if not os.path.isdir(f"{validatorToolbox.harmonyDirPath}/.hmy/blskeys"):
+    if not os.path.isdir(f"{easy_env.user_home_dir}/.hmy_cli/account-keys/"):
+        os.system(f"mkdir -p {easy_env.user_home_dir}/.hmy_cli/account-keys/")
+    if not os.path.isdir(f"{easy_env.harmony_dir}/.hmy/blskeys"):
         print("* Creating all Harmony Files & Folders")
-        os.system(f"mkdir -p {validatorToolbox.harmonyDirPath}/.hmy/blskeys")
+        os.system(f"mkdir -p {easy_env.harmony_dir}/.hmy/blskeys")
     # Change to ~/harmony folder
-    os.chdir(f"{validatorToolbox.harmonyDirPath}")
+    os.chdir(f"{easy_env.harmony_dir}")
     printStars()
     # Install hmy
     installHmyApp()
@@ -697,24 +697,24 @@ def installHarmony() -> None:
             subprocess.run('sudo apt install rclone -y')
 
     os.system(
-        f"mkdir -p {validatorToolbox.userHomeDir}/.config/rclone && cp {validatorToolbox.toolboxLocation}/src/bin/rclone.conf {validatorToolbox.userHomeDir}/.config/rclone/"
+        f"mkdir -p {easy_env.user_home_dir}/.config/rclone && cp {easy_env.toolbox_location}/src/bin/rclone.conf {easy_env.user_home_dir}/.config/rclone/"
     )
     printStars()
     # Setup the harmony service file
     print("* Customizing, Moving & Enabling your harmony.service systemd file")
-    if validatorToolbox.activeUserName == "root":
+    if easy_env.active_user == "root":
         os.system(
-            f"sudo cp {validatorToolbox.toolboxLocation}/src/bin/harmony.service . && sed -i 's/home\/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony.service' && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
+            f"sudo cp {easy_env.toolbox_location}/src/bin/harmony.service . && sed -i 's/home\/serviceharmony/{easy_env.active_user}/g' 'harmony.service' && sed -i 's/serviceharmony/{easy_env.active_user}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
         )
     else:
         os.system(
-            f"sudo cp {validatorToolbox.toolboxLocation}/src/bin/harmony.service . && sed -i 's/serviceharmony/{validatorToolbox.activeUserName}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
+            f"sudo cp {easy_env.toolbox_location}/src/bin/harmony.service . && sed -i 's/serviceharmony/{easy_env.active_user}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
         )
 
 # Database Downloader
 def cloneShards():
     # Move to ~/harmony
-    os.chdir(f"{validatorToolbox.harmonyDirPath}")
+    os.chdir(f"{easy_env.harmony_dir}")
     os.system("clear")
     printStars()
     if environ.get("SHARD") != "0":
@@ -722,7 +722,7 @@ def cloneShards():
         print(f"* Now cloning shard {environ.get('SHARD')}")
         printStars()
         os.system(
-            f"rclone -P sync release:pub.harmony.one/{environ.get('NETWORK')}.min/harmony_db_{environ.get('SHARD')} {validatorToolbox.harmonyDirPath}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 4 --transfers=32"
+            f"rclone -P sync release:pub.harmony.one/{environ.get('NETWORK')}.min/harmony_db_{environ.get('SHARD')} {easy_env.harmony_dir}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 4 --transfers=32"
         )
         printStars()
         print(f"Shard {environ.get('SHARD')} completed.")
@@ -732,13 +732,13 @@ def cloneShards():
         print("* Now cloning Shard 0, kick back and relax for awhile...")
         printStars()
         os.system(
-            f"rclone -P -L --checksum sync release:pub.harmony.one/{environ.get('NETWORK')}.snap/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0 --multi-thread-streams 4 --transfers=32"
+            f"rclone -P -L --checksum sync release:pub.harmony.one/{environ.get('NETWORK')}.snap/harmony_db_0 {easy_env.harmony_dir}/harmony_db_0 --multi-thread-streams 4 --transfers=32"
         )
 
 # Code to restore a wallet
 def restoreWallet() -> str:
     if environ.get("NODE_WALLET") == "true":
-        if not os.path.exists(validatorToolbox.hmyWalletStorePath):
+        if not os.path.exists(easy_env.hmy_wallet_store):
             os.system("clear")
             printStars()
             print("* Harmony ONE Validator Wallet Import")
@@ -770,11 +770,11 @@ def setMountedPoint():
         myVolumePath = "/mnt/" + str(volumeMountPath[0])
         myLongHmyPath = myVolumePath + "/harmony"
     else:
-        myVolumePath = validatorToolbox.harmonyDirPath
+        myVolumePath = easy_env.harmony_dir
     if totalDir == 1:
-        dotenv.set_key(validatorToolbox.dotenv_file, "MOUNT_POINT", myLongHmyPath)
+        dotenv.set_key(easy_env.dotenv_file, "MOUNT_POINT", myLongHmyPath)
     else:
-        dotenv.set_key(validatorToolbox.dotenv_file, "MOUNT_POINT", f"{validatorToolbox.harmonyDirPath}")
+        dotenv.set_key(easy_env.dotenv_file, "MOUNT_POINT", f"{easy_env.harmony_dir}")
 
 
 def finish_node_install():
@@ -810,7 +810,7 @@ def finish_node_install():
     printStars()
     print("* Thanks for using Easy Node - Validator Node Server Software Installer!")
     printStars()
-    setVar(validatorToolbox.dotenv_file, "SETUP_STATUS", "1")
+    setVar(easy_env.dotenv_file, "SETUP_STATUS", "1")
     raise SystemExit(0)
 
 def freeSpaceCheck(mount) -> str:
@@ -823,7 +823,7 @@ def serverDriveCheck() -> None:
     if environ.get("MOUNT_POINT") is not None:
         ourDiskMount = environ.get("MOUNT_POINT")
     else:
-        dotenv.set_key(validatorToolbox.dotenv_file, "MOUNT_POINT", validatorToolbox.harmonyDirPath)
+        dotenv.set_key(easy_env.dotenv_file, "MOUNT_POINT", easy_env.harmony_dir)
         loadVarFile()
         ourDiskMount = environ.get("MOUNT_POINT")
     printStarsReset()
@@ -834,7 +834,7 @@ def serverDriveCheck() -> None:
     total, used, free = shutil.disk_usage(ourDiskMount)
     total = str(convertedUnit(total))
     used = str(convertedUnit(used))
-    print("Disk: " + str(ourDiskMount) + "\n" + freeSpaceCheck(validatorToolbox.harmonyDirPath) + " Free\n" + used + " Used\n" + total + " Total")
+    print("Disk: " + str(ourDiskMount) + "\n" + freeSpaceCheck(easy_env.harmony_dir) + " Free\n" + used + " Used\n" + total + " Total")
     printStars()
     input("Disk check complete, press ENTER to return to the main menu. ")
 

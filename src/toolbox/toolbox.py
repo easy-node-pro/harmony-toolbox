@@ -5,7 +5,7 @@ import json
 import subprocess
 from subprocess import Popen, PIPE, run
 from ast import literal_eval
-from toolbox.config import validatorToolbox
+from toolbox.config import easy_env
 from os import environ
 from datetime import datetime
 from colorama import Fore, Back, Style
@@ -50,7 +50,7 @@ def rewardsCollector() -> None:
     print("* Harmony ONE Rewards Collection")
     printStars()
     question = askYesNo(
-        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {getRewardsBalance(validatorToolbox.rpc_endpoints, environ.get('VALIDATOR_WALLET'))} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
+        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {getRewardsBalance(easy_env.rpc_endpoints, environ.get('VALIDATOR_WALLET'))} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
     )
     if question:
         collectRewards(f"{environ.get('NETWORK_0_CALL')}")
@@ -89,9 +89,9 @@ def menuTopperRegular() -> None:
     os.system("clear")
     # Print Menu
     printStars()
-    print(f'{Style.RESET_ALL}* {Fore.GREEN}validator-toolbox for Harmony ONE Validators by Easy Node   v{validatorToolbox.easyVersion}{Style.RESET_ALL}   https://easynode.one *')
+    print(f'{Style.RESET_ALL}* {Fore.GREEN}validator-toolbox for Harmony ONE Validators by Easy Node   v{easy_env.easy_version}{Style.RESET_ALL}   https://easynode.pro *')
     printStars()
-    print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Style.RESET_ALL}\n* Your $ONE balance is:             {Fore.GREEN}{str(total_balance)}{Style.RESET_ALL}\n* Your pending $ONE rewards are:    {Fore.GREEN}{str(getRewardsBalance(validatorToolbox.rpc_endpoints, environ.get("VALIDATOR_WALLET")))}{Style.RESET_ALL}\n* Server Hostname & IP:             {validatorToolbox.serverHostName}{Style.RESET_ALL} - {Fore.YELLOW}{validatorToolbox.ourExternalIPAddress}{Style.RESET_ALL}')
+    print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Style.RESET_ALL}\n* Your $ONE balance is:             {Fore.GREEN}{str(total_balance)}{Style.RESET_ALL}\n* Your pending $ONE rewards are:    {Fore.GREEN}{str(getRewardsBalance(easy_env.rpc_endpoints, environ.get("VALIDATOR_WALLET")))}{Style.RESET_ALL}\n* Server Hostname & IP:             {easy_env.server_host_name}{Style.RESET_ALL} - {Fore.YELLOW}{easy_env.external_ip}{Style.RESET_ALL}')
     harmonyServiceStatus()
     print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}\n* Current disk space free: {Fore.CYAN}{freeSpaceCheck(): >6}{Style.RESET_ALL}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}')
     printStars()
@@ -113,7 +113,7 @@ def menuTopperFull() -> None:
     printStars()
     print(f'{Style.RESET_ALL}* {Fore.GREEN}validator-toolbox for Harmony ONE Validators by Easy Node   v{str(environ.get("EASY_VERSION"))}{Style.RESET_ALL}   https://easynode.one *')
     printStars()
-    print(f'* Server Hostname & IP:             {validatorToolbox.serverHostName}{Style.RESET_ALL} - {Fore.YELLOW}{validatorToolbox.ourExternalIPAddress}{Style.RESET_ALL}')
+    print(f'* Server Hostname & IP:             {easy_env.server_host_name}{Style.RESET_ALL} - {Fore.YELLOW}{easy_env.external_ip}{Style.RESET_ALL}')
     harmonyServiceStatus()
     print(f'* Current disk space free: {Fore.CYAN}{freeSpaceCheck(): >6}{Style.RESET_ALL}{Style.RESET_ALL}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}')
     print(f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}")
@@ -124,7 +124,7 @@ def menuTopperFull() -> None:
 
 def menuRegular() -> None:
     menuTopperRegular()
-    for x in return_txt(validatorToolbox.mainMenuRegular):
+    for x in return_txt(easy_env.main_menu_regular):
         x = x.strip()
         try:
             x = eval(x)
@@ -136,7 +136,7 @@ def menuRegular() -> None:
 
 def menuFull() -> None:
     menuTopperFull()
-    for x in return_txt(validatorToolbox.mainMenuFull):
+    for x in return_txt(easy_env.main_menu_full):
         x = x.strip()
         try:
             x = eval(x)
@@ -158,7 +158,7 @@ def getWalletJSON(wallet: str) -> str:
     except HTTPError as http_err:
         print(f"HTTP error occurred: {http_err}")
         print(
-            f'* You have not created your validator yet, try again after you add one!\n* cd ~/harmony\n* ./hmy keys recover-from-mnemonic {validatorToolbox.activeUserName} {environ.get("PASS_SWITCH")}'
+            f'* You have not created your validator yet, try again after you add one!\n* cd ~/harmony\n* ./hmy keys recover-from-mnemonic {easy_env.active_user} {environ.get("PASS_SWITCH")}'
         )
         input("Press ENTER to return to the main menu.")
         return
@@ -186,7 +186,7 @@ def setRewardsWallet() -> None:
         if question:
             rewardsWallet = input(f"* Input your one1 address to send rewards into, please input your address now: ")
             if rewardsWallet.startswith("one1"):
-                setVar(validatorToolbox.dotenv_file, "REWARDS_WALLET", rewardsWallet)
+                setVar(easy_env.dotenv_file, "REWARDS_WALLET", rewardsWallet)
             else:
                 print("* Wallet does not start with one1, please try again.")
                 return
@@ -198,7 +198,7 @@ def setRewardsWallet() -> None:
         if question:
             rewardsWallet = input(f"* Input your one1 address to send rewards into, please input your address now: ")
             if rewardsWallet.startswith("one1"):
-                setVar(validatorToolbox.dotenv_file, "REWARDS_WALLET", rewardsWallet)
+                setVar(easy_env.dotenv_file, "REWARDS_WALLET", rewardsWallet)
             else:
                 print("* Wallet does not start with one1, please try again.")
                 return
@@ -231,7 +231,7 @@ def askReserveTotal() -> None:
 
 
 def setReserveTotal(reserveTotal):
-    setVar(validatorToolbox.dotenv_file, "GAS_RESERVE", reserveTotal)
+    setVar(easy_env.dotenv_file, "GAS_RESERVE", reserveTotal)
 
 
 def runFullNode() -> None:
@@ -381,10 +381,10 @@ def serviceMenuOption() -> None:
 
 
 def makeBackupDir() -> str:
-    if not os.path.isdir(f"{validatorToolbox.harmonyDirPath}/harmony_backup"):
+    if not os.path.isdir(f"{easy_env.harmony_dir}/harmony_backup"):
         printStarsReset()
         print("Backup directory not found, creating folder")
-        os.system(f"mkdir -p {validatorToolbox.harmonyDirPath}/harmony_backup")
+        os.system(f"mkdir -p {easy_env.harmony_dir}/harmony_backup")
 
 
 def hmyCLIUpgrade():
@@ -393,36 +393,36 @@ def hmyCLIUpgrade():
         "Are you sure you would like to proceed with updating the Harmony CLI file?\n\nType 'Yes' or 'No' to continue"
     )
     if question:
-        os.chdir(f"{validatorToolbox.harmonyDirPath}")
+        os.chdir(f"{easy_env.harmony_dir}")
         makeBackupDir()
-        os.system(f"cp {validatorToolbox.hmyAppPath} {validatorToolbox.harmonyDirPath}/harmony_backup")
+        os.system(f"cp {easy_env.hmy_app} {easy_env.harmony_dir}/harmony_backup")
         printStars()
-        installHmyApp(validatorToolbox.harmonyDirPath)
+        installHmyApp(easy_env.harmony_dir)
         printStars()
         print("Harmony cli has been updated to: ")
-        os.system(f"{validatorToolbox.hmyAppPath} version")
+        os.system(f"{easy_env.hmy_app} version")
         printStars()
-        setVar(validatorToolbox.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
+        setVar(easy_env.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
         input("Update completed, press ENTER to return to the main menu. ")
 
 
 def upgradeHarmonyApp(testOrMain):
-    os.chdir(f"{validatorToolbox.harmonyDirPath}")
+    os.chdir(f"{easy_env.harmony_dir}")
     printStarsReset()
     print("Currently installed version: ")
     os.system("./harmony -V")
     makeBackupDir()
-    os.system(f"cp {validatorToolbox.harmonyDirPath}/harmony {validatorToolbox.harmonyDirPath}/harmony_backup")
+    os.system(f"cp {easy_env.harmony_dir}/harmony {easy_env.harmony_dir}/harmony_backup")
     printStars()
     print("Downloading current harmony binary file from harmony.one: ")
     printStars()
-    installHarmonyApp(validatorToolbox.harmonyDirPath, validatorToolbox.blsKeyFile)
+    installHarmonyApp(easy_env.harmony_dir, easy_env.bls_key_file)
     printStars()
     print("Updated version: ")
     os.system("./harmony -V")
     if environ.get("SHARD") != "0":
         size = 0
-        for path, dirs, files in os.walk(f"{validatorToolbox.harmonyDirPath}/harmony_db_0"):
+        for path, dirs, files in os.walk(f"{easy_env.harmony_dir}/harmony_db_0"):
             for f in files:
                 fp = os.path.join(path, f)
                 size += os.path.getsize(fp)
@@ -434,10 +434,10 @@ def upgradeHarmonyApp(testOrMain):
                 if question:
                     os.system("sudo service harmony stop")
                     os.system(
-                        f"mv {validatorToolbox.harmonyDirPath}/harmony_db_0 {validatorToolbox.harmonyDirPath}/harmony_db_0_old"
+                        f"mv {easy_env.harmony_dir}/harmony_db_0 {easy_env.harmony_dir}/harmony_db_0_old"
                     )
                     os.system("sudo service harmony start")
-                    os.system(f"rm -r {validatorToolbox.harmonyDirPath}/harmony_db_0_old")
+                    os.system(f"rm -r {easy_env.harmony_dir}/harmony_db_0_old")
                 else:
                     print("Skipping removal of 0, but it's no longer required, fyi!")
             else:
@@ -446,26 +446,26 @@ def upgradeHarmonyApp(testOrMain):
         os.system("sudo service harmony restart")
     printStars()
     print("Harmony Service is restarting, waiting 10 seconds for restart.")
-    setVar(validatorToolbox.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
+    setVar(easy_env.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
     time.sleep(10)
 
 def menuValidatorStats():
     loadVarFile()
     remote_shard_0 = [
-        f"{validatorToolbox.hmyAppPath}",
+        f"{easy_env.hmy_app}",
         "blockchain",
         "latest-headers",
         f'--node=https://api.s0.{environ.get("NETWORK_SWITCH")}.hmny.io',
     ]
     result_remote_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
-    local_shard = [f"{validatorToolbox.hmyAppPath}", "blockchain", "latest-headers"]
+    local_shard = [f"{easy_env.hmy_app}", "blockchain", "latest-headers"]
     result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     local_data_shard = json.loads(result_local_shard.stdout)
             
     if environ.get("SHARD") != "0":
         remote_shard = [
-            f"{validatorToolbox.hmyAppPath}",
+            f"{easy_env.hmy_app}",
             "blockchain",
             "latest-headers",
             f'--node=https://api.s{environ.get("SHARD")}.{environ.get("NETWORK_SWITCH")}.hmny.io',
@@ -490,15 +490,15 @@ def refreshStats(clear=0) -> str:
 
 
 def getDBSize(ourShard) -> str:
-    harmonyDBSize = subprocess.getoutput(f"du -h {validatorToolbox.harmonyDirPath}/harmony_db_{ourShard}")
+    harmonyDBSize = subprocess.getoutput(f"du -h {easy_env.harmony_dir}/harmony_db_{ourShard}")
     harmonyDBSize = harmonyDBSize.rstrip("\t")
-    countTrim = len(validatorToolbox.harmonyDirPath) + 13
+    countTrim = len(easy_env.harmony_dir) + 13
     return harmonyDBSize[:-countTrim]
 
 
 def shardStats(ourShard) -> str:
     ourUptime = subprocess.getoutput("uptime")
-    ourVersion = subprocess.getoutput(f"{validatorToolbox.harmonyAppPath} -V")
+    ourVersion = subprocess.getoutput(f"{easy_env.harmony_app} -V")
     dbZeroSize = getDBSize("0")
     if ourShard == "0":
         print(
@@ -670,12 +670,12 @@ def balanceCheckAny():
 
 def getCurrentEpoch():
     if environ.get("NETWORK") == "mainnet":
-        endpoints_count = len(validatorToolbox.rpc_endpoints)
+        endpoints_count = len(easy_env.rpc_endpoints)
     if environ.get("NETWORK") == "testnet":
-        endpoints_count = len(validatorToolbox.rpc_endpoints_test)
+        endpoints_count = len(easy_env.rpc_endpoints_test)
 
     for i in range(endpoints_count):
-        current_epoch = getCurrentEpochByEndpoint(validatorToolbox.rpc_endpoints[i])
+        current_epoch = getCurrentEpochByEndpoint(easy_env.rpc_endpoints[i])
 
         if current_epoch != -1:
             return current_epoch
@@ -685,7 +685,7 @@ def getCurrentEpoch():
 
 def getCurrentEpochByEndpoint(endpoint):
     current = 0
-    max_tries = validatorToolbox.rpc_endpoints_max_connection_retries
+    max_tries = easy_env.rpc_endpoints_max_connection_retries
     current_epoch = -1
 
     while current < max_tries:

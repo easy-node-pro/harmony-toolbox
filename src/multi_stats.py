@@ -2,7 +2,7 @@ import os
 import json
 from os import environ
 from ast import literal_eval
-from toolbox.config import validatorToolbox
+from toolbox.config import easy_env
 from toolbox.library import loadVarFile, getSignPercent, getWalletBalance, printStars, setVar, loaderIntro, askYesNo
 from toolbox.toolbox import freeSpaceCheck, harmonyServiceStatus, getRewardsBalance, getDBSize, refreshStats
 from subprocess import PIPE, run
@@ -18,7 +18,7 @@ if not environ.get("VALIDATOR_WALLET"):
     address = input(f'No Harmony $ONE address found, please input a one1 or 0x address: ')
     address2 = input(f'Please re-enter your address to verify: ')
     if address == address2:
-        setVar(validatorToolbox.dot_env, "VALIDATOR_WALLET", address2)
+        setVar(easy_env.dot_env, "VALIDATOR_WALLET", address2)
 
 if not environ.get("NETWORK_SWITCH"):
     # ask for mainnet or testnet
@@ -36,13 +36,13 @@ if not environ.get("NETWORK_SWITCH"):
     terminal_menu = TerminalMenu(menuOptions, title="Mainnet or Testnet")
     results = terminal_menu.show()
     if results == 0:
-        setVar(validatorToolbox.dotenv_file, "NETWORK", "mainnet")
-        setVar(validatorToolbox.dotenv_file, "NETWORK_SWITCH", "t")
-        setVar(validatorToolbox.dotenv_file, "RPC_NET", "https://rpc.s0.t.hmny.io")
+        setVar(easy_env.dotenv_file, "NETWORK", "mainnet")
+        setVar(easy_env.dotenv_file, "NETWORK_SWITCH", "t")
+        setVar(easy_env.dotenv_file, "RPC_NET", "https://rpc.s0.t.hmny.io")
     if results == 1:
-        setVar(validatorToolbox.dotenv_file, "NETWORK", "testnet")
-        setVar(validatorToolbox.dotenv_file, "NETWORK_SWITCH", "b")
-        setVar(validatorToolbox.dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
+        setVar(easy_env.dotenv_file, "NETWORK", "testnet")
+        setVar(easy_env.dotenv_file, "NETWORK_SWITCH", "b")
+        setVar(easy_env.dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
     os.system("clear")
 
 # Search harmony.conf for the proper port to hit
@@ -98,9 +98,9 @@ def statsOutputRegular(folders) -> None:
     os.system("clear")
     # Print Menu
     printStars()
-    print(f'{Style.RESET_ALL}* {Fore.GREEN}validator-toolbox for Harmony ONE Validators by Easy Node   v{validatorToolbox.easyVersion}{Style.RESET_ALL}   https://easynode.one *')
+    print(f'{Style.RESET_ALL}* {Fore.GREEN}validator-toolbox for Harmony ONE Validators by Easy Node   v{easy_env.easy_version}{Style.RESET_ALL}   https://easynode.one *')
     printStars()
-    print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Style.RESET_ALL}\n* Your $ONE balance is:             {Fore.GREEN}{str(total_balance)}{Style.RESET_ALL}\n* Your pending $ONE rewards are:    {Fore.GREEN}{str(getRewardsBalance(validatorToolbox.rpc_endpoints, environ.get("VALIDATOR_WALLET")))}{Style.RESET_ALL}\n* Server Hostname & IP:             {validatorToolbox.serverHostName}{Style.RESET_ALL} - {Fore.YELLOW}{validatorToolbox.ourExternalIPAddress}{Style.RESET_ALL}')
+    print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Style.RESET_ALL}\n* Your $ONE balance is:             {Fore.GREEN}{str(total_balance)}{Style.RESET_ALL}\n* Your pending $ONE rewards are:    {Fore.GREEN}{str(getRewardsBalance(easy_env.rpc_endpoints, environ.get("VALIDATOR_WALLET")))}{Style.RESET_ALL}\n* Server Hostname & IP:             {easy_env.server_host_name}{Style.RESET_ALL} - {Fore.YELLOW}{easy_env.external_ip}{Style.RESET_ALL}')
     harmonyServiceStatus()
     print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}\n* Current disk space free: {Fore.CYAN}{freeSpaceCheck(): >6}{Style.RESET_ALL}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}')
     print(f"* CPU Load Averages: {round(Load1, 2)} over 1 min, {round(Load5, 2)} over 5 min, {round(Load15, 2)} over 15 min")
