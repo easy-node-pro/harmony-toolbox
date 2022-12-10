@@ -335,6 +335,7 @@ def run_regular_node() -> None:
             return finish_node()
         os.system("clear")
         menu_options[option]()
+        refresh_stats(1)
 
 
 def menu_error() -> None:
