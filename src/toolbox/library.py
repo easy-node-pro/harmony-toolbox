@@ -22,7 +22,7 @@ import shutil
 load_dotenv(easy_env.dotenv_file)
 
 
-class print_stuff:
+class PrintStuff:
     def __init__(self, reset: int = 0):
         self.reset = reset
         self.print_stars = "*" * 93
@@ -45,11 +45,11 @@ class print_stuff:
         print("\n" * 8)
 
 
-print_whitespace = print_stuff.print_whitespace
-print_stars = print_stuff().print_stars
-string_stars = print_stuff().string_stars
-print_stars_reset = print_stuff(reset=1).print_stars
-string_stars_reset = print_stuff(reset=1).string_stars
+print_whitespace = PrintStuff.print_whitespace
+print_stars = PrintStuff().print_stars
+string_stars = PrintStuff().string_stars
+print_stars_reset = PrintStuff(reset=1).print_stars
+string_stars_reset = PrintStuff(reset=1).string_stars
 
 # check if a var exists in your .env file, unset and reset if exists to avoid bad stuff
 def set_var(fileName, keyName, updateName):
