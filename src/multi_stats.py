@@ -9,7 +9,7 @@ from subprocess import PIPE, run
 from colorama import Fore, Back, Style
 from simple_term_menu import TerminalMenu
 
-load_var_file()
+load_var_file(easy_env.dotenv_file)
 
 user_home = f'{os.path.expanduser("~")}'
 

@@ -47,7 +47,7 @@ def get_token():
     if len(sys.argv) > 1:
             vstatsToken = sys.argv[1]
             set_var(easy_env.dotenv_file, "VSTATSBOT_TOKEN", vstatsToken)
-            load_var_file()
+            load_var_file(easy_env.dotenv_file)
     if environ.get("VSTATSBOT_TOKEN") is None:
         question = ask_yes_no(
             f"* No token found, please run /token on vStats Bot to obtain your token. Would you like to enter one now? (YES/NO)"
@@ -73,7 +73,7 @@ if __name__ == '__main__':
         vstatsToken = get_token()
     
     else:
-        load_var_file()
+        load_var_file(easy_env.dotenv_file)
         # load env configuration
         vstatsToken = get_token()
 

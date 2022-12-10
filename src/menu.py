@@ -13,7 +13,7 @@ if __name__ == "__main__":
         print("Install Harmony First!!!\nRun python3 ~/validatortoolboxinstall.py")
         raise SystemExit(0)
     # passed .env check, let's load it!
-    load_var_file()
+    load_var_file(easy_env.dotenv_file)
     # This section is for hard coding new settings for current users.
     if environ.get("GAS_RESERVE") is None:
         set_var(easy_env.dotenv_file, "GAS_RESERVE", "5")

@@ -260,7 +260,7 @@ def run_full_node() -> None:
         999: menu_reboot_server,
     }
     while True:
-        load_var_file()
+        load_var_file(easy_env.dotenv_file)
         menu_full()
         if environ.get("HARMONY_UPGRADE_AVAILABLE") == "True":
             print(
@@ -309,7 +309,7 @@ def run_regular_node() -> None:
         999: menu_reboot_server,
     }
     while True:
-        load_var_file()
+        load_var_file(easy_env.dotenv_file)
         menu_regular()
         if environ.get("HARMONY_UPGRADE_AVAILABLE") == "True":
             print(
@@ -419,7 +419,7 @@ def update_harmony_app(test_or_main):
     time.sleep(10)
 
 def menu_validator_stats():
-    load_var_file()
+    load_var_file(easy_env.dotenv_file)
     remote_shard_0 = [
         f"{easy_env.hmy_app}",
         "blockchain",

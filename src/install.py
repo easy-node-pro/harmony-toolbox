@@ -8,7 +8,7 @@ if __name__ == "__main__":
     loader_intro()
     if not os.path.exists(easy_env.dotenv_file):
         first_setup()
-    load_var_file()
+    load_var_file(easy_env.dotenv_file)
     if not environ.get("VALIDATOR_WALLET"):
         recover_wallet()
         if not environ.get("VALIDATOR_WALLET"):

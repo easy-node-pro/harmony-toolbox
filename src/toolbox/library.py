@@ -57,7 +57,7 @@ def set_var(fileName, keyName, updateName):
     if environ.get(keyName):
         dotenv.unset_key(fileName, keyName)
     dotenv.set_key(fileName, keyName, updateName)
-    load_var_file()
+    load_var_file(easy_env.dotenv_file)
     return
 
 
@@ -111,7 +111,7 @@ def recover_wallet():
     # if yes, find recovery type
     if question:
         recovery_type()
-        load_var_file()
+        load_var_file(easy_env.dotenv_file)
         print(
             f'\n* Verify the address above matches the address below:\n* Detected Wallet: {Fore.GREEN}{environ.get("VALIDATOR_WALLET")}{Style.RESET_ALL}\n* If a different wallet is showing you can remove it and retry it after installation.\n*\n* .{easy_env.hmy_app} keys remove {easy_env.active_user}\n*\n* To restore a wallet once again, run the following:\n*\n* .{easy_env.hmy_app} keys recover-from-mnemonic {easy_env.active_user} {environ.get("PASS_SWITCH")}\n*'
         )
@@ -156,7 +156,7 @@ def set_wallet_env():
             set_var(easy_env.dotenv_file, "VALIDATOR_WALLET", output_stripped)
             return output_stripped
         else:
-            load_var_file()
+            load_var_file(easy_env.dotenv_file)
             validator_wallet = environ.get("VALIDATOR_WALLET")
             return validator_wallet
 
@@ -199,7 +199,7 @@ def recovery_type():
 
 
 def passphrase_status():
-    load_var_file()
+    load_var_file(easy_env.dotenv_file)
     if environ.get("NODE_WALLET") == "true":
         passphrase_set()
         set_var(
@@ -234,7 +234,7 @@ def passphrase_set():
             break
     # Save file, we won't encrypt because if someone has access to the file, they will also have the salt and decrypt code at their disposal.
     save_text(easy_env.password_path, password_1)
-    load_var_file()
+    load_var_file(easy_env.dotenv_file)
     passphrase_status()
 
 
@@ -271,9 +271,9 @@ def return_txt(fn: str) -> list:
         return []
 
 
-def load_var_file():
-    if os.path.exists(easy_env.dotenv_file):
-        load_dotenv(easy_env.dotenv_file, override=True)
+def load_var_file(var_file):
+    if os.path.exists(var_file):
+        load_dotenv(var_file, override=True)
 
 
 def get_shard_menu() -> None:
@@ -602,7 +602,7 @@ def first_setup():
 
 def recheck_vars():
     # recheck some stuff just in case the .easynode.env isn't proper
-    load_var_file()
+    load_var_file(easy_env.dotenv_file)
     get_shard_menu()
     get_node_type()
     set_main_or_test()
@@ -612,7 +612,7 @@ def recheck_vars():
 
 # looks for ~/harmony or installs it if it's not there. Asks to overwrite if it finds it, run at your own risk.
 def check_for_install() -> str:
-    load_var_file()
+    load_var_file(easy_env.dotenv_file)
     if not os.path.exists(easy_env.harmony_dir):
         print(f"* You selected Shard: {environ.get('SHARD')}. ")
         install_harmony()
@@ -783,7 +783,7 @@ def set_mounted_point():
 
 
 def finish_node_install():
-    load_var_file()
+    load_var_file(easy_env.dotenv_file)
     print_stars()
     print(
         "* Installation is completed"
@@ -829,7 +829,7 @@ def server_drive_check() -> None:
         ourDiskMount = environ.get("MOUNT_POINT")
     else:
         dotenv.set_key(easy_env.dotenv_file, "MOUNT_POINT", easy_env.harmony_dir)
-        load_var_file()
+        load_var_file(easy_env.dotenv_file)
         ourDiskMount = environ.get("MOUNT_POINT")
     print_stars()
     print("Here are all of your mount points: ")
