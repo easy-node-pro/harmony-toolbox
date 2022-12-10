@@ -29,7 +29,7 @@ from toolbox.library import (
     free_space_check,
     server_drive_check
 )
-from toolbox.all_sys_info import all_sys_info
+from all_sys_info import all_sys_info
 
 
 def collect_rewards(networkCall):
