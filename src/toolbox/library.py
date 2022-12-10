@@ -1032,7 +1032,6 @@ def coming_soon():
 def run_ubuntu_updater() -> None:
     os_upgrades()
     print()
-    input("* OS Updates completed, press ENTER to return to the main menu. ")
 
 def os_upgrades() -> None:
     upgrades = (
@@ -1053,6 +1052,7 @@ def menu_ubuntu_updates() -> str:
     )
     if question:
         run_ubuntu_updater()
+        input("* OS Updates completed, press ENTER to return to the main menu. ")
 
 def menu_error() -> None:
     os.system("clear")
