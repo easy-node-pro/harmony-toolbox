@@ -813,8 +813,8 @@ def finish_node_install():
     setVar(validatorToolbox.dotenv_file, "SETUP_STATUS", "1")
     raise SystemExit(0)
 
-def freeSpaceCheck() -> str:
-    ourDiskMount = get_mount_point(validatorToolbox.harmonyDirPath)
+def freeSpaceCheck(mount) -> str:
+    ourDiskMount = get_mount_point(mount)
     _, _, free = shutil.disk_usage(ourDiskMount)
     freeConverted = str(convertedUnit(free))
     return freeConverted
@@ -834,7 +834,7 @@ def serverDriveCheck() -> None:
     total, used, free = shutil.disk_usage(ourDiskMount)
     total = str(convertedUnit(total))
     used = str(convertedUnit(used))
-    print("Disk: " + str(ourDiskMount) + "\n" + freeSpaceCheck() + " Free\n" + used + " Used\n" + total + " Total")
+    print("Disk: " + str(ourDiskMount) + "\n" + freeSpaceCheck(validatorToolbox.harmonyDirPath) + " Free\n" + used + " Used\n" + total + " Total")
     printStars()
     input("Disk check complete, press ENTER to return to the main menu. ")
 
