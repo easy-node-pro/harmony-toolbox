@@ -28,7 +28,12 @@ from toolbox.library import (
     set_var,
     free_space_check,
     server_drive_check,
-    all_sys_info
+    all_sys_info,
+    coming_soon,
+    menu_ubuntu_updates,
+    menu_error,
+    menu_reboot_server,
+    finish_node
 )
 
 
@@ -283,15 +288,6 @@ def bingo_checker():
     input("* Press enter to return to the main menu.")
 
 
-def coming_soon():
-    os.system("clear")
-    print_whitespace()
-    print_stars()
-    print("* This option isn't available on your system, yet!")
-    print_stars()
-    input("* Press enter to return to the main menu.")
-
-
 def run_regular_node() -> None:
     menu_options = {
         # 0: finish_node,
@@ -336,32 +332,6 @@ def run_regular_node() -> None:
         os.system("clear")
         menu_options[option]()
         refresh_stats(1)
-
-
-def menu_error() -> None:
-    os.system("clear")
-    print_stars_reset()
-    print(
-        "* "
-        + Fore.RED
-        + "WARNING"
-        + Style.RESET_ALL
-        + ": Only numbers are possible, please try your selection on the main menu once again."
-    )
-    return
-
-
-def os_upgrades() -> None:
-    print_stars()
-    upgrades = (
-        "sudo apt update",
-        "sudo apt upgrade -y",
-        "sudo apt dist-upgrade -y",
-        "sudo apt autoremove -y",
-    )
-    for x in upgrades:
-        process_command(x)
-    print_stars()
 
 
 def harmony_service_status() -> None:
@@ -523,7 +493,6 @@ def shard_stats(our_shard) -> str:
         """
         )
 
-
 def menu_binary_updates():
     test_or_main = environ.get("NETWORK")
     print_stars_reset()
@@ -535,33 +504,6 @@ def menu_binary_updates():
     )
     if question:
         update_harmony_app(test_or_main)
-
-
-def menu_ubuntu_updates() -> str:
-    print_stars_reset()
-    question = ask_yes_no(
-        Fore.WHITE + "Are you sure you would like to proceed with Linux apt Upgrades?\n\nType 'Yes' or 'No' to continue"
-    )
-    if question:
-        os_upgrades()
-        print()
-        input("OS Updates completed, press ENTER to return to the main menu. ")
-
-
-def menu_reboot_server() -> str:
-    print_stars_reset()
-    question = ask_yes_no(
-        Fore.RED
-        + "WARNING: YOU WILL MISS BLOCKS WHILE YOU REBOOT YOUR ENTIRE SERVER.\n\n"
-        + "Reconnect after a few moments & Run the Validator Toolbox Menu again with: python3 ~/validator-toolboxstart.py\n"
-        + Fore.WHITE
-        + "Are you sure you would like to proceed with rebooting your server?\n\nType 'Yes' or 'No' to continue"
-    )
-    if question:
-        os.system("sudo reboot")
-    else:
-        print("Invalid option.")
-
 
 def menu_service_stop_start() -> str:
     status = os.system("systemctl is-active --quiet harmony")
@@ -699,10 +641,3 @@ def get_current_epochByEndpoint(endpoint):
             continue
 
     return current_epoch
-
-
-def finish_node():
-    print_stars()
-    print("* Thanks for using Easy Node - EZ Mode! Goodbye.")
-    print_stars()
-    raise SystemExit(0)

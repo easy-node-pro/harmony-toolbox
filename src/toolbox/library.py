@@ -996,3 +996,77 @@ def all_sys_info():
     print(f"Total Bytes Received: {get_size(net_io.bytes_recv)}")
     input("Press ENTER to return to the main menu.")
     return
+
+def docker_check():
+    status = subprocess.call(["docker"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if status == 0:
+        print("* Docker is available and working properly.\n* Loading management menu now...")
+        print_stars()
+        time.sleep(2)
+        return 0
+    else:
+        print("* Docker is not installed and/or is not working properly.")
+        print("* Install docker on this server and give the user access to continue.")
+        print_stars()
+        raise SystemExit(0)
+
+def coming_soon():
+    os.system("clear")
+    print_stars()
+    print("* This option isn't available on your system, yet!")
+    print_stars()
+    input("* Press enter to return to the main menu.")
+
+def os_upgrades() -> None:
+    print_stars()
+    upgrades = (
+        "sudo apt update",
+        "sudo apt upgrade -y",
+        "sudo apt dist-upgrade -y",
+        "sudo apt autoremove -y",
+    )
+    for x in upgrades:
+        process_command(x)
+    print_stars()
+
+def menu_ubuntu_updates() -> str:
+    print_stars()
+    question = ask_yes_no(
+        f"* Are you sure you would like to proceed with Linux apt Upgrades?\n\nType 'Yes' or 'No' to continue"
+    )
+    if question:
+        os_upgrades()
+        print()
+        input("* OS Updates completed, press ENTER to return to the main menu. ")
+
+def menu_error() -> None:
+    os.system("clear")
+    print_stars_reset()
+    print(
+        "* "
+        + Fore.RED
+        + "WARNING"
+        + Style.RESET_ALL
+        + ": Only numbers are possible, please try your selection on the main menu once again."
+    )
+    return
+
+def menu_reboot_server() -> str:
+    print_stars_reset()
+    question = ask_yes_no(
+        Fore.RED
+        + "WARNING: YOU WILL MISS BLOCKS WHILE YOU REBOOT YOUR ENTIRE SERVER.\n\n"
+        + "Reconnect after a few moments & Run the Validator Toolbox Menu again with: python3 ~/validator-toolboxstart.py\n"
+        + Fore.WHITE
+        + "Are you sure you would like to proceed with rebooting your server?\n\nType 'Yes' or 'No' to continue"
+    )
+    if question:
+        os.system("sudo reboot")
+    else:
+        print("Invalid option.")
+
+def finish_node():
+    print_stars()
+    print("* Thanks for using Easy Node - EZ Mode! Goodbye.")
+    print_stars()
+    raise SystemExit(0)
