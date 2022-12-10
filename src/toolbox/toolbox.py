@@ -14,7 +14,7 @@ from requests.exceptions import HTTPError
 from toolbox.library import (
     process_command,
     print_stars,
-    print_stars_reset,
+    print_stars,
     print_whitespace,
     ask_yes_no,
     return_txt,
@@ -124,7 +124,7 @@ def menu_topper_full() -> None:
     print(f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}")
     print(f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}")
     print(f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min")
-    print_stars_reset()
+    print_stars()
 
 
 def menu_regular() -> None:
@@ -179,7 +179,7 @@ def tmi_server_info() -> None:
     json_response = get_wallet_json(validator_wallet)
     for key, value in json_response.items():
         print(key, ":", value)
-    print_stars_reset()
+    print_stars()
     input("Press ENTER to return to the main menu.")
 
 
@@ -353,13 +353,13 @@ def service_menu_option() -> None:
 
 def make_backup_dir() -> str:
     if not os.path.isdir(f"{easy_env.harmony_dir}/harmony_backup"):
-        print_stars_reset()
+        print_stars()
         print("Backup directory not found, creating folder")
         os.system(f"mkdir -p {easy_env.harmony_dir}/harmony_backup")
 
 
 def hmy_cli_upgrade():
-    print_stars_reset()
+    print_stars()
     question = ask_yes_no(
         "Are you sure you would like to proceed with updating the Harmony CLI file?\n\nType 'Yes' or 'No' to continue"
     )
@@ -379,7 +379,7 @@ def hmy_cli_upgrade():
 
 def update_harmony_app(test_or_main):
     os.chdir(f"{easy_env.harmony_dir}")
-    print_stars_reset()
+    print_stars()
     print("Currently installed version: ")
     os.system("./harmony -V")
     make_backup_dir()
@@ -495,7 +495,7 @@ def shard_stats(our_shard) -> str:
 
 def menu_binary_updates():
     test_or_main = environ.get("NETWORK")
-    print_stars_reset()
+    print_stars()
     question = ask_yes_no(
         Fore.RED
         + "WARNING: YOU WILL MISS BLOCKS WHILE YOU UPGRADE THE HARMONY SERVICE.\n\n"
@@ -552,7 +552,7 @@ def menu_service_restart() -> str:
 def menu_active_bls() -> str:
     validator_wallet = environ.get("VALIDATOR_WALLET")
     json_response = get_wallet_json(validator_wallet)
-    print_stars_reset()
+    print_stars()
     print("* This is a list of your BLS Keys that are active for the next election.")
     for i, x in enumerate(json_response["bls-public-keys"]):
         print(f"BLS Key {i+1} {x}")
@@ -572,7 +572,7 @@ def is_float(value):
 def menu_check_balance() -> None:
     validator_wallet = environ.get("VALIDATOR_WALLET")
     if environ.get("NODE_TYPE") == "regular":
-        print_stars_reset()
+        print_stars()
         print("* Calling mainnet and testnet for balances...")
         print_stars()
         total_balance, total_balance_test = get_wallet_balance(validator_wallet)
@@ -597,13 +597,13 @@ def menu_check_balance() -> None:
 
 
 def balanceCheckAny():
-    print_stars_reset()
+    print_stars()
     check_wallet = input(
         "* Type the address of the Harmony ONE Wallet you would like to check.\n"
         + "* Only one wallets will work, no 0x addresses : "
     )
     print("* Calling mainnet and testnet for balances...")
-    print_stars_reset()
+    print_stars()
     total_balance, total_balance_test = get_wallet_balance(check_wallet)
     print(
         f"* The Mainnet Wallet Balance is: {total_balance} Harmony ONE Coins\n* The Testnet Wallet Balance is: {total_balance_test} Harmony ONE Test Coins"

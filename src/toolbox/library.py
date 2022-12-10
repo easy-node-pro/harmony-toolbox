@@ -830,7 +830,7 @@ def server_drive_check() -> None:
         dotenv.set_key(easy_env.dotenv_file, "MOUNT_POINT", easy_env.harmony_dir)
         load_var_file()
         ourDiskMount = environ.get("MOUNT_POINT")
-    print_stars_reset()
+    print_stars()
     print("Here are all of your mount points: ")
     for part in disk_partitions():
         print(part)
@@ -1041,7 +1041,7 @@ def menu_ubuntu_updates() -> str:
 
 def menu_error() -> None:
     os.system("clear")
-    print_stars_reset()
+    print_stars()
     print(
         "* "
         + Fore.RED
@@ -1052,7 +1052,7 @@ def menu_error() -> None:
     return
 
 def menu_reboot_server() -> str:
-    print_stars_reset()
+    print_stars()
     question = ask_yes_no(
         Fore.RED
         + "WARNING: YOU WILL MISS BLOCKS WHILE YOU REBOOT YOUR ENTIRE SERVER.\n\n"
