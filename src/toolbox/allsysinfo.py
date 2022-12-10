@@ -9,7 +9,7 @@ def get_size(bytes, suffix="B"):
             return f"{bytes:.2f}{unit}{suffix}"
         bytes /= factor
 
-def allSysInfo():
+def all_sys_info():
     print("="*40, "System Information", "="*40)
     uname = platform.uname()
     print(f"System: {uname.system}")

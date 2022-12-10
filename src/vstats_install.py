@@ -5,7 +5,7 @@ from toolbox.config import easy_env
 from toolbox.library import loader_intro, load_var_file, ask_yes_no, set_var, update_text_file, print_stars
 
 
-def installVstats(vstatsToken) -> None:
+def install_vstats(vstatsToken) -> None:
     # Check if it exists already
     if os.path.isdir(f"{easy_env.user_home_dir}/harmony_node_stats"):
         question = ask_yes_no("* You already have vstats installed, would you like to update & reinstall vstats? (YES/NO)")
@@ -43,7 +43,7 @@ def installVstats(vstatsToken) -> None:
     return
     
 
-def getToken():
+def get_token():
     if len(sys.argv) > 1:
             vstatsToken = sys.argv[1]
             set_var(easy_env.dotenv_file, "VSTATSBOT_TOKEN", vstatsToken)
@@ -70,16 +70,16 @@ if __name__ == '__main__':
     # check if it exists, load anyway if it does
     if os.path.exists(easy_env.dotenv_file) is None:
         # ask a bunch of questions to gather data since we don't have env
-        vstatsToken = getToken()
+        vstatsToken = get_token()
     
     else:
         load_var_file()
         # load env configuration
-        vstatsToken = getToken()
+        vstatsToken = get_token()
 
 
     # install once we have the info to customize
-    installVstats(vstatsToken)
+    install_vstats(vstatsToken)
 
     # Goodbye!
     print_stars()

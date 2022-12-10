@@ -2,7 +2,7 @@ import os
 from os import environ
 from toolbox.config import easy_env
 from toolbox.library import loader_intro, set_wallet_env, load_var_file, passphrase_status, set_var, version_checks, recheck_vars, recover_wallet
-from toolbox.toolbox import runRegularNode, runFullNode, refreshStats
+from toolbox.toolbox import run_regular_node, run_full_node, refresh_stats
 
 if __name__ == "__main__":
     # clear screen, show logo
@@ -28,7 +28,7 @@ if __name__ == "__main__":
             input("* Press any key to exit.")
             raise SystemExit(0)
     # Check online versions of harmony & hmy and compare to our local copy.
-    refreshStats(1)
+    refresh_stats(1)
     version_checks()
     # Last check on setup status, if it never finished it will try again here.
     if environ.get("SETUP_STATUS") != "2":
@@ -38,9 +38,9 @@ if __name__ == "__main__":
     if environ.get("NODE_TYPE") == "regular":
         if environ.get("VALIDATOR_WALLET") is None:
             set_wallet_env()
-        runRegularNode()
+        run_regular_node()
     # Run full node
     if environ.get("NODE_TYPE") == "full":
-        runFullNode()
+        run_full_node()
     print("Uh oh, you broke me! Contact Easy Node")
     raise SystemExit(0)

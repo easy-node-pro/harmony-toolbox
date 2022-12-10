@@ -287,9 +287,9 @@ def get_shard_menu() -> None:
             "[3] - Shard 3",
         ]
         terminal_menu = TerminalMenu(menu_options, title="* Which Shard will this node operate on? ")
-        ourShard = str(terminal_menu.show())
-        set_var(easy_env.dotenv_file, "SHARD", ourShard)
-        return ourShard
+        our_shard = str(terminal_menu.show())
+        set_var(easy_env.dotenv_file, "SHARD", our_shard)
+        return our_shard
 
 
 def get_node_type() -> None:

@@ -2,7 +2,7 @@
 print("*")
 print("*   1 - Refresh Toolbox Info      - Use this option to reload to get updated stats above!")
 print("*   2 - Show Balance              - Check Any Wallet Balance")
-serviceMenuOption()
+service_menu_option()
 print("*  10 - Update Harmony Binary     - For New Harmony Releases ONLY")
 print("*  11 -  Update Harmony CLI        - Update harmony binary file, " + Fore.YELLOW + Back.RED + "WARNING: You will miss blocks during service restart!!!")
 print("*  12 -  Update Operating System   - Update hmy binary file")
