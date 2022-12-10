@@ -2,7 +2,7 @@ import os
 import sys
 from os import environ
 from toolbox.config import easy_env
-from toolbox.library import loader_intro, load_var_file, ask_yes_no, set_var, update_text_file, printStars
+from toolbox.library import loader_intro, load_var_file, ask_yes_no, set_var, update_text_file, print_stars
 
 
 def install_vstats(vstatsToken) -> None:
@@ -82,6 +82,6 @@ if __name__ == '__main__':
     install_vstats(vstatsToken)
 
     # Goodbye!
-    printStars()
+    print_stars()
     print("\n*\n* Installer has finished, you should have a ping waiting on vStats if everything was input correctly\n* You can also run `sudo service harmony_node_stats status` to verify your service is online and running!\n*")
-    printStars()
+    print_stars()

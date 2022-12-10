@@ -2,7 +2,7 @@ import os
 import dotenv
 from os import environ
 from toolbox.config import easy_env
-from toolbox.library import loader_intro, set_wallet_env, ask_yes_no, printStars, recover_wallet
+from toolbox.library import loader_intro, set_wallet_env, ask_yes_no, print_stars, recover_wallet
 
 if __name__ == "__main__":
     os.system("clear")
@@ -10,7 +10,7 @@ if __name__ == "__main__":
     print(
         "* Harmony ONE Validator Wallet Import"
     )
-    printStars()
+    print_stars()
     question = ask_yes_no(
             "\n* You will directly utilize the harmony application interface"
             + "\n* We do not store any pass phrases  or data inside of our application"
