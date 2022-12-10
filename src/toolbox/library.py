@@ -1029,14 +1029,19 @@ def coming_soon():
     print_stars()
     input("* Press enter to return to the main menu.")
 
+def run_ubuntu_updater() -> None:
+    os_upgrades()
+    print()
+    input("* OS Updates completed, press ENTER to return to the main menu. ")
+
 def os_upgrades() -> None:
-    print_stars()
     upgrades = (
         "sudo apt update",
         "sudo apt upgrade -y",
         "sudo apt dist-upgrade -y",
         "sudo apt autoremove -y",
     )
+    print_stars()
     for x in upgrades:
         process_command(x)
     print_stars()
@@ -1044,12 +1049,10 @@ def os_upgrades() -> None:
 def menu_ubuntu_updates() -> str:
     print_stars()
     question = ask_yes_no(
-        f"* Are you sure you would like to proceed with Linux apt Upgrades?\n\nType 'Yes' or 'No' to continue"
+        f"* Are you sure you would like to proceed with Linux apt Upgrades? (Y/N) "
     )
     if question:
-        os_upgrades()
-        print()
-        input("* OS Updates completed, press ENTER to return to the main menu. ")
+        run_ubuntu_updater()
 
 def menu_error() -> None:
     os.system("clear")
