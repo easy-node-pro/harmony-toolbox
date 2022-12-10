@@ -27,9 +27,9 @@ from toolbox.library import (
     string_stars,
     set_var,
     free_space_check,
-    server_drive_check
+    server_drive_check,
+    all_sys_info
 )
-from all_sys_info import all_sys_info
 
 
 def collect_rewards(networkCall):
