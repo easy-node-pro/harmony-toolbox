@@ -12,7 +12,7 @@ def get_url() -> None:
     return result
 
 class easy_env:
-    easy_version = "1.7.6.2"
+    easy_version = "1.7.7"
     server_host_name = socket.gethostname()
     user_home_dir = os.path.expanduser("~")
     dotenv_file = f"{user_home_dir}/.easynode.env"

@@ -290,7 +290,7 @@ def bingo_checker():
 
 def run_regular_node() -> None:
     menu_options = {
-        # 0: finish_node,
+        0: finish_node,
         1: refresh_stats,
         2: menu_active_bls,
         3: menu_check_balance,
@@ -327,8 +327,6 @@ def run_regular_node() -> None:
             menu_error()
             refresh_stats(1)
             run_regular_node()
-        if option == 0:
-            return finish_node()
         os.system("clear")
         menu_options[option]()
         refresh_stats(1)
