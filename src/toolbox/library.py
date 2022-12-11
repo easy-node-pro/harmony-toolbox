@@ -275,7 +275,6 @@ def get_shard_menu() -> None:
         set_var(easy_env.dotenv_file, "SHARD", our_shard)
         return our_shard
 
-
 def get_node_type() -> None:
     if not os.path.exists(easy_env.hmy_wallet_store):
         if environ.get("NODE_TYPE") == None:
@@ -364,7 +363,6 @@ def get_wallet_address():
     print_stars()
     raise SystemExit(0)
 
-
 def set_api_paths():
     if not environ.get("NETWORK_0_CALL"):
         set_var(
@@ -377,7 +375,6 @@ def set_api_paths():
             "NETWORK_S_CALL",
             f"{easy_env.hmy_app} --node='https://api.s{environ.get('SHARD')}.{environ.get('NETWORK_SWITCH')}.hmny.io' ",
         )
-
 
 def get_validator_info():
     if environ.get("NETWORK") == "mainnet":
@@ -398,7 +395,6 @@ def get_validator_info():
 
     return validator_data
 
-
 def current_price():
     try:
         response = requests.get(easy_env.onePriceURL, timeout=5)
@@ -409,7 +405,6 @@ def current_price():
     type(data_dict)
     data_dict.keys()
     return data_dict["lastPrice"][:-4]
-
 
 def get_wallet_balance(wallet_addr):
     endpoints_count = len(easy_env.rpc_endpoints)
@@ -422,7 +417,6 @@ def get_wallet_balance(wallet_addr):
             return wallet_balance, wallet_balance_test
 
     raise ConnectionError("Couldn't fetch RPC data for current epoch.")
-
 
 def get_wallet_balance_by_endpoint(endpoint, wallet_addr):
     current = 0
@@ -439,7 +433,6 @@ def get_wallet_balance_by_endpoint(endpoint, wallet_addr):
 
     return get_balance
 
-
 def get_rewards_balance(endpoint, wallet_addr):
     endpoints_count = len(endpoint)
 
@@ -450,7 +443,6 @@ def get_rewards_balance(endpoint, wallet_addr):
             return wallet_balance
 
     raise ConnectionError("Couldn't fetch RPC data for current epoch.")
-
 
 def get_rewards_balance_by_endpoint(endpoint, wallet_addr):
     current = 0
@@ -467,11 +459,9 @@ def get_rewards_balance_by_endpoint(endpoint, wallet_addr):
     totalRewards = pyhmy.numbers.convert_atto_to_one(totalRewards)
     return totalRewards
 
-
 def save_json(fn: str, data: dict) -> dict:
     with open(fn, "w") as j:
         dump(data, j, indent=4)
-
 
 def return_json(fn: str, single_key: str = None) -> dict:
     try:
@@ -484,7 +474,6 @@ def return_json(fn: str, single_key: str = None) -> dict:
         # print(f"File not Found  ::  {e}")
         return {}
 
-
 def wallet_pending_rewards(wallet):
     res, walletBalance = get_rewards_balance(wallet, save_data=True, display=False)
     totalRewards = 0
@@ -492,7 +481,6 @@ def wallet_pending_rewards(wallet):
         totalRewards = totalRewards + i["reward"]
     totalRewards = "{:,}".format(round(totalRewards * 0.000000000000000001, 2))
     return totalRewards
-
 
 def get_sign_pct() -> str:
     output = subprocess.getoutput(
@@ -508,7 +496,6 @@ def get_sign_pct() -> str:
         output_stripped = "0"
         return str(output_stripped)
 
-
 def get_versions():
     output = subprocess.getoutput(f"{easy_env.harmony_app} -V")
     output_2 = subprocess.getoutput(f"{easy_env.hmy_app} version")
@@ -516,10 +503,8 @@ def get_versions():
     set_var(easy_env.dotenv_file, "HMY_VERSION", output_2[62:-15])
     return output[35:-35], output_2[62:-15]
 
-
 def set_mod_x(file):
     subprocess.run(["chmod", "+x", file])
-
 
 def check_for_updates():
     subprocess.check_output(
@@ -590,7 +575,6 @@ def recheck_vars():
     set_main_or_test()
     set_api_paths()
     return
-
 
 # looks for ~/harmony or installs it if it's not there. Asks to overwrite if it finds it, run at your own risk.
 def check_for_install() -> str:
@@ -761,7 +745,6 @@ def set_mounted_point():
         dotenv.set_key(easy_env.dotenv_file, "MOUNT_POINT", myLongHmyPath)
     else:
         dotenv.set_key(easy_env.dotenv_file, "MOUNT_POINT", f"{easy_env.harmony_dir}")
-
 
 def finish_node_install():
     load_var_file(easy_env.dotenv_file)
@@ -1053,6 +1036,6 @@ def menu_reboot_server() -> str:
         print("Invalid option.")
 
 def finish_node():
-    print("* Thanks for using Easy Node - EZ Mode!\n* We serve up free tools, consider supporting us one time or monthly at https://github.com/sponsors/easy-node-pro today!\n* Goodbye.")
+    print("* Thanks for using Easy Node - EZ Mode!\n* We serve up free tools.\n* Please consider supporting us one time or monthly at https://github.com/sponsors/easy-node-pro today!\n*\n* Goodbye!")
     print_stars()
     raise SystemExit(0)
