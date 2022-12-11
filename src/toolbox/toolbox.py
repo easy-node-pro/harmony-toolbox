@@ -436,7 +436,7 @@ def menu_validator_stats():
     try:
         local_data_shard = json.loads(result_local_shard.stdout)
     except:
-        print(f'* Local Data Offline')
+        print(f'* Local Server Offline, restart your service or troubleshoot the issue by running the following in your ~/harmony directory:\n* ./harmony -c harmony.conf')
             
     if environ.get("SHARD") != "0":
         remote_shard = [
