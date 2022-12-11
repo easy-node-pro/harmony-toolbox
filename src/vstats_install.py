@@ -1,9 +1,9 @@
 import os
 import sys
+import subprocess
 from os import environ
 from toolbox.config import easy_env
 from toolbox.library import loader_intro, load_var_file, ask_yes_no, set_var, update_text_file, print_stars
-
 
 def install_vstats(vstatsToken) -> None:
     # Check if it exists already
