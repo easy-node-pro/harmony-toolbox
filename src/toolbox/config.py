@@ -17,6 +17,7 @@ class easy_env:
     user_home_dir = os.path.expanduser("~")
     dotenv_file = f"{user_home_dir}/.easynode.env"
     active_user = os.path.split(user_home_dir)[-1]
+    harmony_folder_name = f'harmony'
     harmony_dir = os.path.join(user_home_dir, "harmony")
     harmony_app = os.path.join(harmony_dir, "harmony")
     bls_key_file = os.path.join(harmony_dir, "blskey.pass")

@@ -29,7 +29,7 @@ if __name__ == "__main__":
             raise SystemExit(0)
     # Check online versions of harmony & hmy and compare to our local copy.
     refresh_stats(1)
-    software_versions = version_checks(easy_env.harmony_dir)
+    software_versions = version_checks(easy_env.harmony_folder_name)
     # Last check on setup status, if it never finished it will try again here.
     if environ.get("SETUP_STATUS") != "2":
         recheck_vars()
