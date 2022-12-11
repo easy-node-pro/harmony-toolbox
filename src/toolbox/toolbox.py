@@ -325,7 +325,7 @@ def run_regular_node(software_versions) -> None:
         except ValueError:
             menu_error()
             refresh_stats(1)
-            run_regular_node()
+            run_regular_node(software_versions)
         subprocess.run("clear")
         print_stars()
         menu_options[option]()
