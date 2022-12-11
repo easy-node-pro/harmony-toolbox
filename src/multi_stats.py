@@ -113,7 +113,7 @@ def stats_output_regular(folders) -> None:
     print_stars()
     for folder in folders:
         software_versions = version_checks(folder)
-        print(f'\n* Current harmony version: {Fore.YELLOW}{harmony_version}{Style.RESET_ALL}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}')
+        print(f'\n* For the current folder: {folder}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Style.RESET_ALL}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Style.RESET_ALL}, has upgrade available: {software_versions["hmy_upgrade"]}')
         local_server = [f"{user_home}/{folder}/hmy", "utility", "metadata", f"--node=http://localhost:{folders[folder]}"]
         result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data = json.loads(result_local_server.stdout)
