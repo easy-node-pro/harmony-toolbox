@@ -324,12 +324,13 @@ def run_regular_node(software_versions) -> None:
             option = int(input("Enter your option: "))
         except ValueError:
             menu_error()
-            run_regular_node(software_versions)
+            break
         subprocess.run("clear")
         print_stars()
         if menu_options[option] != 1: 
             menu_options[option]()
             refresh_stats(1)
+    run_regular_node(software_versions)
         
 
 
