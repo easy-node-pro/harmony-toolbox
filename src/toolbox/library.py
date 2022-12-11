@@ -564,6 +564,7 @@ def first_env_check(env_file, home_dir) -> None:
         load_var_file(env_file)
     else:
         os.system(f"touch {home_dir}/.easynode.env")
+        load_var_file(env_file)
 
 def version_checks():
     harmony_version, hmy_version = get_versions()
@@ -578,7 +579,6 @@ def version_checks():
     if hmy_version == online_hmy_version:
         set_var(easy_env.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
     return
-
 
 def first_setup():
     first_env_check(easy_env.dotenv_file, easy_env.user_home_dir)
@@ -603,7 +603,6 @@ def first_setup():
     check_for_install()
     print_stars()
     return
-
 
 def recheck_vars():
     # recheck some stuff just in case the .easynode.env isn't proper
