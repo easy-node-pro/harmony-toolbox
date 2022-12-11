@@ -284,7 +284,10 @@ def run_full_node() -> None:
 
 def bingo_checker():
     os.system("grep BINGO ~/harmony/latest/zerolog-harmony.log | tail -10")
-    input("* Press enter to return to the main menu.")
+    print_stars()
+    print("* Press enter to return to the main menu.")
+    print_stars()
+    input()
 
 
 def run_regular_node(software_versions) -> None:
