@@ -68,22 +68,22 @@ def get_folders():
         print_stars()
     if os.path.exists(f"{user_home}/harmony0/harmony.conf"):
         port = find_port(f'harmony0')
-        folders['harmony1'] = port
+        folders['harmony0'] = port
         print(f'* Found ~/harmony1 folder, on port {port}')
         print_stars()
     if os.path.exists(f"{user_home}/harmony1/harmony.conf"):
         port = find_port(f'harmony1')
-        folders['harmony2'] = port
+        folders['harmony1'] = port
         print(f'* Found ~/harmony1 folder, on port {port}')
         print_stars()
     if os.path.exists(f"{user_home}/harmony2/harmony.conf"):
         port = find_port(f'harmony2')
-        folders['harmony3'] = port
+        folders['harmony2'] = port
         print(f'* Found ~/harmony2 folder, on port {port}')
         print_stars()
     if os.path.exists(f"{user_home}/harmony3/harmony.conf"):
         port = find_port(f'harmony3')
-        folders['harmony4'] = port
+        folders['harmony3'] = port
         print(f'* Found ~/harmony3 folder, on port {port}')
         print_stars()
     return folders
@@ -113,7 +113,7 @@ def stats_output_regular(folders) -> None:
     print_stars()
     for folder in folders:
         software_versions = version_checks(folder)
-        print(f'\n* For the current folder: {folder}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Style.RESET_ALL}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Style.RESET_ALL}, has upgrade available: {software_versions["hmy_upgrade"]}')
+        print(f'* For the current folder: {folder}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Style.RESET_ALL}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Style.RESET_ALL}, has upgrade available: {software_versions["hmy_upgrade"]}')
         local_server = [f"{user_home}/{folder}/hmy", "utility", "metadata", f"--node=http://localhost:{folders[folder]}"]
         result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data = json.loads(result_local_server.stdout)
