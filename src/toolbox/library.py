@@ -559,6 +559,11 @@ def check_for_updates():
     set_var(easy_env.dotenv_file, "ONLINE_HMY_VERSION", output_2[62:-15])
     return output[35:-35], output_2[62:-15]
 
+def first_env_check(env_file, home_dir) -> None:
+    if os.path.exists(env_file):
+        load_var_file(env_file)
+    else:
+        os.system(f"touch {home_dir}/.easynode.env")
 
 def version_checks():
     harmony_version, hmy_version = get_versions()
@@ -576,7 +581,7 @@ def version_checks():
 
 
 def first_setup():
-    os.system("touch ~/.easynode.env")
+    first_env_check(easy_env.dotenv_file, easy_env.user_home_dir)
     # first run stuff
     time.sleep(2)
     # Update version if newer from conf file to .easynode.env
