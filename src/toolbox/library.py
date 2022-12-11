@@ -53,11 +53,11 @@ print_stars_reset = print_stuff(reset=1).printStars
 string_stars_reset = print_stuff(reset=1).stringStars
 
 # check if a var exists in your .env file, unset and reset if exists to avoid bad stuff
-def set_var(fileName, keyName, updateName):
-    if environ.get(keyName):
-        dotenv.unset_key(fileName, keyName)
-    dotenv.set_key(fileName, keyName, updateName)
-    load_var_file(easy_env.dotenv_file)
+def set_var(env_file, key_name, update_name):
+    if environ.get(key_name):
+        dotenv.unset_key(env_file, key_name)
+    dotenv.set_key(env_file, key_name, update_name)
+    load_var_file(env_file)
     return
 
 
