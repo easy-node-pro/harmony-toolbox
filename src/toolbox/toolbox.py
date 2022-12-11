@@ -330,6 +330,8 @@ def run_regular_node(software_versions) -> None:
         if menu_options[option] != 1: 
             menu_options[option]()
             refresh_stats(1)
+        else:
+            run_regular_node(software_versions)
     run_regular_node(software_versions)
         
 
