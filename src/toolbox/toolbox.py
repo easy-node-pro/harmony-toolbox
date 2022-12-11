@@ -457,9 +457,6 @@ def menu_validator_stats():
 def refresh_stats(clear=0) -> str:
     if clear == 0:
         subprocess.run("clear")
-    print_stars()
-    print(f'* Getting the latest local & blockchain information now, one moment while we load...')
-    print_stars()
     return
 
 
