@@ -124,7 +124,6 @@ def stats_output_regular(folders) -> None:
         print(f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}")
         print(f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}\n*   Local Shard 0 Size: {get_db_size('0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(local_data['result']['shard-id'])}")
         print_stars()
-        print(software_versions)
 
 if __name__ == "__main__":
     loader_intro()
