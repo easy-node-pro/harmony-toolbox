@@ -312,7 +312,7 @@ def run_regular_node(software_versions) -> None:
         menu_regular()
         if software_versions["harmony_upgrade"] == "True":
             print(
-                f'* The harmony binary has an update available to version {software_versions["online_harmony_ver"]}\n* Option #10 will upgrade you, but you may miss a block while it upgrades & restarts.\n* Currently installed version {software_versions["harmony_version"]}'
+                f'* The harmony binary has an update available to version {software_versions["online_harmony_version"]}\n* Option #10 will upgrade you, but you may miss a block while it upgrades & restarts.\n* Currently installed version {software_versions["harmony_version"]}'
             )
             print_stars()
         if software_versions["hmy_upgrade"] == "True":
