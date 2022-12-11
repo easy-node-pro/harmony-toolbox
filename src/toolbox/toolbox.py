@@ -327,8 +327,10 @@ def run_regular_node(software_versions) -> None:
             run_regular_node(software_versions)
         subprocess.run("clear")
         print_stars()
-        if menu_options[option] != 1: menu_options[option]()
-        refresh_stats(1)
+        if menu_options[option] != 1: 
+            menu_options[option]()
+            refresh_stats(1)
+        
 
 
 def harmony_service_status() -> None:
