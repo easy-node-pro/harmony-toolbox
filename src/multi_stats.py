@@ -88,14 +88,11 @@ def get_folders():
         print_stars()
     return folders
 
-
 def stats_output_regular(folders) -> None:
     # Get server stats & wallet balances
     load_1, load_5, load_15 = os.getloadavg()
     sign_percentage = get_sign_pct()
     total_balance, total_balance_test = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
-    # Get shard stats here
-    count = 0
     subprocess.run("clear")
     # Print Menu
     print_stars()
@@ -113,14 +110,13 @@ def stats_output_regular(folders) -> None:
     print_stars()
     for folder in folders:
         software_versions = version_checks(folder)
-        print(f'* For the current folder: {folder}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Style.RESET_ALL}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Style.RESET_ALL}, has upgrade available: {software_versions["hmy_upgrade"]}')
+        print(f'* Results for the current folder: {easy_env.user_home_dir}{folder}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Style.RESET_ALL}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Style.RESET_ALL}, has upgrade available: {software_versions["hmy_upgrade"]}')
         local_server = [f"{user_home}/{folder}/hmy", "utility", "metadata", f"--node=http://localhost:{folders[folder]}"]
         result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data = json.loads(result_local_server.stdout)
         remote_server = [f"{user_home}/{folder}/hmy", "utility", "metadata", f"--node=https://api.s{local_data['result']['shard-id']}.t.hmny.io"]
         result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         remote_data = json.loads(result_remote_server.stdout)
-        print(f"* Results for folder {user_home}/{folder}:")
         print(f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}")
         print(f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}\n*   Local Shard 0 Size: {get_db_size('0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(local_data['result']['shard-id'])}")
         print_stars()
