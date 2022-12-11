@@ -539,7 +539,7 @@ def version_checks(folder = f'{easy_env.user_home_dir}/harmony'):
     if software_versions["hmy_version"] != software_versions["online_hmy_version"]:
         software_versions["hmy_upgrade"] = True
     else:
-        hmy_upgrade = False
+        software_versions["hmy_upgrade"] = False
     return software_versions
 
 def first_setup():
