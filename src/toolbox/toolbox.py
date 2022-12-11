@@ -324,7 +324,6 @@ def run_regular_node(software_versions) -> None:
             option = int(input("Enter your option: "))
         except ValueError:
             menu_error()
-            refresh_stats(1)
             run_regular_node(software_versions)
         subprocess.run("clear")
         print_stars()
@@ -457,6 +456,9 @@ def menu_validator_stats():
 def refresh_stats(clear=0) -> str:
     if clear == 0:
         subprocess.run("clear")
+    print_stars()
+    print(f'* Getting the latest local & blockchain information now, one moment while we load...')
+    print_stars()
     return
 
 
