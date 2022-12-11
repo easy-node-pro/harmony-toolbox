@@ -52,6 +52,8 @@ string_stars_reset = print_stuff(reset=1).stringStars
 
 # check if a var exists in your .env file, unset and reset if exists to avoid bad stuff
 def set_var(env_file, key_name, update_name):
+    if not os.path.exists:
+        subprocess.run(["touch", env_file])
     if environ.get(key_name):
         dotenv.unset_key(env_file, key_name)
     dotenv.set_key(env_file, key_name, update_name)
