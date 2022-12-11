@@ -551,7 +551,6 @@ def menu_service_restart() -> str:
         print("* The Harmony Service Has Been Restarted")
         input("* Press ENTER to return to the main menu.")
 
-
 def menu_active_bls() -> str:
     validator_wallet = environ.get("VALIDATOR_WALLET")
     json_response = get_wallet_json(validator_wallet)
@@ -559,8 +558,9 @@ def menu_active_bls() -> str:
     for i, x in enumerate(json_response["bls-public-keys"]):
         print(f"BLS Key {i+1} {x}")
     print_stars()
-    input("Press ENTER to return to the main menu.")
-
+    print("* Press ENTER to return to the main menu.")
+    print_stars()
+    input()
 
 # is this used?
 def is_float(value):
@@ -569,7 +569,6 @@ def is_float(value):
         return True
     except ValueError:
         return False
-
 
 def menu_check_balance() -> None:
     validator_wallet = environ.get("VALIDATOR_WALLET")
