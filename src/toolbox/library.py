@@ -499,9 +499,9 @@ def get_sign_pct() -> str:
         return str(output_stripped)
 
 def get_local_version(folder):
-    output = subprocess.getoutput(f"{folder}/harmony -V")
-    output_2 = subprocess.getoutput(f"{folder}/hmy version")
-    return output[35:-35], output_2[62:-15]
+    harmony_version = subprocess.getoutput(f"{folder}/harmony -V")
+    hmy_version = subprocess.getoutput(f"{folder}/hmy version")
+    return harmony_version[35:-35], hmy_version[62:-15]
 
 def set_mod_x(file):
     subprocess.run(["chmod", "+x", file])
@@ -527,7 +527,7 @@ def first_env_check(env_file, home_dir) -> None:
         os.system(f"touch {home_dir}/.easynode.env")
         load_var_file(env_file)
 
-def version_checks(folder = f'{easy_env.user_home_dir}/harmony'):
+def version_checks(folder = f'harmony'):
     software_versions = {}
     software_versions["harmony_version"], software_versions["hmy_version"] = get_local_version(f'{easy_env.user_home_dir}/{folder}')
     software_versions["online_harmony_version"], software_versions["online_hmy_version"] = check_online_version()
