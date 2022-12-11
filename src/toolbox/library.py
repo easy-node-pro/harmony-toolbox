@@ -1053,6 +1053,6 @@ def menu_reboot_server() -> str:
         print("Invalid option.")
 
 def finish_node():
-    print("* Thanks for using Easy Node - EZ Mode! Goodbye.")
+    print("* Thanks for using Easy Node - EZ Mode!\n* We serve up free tools, consider supporting us one time or monthly at https://github.com/sponsors/easy-node-pro today!\n* Goodbye.")
     print_stars()
     raise SystemExit(0)
