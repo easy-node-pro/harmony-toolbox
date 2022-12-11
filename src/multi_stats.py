@@ -1,5 +1,6 @@
 import os
 import json
+import subprocess
 from os import environ
 from ast import literal_eval
 from toolbox.config import easy_env
@@ -18,7 +19,7 @@ if not environ.get("VALIDATOR_WALLET"):
     address = input(f'No Harmony $ONE address found, please input a one1 or 0x address: ')
     address_2 = input(f'Please re-enter your address to verify: ')
     if address == address_2:
-        set_var(easy_env.dot_env, "VALIDATOR_WALLET", address_2)
+        set_var(easy_env.dotenv_file, "VALIDATOR_WALLET", address_2)
 
 if not environ.get("NETWORK_SWITCH"):
     # ask for mainnet or testnet
