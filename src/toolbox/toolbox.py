@@ -287,7 +287,7 @@ def bingo_checker():
     input("* Press enter to return to the main menu.")
 
 
-def run_regular_node() -> None:
+def run_regular_node(software_versions) -> None:
     menu_options = {
         0: finish_node,
         1: refresh_stats,
@@ -310,14 +310,14 @@ def run_regular_node() -> None:
     while True:
         load_var_file(easy_env.dotenv_file)
         menu_regular()
-        if environ.get("HARMONY_UPGRADE_AVAILABLE") == "True":
+        if software_versions["harmony_upgrade"] == True:
             print(
-                f'* The harmony binary has an update available to version {environ.get("ONLINE_HARMONY_VERSION")}\n* Option #10 will upgrade you, but you may miss a block while it upgrades & restarts.\n* Currently installed version {environ.get("HARMONY_VERSION")}\n'
+                f'* The harmony binary has an update available to version {software_versions["online_harmony_ver"]}\n* Option #10 will upgrade you, but you may miss a block while it upgrades & restarts.\n* Currently installed version {software_versions["harmony_version"]}\n'
             )
             print_stars()
-        if environ.get("HMY_UPGRADE_AVAILABLE") == "True":
+        if software_versions["hmy_upgrade"] == True:
             print(
-                f'* The hmy binary has an update available to version {environ.get("ONLINE_HMY_VERSION")}\n* Option #11 will upgrade you.\n* Currently installed version {environ.get("HMY_VERSION")}\n'
+                f'* The hmy binary has an update available to version {software_versions["online_hmy_version"]}\n* Option #11 will upgrade you.\n* Currently installed version {software_versions["hmy_version"]}\n'
             )
             print_stars()
         try:
@@ -597,7 +597,6 @@ def menu_check_balance() -> None:
 
 
 def balanceCheckAny():
-    print_stars()
     check_wallet = input(
         "* Type the address of the Harmony ONE Wallet you would like to check.\n"
         + "* Only one wallets will work, no 0x addresses : "

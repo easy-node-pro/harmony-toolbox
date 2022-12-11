@@ -498,31 +498,27 @@ def get_sign_pct() -> str:
         output_stripped = "0"
         return str(output_stripped)
 
-def get_versions():
-    output = subprocess.getoutput(f"{easy_env.harmony_app} -V")
-    output_2 = subprocess.getoutput(f"{easy_env.hmy_app} version")
-    set_var(easy_env.dotenv_file, "HARMONY_VERSION", output[35:-35])
-    set_var(easy_env.dotenv_file, "HMY_VERSION", output_2[62:-15])
+def get_local_version(folder):
+    output = subprocess.getoutput(f"{folder}/harmony -V")
+    output_2 = subprocess.getoutput(f"{folder}/hmy version")
     return output[35:-35], output_2[62:-15]
 
 def set_mod_x(file):
     subprocess.run(["chmod", "+x", file])
 
-def check_for_updates():
+def check_online_version():
     subprocess.check_output(
         ["wget", "https://harmony.one/binary", "-O", easy_env.hmy_tmp_path], stderr=subprocess.STDOUT
     )
     set_mod_x(easy_env.hmy_tmp_path)
     subprocess.check_output([easy_env.hmy_tmp_path, "config", "dump", "harmony.conf"], stderr=subprocess.STDOUT)
-    output = subprocess.getoutput(f"{easy_env.hmy_tmp_path} -V")
-    set_var(easy_env.dotenv_file, "ONLINE_HARMONY_VERSION", output[35:-35])
+    harmony_ver = subprocess.getoutput(f"{easy_env.hmy_tmp_path} -V")
     subprocess.check_output(
         ["wget", "https://harmony.one/hmycli", "-O", easy_env.hmy_tmp_path], stderr=subprocess.STDOUT
     )
     set_mod_x(easy_env.hmy_tmp_path)
-    output_2 = subprocess.getoutput(f"{easy_env.hmy_tmp_path} version")
-    set_var(easy_env.dotenv_file, "ONLINE_HMY_VERSION", output_2[62:-15])
-    return output[35:-35], output_2[62:-15]
+    hmy_ver = subprocess.getoutput(f"{easy_env.hmy_tmp_path} version")
+    return harmony_ver[35:-35], hmy_ver[62:-15]
 
 def first_env_check(env_file, home_dir) -> None:
     if os.path.exists(env_file):
@@ -531,19 +527,20 @@ def first_env_check(env_file, home_dir) -> None:
         os.system(f"touch {home_dir}/.easynode.env")
         load_var_file(env_file)
 
-def version_checks():
-    harmony_version, hmy_version = get_versions()
-    online_version, online_hmy_version = check_for_updates()
-    if harmony_version != online_version:
+def version_checks(folder = easy_env.harmony_dir):
+    software_versions = {}
+    software_versions["harmony_version"], software_versions["hmy_version"] = get_local_version(folder)
+    software_versions["online_harmony_ver"], software_versions["online_hmy_version"] = check_online_version()
+    if software_versions["harmony_version"] != software_versions["online_harmony_ver"]:
         # here we would set the upgrade harmony flag in env
-        set_var(easy_env.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "True")
-    if harmony_version == online_version:
-        set_var(easy_env.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
-    if hmy_version != online_hmy_version:
-        set_var(easy_env.dotenv_file, "HMY_UPGRADE_AVAILABLE", "True")
-    if hmy_version == online_hmy_version:
-        set_var(easy_env.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
-    return
+        software_versions["harmony_upgrade"] = True
+    else:
+        software_versions["harmony_upgrade"] = False
+    if software_versions["hmy_version"] != software_versions["online_hmy_version"]:
+        software_versions["hmy_upgrade"] = True
+    else:
+        hmy_upgrade = False
+    return software_versions
 
 def first_setup():
     first_env_check(easy_env.dotenv_file, easy_env.user_home_dir)
