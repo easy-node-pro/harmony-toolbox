@@ -1,4 +1,4 @@
-import os
+import subprocess
 from toolbox.library import loader_intro, print_stars
 
 # This is just a temp file to replace start.py to guide people to install.py or menu.py in the interim. 

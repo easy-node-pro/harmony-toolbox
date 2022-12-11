@@ -1,3 +1,13 @@
+import psutil
+import platform
+import dotenv
+import time
+import os
+import subprocess
+import requests
+import pyhmy
+import shutil
+import docker
 from toolbox.config import easy_env
 from os import environ
 from dotenv import load_dotenv
@@ -9,16 +19,6 @@ from json import load, dump
 from toolbox.config import easy_env
 from collections import namedtuple
 from datetime import datetime
-import psutil
-import platform
-import dotenv
-import time
-import os
-import subprocess
-import requests
-import pyhmy
-import shutil
-import docker
 
 load_dotenv(easy_env.dotenv_file)
 

@@ -1,4 +1,5 @@
 import os
+import subprocess
 from os import environ
 from toolbox.config import easy_env
 from toolbox.library import loader_intro, load_var_file, first_setup, recover_wallet
