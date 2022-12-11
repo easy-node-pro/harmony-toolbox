@@ -51,7 +51,6 @@ def send_rewards(networkCall, sendAmount, rewards_wallet):
 
 def rewards_collector() -> None:
     rewards_wallet = environ.get("REWARDS_WALLET")
-    print_stars()
     print("* Harmony ONE Rewards Collection")
     print_stars()
     question = ask_yes_no(
@@ -358,7 +357,6 @@ def make_backup_dir() -> str:
 
 
 def hmy_cli_upgrade():
-    print_stars()
     question = ask_yes_no(
         "Are you sure you would like to proceed with updating the Harmony CLI file?\n\nType 'Yes' or 'No' to continue"
     )
@@ -500,7 +498,6 @@ def shard_stats(our_shard) -> str:
 
 def menu_binary_updates():
     test_or_main = environ.get("NETWORK")
-    print_stars()
     question = ask_yes_no(
         Fore.RED
         + "WARNING: YOU WILL MISS BLOCKS WHILE YOU UPGRADE THE HARMONY SERVICE.\n\n"
@@ -557,7 +554,6 @@ def menu_service_restart() -> str:
 def menu_active_bls() -> str:
     validator_wallet = environ.get("VALIDATOR_WALLET")
     json_response = get_wallet_json(validator_wallet)
-    print_stars()
     print("* This is a list of your BLS Keys that are active for the next election.")
     for i, x in enumerate(json_response["bls-public-keys"]):
         print(f"BLS Key {i+1} {x}")
@@ -577,7 +573,6 @@ def is_float(value):
 def menu_check_balance() -> None:
     validator_wallet = environ.get("VALIDATOR_WALLET")
     if environ.get("NODE_TYPE") == "regular":
-        print_stars()
         print("* Calling mainnet and testnet for balances...")
         print_stars()
         total_balance, total_balance_test = get_wallet_balance(validator_wallet)
