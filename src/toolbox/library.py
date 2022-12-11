@@ -1012,13 +1012,16 @@ def menu_ubuntu_updates() -> str:
         input("* OS Updates completed, press ENTER to return to the main menu. ")
 
 def menu_error() -> None:
+    subprocess.run("clear")
+    print_stars()
     print(
         "* "
         + Fore.RED
         + "WARNING"
         + Style.RESET_ALL
-        + ": Only numbers are possible, please try your selection on the main menu once again."
+        + ": Only numbers are possible, please try your selection on the main menu once again.\n* Press enter to return to the menu."
     )
+    print_stars()
     return
 
 def menu_reboot_server() -> str:
