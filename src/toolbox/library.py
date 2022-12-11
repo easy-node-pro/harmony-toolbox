@@ -52,8 +52,6 @@ string_stars_reset = print_stuff(reset=1).stringStars
 
 # check if a var exists in your .env file, unset and reset if exists to avoid bad stuff
 def set_var(env_file, key_name, update_name):
-    if not os.path.exists(env_file):
-        subprocess.run(["touch", env_file])
     if environ.get(key_name):
         dotenv.unset_key(env_file, key_name)
     dotenv.set_key(env_file, key_name, update_name)
@@ -257,6 +255,8 @@ def return_txt(fn: str) -> list:
 def load_var_file(var_file):
     if os.path.exists(var_file):
         load_dotenv(var_file, override=True)
+    else:
+        subprocess.run(["touch", var_file])
 
 def get_shard_menu() -> None:
     if not environ.get("SHARD"):
