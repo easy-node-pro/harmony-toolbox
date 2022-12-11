@@ -61,27 +61,27 @@ def find_port(folder):
 # build list of installs
 def get_folders():
     folders = {}
-    if os.path.exists(f"{user_home}/harmony"):
+    if os.path.exists(f"{user_home}/harmony/harmony.conf"):
         port = find_port(f'harmony')
         folders['harmony'] = port
         print(f'* Found ~/harmony folder, on port {port}')
         print_stars()
-    if os.path.exists(f"{user_home}/harmony0"):
+    if os.path.exists(f"{user_home}/harmony0/harmony.conf"):
         port = find_port(f'harmony0')
         folders['harmony1'] = port
         print(f'* Found ~/harmony1 folder, on port {port}')
         print_stars()
-    if os.path.exists(f"{user_home}/harmony1"):
+    if os.path.exists(f"{user_home}/harmony1/harmony.conf"):
         port = find_port(f'harmony1')
         folders['harmony2'] = port
         print(f'* Found ~/harmony1 folder, on port {port}')
         print_stars()
-    if os.path.exists(f"{user_home}/harmony2"):
+    if os.path.exists(f"{user_home}/harmony2/harmony.conf"):
         port = find_port(f'harmony2')
         folders['harmony3'] = port
         print(f'* Found ~/harmony2 folder, on port {port}')
         print_stars()
-    if os.path.exists(f"{user_home}/harmony3"):
+    if os.path.exists(f"{user_home}/harmony3/harmony.conf"):
         port = find_port(f'harmony3')
         folders['harmony4'] = port
         print(f'* Found ~/harmony3 folder, on port {port}')
