@@ -564,6 +564,7 @@ def first_env_check(env_file, home_dir) -> None:
         load_var_file(env_file)
     else:
         os.system(f"touch {home_dir}/.easynode.env")
+        set_main_or_test()
         load_var_file(env_file)
 
 def version_checks():
