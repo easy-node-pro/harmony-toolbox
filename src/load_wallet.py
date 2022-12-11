@@ -5,7 +5,7 @@ from toolbox.config import easy_env
 from toolbox.library import loader_intro, set_wallet_env, ask_yes_no, print_stars, recover_wallet
 
 if __name__ == "__main__":
-    os.system("clear")
+    subprocess.run("clear")
     loader_intro()
     print(
         "* Harmony ONE Validator Wallet Import"

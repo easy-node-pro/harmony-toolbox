@@ -22,7 +22,6 @@ import docker
 
 load_dotenv(easy_env.dotenv_file)
 
-
 class print_stuff:
     def __init__(self, reset: int = 0):
         self.reset = reset
@@ -45,7 +44,6 @@ class print_stuff:
     def printWhitespace(self) -> None:
         print("\n" * 8)
 
-
 print_whitespace = print_stuff.printWhitespace
 print_stars = print_stuff().printStars
 string_stars = print_stuff().stringStars
@@ -60,10 +58,9 @@ def set_var(env_file, key_name, update_name):
     load_var_file(env_file)
     return
 
-
 # loader intro splash screen
 def loader_intro():
-    os.system("clear")
+    subprocess.run("clear")
     p = f"""
                     ____ ____ ____ ____ _________ ____ ____ ____ ____           
                     ||E |||a |||s |||y |||       |||N |||o |||d |||e ||          
@@ -83,7 +80,6 @@ def loader_intro():
     print(p)
     return
 
-
 # Install Harmony ONE
 def install_hmy():
     os.chdir(f"{easy_env.harmony_dir}")
@@ -92,10 +88,8 @@ def install_hmy():
     print("* hmy application installed.")
     return
 
-
 # Code to update the harmony.conf after an upgrade and other text files.
 def update_text_file(fileName, originalText, newText):
-
     with open(fileName, "r") as f:
         filedata = f.read()
 
@@ -103,7 +97,6 @@ def update_text_file(fileName, originalText, newText):
 
     with open(fileName, "w") as f:
         f.write(newdata)
-
 
 # Setup a wallet, ask if they need to import one (not required but no toolbox menu without a wallet)
 def recover_wallet():
@@ -124,7 +117,6 @@ def recover_wallet():
         set_var(easy_env.dotenv_file, "VALIDATOR_WALLET", wallet)
         return
 
-
 def install_harmony():
     os.chdir(f"{easy_env.harmony_dir}")
     if environ.get("NETWORK") == "testnet":
@@ -144,7 +136,6 @@ def install_harmony():
     print(f"* Harmony {environ.get('NETWORK')} application installed & ~/harmony/harmony.conf created.")
     return
 
-
 def set_wallet_env():
     if environ.get("NODE_WALLET") == "true":
         if not environ.get("VALIDATOR_WALLET"):
@@ -160,9 +151,8 @@ def set_wallet_env():
             validator_wallet = environ.get("VALIDATOR_WALLET")
             return validator_wallet
 
-
 def recovery_type():
-    os.system("clear")
+    subprocess.run("clear")
     set_var(easy_env.dotenv_file, "NODE_WALLET", "true")
     passphrase_status()
     passphrase_switch = environ.get("PASS_SWITCH")
@@ -197,7 +187,6 @@ def recovery_type():
         print_stars()
         set_wallet_env()
 
-
 def passphrase_status():
     load_var_file(easy_env.dotenv_file)
     if environ.get("NODE_WALLET") == "true":
@@ -210,14 +199,11 @@ def passphrase_status():
     if environ.get("NODE_WALLET") == "false":
         set_var(easy_env.dotenv_file, "PASS_SWITCH", "--passphrase")
 
-
 def passphrase_set():
     if os.path.exists(easy_env.password_path):
         return
     import getpass
-
-    os.system("clear")
-    print_stars()
+    
     print("* Setup ~/harmony/passphrase.txt file for use with autobidder & validatortoolbox.")
     print_stars()
     # take input
@@ -237,11 +223,9 @@ def passphrase_set():
     load_var_file(easy_env.dotenv_file)
     passphrase_status()
 
-
 def process_command(command: str) -> None:
     process = subprocess.Popen(command, shell=True)
     output, error = process.communicate()
-
 
 def ask_yes_no(question: str) -> bool:
     yes_no_answer = ""
@@ -250,7 +234,6 @@ def ask_yes_no(question: str) -> bool:
     if yes_no_answer.startswith("Y"):
         return True
     return False
-
 
 def save_text(fn: str, to_write: str) -> bool:
     try:
@@ -261,7 +244,6 @@ def save_text(fn: str, to_write: str) -> bool:
         print(f"Error writing file  ::  {e}")
         return False
 
-
 def return_txt(fn: str) -> list:
     try:
         with open(fn, "r") as f:
@@ -270,15 +252,13 @@ def return_txt(fn: str) -> list:
         print(f"File not Found  ::  {e}")
         return []
 
-
 def load_var_file(var_file):
     if os.path.exists(var_file):
         load_dotenv(var_file, override=True)
 
-
 def get_shard_menu() -> None:
     if not environ.get("SHARD"):
-        os.system("clear")
+        subprocess.run("clear")
         print_stars()
         print("* First Boot - Gathering more information about your server                                 *")
         print_stars()
@@ -299,7 +279,7 @@ def get_shard_menu() -> None:
 def get_node_type() -> None:
     if not os.path.exists(easy_env.hmy_wallet_store):
         if environ.get("NODE_TYPE") == None:
-            os.system("clear")
+            subprocess.run("clear")
             print_stars()
             print("* Which type of node would you like to run on this server?                                  *")
             print_stars()
@@ -322,7 +302,7 @@ def get_node_type() -> None:
                 set_var(easy_env.dotenv_file, "NODE_WALLET", "false")
             if results == 2:
                 set_var(easy_env.dotenv_file, "NODE_TYPE", "full")
-            os.system("clear")
+            subprocess.run("clear")
             return
         set_wallet_env()
     if not environ.get("NODE_TYPE"):
@@ -332,7 +312,7 @@ def get_node_type() -> None:
 
 def set_main_or_test() -> None:
     if not environ.get("NETWORK"):
-        os.system("clear")
+        subprocess.run("clear")
         print_stars()
         print("* Setup config not found, which blockchain does this node run on?                           *")
         print_stars()
@@ -355,12 +335,12 @@ def set_main_or_test() -> None:
             set_var(easy_env.dotenv_file, "NETWORK_SWITCH", "b")
             set_var(easy_env.dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
             set_var(easy_env.dotenv_file, "RPC_NET_SHARD", f"https://rpc.s{environ.get('SHARD')}.b.hmny.io")
-        os.system("clear")
+        subprocess.run("clear")
     return
 
 def get_express_status() -> None:
     if environ.get("SETUP_STATUS") == "0":
-        os.system("clear")
+        subprocess.run("clear")
         print_stars()
         print("* Express or Manual Setup?                                                                  *")
         print_stars()
@@ -375,8 +355,6 @@ def get_express_status() -> None:
 
 
 def get_wallet_address():
-    os.system("clear")
-    print_stars()
     print("* Signing Node, No Wallet!                                                                  *")
     print("* You are attempting to launch the menu but no wallet has been loaded, as you chose         *")
     print("* If you would like to use the menu on the server, complete the following:                  *")
@@ -723,8 +701,7 @@ def install_harmony() -> None:
 def clone_shards():
     # Move to ~/harmony
     os.chdir(f"{easy_env.harmony_dir}")
-    os.system("clear")
-    print_stars()
+    
     if environ.get("SHARD") != "0":
         # If we're not on shard 0, download the numbered shard DB here.
         print(f"* Now cloning shard {environ.get('SHARD')}")
@@ -747,7 +724,7 @@ def clone_shards():
 def restore_wallet() -> str:
     if environ.get("NODE_WALLET") == "true":
         if not os.path.exists(easy_env.hmy_wallet_store):
-            os.system("clear")
+            subprocess.run("clear")
             print_stars()
             print("* Harmony ONE Validator Wallet Import")
             print_stars()
@@ -847,7 +824,6 @@ def server_drive_check() -> None:
     print_stars()
     input("Disk check complete, press ENTER to return to the main menu. ")
 
-
 def disk_partitions(all=False):
     disk_ntuple = namedtuple("partition", "device mountpoint fstype")
     # Return all mounted partitions as a nameduple.
@@ -875,7 +851,6 @@ def disk_partitions(all=False):
             retlist.append(ntuple)
     return retlist
 
-
 def get_mount_point(pathname):
     pathname = os.path.normcase(os.path.realpath(pathname))
     parent_device = path_device = os.stat(pathname).st_dev
@@ -886,7 +861,6 @@ def get_mount_point(pathname):
             break
         parent_device = os.stat(pathname).st_dev
     return mount_point
-
 
 def converted_unit(n):
     symbols = ("K", "M", "G", "T", "P", "E", "Z", "Y")
@@ -1026,9 +1000,7 @@ def container_running(container_name) -> None:
     else:
         return False
 
-def coming_soon():
-    os.system("clear")
-    print_stars()
+def coming_soon():    
     print("* This option isn't available on your system, yet!")
     print_stars()
     input("* Press enter to return to the main menu.")
@@ -1050,7 +1022,6 @@ def os_upgrades() -> None:
     print_stars()
 
 def menu_ubuntu_updates() -> str:
-    print_stars()
     question = ask_yes_no(
         f"* Are you sure you would like to proceed with Linux apt Upgrades? (Y/N) "
     )
@@ -1059,8 +1030,6 @@ def menu_ubuntu_updates() -> str:
         input("* OS Updates completed, press ENTER to return to the main menu. ")
 
 def menu_error() -> None:
-    os.system("clear")
-    print_stars()
     print(
         "* "
         + Fore.RED
@@ -1071,7 +1040,6 @@ def menu_error() -> None:
     return
 
 def menu_reboot_server() -> str:
-    print_stars()
     question = ask_yes_no(
         Fore.RED
         + "WARNING: YOU WILL MISS BLOCKS WHILE YOU REBOOT YOUR ENTIRE SERVER.\n\n"
@@ -1085,7 +1053,6 @@ def menu_reboot_server() -> str:
         print("Invalid option.")
 
 def finish_node():
-    print_stars()
     print("* Thanks for using Easy Node - EZ Mode! Goodbye.")
     print_stars()
     raise SystemExit(0)

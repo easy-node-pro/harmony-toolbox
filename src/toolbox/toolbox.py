@@ -91,7 +91,7 @@ def menu_topper_regular() -> None:
     sign_percentage = get_sign_pct()
     total_balance, total_balance_test = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
     remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
-    os.system("clear")
+    subprocess.run("clear")
     # Print Menu
     print_stars()
     print(f'{Style.RESET_ALL}* {Fore.GREEN}validator-toolbox for Harmony ONE Validators by Easy Node   v{easy_env.easy_version}{Style.RESET_ALL}   https://easynode.pro *')
@@ -113,7 +113,7 @@ def menu_topper_regular() -> None:
 def menu_topper_full() -> None:
     load_1, load_5, load_15 = os.getloadavg()
     remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
-    os.system("clear")
+    subprocess.run("clear")
     # Print Menu
     print_stars()
     print(f'{Style.RESET_ALL}* {Fore.GREEN}validator-toolbox for Harmony ONE Validators by Easy Node   v{str(environ.get("EASY_VERSION"))}{Style.RESET_ALL}   https://easynode.one *')
@@ -279,7 +279,7 @@ def run_full_node() -> None:
             run_full_node(environ.get("NODE_TYPE"))
         if option == 0:
             return finish_node()
-        os.system("clear")
+        subprocess.run("clear")
         menu_options[option]()
 
 
@@ -327,7 +327,8 @@ def run_regular_node() -> None:
             menu_error()
             refresh_stats(1)
             run_regular_node()
-        os.system("clear")
+        subprocess.run("clear")
+        print_stars()
         menu_options[option]()
         refresh_stats(1)
 
@@ -457,7 +458,7 @@ def menu_validator_stats():
 
 def refresh_stats(clear=0) -> str:
     if clear == 0:
-        os.system("clear")
+        subprocess.run("clear")
     print_stars()
     print(f'* Getting the latest local & blockchain information now, one moment while we load...')
     print_stars()

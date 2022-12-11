@@ -65,7 +65,7 @@ def get_token():
 
 
 if __name__ == '__main__':
-    os.system("clear")
+    subprocess.run("clear")
     loader_intro()
     # check if it exists, load anyway if it does
     if os.path.exists(easy_env.dotenv_file) is None:

@@ -22,7 +22,7 @@ if not environ.get("VALIDATOR_WALLET"):
 
 if not environ.get("NETWORK_SWITCH"):
     # ask for mainnet or testnet
-    os.system("clear")
+    subprocess.run("clear")
     print_stars()
     print("* Setup config not found, which blockchain does this node run on?                           *")
     print_stars()
@@ -43,7 +43,7 @@ if not environ.get("NETWORK_SWITCH"):
         set_var(easy_env.dotenv_file, "NETWORK", "testnet")
         set_var(easy_env.dotenv_file, "NETWORK_SWITCH", "b")
         set_var(easy_env.dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
-    os.system("clear")
+    subprocess.run("clear")
 
 # Search harmony.conf for the proper port to hit
 def find_port(folder):
@@ -95,7 +95,7 @@ def stats_output_regular(folders) -> None:
     total_balance, total_balance_test = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
     # Get shard stats here
     count = 0
-    os.system("clear")
+    subprocess.run("clear")
     # Print Menu
     print_stars()
     print(f'{Style.RESET_ALL}* {Fore.GREEN}validator-toolbox for Harmony ONE Validators by Easy Node   v{easy_env.easy_version}{Style.RESET_ALL}   https://easynode.one *')

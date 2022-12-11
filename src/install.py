@@ -4,7 +4,7 @@ from toolbox.config import easy_env
 from toolbox.library import loader_intro, load_var_file, first_setup, recover_wallet
 
 if __name__ == "__main__":
-    os.system("clear")
+    subprocess.run("clear")
     loader_intro()
     if not os.path.exists(easy_env.dotenv_file):
         first_setup()
