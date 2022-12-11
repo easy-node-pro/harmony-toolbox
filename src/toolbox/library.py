@@ -531,15 +531,15 @@ def version_checks(folder = f'{easy_env.user_home_dir}/harmony'):
     software_versions = {}
     software_versions["harmony_version"], software_versions["hmy_version"] = get_local_version(f'{easy_env.user_home_dir}/{folder}')
     software_versions["online_harmony_version"], software_versions["online_hmy_version"] = check_online_version()
-    if software_versions["harmony_version"] != software_versions["online_harmony_version"]:
-        # here we would set the upgrade harmony flag in env
-        software_versions["harmony_upgrade"] = "True"
-    else:
+    # Check versions, if matching False (No Upgrade Required), non-match True (Upgrade Required)
+    if software_versions["harmony_version"] == software_versions["online_harmony_version"]:
         software_versions["harmony_upgrade"] = "False"
-    if software_versions["hmy_version"] != software_versions["online_hmy_version"]:
-        software_versions["hmy_upgrade"] = "True"
     else:
+        software_versions["harmony_upgrade"] = "True"
+    if software_versions["hmy_version"] == software_versions["online_hmy_version"]:
         software_versions["hmy_upgrade"] = "False"
+    else:
+        software_versions["hmy_upgrade"] = "True"
     return software_versions
 
 def first_setup():
