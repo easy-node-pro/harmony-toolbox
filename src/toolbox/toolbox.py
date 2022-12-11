@@ -290,7 +290,7 @@ def bingo_checker():
 def run_regular_node(software_versions) -> None:
     menu_options = {
         0: finish_node,
-        1: refresh_stats,
+        #1: refresh_stats,
         2: menu_active_bls,
         3: menu_check_balance,
         4: rewards_collector,
