@@ -509,10 +509,9 @@ def set_mod_x(file):
 
 def check_online_version():
     subprocess.check_output(
-        ["wget", "https://harmony.one/binary", "-O", easy_env.hmy_tmp_path], stderr=subprocess.STDOUT
+        ["wget", "https://harmony.one/binary", "-O", easy_env.harmony_tmp_path], stderr=subprocess.STDOUT
     )
-    set_mod_x(easy_env.hmy_tmp_path)
-    subprocess.check_output([easy_env.hmy_tmp_path, "config", "dump", "harmony.conf"], stderr=subprocess.STDOUT)
+    set_mod_x(easy_env.harmony_tmp_path)
     harmony_ver = subprocess.getoutput(f"{easy_env.hmy_tmp_path} -V")
     subprocess.check_output(
         ["wget", "https://harmony.one/hmycli", "-O", easy_env.hmy_tmp_path], stderr=subprocess.STDOUT
