@@ -729,7 +729,6 @@ def restore_wallet() -> str:
         print_stars()
         print("* Wallet already setup for this user account")
 
-
 # is this used?
 def set_mounted_point():
     # First let's make sure your volume is mounted
