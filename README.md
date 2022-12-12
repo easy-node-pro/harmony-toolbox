@@ -36,11 +36,13 @@ cd ~/ && git clone https://github.com/easy-node-pro/validatortoolbox.git
 ```
 Install requirements.
 ```text
-cd validatortoolbox && sudo apt update && sudo apt upgrade -y && sudo apt-get install bind9-dnsutils git python3-pip python3-dotenv unzip -y && pip3 install -r requirements.txt
+cd validatortoolbox && sudo apt update && sudo apt upgrade -y && sudo apt-get install bind9-dnsutils git python3-pip python3-dotenv unzip -y && pip3 install -r requirements.txt --quiet
 ```
-Run the installer from anywhere. You'll be presented with our menu to grab configuration details.
+
+## Run Installer
+Run the installer from anywhere. You'll be presented with our menu to grab configuration details. We suggest the following string to keep you updated when launching.
 ```text
-python3 ~/validatortoolbox/src/install.py
+cd ~/validatortoolbox && git pull && pip3 install -r requirements.txt --quiet && cd ~/harmony && python3 ~/validatortoolbox/src/menu.py
 ```
 
 ## Management Menu
