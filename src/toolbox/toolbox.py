@@ -88,7 +88,7 @@ def menu_topper_regular() -> None:
     print_stars()
     print(f'{Style.RESET_ALL}* {Fore.GREEN}validator-toolbox for Harmony ONE Validators by Easy Node   v{easy_env.easy_version}{Style.RESET_ALL}   https://easynode.pro *')
     print_stars()
-    print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Style.RESET_ALL}\n* Your $ONE balance is:             {Fore.GREEN}{str(total_balance)}{Style.RESET_ALL}\n* Your pending $ONE rewards are:    {Fore.GREEN}{str(get_rewards_balance(easy_env.rpc_endpoints, environ.get("VALIDATOR_WALLET")))}{Style.RESET_ALL}\n* Server Hostname & IP:             {easy_env.server_host_name}{Style.RESET_ALL} - {Fore.YELLOW}{easy_env.external_ip}{Style.RESET_ALL}')
+    print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Style.RESET_ALL}\n* Your $ONE balance is:             {Fore.GREEN}{str(round(total_balance, 2))}{Style.RESET_ALL}\n* Your pending $ONE rewards are:    {Fore.GREEN}{str(round(get_rewards_balance(easy_env.rpc_endpoints, environ.get("VALIDATOR_WALLET")), 2))}{Style.RESET_ALL}\n* Server Hostname & IP:             {easy_env.server_host_name}{Style.RESET_ALL} - {Fore.YELLOW}{easy_env.external_ip}{Style.RESET_ALL}')
     harmony_service_status()
     print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}\n* Current disk space free: {Fore.CYAN}{free_space_check(easy_env.harmony_dir): >6}{Style.RESET_ALL}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}')
     print_stars()
@@ -233,7 +233,7 @@ def run_full_node() -> None:
     menu_options = {
         # 0: finish_node,
         1: refresh_stats,
-        2: run_check_balance,
+        2: coming_soon,
         3: coming_soon,
         4: coming_soon,
         5: coming_soon,
@@ -288,7 +288,7 @@ def run_regular_node(software_versions) -> None:
         0: finish_node,
         1: refresh_stats,
         2: menu_active_bls,
-        3: run_check_balance,
+        3: coming_soon,
         4: run_rewards_collector,
         5: bingo_checker,
         6: coming_soon,
