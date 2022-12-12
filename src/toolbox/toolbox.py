@@ -95,7 +95,7 @@ def menu_topper_regular() -> None:
     if environ.get("SHARD") != "0":
         print(f"\n* Note: Running on shard {environ.get('SHARD')}, Shard 0 is no longer needed locally and should be under 200MB\n* Remote Shard 0 Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}, Local Shard 0 Size: {get_db_size('0')}")
         print(f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}")
-        print(f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}, Local Shard {environ.get('SHARD')} Size: {get_db_size(environ.get('SHARD'))}")
+        print(f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}, Local Shard {environ.get('SHARD')} Size: {get_db_size(easy_env.harmony_dir, environ.get('SHARD'))}")
     if environ.get("SHARD") == "0":
         print(f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}")
         print(f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}")
@@ -452,21 +452,19 @@ def refresh_stats(clear=0) -> str:
     print_stars()
     return
 
-def get_db_size(our_shard) -> str:
-    harmony_db_size = subprocess.getoutput(f"du -h {easy_env.harmony_dir}/harmony_db_{our_shard}")
+def get_db_size(harmony_dir, our_shard) -> str:
+    harmony_db_size = subprocess.getoutput(f"du -h {harmony_dir}/harmony_db_{our_shard}")
     harmony_db_size = harmony_db_size.rstrip("\t")
     countTrim = len(easy_env.harmony_dir) + 13
     return harmony_db_size[:-countTrim]
 
 def shard_stats(our_shard) -> str:
     our_uptime = subprocess.getoutput("uptime")
-    our_ver = subprocess.getoutput(f"{easy_env.harmony_app} -V")
-    db_0_size = get_db_size("0")
+    db_0_size = get_db_size(easy_env.harmony_dir, "0")
     if our_shard == "0":
         print(
             f"""
     * Uptime :: {our_uptime}\n\n Harmony DB 0 Size  ::  {db_0_size}
-    * {our_ver}
     {string_stars()}
         """
         )
@@ -476,9 +474,8 @@ def shard_stats(our_shard) -> str:
     * Uptime :: {our_uptime}
     *
     * Harmony DB 0 Size  ::  {db_0_size}
-    * Harmony DB {our_shard} Size  ::   {get_db_size(str(our_shard))}
+    * Harmony DB {our_shard} Size  ::   {get_db_size(easy_env.harmony_dir, str(our_shard))}
     *
-    * {our_ver}
     *
     {string_stars()}
         """

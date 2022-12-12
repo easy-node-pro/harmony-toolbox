@@ -118,7 +118,7 @@ def stats_output_regular(folders) -> None:
         result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         remote_data = json.loads(result_remote_server.stdout)
         print(f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}")
-        print(f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}\n*   Local Shard 0 Size: {get_db_size('0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(local_data['result']['shard-id'])}")
+        print(f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}\n*   Local Shard 0 Size: {get_db_size(folder, '0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(folder, local_data['result']['shard-id'])}")
         print_stars()
 
 if __name__ == "__main__":
