@@ -981,13 +981,6 @@ def container_running(container_name) -> None:
     else:
         return False
 
-def container_version(container_name) -> None:
-    client = docker.APIClient()
-    container = client.inspect_container(container_name)
-    version = container['Config']['Image']
-    return version
-
-
 def coming_soon():    
     print("* This option isn't available on your system, yet!")
     print_stars()
