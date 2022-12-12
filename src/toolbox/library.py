@@ -787,12 +787,12 @@ def free_space_check(mount) -> str:
     freeConverted = str(converted_unit(free))
     return freeConverted
 
-def server_drive_check() -> None:
+def server_drive_check(dot_env, directory) -> None:
     if environ.get("MOUNT_POINT") is not None:
         ourDiskMount = environ.get("MOUNT_POINT")
     else:
-        dotenv.set_key(easy_env.dotenv_file, "MOUNT_POINT", easy_env.harmony_dir)
-        load_var_file(easy_env.dotenv_file)
+        dotenv.set_key(dot_env, "MOUNT_POINT", directory)
+        load_var_file(dot_env)
         ourDiskMount = environ.get("MOUNT_POINT")
     print_stars()
     print("Here are all of your mount points: ")
@@ -802,7 +802,7 @@ def server_drive_check() -> None:
     total, used, free = shutil.disk_usage(ourDiskMount)
     total = str(converted_unit(total))
     used = str(converted_unit(used))
-    print("Disk: " + str(ourDiskMount) + "\n" + free_space_check(easy_env.harmony_dir) + " Free\n" + used + " Used\n" + total + " Total")
+    print("Disk: " + str(ourDiskMount) + "\n" + free_space_check(directory) + " Free\n" + used + " Used\n" + total + " Total")
     print_stars()
     input("Disk check complete, press ENTER to return to the main menu. ")
 

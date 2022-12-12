@@ -36,53 +36,46 @@ from toolbox.library import (
     finish_node
 )
 
-
 def collect_rewards(networkCall):
     os.system(
         f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 100 {environ.get('PASS_SWITCH')}"
     )
-
 
 def send_rewards(networkCall, sendAmount, rewards_wallet):
     os.system(
         f"{networkCall} transfer --amount {sendAmount} --from {environ.get('VALIDATOR_WALLET')} --from-shard 0 --to {rewards_wallet} --to-shard 0 --gas-price 100 {environ.get('PASS_SWITCH')}"
     )
 
-
-def rewards_collector() -> None:
-    rewards_wallet = environ.get("REWARDS_WALLET")
+def rewards_collector(rewards_wallet, validator_wallet, rpc) -> None:
     print("* Harmony ONE Rewards Collection")
     print_stars()
     question = ask_yes_no(
-        f"*\n* For your validator wallet {environ.get('VALIDATOR_WALLET')}\n* You have {get_rewards_balance(easy_env.rpc_endpoints, environ.get('VALIDATOR_WALLET'))} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
+        f"*\n* For your validator wallet {validator_wallet}\n* You have {get_rewards_balance(rpc, validator_wallet)} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
     )
     if question:
-        collect_rewards(f"{environ.get('NETWORK_0_CALL')}")
+        collect_rewards(environ.get('NETWORK_0_CALL'))
         print_stars()
         print(
             Fore.GREEN
-            + f"* mainnet rewards for {environ.get('VALIDATOR_WALLET')} have been collected."
+            + f"* mainnet rewards for {validator_wallet} have been collected."
             + Style.RESET_ALL
         )
         print_stars()
     else:
         return
-    if rewards_wallet:
-        wallet_balance, wallet_balance_test = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
-        suggested_send = wallet_balance - int(environ.get("GAS_RESERVE"))
-        print("*\n*\n")
-        print_stars()
-        print("\n* Send your Harmony ONE Rewards?")
-        print_stars()
-        if suggested_send >= 1:
-            question = ask_yes_no(
-                f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
-            )
-            if question:
-                send_rewards(environ.get("NETWORK_0_CALL"), suggested_send, rewards_wallet)
-            return
-    return
-
+    wallet_balance, wallet_balance_test = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
+    suggested_send = wallet_balance - int(environ.get("GAS_RESERVE"))
+    print("*\n*\n")
+    print_stars()
+    print("\n* Send your Harmony ONE Rewards?")
+    print_stars()
+    if suggested_send >= 1:
+        question = ask_yes_no(
+            f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
+        )
+        if question:
+            send_rewards(environ.get("NETWORK_0_CALL"), suggested_send, rewards_wallet)
+        return
 
 def menu_topper_regular() -> None:
     # Get stats & balances
@@ -125,7 +118,6 @@ def menu_topper_full() -> None:
     print(f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min")
     print_stars()
 
-
 def menu_regular() -> None:
     menu_topper_regular()
     for x in return_txt(easy_env.main_menu_regular):
@@ -137,7 +129,6 @@ def menu_regular() -> None:
         if x:
             print(x)
 
-
 def menu_full() -> None:
     menu_topper_full()
     for x in return_txt(easy_env.main_menu_full):
@@ -148,7 +139,6 @@ def menu_full() -> None:
             pass
         if x:
             print(x)
-
 
 def get_wallet_json(wallet: str) -> str:
     test_or_main = environ.get("NETWORK")
@@ -172,7 +162,6 @@ def get_wallet_json(wallet: str) -> str:
         return
     return json_response
 
-
 def tmi_server_info() -> None:
     validator_wallet = environ.get("VALIDATOR_WALLET")
     json_response = get_wallet_json(validator_wallet)
@@ -180,7 +169,6 @@ def tmi_server_info() -> None:
         print(key, ":", value)
     print_stars()
     input("Press ENTER to return to the main menu.")
-
 
 def set_rewards_wallet() -> None:
     rewards_wallet = environ.get("REWARDS_WALLET")
@@ -217,7 +205,6 @@ def set_rewards_wallet() -> None:
                 return
     return
 
-
 def set_gas_reserve() -> None:
     gas_reserve = environ.get("GAS_RESERVE")
     question = ask_yes_no(
@@ -227,22 +214,26 @@ def set_gas_reserve() -> None:
         ask_reserve_total()
     return
 
-
 def ask_reserve_total() -> None:
     reserve_total = input("* How much $ONE would you like to keep reserved for fees? ")
     set_reserve_total(reserve_total)
     return
 
-
 def set_reserve_total(reserve_total):
     set_var(easy_env.dotenv_file, "GAS_RESERVE", reserve_total)
 
+def drive_check() -> None:
+    server_drive_check(easy_env.dotenv_file, easy_env.harmony_dir)
+    return
+
+def run_check_balance() -> None:
+    menu_check_balance(easy_env.rpc_endpoints, environ.get("VALIDATOR_WALLET"))
 
 def run_full_node() -> None:
     menu_options = {
         # 0: finish_node,
         1: refresh_stats,
-        2: menu_check_balance,
+        2: run_check_balance,
         3: coming_soon,
         4: coming_soon,
         5: coming_soon,
@@ -253,7 +244,7 @@ def run_full_node() -> None:
         10: menu_binary_updates,
         11: hmy_cli_upgrade,
         12: menu_ubuntu_updates,
-        13: server_drive_check,
+        13: drive_check,
         14: coming_soon,
         15: all_sys_info,
         999: menu_reboot_server,
@@ -281,7 +272,6 @@ def run_full_node() -> None:
         subprocess.run("clear")
         menu_options[option]()
 
-
 def bingo_checker():
     os.system("grep BINGO ~/harmony/latest/zerolog-harmony.log | tail -10")
     print_stars()
@@ -289,14 +279,17 @@ def bingo_checker():
     print_stars()
     input()
 
+def run_rewards_collector() -> None:
+    rewards_collector(environ.get("REWARDS_WALLET"), environ.get('VALIDATOR_WALLET'), easy_env.rpc_endpoints)
+    return
 
 def run_regular_node(software_versions) -> None:
     menu_options = {
         0: finish_node,
         1: refresh_stats,
         2: menu_active_bls,
-        3: menu_check_balance,
-        4: rewards_collector,
+        3: run_check_balance,
+        4: run_rewards_collector,
         5: bingo_checker,
         6: coming_soon,
         7: set_rewards_wallet,
@@ -305,7 +298,7 @@ def run_regular_node(software_versions) -> None:
         10: menu_binary_updates,
         11: hmy_cli_upgrade,
         12: menu_ubuntu_updates,
-        13: server_drive_check,
+        13: drive_check,
         14: tmi_server_info,
         15: all_sys_info,
         999: menu_reboot_server,
@@ -333,8 +326,6 @@ def run_regular_node(software_versions) -> None:
         menu_options[option]()
         if option != 1:
             refresh_stats(1)
-        
-
 
 def harmony_service_status() -> None:
     status = subprocess.call(["systemctl", "is-active", "--quiet", "harmony"])
@@ -342,7 +333,6 @@ def harmony_service_status() -> None:
         print("* Harmony Service is:               " + Fore.BLACK + Back.GREEN + "   Online  " + Style.RESET_ALL)
     else:
         print("* Harmony Service is:               " + Fore.WHITE + Back.RED + "  *** Offline *** " + Style.RESET_ALL)
-
 
 def service_menu_option() -> None:
     status = os.system("systemctl is-active --quiet harmony")
@@ -352,13 +342,11 @@ def service_menu_option() -> None:
     else:
         print(f'*   8 - {Fore.GREEN}Start Harmony Service{Style.RESET_ALL}')
 
-
 def make_backup_dir() -> str:
     if not os.path.isdir(f"{easy_env.harmony_dir}/harmony_backup"):
         print_stars()
         print("Backup directory not found, creating folder")
         os.system(f"mkdir -p {easy_env.harmony_dir}/harmony_backup")
-
 
 def hmy_cli_upgrade():
     question = ask_yes_no(
@@ -376,7 +364,6 @@ def hmy_cli_upgrade():
         print_stars()
         set_var(easy_env.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
         input("Update completed, press ENTER to return to the main menu. ")
-
 
 def update_harmony_app(test_or_main):
     os.chdir(f"{easy_env.harmony_dir}")
@@ -457,7 +444,6 @@ def menu_validator_stats():
         
     return remote_data_shard_0, local_data_shard, None
 
-
 def refresh_stats(clear=0) -> str:
     if clear == 0:
         subprocess.run("clear")
@@ -466,13 +452,11 @@ def refresh_stats(clear=0) -> str:
     print_stars()
     return
 
-
 def get_db_size(our_shard) -> str:
     harmony_db_size = subprocess.getoutput(f"du -h {easy_env.harmony_dir}/harmony_db_{our_shard}")
     harmony_db_size = harmony_db_size.rstrip("\t")
     countTrim = len(easy_env.harmony_dir) + 13
     return harmony_db_size[:-countTrim]
-
 
 def shard_stats(our_shard) -> str:
     our_uptime = subprocess.getoutput("uptime")
@@ -539,7 +523,6 @@ def menu_service_stop_start() -> str:
             print()
             input("Press ENTER to return to the main menu.")
 
-
 def menu_service_restart() -> str:
     question = ask_yes_no(
         "*********\n"
@@ -573,13 +556,13 @@ def is_float(value):
     except ValueError:
         return False
 
-def menu_check_balance() -> None:
-    validator_wallet = environ.get("VALIDATOR_WALLET")
+def menu_check_balance(rpc, validator_wallet) -> None:
     if environ.get("NODE_TYPE") == "regular":
         print("* Calling mainnet and testnet for balances...")
         print_stars()
         total_balance, total_balance_test = get_wallet_balance(validator_wallet)
         print(f"* Your Validator Wallet Balance on Mainnet is: {total_balance} Harmony ONE Coins")
+        print(f"* Your Pending Validator Rewards are: {get_rewards_balance(rpc, validator_wallet)}")
         print(f"* Your Validator Wallet Balance on Testnet is: {total_balance_test} Harmony ONE Test Coins")
         print_stars()
         i = 0
@@ -598,7 +581,6 @@ def menu_check_balance() -> None:
             else:
                 i = 1
 
-
 def balanceCheckAny():
     check_wallet = input(
         "* Type the address of the Harmony ONE Wallet you would like to check.\n"
@@ -613,7 +595,6 @@ def balanceCheckAny():
     print_stars()
     input("Press ENTER to continue.")
 
-
 def get_current_epoch():
     if environ.get("NETWORK") == "mainnet":
         endpoints_count = len(easy_env.rpc_endpoints)
@@ -627,7 +608,6 @@ def get_current_epoch():
             return current_epoch
     current_epoch = 0
     return current_epoch
-
 
 def get_current_epochByEndpoint(endpoint):
     current = 0
