@@ -512,7 +512,7 @@ def check_online_version():
         ["wget", "https://harmony.one/binary", "-O", easy_env.harmony_tmp_path], stderr=subprocess.STDOUT
     )
     set_mod_x(easy_env.harmony_tmp_path)
-    harmony_ver = subprocess.getoutput(f"{easy_env.hmy_tmp_path} -V")
+    harmony_ver = subprocess.getoutput(f"{easy_env.harmony_tmp_path} -V")
     subprocess.check_output(
         ["wget", "https://harmony.one/hmycli", "-O", easy_env.hmy_tmp_path], stderr=subprocess.STDOUT
     )
