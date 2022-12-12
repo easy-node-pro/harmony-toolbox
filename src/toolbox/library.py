@@ -498,31 +498,27 @@ def get_sign_pct() -> str:
         output_stripped = "0"
         return str(output_stripped)
 
-def get_versions():
-    output = subprocess.getoutput(f"{easy_env.harmony_app} -V")
-    output_2 = subprocess.getoutput(f"{easy_env.hmy_app} version")
-    set_var(easy_env.dotenv_file, "HARMONY_VERSION", output[35:-35])
-    set_var(easy_env.dotenv_file, "HMY_VERSION", output_2[62:-15])
-    return output[35:-35], output_2[62:-15]
+def get_local_version(folder):
+    harmony_version = subprocess.getoutput(f"{folder}/harmony -V")
+    hmy_version = subprocess.getoutput(f"{folder}/hmy version")
+    return harmony_version[35:-35], hmy_version[62:-15]
 
 def set_mod_x(file):
     subprocess.run(["chmod", "+x", file])
 
-def check_for_updates():
+def check_online_version():
     subprocess.check_output(
         ["wget", "https://harmony.one/binary", "-O", easy_env.hmy_tmp_path], stderr=subprocess.STDOUT
     )
     set_mod_x(easy_env.hmy_tmp_path)
     subprocess.check_output([easy_env.hmy_tmp_path, "config", "dump", "harmony.conf"], stderr=subprocess.STDOUT)
-    output = subprocess.getoutput(f"{easy_env.hmy_tmp_path} -V")
-    set_var(easy_env.dotenv_file, "ONLINE_HARMONY_VERSION", output[35:-35])
+    harmony_ver = subprocess.getoutput(f"{easy_env.hmy_tmp_path} -V")
     subprocess.check_output(
         ["wget", "https://harmony.one/hmycli", "-O", easy_env.hmy_tmp_path], stderr=subprocess.STDOUT
     )
     set_mod_x(easy_env.hmy_tmp_path)
-    output_2 = subprocess.getoutput(f"{easy_env.hmy_tmp_path} version")
-    set_var(easy_env.dotenv_file, "ONLINE_HMY_VERSION", output_2[62:-15])
-    return output[35:-35], output_2[62:-15]
+    hmy_ver = subprocess.getoutput(f"{easy_env.hmy_tmp_path} version")
+    return harmony_ver[35:-35], hmy_ver[62:-15]
 
 def first_env_check(env_file, home_dir) -> None:
     if os.path.exists(env_file):
@@ -531,19 +527,20 @@ def first_env_check(env_file, home_dir) -> None:
         os.system(f"touch {home_dir}/.easynode.env")
         load_var_file(env_file)
 
-def version_checks():
-    harmony_version, hmy_version = get_versions()
-    online_version, online_hmy_version = check_for_updates()
-    if harmony_version != online_version:
-        # here we would set the upgrade harmony flag in env
-        set_var(easy_env.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "True")
-    if harmony_version == online_version:
-        set_var(easy_env.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
-    if hmy_version != online_hmy_version:
-        set_var(easy_env.dotenv_file, "HMY_UPGRADE_AVAILABLE", "True")
-    if hmy_version == online_hmy_version:
-        set_var(easy_env.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
-    return
+def version_checks(folder = f'harmony'):
+    software_versions = {}
+    software_versions["harmony_version"], software_versions["hmy_version"] = get_local_version(f'{easy_env.user_home_dir}/{folder}')
+    software_versions["online_harmony_version"], software_versions["online_hmy_version"] = check_online_version()
+    # Check versions, if matching False (No Upgrade Required), non-match True (Upgrade Required)
+    if software_versions["harmony_version"] == software_versions["online_harmony_version"]:
+        software_versions["harmony_upgrade"] = "False"
+    else:
+        software_versions["harmony_upgrade"] = "True"
+    if software_versions["hmy_version"] == software_versions["online_hmy_version"]:
+        software_versions["hmy_upgrade"] = "False"
+    else:
+        software_versions["hmy_upgrade"] = "True"
+    return software_versions
 
 def first_setup():
     first_env_check(easy_env.dotenv_file, easy_env.user_home_dir)
@@ -732,7 +729,6 @@ def restore_wallet() -> str:
         print_stars()
         print("* Wallet already setup for this user account")
 
-
 # is this used?
 def set_mounted_point():
     # First let's make sure your volume is mounted
@@ -790,12 +786,12 @@ def free_space_check(mount) -> str:
     freeConverted = str(converted_unit(free))
     return freeConverted
 
-def server_drive_check() -> None:
+def server_drive_check(dot_env, directory) -> None:
     if environ.get("MOUNT_POINT") is not None:
         ourDiskMount = environ.get("MOUNT_POINT")
     else:
-        dotenv.set_key(easy_env.dotenv_file, "MOUNT_POINT", easy_env.harmony_dir)
-        load_var_file(easy_env.dotenv_file)
+        dotenv.set_key(dot_env, "MOUNT_POINT", directory)
+        load_var_file(dot_env)
         ourDiskMount = environ.get("MOUNT_POINT")
     print_stars()
     print("Here are all of your mount points: ")
@@ -805,7 +801,7 @@ def server_drive_check() -> None:
     total, used, free = shutil.disk_usage(ourDiskMount)
     total = str(converted_unit(total))
     used = str(converted_unit(used))
-    print("Disk: " + str(ourDiskMount) + "\n" + free_space_check(easy_env.harmony_dir) + " Free\n" + used + " Used\n" + total + " Total")
+    print("Disk: " + str(ourDiskMount) + "\n" + free_space_check(directory) + " Free\n" + used + " Used\n" + total + " Total")
     print_stars()
     input("Disk check complete, press ENTER to return to the main menu. ")
 
@@ -1015,13 +1011,16 @@ def menu_ubuntu_updates() -> str:
         input("* OS Updates completed, press ENTER to return to the main menu. ")
 
 def menu_error() -> None:
+    subprocess.run("clear")
+    print_stars()
     print(
         "* "
         + Fore.RED
         + "WARNING"
         + Style.RESET_ALL
-        + ": Only numbers are possible, please try your selection on the main menu once again."
+        + ": Only numbers are possible, please try your selection on the main menu once again.\n* Press enter to return to the menu."
     )
+    print_stars()
     return
 
 def menu_reboot_server() -> str:

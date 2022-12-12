@@ -4,7 +4,7 @@ import subprocess
 from os import environ
 from ast import literal_eval
 from toolbox.config import easy_env
-from toolbox.library import load_var_file, get_sign_pct, get_wallet_balance, print_stars, set_var, loader_intro, ask_yes_no
+from toolbox.library import load_var_file, get_sign_pct, get_wallet_balance, print_stars, set_var, loader_intro, ask_yes_no, version_checks
 from toolbox.toolbox import free_space_check, harmony_service_status, get_rewards_balance, get_db_size, refresh_stats
 from subprocess import PIPE, run
 from colorama import Fore, Back, Style
@@ -68,42 +68,39 @@ def get_folders():
         print_stars()
     if os.path.exists(f"{user_home}/harmony0/harmony.conf"):
         port = find_port(f'harmony0')
-        folders['harmony1'] = port
+        folders['harmony0'] = port
         print(f'* Found ~/harmony1 folder, on port {port}')
         print_stars()
     if os.path.exists(f"{user_home}/harmony1/harmony.conf"):
         port = find_port(f'harmony1')
-        folders['harmony2'] = port
+        folders['harmony1'] = port
         print(f'* Found ~/harmony1 folder, on port {port}')
         print_stars()
     if os.path.exists(f"{user_home}/harmony2/harmony.conf"):
         port = find_port(f'harmony2')
-        folders['harmony3'] = port
+        folders['harmony2'] = port
         print(f'* Found ~/harmony2 folder, on port {port}')
         print_stars()
     if os.path.exists(f"{user_home}/harmony3/harmony.conf"):
         port = find_port(f'harmony3')
-        folders['harmony4'] = port
+        folders['harmony3'] = port
         print(f'* Found ~/harmony3 folder, on port {port}')
         print_stars()
     return folders
-
 
 def stats_output_regular(folders) -> None:
     # Get server stats & wallet balances
     load_1, load_5, load_15 = os.getloadavg()
     sign_percentage = get_sign_pct()
     total_balance, total_balance_test = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
-    # Get shard stats here
-    count = 0
     subprocess.run("clear")
     # Print Menu
     print_stars()
     print(f'{Style.RESET_ALL}* {Fore.GREEN}validator-toolbox for Harmony ONE Validators by Easy Node   v{easy_env.easy_version}{Style.RESET_ALL}   https://easynode.one *')
     print_stars()
-    print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Style.RESET_ALL}\n* Your $ONE balance is:             {Fore.GREEN}{str(total_balance)}{Style.RESET_ALL}\n* Your pending $ONE rewards are:    {Fore.GREEN}{str(get_rewards_balance(easy_env.rpc_endpoints, environ.get("VALIDATOR_WALLET")))}{Style.RESET_ALL}\n* Server Hostname & IP:             {easy_env.server_host_name}{Style.RESET_ALL} - {Fore.YELLOW}{easy_env.external_ip}{Style.RESET_ALL}')
+    print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Style.RESET_ALL}\n* Your $ONE balance is:             {Fore.GREEN}{str(round(total_balance, 2))}{Style.RESET_ALL}\n* Your pending $ONE rewards are:    {Fore.GREEN}{str(round(get_rewards_balance(easy_env.rpc_endpoints, environ.get("VALIDATOR_WALLET")), 2))}{Style.RESET_ALL}\n* Server Hostname & IP:             {easy_env.server_host_name}{Style.RESET_ALL} - {Fore.YELLOW}{easy_env.external_ip}{Style.RESET_ALL}')
     harmony_service_status()
-    print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}\n* Current user home dir free space: {Fore.CYAN}{free_space_check(easy_env.user_home_dir): >6}{Style.RESET_ALL}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Style.RESET_ALL}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}')
+    print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}\n* Current user home dir free space: {Fore.CYAN}{free_space_check(easy_env.user_home_dir): >6}{Style.RESET_ALL}')
     print(f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min")
     print_stars()
     remote_shard_0 = [f"{user_home}/{list(folders.items())[0][0]}/hmy", "utility", "metadata", f"--node=https://api.s0.t.hmny.io"]
@@ -112,13 +109,14 @@ def stats_output_regular(folders) -> None:
     print(f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}")
     print_stars()
     for folder in folders:
+        software_versions = version_checks(folder)
+        print(f'* Results for the current folder: {easy_env.user_home_dir}{folder}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Style.RESET_ALL}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Style.RESET_ALL}, has upgrade available: {software_versions["hmy_upgrade"]}')
         local_server = [f"{user_home}/{folder}/hmy", "utility", "metadata", f"--node=http://localhost:{folders[folder]}"]
         result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data = json.loads(result_local_server.stdout)
         remote_server = [f"{user_home}/{folder}/hmy", "utility", "metadata", f"--node=https://api.s{local_data['result']['shard-id']}.t.hmny.io"]
         result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         remote_data = json.loads(result_remote_server.stdout)
-        print(f"* Results for folder {user_home}/{folder}:")
         print(f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}")
         print(f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}\n*   Local Shard 0 Size: {get_db_size('0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(local_data['result']['shard-id'])}")
         print_stars()
