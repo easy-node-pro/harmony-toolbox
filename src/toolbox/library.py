@@ -8,6 +8,7 @@ import requests
 import pyhmy
 import shutil
 import docker
+import hashlib
 from toolbox.config import easy_env
 from os import environ
 from dotenv import load_dotenv
@@ -1040,3 +1041,18 @@ def finish_node():
     print("* Thanks for using Easy Node - EZ Mode!\n* We serve up free tools.\n* Please consider supporting us one time or monthly at https://github.com/sponsors/easy-node-pro today!\n*\n* Goodbye!")
     print_stars()
     raise SystemExit(0)
+
+def compare_two_files(file1, file2) -> None:
+    #open the files
+    file1 = open('file1.txt', 'rb')
+    file2 = open('file2.txt', 'rb')
+
+    #generate their hashes
+    hash1 = hashlib.md5(file1.read()).hexdigest()
+    hash2 = hashlib.md5(file2.read()).hexdigest()
+
+    #compare the hashes
+    if hash1 == hash2:
+        return True
+    else:
+        return False
