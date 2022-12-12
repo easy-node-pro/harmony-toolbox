@@ -1042,10 +1042,10 @@ def finish_node():
     print_stars()
     raise SystemExit(0)
 
-def compare_two_files(file1, file2) -> None:
+def compare_two_files(input1, input2) -> None:
     #open the files
-    file1 = open('file1.txt', 'rb')
-    file2 = open('file2.txt', 'rb')
+    file1 = open(input1, 'rb')
+    file2 = open(input2, 'rb')
 
     #generate their hashes
     hash1 = hashlib.md5(file1.read()).hexdigest()
