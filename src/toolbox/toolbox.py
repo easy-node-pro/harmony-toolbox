@@ -358,7 +358,7 @@ def hmy_cli_upgrade():
         make_backup_dir()
         os.system(f"cp {easy_env.hmy_app} {easy_env.harmony_dir}/harmony_backup")
         print_stars()
-        install_hmy(easy_env.harmony_dir)
+        install_hmy()
         print_stars()
         print("Harmony cli has been updated to: ")
         os.system(f"{easy_env.hmy_app} version")
