@@ -134,7 +134,7 @@ def install_harmony(harmony_dir, bls_key_file, harmony_conf):
         update_text_file(harmony_conf, 'PassFile = ""', f'PassFile = "blskey.pass"')
         print("* blskey.pass found, updated harmony.conf")
     print_stars()
-    print(f"* Harmony {environ.get('NETWORK')} application installed & ~/harmony/harmony.conf created.")
+    print(f"* Harmony {environ.get('NETWORK')} application installed & ~/harmony/harmony.conf created. ")
     return
 
 def set_wallet_env():
