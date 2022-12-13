@@ -33,7 +33,8 @@ from toolbox.library import (
     menu_ubuntu_updates,
     menu_error,
     menu_reboot_server,
-    finish_node
+    finish_node,
+    pull_harmony_update
 )
 
 def collect_rewards(networkCall):
@@ -375,7 +376,7 @@ def update_harmony_app(test_or_main):
     print_stars()
     print("Downloading current harmony binary file from harmony.one: ")
     print_stars()
-    install_harmony(easy_env.harmony_dir, easy_env.bls_key_file, easy_env.harmony_conf)
+    pull_harmony_update(easy_env.harmony_dir, easy_env.bls_key_file, easy_env.harmony_conf)
     print_stars()
     print("Updated version: ")
     os.system("./harmony -V")

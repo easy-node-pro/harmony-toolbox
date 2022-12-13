@@ -118,7 +118,7 @@ def recover_wallet():
         set_var(easy_env.dotenv_file, "VALIDATOR_WALLET", wallet)
         return
 
-def install_harmony(harmony_dir, bls_key_file, harmony_conf):
+def pull_harmony_update(harmony_dir, bls_key_file, harmony_conf):
     os.chdir(f"{harmony_dir}")
     if environ.get("NETWORK") == "testnet":
         os.system("curl -LO https://harmony.one/binary_testnet && mv binary_testnet harmony && chmod +x harmony")
