@@ -305,7 +305,7 @@ def refresh_toggle() -> None:
             set_var(easy_env.dotenv_file, "RESET_TIME", str(delay_time))
     return
 
-def refresh_status_option() -> None:
+def refresh_status_option():
     if environ.get("REFRESH_OPTION") == "True":
         print(f"*  20 -  Config auto-refresh      - Disable or Change Refresh Delay Timer")
     else:
