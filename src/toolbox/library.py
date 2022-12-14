@@ -649,7 +649,7 @@ def install_harmony() -> None:
     install_hmy()
     print_stars()
     # Install harmony
-    pull_harmony_update(easy_env.harmony_dir, easy_env.bls_key_file, easy_env.harmony_conf))
+    pull_harmony_update(easy_env.harmony_dir, easy_env.bls_key_file, easy_env.harmony_conf)
     # install hmy files
     print("* Installing rclone application & rclone configuration files")
     print_stars()
