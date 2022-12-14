@@ -287,26 +287,26 @@ def run_rewards_collector() -> None:
 
 def safety_defaults() -> None:
     if environ.get("GAS_RESERVE") is None: set_var(easy_env.dotenv_file, "GAS_RESERVE", "5")
-    if environ.get("REFRESH_TIME") is None: set_var(easy_env.dotenv_file, "REFRESH_TIME", "15")
+    if environ.get("REFRESH_TIME") is None: set_var(easy_env.dotenv_file, "REFRESH_TIME", "30")
     if environ.get("REFRESH_OPTION") is None: set_var(easy_env.dotenv_file, "REFRESH_OPTION", "True")
 
 def refresh_toggle() -> None:
     if environ.get("REFRESH_OPTION") == "True":
         answer = ask_yes_no(f'* Refresh is currently enabled. Would you like to disable it? (Y/N) ')
         if answer:
-            set_var(easy_env.dotenv_file, "REFRESH_OPTION", False)
+            set_var(easy_env.dotenv_file, "REFRESH_OPTION", "False")
         answer = ask_yes_no(f'* Your current refresh time is {str(environ.get("REFRESH_TIME"))} seconds. Would you like to change the delay? (Y/N) ')
         if answer:
             delay_time = timedInteger("* Enter the number of seconds to wait before auto-refreshing: ", timeout=-1, resetOnInput=True, allowNegative=False)
-            set_var(easy_env.dotenv_file, "RESET_TIME", int(delay_time))
+            set_var(easy_env.dotenv_file, "RESET_TIME", str(delay_time))
     else:
         answer = ask_yes_no(f'* Refresh is currently disabled. Would you like to enable it? (Y/N) ')
         if answer:
-            set_var(easy_env.dotenv_file, "REFRESH_OPTION", True)
+            set_var(easy_env.dotenv_file, "REFRESH_OPTION", "True")
         answer = ask_yes_no(f'* Your current refresh time is {str(environ.get("REFRESH_TIME"))} seconds. Would you like to change the delay? (Y/N) ')
         if answer:
             delay_time = timedInteger("* Enter the number of seconds to wait before auto-refreshing: ", timeout=-1, resetOnInput=True, allowNegative=False)
-            set_var(easy_env.dotenv_file, "RESET_TIME", int(delay_time))
+            set_var(easy_env.dotenv_file, "RESET_TIME", str(delay_time))
     return
 
 def refresh_status_option() -> None:
