@@ -392,7 +392,7 @@ def make_backup_dir() -> str:
 
 def hmy_cli_upgrade():
     question = ask_yes_no(
-        "Are you sure you would like to proceed with updating the Harmony CLI file?\n\nType 'Yes' or 'No' to continue"
+        "* Are you sure you would like to proceed with updating the Harmony CLI file?\n\nType 'Yes' or 'No' to continue"
     )
     if question:
         os.chdir(f"{easy_env.harmony_dir}")
@@ -405,7 +405,7 @@ def hmy_cli_upgrade():
         os.system(f"{easy_env.hmy_app} version")
         print_stars()
         set_var(easy_env.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
-        input("Update completed, press ENTER to return to the main menu. ")
+        input("* Update completed, press ENTER to return to the main menu. ")
 
 def update_harmony_app(test_or_main):
     os.chdir(f"{easy_env.harmony_dir}")
@@ -430,7 +430,7 @@ def update_harmony_app(test_or_main):
             if size >= 200000000:
                 question = ask_yes_no(
                     Fore.WHITE
-                    + "Are you sure you would like to proceed with upgrading and trimming database 0?\n\nType 'Yes' or 'No' to continue"
+                    + "* Are you sure you would like to proceed with upgrading and trimming database 0?\n\nType 'Yes' or 'No' to continue"
                 )
                 if question:
                     os.system("sudo service harmony stop")
@@ -527,9 +527,9 @@ def menu_binary_updates():
     test_or_main = environ.get("NETWORK")
     question = ask_yes_no(
         Fore.RED
-        + "WARNING: YOU WILL MISS BLOCKS WHILE YOU UPGRADE THE HARMONY SERVICE.\n\n"
+        + "* WARNING: YOU WILL MISS BLOCKS WHILE YOU UPGRADE THE HARMONY SERVICE.\n\n"
         + Fore.WHITE
-        + "Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
+        + "* Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
     )
     if question:
         update_harmony_app(test_or_main)
@@ -539,28 +539,28 @@ def menu_service_stop_start() -> str:
     if status != 0:
         os.system("sudo service harmony start")
         print()
-        print("Harmony Service Has Been Started.")
+        print("* Harmony Service Has Been Started.")
         print()
-        input("Press ENTER to return to the main menu.")
+        input("* Press ENTER to return to the main menu.")
     else:
         question = ask_yes_no(
             "*********\n"
             + Fore.RED
-            + "WARNING: YOU WILL MISS BLOCKS IF YOU STOP THE HARMONY SERVICE.\n\n"
+            + "* WARNING: YOU WILL MISS BLOCKS IF YOU STOP THE HARMONY SERVICE.\n\n"
             + Fore.WHITE
-            + "Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
+            + "* Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
         )
         if question:
             os.system("sudo service harmony stop")
             print()
             print(
-                "Harmony Service Has Been Stopped. "
+                "* Harmony Service Has Been Stopped. "
                 + Fore.RED
                 + "YOU ARE MISSING BLOCKS ON THIS NODE."
                 + Style.RESET_ALL
             )
             print()
-            input("Press ENTER to return to the main menu.")
+            input("* Press ENTER to return to the main menu.")
 
 def menu_service_restart() -> str:
     question = ask_yes_no(
@@ -632,7 +632,7 @@ def balanceCheckAny():
         f"* The Mainnet Wallet Balance is: {total_balance} Harmony ONE Coins\n* The Testnet Wallet Balance is: {total_balance_test} Harmony ONE Test Coins"
     )
     print_stars()
-    input("Press ENTER to continue.")
+    input("* Press ENTER to continue.")
 
 def get_current_epoch():
     if environ.get("NETWORK") == "mainnet":
