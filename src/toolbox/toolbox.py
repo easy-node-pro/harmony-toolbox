@@ -307,9 +307,9 @@ def refresh_toggle() -> None:
 
 def refresh_status_option():
     if environ.get("REFRESH_OPTION") == "True":
-        print(f"*  20 - Config auto-refresh      - Disable or Change Refresh Delay Timer: {str(environ.get('REFRESH_TIME'))}")
+        print(f"*  20 - Config auto-refresh       - Disable or Change Refresh Delay Timer: {str(environ.get('REFRESH_TIME'))}")
     else:
-        print(f"*  20 - Config auto-refresh      - Enable or Change Refresh Delay Timer: {str(environ.get('REFRESH_TIME'))}")
+        print(f"*  20 - Config auto-refresh       - Enable or Change Refresh Delay Timer: {str(environ.get('REFRESH_TIME'))}")
 
 def run_regular_node(software_versions) -> None:
     menu_options = {
