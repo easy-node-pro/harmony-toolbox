@@ -3,7 +3,7 @@ import requests
 import time
 import json
 import subprocess
-from input_timeout import InputTimeout
+from pytimedinput import timedInteger
 from subprocess import Popen, PIPE, run
 from ast import literal_eval
 from toolbox.config import easy_env
@@ -285,6 +285,32 @@ def run_rewards_collector() -> None:
     rewards_collector(environ.get("REWARDS_WALLET"), environ.get('VALIDATOR_WALLET'), easy_env.rpc_endpoints)
     return
 
+def refresh_toggle() -> None:
+    if environ.get("REFRESH_TIME") is None: set_var(easy_env.dotenv_file, "REFRESH_TIME", 15)
+    if environ.get("REFRESH_OPTION") is None or environ.get("REFRESH_OPTION") is True:
+        answer = ask_yes_no(f'* Refresh is currently enabled. Would you like to disable it? (Y/N) ')
+        if answer:
+            set_var(easy_env.dotenv_file, "REFRESH_OPTION", False)
+        answer = ask_yes_no(f'* Your current refresh time is {str(environ.get("REFRESH_TIME"))} seconds. Would you like to change the delay? (Y/N) ')
+        if answer:
+            delay_time = timedInteger("* Enter the number of seconds to wait before auto-refreshing: ", timeout=-1, resetOnInput=True, allowNegative=False)
+            set_var(easy_env.dotenv_file, "RESET_TIME", delay_time)
+    else:
+        answer = ask_yes_no(f'* Refresh is currently disabled. Would you like to enable it? (Y/N) ')
+        if answer:
+            set_var(easy_env.dotenv_file, "REFRESH_OPTION", True)
+        answer = ask_yes_no(f'* Your current refresh time is {str(environ.get("REFRESH_TIME"))} seconds. Would you like to change the delay? (Y/N) ')
+        if answer:
+            delay_time = timedInteger("* Enter the number of seconds to wait before auto-refreshing: ", timeout=-1, resetOnInput=True, allowNegative=False)
+            set_var(easy_env.dotenv_file, "RESET_TIME", delay_time)
+    return
+
+def refresh_status_option() -> None:
+    if environ.get("REFRESH_OPTION") or environ.get("REFRESH_OPTION") is None:
+        print(f"*  20 -  Config auto-refresh      - Disable or Change Refresh Delay Timer")
+    if environ.get("REFRESH_OPTION") is False:
+        print(f"*  20 -  Config auto-refresh      - Enable or Change Refresh Delay Timer")
+
 def run_regular_node(software_versions) -> None:
     menu_options = {
         0: finish_node,
@@ -303,6 +329,7 @@ def run_regular_node(software_versions) -> None:
         13: drive_check,
         14: tmi_server_info,
         15: all_sys_info,
+        20: refresh_toggle,
         999: menu_reboot_server,
     }
     while True:
@@ -319,11 +346,13 @@ def run_regular_node(software_versions) -> None:
             )
             print_stars()
         try:
-            option = InputTimeout(
-                timeout=15,
-                input_message=" >> ",
-                timeout_message="* 15 seconds passed, refreshing stats..."
-            )
+            if environ.get("REFRESH_OPTION") is True or environ.get("REFRESH_OPTION") is None:
+                # run timed input
+                option, timedOut = timedInteger("Enter your menu choice: ", timeout=environ.get("REFRESH_TIME"), resetOnInput=True, allowNegative=False)
+                if timedOut:
+                    break
+            else:
+                option = int(input("Enter your menu choice: "))
         except ValueError:
             menu_error()
             break
@@ -332,6 +361,7 @@ def run_regular_node(software_versions) -> None:
         menu_options[option]()
         if option != 1:
             refresh_stats(1)
+    refresh_stats(0)
 
 def harmony_service_status() -> None:
     status = subprocess.call(["systemctl", "is-active", "--quiet", "harmony"])
