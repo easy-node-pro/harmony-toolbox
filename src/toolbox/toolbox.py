@@ -288,10 +288,10 @@ def run_rewards_collector() -> None:
 def safety_defaults() -> None:
     if environ.get("GAS_RESERVE") is None: set_var(easy_env.dotenv_file, "GAS_RESERVE", "5")
     if environ.get("REFRESH_TIME") is None: set_var(easy_env.dotenv_file, "REFRESH_TIME", "15")
-    if environ.get("REFRESH_OPTION") is None: set_var(easy_env.dotenv_file, "REFRESH_OPTION", True)
+    if environ.get("REFRESH_OPTION") is None: set_var(easy_env.dotenv_file, "REFRESH_OPTION", "True")
 
 def refresh_toggle() -> None:
-    if environ.get("REFRESH_OPTION"):
+    if environ.get("REFRESH_OPTION") == "True":
         answer = ask_yes_no(f'* Refresh is currently enabled. Would you like to disable it? (Y/N) ')
         if answer:
             set_var(easy_env.dotenv_file, "REFRESH_OPTION", False)
@@ -350,7 +350,7 @@ def run_regular_node(software_versions) -> None:
             )
             print_stars()
         try:
-            if environ.get("REFRESH_OPTION") is True or environ.get("REFRESH_OPTION") is None:
+            if environ.get("REFRESH_OPTION") == "True":
                 # run timed input
                 option, timedOut = timedInteger("Enter your menu choice: ", timeout=int(environ.get("REFRESH_TIME")), resetOnInput=True, allowNegative=False)
                 if timedOut:
