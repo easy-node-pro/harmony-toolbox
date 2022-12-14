@@ -350,26 +350,24 @@ def run_regular_node(software_versions) -> None:
                 f'* The hmy binary has an update available to version {software_versions["online_hmy_version"]}\n* Option #11 will upgrade you.\n* Currently installed version {software_versions["hmy_version"]}'
             )
             print_stars()
-        try:
-            if environ.get("REFRESH_OPTION") == "True":
-                # run timed input
-                option, timedOut = timedInteger(f"* Auto refresh enabled, Enter your menu choice: ", timeout=int(environ.get("REFRESH_TIME")), resetOnInput=True, allowNegative=False)
-                if timedOut:
-                    run_regular_node(software_versions)
-                else:
-                    menu_options[option]()
-                    continue
+        if environ.get("REFRESH_OPTION") == "True":
+            # run timed input
+            option, timedOut = timedInteger(f"* Auto refresh enabled, Enter your menu choice: ", timeout=int(environ.get("REFRESH_TIME")), resetOnInput=True, allowNegative=False)
+            if timedOut:
+                run_regular_node(software_versions)
             else:
-                option = timedInteger("* Auto refresh disabled, Enter your menu choice: ", timeout=-1, resetOnInput=True, allowNegative=False)
-        except ValueError:
-            menu_error()
-            break
-        subprocess.run("clear")
-        print_stars()
-        menu_options[option]()
-        if option != 1:
-            refresh_stats(1)
-    run_regular_node(software_versions)
+                subprocess.run("clear")
+                print_stars()
+                menu_options[option]()
+                if option != 1:
+                    refresh_stats(1)
+        else:
+            option = timedInteger("* Auto refresh disabled, Enter your menu choice: ", timeout=-1, resetOnInput=True, allowNegative=False)
+            subprocess.run("clear")
+            print_stars()
+            menu_options[option]()
+            if option != 1:
+                refresh_stats(1)
 
 def harmony_service_status() -> None:
     status = subprocess.call(["systemctl", "is-active", "--quiet", "harmony"])
