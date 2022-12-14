@@ -285,9 +285,13 @@ def run_rewards_collector() -> None:
     rewards_collector(environ.get("REWARDS_WALLET"), environ.get('VALIDATOR_WALLET'), easy_env.rpc_endpoints)
     return
 
-def refresh_toggle() -> None:
+def safety_defaults() -> None:
+    if environ.get("GAS_RESERVE") is None: set_var(easy_env.dotenv_file, "GAS_RESERVE", "5")
     if environ.get("REFRESH_TIME") is None: set_var(easy_env.dotenv_file, "REFRESH_TIME", 15)
-    if environ.get("REFRESH_OPTION") is None or environ.get("REFRESH_OPTION") is True:
+    if environ.get("REFRESH_OPTION") is None: set_var(easy_env.dotenv_file, "REFRESH_OPTION", True)
+
+def refresh_toggle() -> None:
+    if environ.get("REFRESH_OPTION"):
         answer = ask_yes_no(f'* Refresh is currently enabled. Would you like to disable it? (Y/N) ')
         if answer:
             set_var(easy_env.dotenv_file, "REFRESH_OPTION", False)

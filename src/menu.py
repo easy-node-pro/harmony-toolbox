@@ -2,7 +2,7 @@ import os
 from os import environ
 from toolbox.config import easy_env
 from toolbox.library import loader_intro, set_wallet_env, load_var_file, passphrase_status, set_var, version_checks, recheck_vars, recover_wallet, update_text_file
-from toolbox.toolbox import run_regular_node, run_full_node, refresh_stats
+from toolbox.toolbox import run_regular_node, run_full_node, refresh_stats, safety_defaults
 
 if __name__ == "__main__":
     # clear screen, show logo
@@ -15,8 +15,7 @@ if __name__ == "__main__":
     # passed .env check, let's load it!
     load_var_file(easy_env.dotenv_file)
     # This section is for hard coding new settings for current users.
-    if environ.get("GAS_RESERVE") is None:
-        set_var(easy_env.dotenv_file, "GAS_RESERVE", "5")
+    safety_defaults()
     # always set conf to 13 keys, shard max
     if os.path.exists(easy_env.harmony_conf): update_text_file(easy_env.harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
     # Make sure they have a wallet or wallet address in the .env file, if none, get one.
