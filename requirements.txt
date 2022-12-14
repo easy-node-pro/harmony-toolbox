@@ -5,3 +5,4 @@ pyhmy == 0.1.0
 python-dotenv >= 0.8.0
 psutil >=5.8.0
 json2html>=1.3.0
+pytimedinput==2.0.1

@@ -3,6 +3,7 @@ import requests
 import time
 import json
 import subprocess
+from pytimedinput import timedInteger
 from subprocess import Popen, PIPE, run
 from ast import literal_eval
 from toolbox.config import easy_env
@@ -284,6 +285,38 @@ def run_rewards_collector() -> None:
     rewards_collector(environ.get("REWARDS_WALLET"), environ.get('VALIDATOR_WALLET'), easy_env.rpc_endpoints)
     return
 
+def safety_defaults() -> None:
+    if environ.get("GAS_RESERVE") is None: set_var(easy_env.dotenv_file, "GAS_RESERVE", "5")
+    if environ.get("REFRESH_TIME") is None: set_var(easy_env.dotenv_file, "REFRESH_TIME", "30")
+    if environ.get("REFRESH_OPTION") is None: set_var(easy_env.dotenv_file, "REFRESH_OPTION", "True")
+
+def refresh_toggle() -> None:
+    if environ.get("REFRESH_OPTION") == "True":
+        answer = ask_yes_no(f'* Refresh is currently enabled. Would you like to disable it? (Y/N) ')
+        if answer:
+            set_var(easy_env.dotenv_file, "REFRESH_OPTION", "False")
+        else:
+            answer = ask_yes_no(f'* Your current refresh time is {str(environ.get("REFRESH_TIME"))} seconds. Would you like to change the delay? (Y/N) ')
+            if answer:
+                delay_time = timedInteger("* Enter the number of seconds to wait before auto-refreshing: ", timeout=-1, resetOnInput=True, allowNegative=False)
+                set_var(easy_env.dotenv_file, "REFRESH_TIME", str(delay_time[0]))
+    else:
+        answer = ask_yes_no(f'* Refresh is currently disabled. Would you like to enable it? (Y/N) ')
+        if answer:
+            set_var(easy_env.dotenv_file, "REFRESH_OPTION", "True")
+        answer = ask_yes_no(f'* Your current refresh time is {str(environ.get("REFRESH_TIME"))} seconds. Would you like to change the delay? (Y/N) ')
+        if answer:
+            delay_time = timedInteger("* Enter the number of seconds to wait before auto-refreshing: ", timeout=-1, resetOnInput=True, allowNegative=False)
+            set_var(easy_env.dotenv_file, "REFRESH_TIME", str(delay_time[0]))
+    load_var_file(easy_env.dotenv_file)
+    return
+
+def refresh_status_option():
+    if environ.get("REFRESH_OPTION") == "True":
+        print(f"*  20 - Disable auto-refresh      - Disable Refresh or Change Delay Timer: {str(environ.get('REFRESH_TIME'))} seconds")
+    else:
+        print(f"*  20 - Enable Auto refresh       - Enable Refresh Timeout")
+
 def run_regular_node(software_versions) -> None:
     menu_options = {
         0: finish_node,
@@ -302,6 +335,7 @@ def run_regular_node(software_versions) -> None:
         13: drive_check,
         14: tmi_server_info,
         15: all_sys_info,
+        20: refresh_toggle,
         999: menu_reboot_server,
     }
     while True:
@@ -317,16 +351,24 @@ def run_regular_node(software_versions) -> None:
                 f'* The hmy binary has an update available to version {software_versions["online_hmy_version"]}\n* Option #11 will upgrade you.\n* Currently installed version {software_versions["hmy_version"]}'
             )
             print_stars()
-        try:
-            option = int(input("Enter your option: "))
-        except ValueError:
-            menu_error()
-            break
-        subprocess.run("clear")
-        print_stars()
-        menu_options[option]()
-        if option != 1:
-            refresh_stats(1)
+        if environ.get("REFRESH_OPTION") == "True":
+            # run timed input
+            option, timedOut = timedInteger(f"* Auto refresh enabled, Enter your menu choice: ", timeout=int(environ.get("REFRESH_TIME")), resetOnInput=True, allowNegative=False)
+            if timedOut:
+                run_regular_node(software_versions)
+            else:
+                subprocess.run("clear")
+                print_stars()
+                menu_options[option]()
+                if option != 1:
+                    refresh_stats(1)
+        else:
+            option, timedOut = timedInteger("* Auto refresh disabled, Enter your menu choice: ", timeout=-1, resetOnInput=True, allowNegative=False)
+            subprocess.run("clear")
+            print_stars()
+            menu_options[option]()
+            if option != 1:
+                refresh_stats(1)
 
 def harmony_service_status() -> None:
     status = subprocess.call(["systemctl", "is-active", "--quiet", "harmony"])
@@ -351,7 +393,7 @@ def make_backup_dir() -> str:
 
 def hmy_cli_upgrade():
     question = ask_yes_no(
-        "Are you sure you would like to proceed with updating the Harmony CLI file?\n\nType 'Yes' or 'No' to continue"
+        "* Are you sure you would like to proceed with updating the Harmony CLI file?\n\nType 'Yes' or 'No' to continue"
     )
     if question:
         os.chdir(f"{easy_env.harmony_dir}")
@@ -364,7 +406,7 @@ def hmy_cli_upgrade():
         os.system(f"{easy_env.hmy_app} version")
         print_stars()
         set_var(easy_env.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
-        input("Update completed, press ENTER to return to the main menu. ")
+        input("* Update completed, press ENTER to return to the main menu. ")
 
 def update_harmony_app(test_or_main):
     os.chdir(f"{easy_env.harmony_dir}")
@@ -389,7 +431,7 @@ def update_harmony_app(test_or_main):
             if size >= 200000000:
                 question = ask_yes_no(
                     Fore.WHITE
-                    + "Are you sure you would like to proceed with upgrading and trimming database 0?\n\nType 'Yes' or 'No' to continue"
+                    + "* Are you sure you would like to proceed with upgrading and trimming database 0?\n\nType 'Yes' or 'No' to continue"
                 )
                 if question:
                     os.system("sudo service harmony stop")
@@ -486,9 +528,9 @@ def menu_binary_updates():
     test_or_main = environ.get("NETWORK")
     question = ask_yes_no(
         Fore.RED
-        + "WARNING: YOU WILL MISS BLOCKS WHILE YOU UPGRADE THE HARMONY SERVICE.\n\n"
+        + "* WARNING: YOU WILL MISS BLOCKS WHILE YOU UPGRADE THE HARMONY SERVICE.\n\n"
         + Fore.WHITE
-        + "Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
+        + "* Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
     )
     if question:
         update_harmony_app(test_or_main)
@@ -498,28 +540,28 @@ def menu_service_stop_start() -> str:
     if status != 0:
         os.system("sudo service harmony start")
         print()
-        print("Harmony Service Has Been Started.")
+        print("* Harmony Service Has Been Started.")
         print()
-        input("Press ENTER to return to the main menu.")
+        input("* Press ENTER to return to the main menu.")
     else:
         question = ask_yes_no(
             "*********\n"
             + Fore.RED
-            + "WARNING: YOU WILL MISS BLOCKS IF YOU STOP THE HARMONY SERVICE.\n\n"
+            + "* WARNING: YOU WILL MISS BLOCKS IF YOU STOP THE HARMONY SERVICE.\n\n"
             + Fore.WHITE
-            + "Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
+            + "* Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
         )
         if question:
             os.system("sudo service harmony stop")
             print()
             print(
-                "Harmony Service Has Been Stopped. "
+                "* Harmony Service Has Been Stopped. "
                 + Fore.RED
                 + "YOU ARE MISSING BLOCKS ON THIS NODE."
                 + Style.RESET_ALL
             )
             print()
-            input("Press ENTER to return to the main menu.")
+            input("* Press ENTER to return to the main menu.")
 
 def menu_service_restart() -> str:
     question = ask_yes_no(
@@ -591,7 +633,7 @@ def balanceCheckAny():
         f"* The Mainnet Wallet Balance is: {total_balance} Harmony ONE Coins\n* The Testnet Wallet Balance is: {total_balance_test} Harmony ONE Test Coins"
     )
     print_stars()
-    input("Press ENTER to continue.")
+    input("* Press ENTER to continue.")
 
 def get_current_epoch():
     if environ.get("NETWORK") == "mainnet":
