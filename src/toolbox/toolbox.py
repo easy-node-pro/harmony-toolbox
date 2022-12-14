@@ -348,11 +348,11 @@ def run_regular_node(software_versions) -> None:
         try:
             if environ.get("REFRESH_OPTION") == "True":
                 # run timed input
-                option, timedOut = timedInteger("Enter your menu choice: ", timeout=int(environ.get("REFRESH_TIME")), resetOnInput=True, allowNegative=False)
+                option, timedOut = timedInteger(f"* Auto refresh enabled, {str(environ.get('REFRESH_TIME'))} seconds\n* Enter your menu choice: ", timeout=int(environ.get("REFRESH_TIME")), resetOnInput=True, allowNegative=False)
                 if timedOut:
                     run_regular_node(software_versions)
             else:
-                option = int(input("Enter your menu choice: "))
+                option = int(input("* Auto refresh disabled\n* Enter your menu choice: "))
         except ValueError:
             menu_error()
             break
