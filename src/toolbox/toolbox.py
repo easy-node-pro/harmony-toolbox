@@ -354,7 +354,7 @@ def run_regular_node(software_versions) -> None:
                 # run timed input
                 option, timedOut = timedInteger("Enter your menu choice: ", timeout=int(environ.get("REFRESH_TIME")), resetOnInput=True, allowNegative=False)
                 if timedOut:
-                    continue
+                    run_regular_node(software_versions)
             else:
                 option = int(input("Enter your menu choice: "))
         except ValueError:
@@ -365,7 +365,7 @@ def run_regular_node(software_versions) -> None:
         menu_options[option]()
         if option != 1:
             refresh_stats(1)
-    refresh_stats(0)
+    run_regular_node(software_versions)
 
 def harmony_service_status() -> None:
     status = subprocess.call(["systemctl", "is-active", "--quiet", "harmony"])
