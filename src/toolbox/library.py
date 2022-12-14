@@ -643,6 +643,7 @@ def install_harmony() -> None:
         print("* Creating all Harmony Files & Folders")
         os.system(f"mkdir -p {easy_env.harmony_dir}/.hmy/blskeys")
     # Change to ~/harmony folder
+    os.chdir(f"{easy_env.harmony_dir}")
     print_stars()
     # Install hmy
     install_hmy()
