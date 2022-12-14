@@ -84,10 +84,9 @@ def loader_intro():
 # Install Harmony ONE
 def install_hmy():
     os.chdir(f"{easy_env.harmony_dir}")
-    os.system("curl -LO https://harmony.one/hmycli && mv hmycli hmy && chmod +x hmy")
+    os.system(f"curl -LO https://harmony.one/hmycli && mv hmycli hmy && chmod +x hmy")
     print_stars()
     print("* hmy application installed.")
-    return
 
 # Code to update the harmony.conf after an upgrade and other text files.
 def update_text_file(fileName, originalText, newText):
@@ -644,13 +643,12 @@ def install_harmony() -> None:
         print("* Creating all Harmony Files & Folders")
         os.system(f"mkdir -p {easy_env.harmony_dir}/.hmy/blskeys")
     # Change to ~/harmony folder
-    os.chdir(f"{easy_env.harmony_dir}")
     print_stars()
     # Install hmy
     install_hmy()
     print_stars()
     # Install harmony
-    install_harmony()
+    pull_harmony_update()
     # install hmy files
     print("* Installing rclone application & rclone configuration files")
     print_stars()
