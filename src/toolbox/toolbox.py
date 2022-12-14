@@ -307,9 +307,9 @@ def refresh_toggle() -> None:
 
 def refresh_status_option():
     if environ.get("REFRESH_OPTION") == "True":
-        print(f"*  20 -  Config auto-refresh      - Disable or Change Refresh Delay Timer")
+        print(f"*  20 - Config auto-refresh      - Disable or Change Refresh Delay Timer: {str(environ.get('REFRESH_TIME'))}")
     else:
-        print(f"*  20 -  Config auto-refresh      - Enable or Change Refresh Delay Timer")
+        print(f"*  20 - Config auto-refresh      - Enable or Change Refresh Delay Timer: {str(environ.get('REFRESH_TIME'))}")
 
 def run_regular_node(software_versions) -> None:
     menu_options = {
@@ -348,7 +348,7 @@ def run_regular_node(software_versions) -> None:
         try:
             if environ.get("REFRESH_OPTION") == "True":
                 # run timed input
-                option, timedOut = timedInteger(f"* Auto refresh enabled, {str(environ.get('REFRESH_TIME'))} second timer.\n* Enter your menu choice: ", timeout=int(environ.get("REFRESH_TIME")), resetOnInput=True, allowNegative=False)
+                option, timedOut = timedInteger(f"* Auto refresh enabled\n* Enter your menu choice: ", timeout=int(environ.get("REFRESH_TIME")), resetOnInput=True, allowNegative=False)
                 if timedOut:
                     run_regular_node(software_versions)
             else:
