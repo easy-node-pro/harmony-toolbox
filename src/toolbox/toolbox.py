@@ -354,7 +354,7 @@ def run_regular_node(software_versions) -> None:
                 # run timed input
                 option, timedOut = timedInteger("Enter your menu choice: ", timeout=int(environ.get("REFRESH_TIME")), resetOnInput=True, allowNegative=False)
                 if timedOut:
-                    break
+                    continue
             else:
                 option = int(input("Enter your menu choice: "))
         except ValueError:
