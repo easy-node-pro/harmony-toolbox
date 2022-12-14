@@ -357,7 +357,7 @@ def run_regular_node(software_versions) -> None:
                 if timedOut:
                     run_regular_node(software_versions)
             else:
-                option = timedInteger("* Auto refresh disabled, Enter your menu choice: ", timeout=-1, resetnOnInput=True, allowNegative=False)
+                option = timedInteger("* Auto refresh disabled, Enter your menu choice: ", timeout=-1, resetOnInput=True, allowNegative=False)
         except ValueError:
             menu_error()
             break
