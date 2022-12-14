@@ -308,7 +308,7 @@ def refresh_toggle() -> None:
         if answer:
             delay_time = timedInteger("* Enter the number of seconds to wait before auto-refreshing: ", timeout=-1, resetOnInput=True, allowNegative=False)
             set_var(easy_env.dotenv_file, "RESET_TIME", str(delay_time))
-    load_var_file()
+    load_var_file(easy_env.dotenv_file)
     return
 
 def refresh_status_option():
