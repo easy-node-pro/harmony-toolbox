@@ -295,6 +295,11 @@ def refresh_toggle() -> None:
         answer = ask_yes_no(f'* Refresh is currently enabled. Would you like to disable it? (Y/N) ')
         if answer:
             set_var(easy_env.dotenv_file, "REFRESH_OPTION", "False")
+        else:
+            answer = ask_yes_no(f'* Your current refresh time is {str(environ.get("REFRESH_TIME"))} seconds. Would you like to change the delay? (Y/N) ')
+            if answer:
+                delay_time = timedInteger("* Enter the number of seconds to wait before auto-refreshing: ", timeout=-1, resetOnInput=True, allowNegative=False)
+                set_var(easy_env.dotenv_file, "RESET_TIME", str(delay_time))
     else:
         answer = ask_yes_no(f'* Refresh is currently disabled. Would you like to enable it? (Y/N) ')
         if answer:
@@ -307,9 +312,9 @@ def refresh_toggle() -> None:
 
 def refresh_status_option():
     if environ.get("REFRESH_OPTION") == "True":
-        print(f"*  20 - Config auto-refresh       - Disable or Change Refresh Delay Timer: {str(environ.get('REFRESH_TIME'))}")
+        print(f"*  20 - Disable auto-refresh      - Disable Refresh or Change Delay Timer: {str(environ.get('REFRESH_TIME'))} seconds")
     else:
-        print(f"*  20 - Config auto-refresh       - Enable or Change Refresh Delay Timer: {str(environ.get('REFRESH_TIME'))}")
+        print(f"*  20 - Enable Auto refresh       - Enable Refresh Timeout")
 
 def run_regular_node(software_versions) -> None:
     menu_options = {
