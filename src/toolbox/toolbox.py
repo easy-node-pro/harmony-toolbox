@@ -3,6 +3,7 @@ import requests
 import time
 import json
 import subprocess
+from input_timeout import InputTimeout
 from subprocess import Popen, PIPE, run
 from ast import literal_eval
 from toolbox.config import easy_env
@@ -318,7 +319,11 @@ def run_regular_node(software_versions) -> None:
             )
             print_stars()
         try:
-            option = int(input("Enter your option: "))
+            option = InputTimeout(
+                timeout=15,
+                input_message=" >> ",
+                timeout_message="* 15 seconds passed, refreshing stats..."
+            )
         except ValueError:
             menu_error()
             break
