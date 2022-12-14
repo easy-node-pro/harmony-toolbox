@@ -358,7 +358,7 @@ def run_regular_node(software_versions) -> None:
             else:
                 subprocess.run("clear")
                 print_stars()
-                menu_options[option]()
+                menu_options[option[0]]()
                 if option != 1:
                     refresh_stats(1)
         else:
