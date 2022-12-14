@@ -287,7 +287,7 @@ def run_rewards_collector() -> None:
 
 def safety_defaults() -> None:
     if environ.get("GAS_RESERVE") is None: set_var(easy_env.dotenv_file, "GAS_RESERVE", "5")
-    if environ.get("REFRESH_TIME") is None: set_var(easy_env.dotenv_file, "REFRESH_TIME", 15)
+    if environ.get("REFRESH_TIME") is None: set_var(easy_env.dotenv_file, "REFRESH_TIME", "15")
     if environ.get("REFRESH_OPTION") is None: set_var(easy_env.dotenv_file, "REFRESH_OPTION", True)
 
 def refresh_toggle() -> None:
@@ -298,7 +298,7 @@ def refresh_toggle() -> None:
         answer = ask_yes_no(f'* Your current refresh time is {str(environ.get("REFRESH_TIME"))} seconds. Would you like to change the delay? (Y/N) ')
         if answer:
             delay_time = timedInteger("* Enter the number of seconds to wait before auto-refreshing: ", timeout=-1, resetOnInput=True, allowNegative=False)
-            set_var(easy_env.dotenv_file, "RESET_TIME", delay_time)
+            set_var(easy_env.dotenv_file, "RESET_TIME", int(delay_time))
     else:
         answer = ask_yes_no(f'* Refresh is currently disabled. Would you like to enable it? (Y/N) ')
         if answer:
@@ -306,7 +306,7 @@ def refresh_toggle() -> None:
         answer = ask_yes_no(f'* Your current refresh time is {str(environ.get("REFRESH_TIME"))} seconds. Would you like to change the delay? (Y/N) ')
         if answer:
             delay_time = timedInteger("* Enter the number of seconds to wait before auto-refreshing: ", timeout=-1, resetOnInput=True, allowNegative=False)
-            set_var(easy_env.dotenv_file, "RESET_TIME", delay_time)
+            set_var(easy_env.dotenv_file, "RESET_TIME", int(delay_time))
     return
 
 def refresh_status_option() -> None:
@@ -352,7 +352,7 @@ def run_regular_node(software_versions) -> None:
         try:
             if environ.get("REFRESH_OPTION") is True or environ.get("REFRESH_OPTION") is None:
                 # run timed input
-                option, timedOut = timedInteger("Enter your menu choice: ", timeout=environ.get("REFRESH_TIME"), resetOnInput=True, allowNegative=False)
+                option, timedOut = timedInteger("Enter your menu choice: ", timeout=int(environ.get("REFRESH_TIME")), resetOnInput=True, allowNegative=False)
                 if timedOut:
                     break
             else:
