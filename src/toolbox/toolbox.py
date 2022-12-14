@@ -299,7 +299,7 @@ def refresh_toggle() -> None:
             answer = ask_yes_no(f'* Your current refresh time is {str(environ.get("REFRESH_TIME"))} seconds. Would you like to change the delay? (Y/N) ')
             if answer:
                 delay_time = timedInteger("* Enter the number of seconds to wait before auto-refreshing: ", timeout=-1, resetOnInput=True, allowNegative=False)
-                set_var(easy_env.dotenv_file, "REFRESH_TIME", delay_time[0])
+                set_var(easy_env.dotenv_file, "REFRESH_TIME", str(delay_time[0]))
     else:
         answer = ask_yes_no(f'* Refresh is currently disabled. Would you like to enable it? (Y/N) ')
         if answer:
@@ -307,7 +307,7 @@ def refresh_toggle() -> None:
         answer = ask_yes_no(f'* Your current refresh time is {str(environ.get("REFRESH_TIME"))} seconds. Would you like to change the delay? (Y/N) ')
         if answer:
             delay_time = timedInteger("* Enter the number of seconds to wait before auto-refreshing: ", timeout=-1, resetOnInput=True, allowNegative=False)
-            set_var(easy_env.dotenv_file, "REFRESH_TIME", delay_time[0])
+            set_var(easy_env.dotenv_file, "REFRESH_TIME", str(delay_time[0]))
     load_var_file(easy_env.dotenv_file)
     return
 
