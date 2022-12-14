@@ -365,7 +365,7 @@ def run_regular_node(software_versions) -> None:
             option = timedInteger("* Auto refresh disabled, Enter your menu choice: ", timeout=-1, resetOnInput=True, allowNegative=False)
             subprocess.run("clear")
             print_stars()
-            menu_options[option]()
+            menu_options[option[0]]()
             if option != 1:
                 refresh_stats(1)
 
