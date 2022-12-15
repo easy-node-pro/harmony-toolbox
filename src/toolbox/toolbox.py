@@ -275,7 +275,7 @@ def run_full_node() -> None:
         menu_options[option]()
 
 def bingo_checker():
-    os.system("grep BINGO ~/harmony/latest/zerolog-harmony.log | tail -10")
+    os.system(f"grep BINGO {easy_env.harmony_dir}/latest/zerolog-harmony.log | tail -10")
     print_stars()
     print("* Press enter to return to the main menu.")
     print_stars()
@@ -352,23 +352,31 @@ def run_regular_node(software_versions) -> None:
             )
             print_stars()
         if environ.get("REFRESH_OPTION") == "True":
-            # run timed input
-            option, timedOut = timedInteger(f"* Auto refresh enabled, Enter your menu choice: ", timeout=int(environ.get("REFRESH_TIME")), resetOnInput=True, allowNegative=False)
-            if timedOut:
-                run_regular_node(software_versions)
-            else:
+            try:
+                # run timed input
+                option, timedOut = timedInteger(f"* Auto refresh enabled, Enter your menu choice: ", timeout=int(environ.get("REFRESH_TIME")), resetOnInput=True, allowNegative=False)
+                if timedOut:
+                    run_regular_node(software_versions)
+                else:
+                    subprocess.run("clear")
+                    print_stars()
+                    menu_options[option]()
+                    if option != 1:
+                        refresh_stats(1)
+            except KeyError:
+                print(f'* Bad option, try again. Press enter to continue.')
+                input()
+        else:
+            try:
+                option, timedOut = timedInteger("* Auto refresh disabled, Enter your menu choice: ", timeout=-1, resetOnInput=True, allowNegative=False)
                 subprocess.run("clear")
                 print_stars()
                 menu_options[option]()
                 if option != 1:
                     refresh_stats(1)
-        else:
-            option, timedOut = timedInteger("* Auto refresh disabled, Enter your menu choice: ", timeout=-1, resetOnInput=True, allowNegative=False)
-            subprocess.run("clear")
-            print_stars()
-            menu_options[option]()
-            if option != 1:
-                refresh_stats(1)
+            except KeyError:
+                print(f"* Bad option, try again. Press enter to continue.")
+                input()
 
 def harmony_service_status() -> None:
     status = subprocess.call(["systemctl", "is-active", "--quiet", "harmony"])
