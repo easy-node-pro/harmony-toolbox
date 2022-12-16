@@ -85,7 +85,6 @@ def loader_intro():
                             |/__\|/__\|/__\|/__\|/__\|/__\|/__\|   
     """
     print(p)
-    print_stars()
 
 # Install Harmony ONE
 def install_hmy():
