@@ -57,7 +57,7 @@ If a community member engages in unacceptable behavior, the community organizers
 
 ## 7. Reporting Guidelines
 
-If you are subject to or witness unacceptable behavior, or have any other concerns, please notify a community organizer as soon as possible. social@easynode.one.
+If you are subject to or witness unacceptable behavior, or have any other concerns, please notify a community organizer as soon as possible. social@easynode.pro.
 
 
 
@@ -77,7 +77,7 @@ This code of conduct and its related procedures also applies to unacceptable beh
 
 ## 10. Contact info
 
-social@easynode.one
+social@easynode.pro
 
 ## 11. License and attribution
 
