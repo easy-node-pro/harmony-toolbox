@@ -27,7 +27,7 @@ class print_stuff:
     def __init__(self, reset: int = 0):
         self.reset = reset
         self.print_stars = "*" * 93
-        self.reset_stars = self.print_stars + Style.RESET_ALL
+        self.reset_stars = self.print_stars + Style.RESET_ALL + Fore.GREEN
 
     def printStars(self) -> None:
         p = self.print_stars
@@ -65,8 +65,8 @@ def set_var(env_file, key_name, update_name):
 def loader_intro():
     subprocess.run("clear")
     print(Fore.GREEN)
+    print_stars()
     p = f"""
-    {string_stars()}
                     ____ ____ ____ ____ _________ ____ ____ ____ ____           
                     ||E |||a |||s |||y |||       |||N |||o |||d |||e ||          
                     ||__|||__|||__|||__|||_______|||__|||__|||__|||__||          
@@ -83,11 +83,9 @@ def loader_intro():
                             ||T |||o |||o |||l |||b |||o |||x ||                         
                             ||__|||__|||__|||__|||__|||__|||__||                         
                             |/__\|/__\|/__\|/__\|/__\|/__\|/__\|   
-                                            
-    {string_stars()}
-    
     """
     print(p)
+    print_stars()
 
 # Install Harmony ONE
 def install_hmy():
@@ -116,7 +114,7 @@ def recover_wallet():
         recovery_type()
         load_var_file(easy_env.dotenv_file)
         print(
-            f'\n* Verify the address above matches the address below:\n* Detected Wallet: {Fore.GREEN}{environ.get("VALIDATOR_WALLET")}{Style.RESET_ALL}\n* If a different wallet is showing you can remove it and retry it after installation.\n*\n* .{easy_env.hmy_app} keys remove {easy_env.active_user}\n*\n* To restore a wallet once again, run the following:\n*\n* .{easy_env.hmy_app} keys recover-from-mnemonic {easy_env.active_user} {environ.get("PASS_SWITCH")}\n*'
+            f'\n* Verify the address above matches the address below:\n* Detected Wallet: {Fore.YELLOW}{environ.get("VALIDATOR_WALLET")}{Fore.GREEN}\n* If a different wallet is showing you can remove it and retry it after installation.\n*\n* .{easy_env.hmy_app} keys remove {easy_env.active_user}\n*\n* To restore a wallet once again, run the following:\n*\n* .{easy_env.hmy_app} keys recover-from-mnemonic {easy_env.active_user} {environ.get("PASS_SWITCH")}\n*'
         )
         print_stars()
         input("* Verify your wallet information above.\n* Press ENTER to continue Installation.")
@@ -1053,7 +1051,7 @@ def menu_error() -> None:
         "* "
         + Fore.RED
         + "WARNING"
-        + Style.RESET_ALL
+        + Fore.GREEN
         + ": Only numbers are possible, please try your selection on the main menu once again.\n* Press enter to return to the menu."
     )
     print_stars()
