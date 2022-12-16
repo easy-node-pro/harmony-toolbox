@@ -62,7 +62,7 @@ def set_var(env_file, key_name, update_name):
 
 
 # loader intro splash screen
-def loaderIntro():
+def loader_intro():
     p = f"""
     {string_stars()}
                     ____ ____ ____ ____ _________ ____ ____ ____ ____           
