@@ -4,7 +4,7 @@
 [![Stake Now Badge](https://img.shields.io/badge/stake-harmony-brightgreen)](https://bit.ly/easynode)
 
 # Easy Node - Validator Toolbox
-by [EasyNode.ONE](http://EasyNode.ONE "EasyNode.ONE")
+by [EasyNode.PRO](http://EasyNode.PRO "EasyNode.PRO")
 
 This repository provides two functions in one application:
 -   Harmony Validator Menu Driven Installer (install.py)
@@ -14,9 +14,9 @@ This repository provides two functions in one application:
 
 ## Quickstart Guide
 ### Pre-Installation Requirements
-Experienced validators use [this pre-installation quick guide](https://guides.easynode.one/harmonyquick-install "this pre-installation quick guide").
+Experienced validators use [this pre-installation quick guide](https://guides.easynode.pro/harmonyquick-install "this pre-installation quick guide").
 
-New Validators should [read the companion guide](https://guides.easynode.one/harmony/companion) and manually configure a validator by hand before using the toolbox to install Harmony Validator software.
+New Validators should [read the companion guide](https://guides.easynode.pro/harmony/companion) and manually configure a validator by hand before using the toolbox to install Harmony Validator software.
 
 **Operating System**
 Ubuntu 20.04LTS - The suggested operating system from harmony
@@ -60,4 +60,4 @@ python3 ~/validatortoolbox/src/vstats_install.py
 ```
 
 ## Full Installation Guide & Documentation
-See [our guides page](https://guides.easynode.one/harmony) for full documentation on the validatortoolbox.
+See [our guides page](https://guides.easynode.pro/harmony) for full documentation on the validatortoolbox.

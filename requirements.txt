@@ -1,5 +1,4 @@
 colorama >= 0.4.3
-docker >= 6.0.1
 simple-term-menu >= 1.2.1
 pyhmy == 0.1.0
 python-dotenv >= 0.8.0
