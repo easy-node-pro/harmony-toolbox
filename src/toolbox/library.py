@@ -87,7 +87,6 @@ def loader_intro():
     
     """
     print(p)
-    time.sleep(2)
 
 # Install Harmony ONE
 def install_hmy():
