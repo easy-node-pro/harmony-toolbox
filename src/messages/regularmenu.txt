@@ -1,4 +1,4 @@
-* Easy Node's validatortoolbox Menu, Pick an option:
+* Easy Node's Validator Toolbox Menu, Pick an option:
 print("*")
 print("*   1 - Refresh Toolbox Info      - Use this option to reload to get updated stats above!")
 print("*   2 - Show Active BLS Keys      - Keys Active for the Next Election")

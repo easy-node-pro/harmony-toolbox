@@ -1,4 +1,4 @@
-* Easy Node's validatortoolbox Menu Options:
+* Easy Node's Validator Toolbox Menu Options:
 print("*")
 print("*   1 - Refresh Toolbox Info      - Use this option to reload to get updated stats above!")
 service_menu_option()
