@@ -63,6 +63,7 @@ def set_var(env_file, key_name, update_name):
 
 # loader intro splash screen
 def loader_intro():
+    subprocess.run("clear")
     p = f"""
     {string_stars()}
                     ____ ____ ____ ____ _________ ____ ____ ____ ____           
@@ -86,6 +87,7 @@ def loader_intro():
     
     """
     print(p)
+    time.sleep(2)
 
 # Install Harmony ONE
 def install_hmy():
@@ -577,9 +579,6 @@ def version_checks(folder=f"harmony"):
 
 
 def first_setup():
-    first_env_check(easy_env.dotenv_file, easy_env.user_home_dir)
-    # first run stuff
-    time.sleep(2)
     # Update version if newer from conf file to .easynode.env
     if environ.get("EASY_VERSION"):
         set_var(easy_env.dotenv_file, "EASY_VERSION", easy_env.easy_version)

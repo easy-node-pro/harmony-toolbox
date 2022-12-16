@@ -1,7 +1,7 @@
 import os
 from os import environ
 from toolbox.config import easy_env
-from toolbox.library import loader_intro, set_wallet_env, load_var_file, passphrase_status, set_var, version_checks, recheck_vars, recover_wallet, update_text_file
+from toolbox.library import loader_intro, set_wallet_env, load_var_file, passphrase_status, set_var, version_checks, recheck_vars, recover_wallet, update_text_file, first_env_check
 from toolbox.toolbox import run_regular_node, run_full_node, refresh_stats, safety_defaults
 
 if __name__ == "__main__":
@@ -13,7 +13,7 @@ if __name__ == "__main__":
         print("Install Harmony First!!!\nRun python3 ~/validatortoolboxinstall.py")
         raise SystemExit(0)
     # passed .env check, let's load it!
-    load_var_file(easy_env.dotenv_file)
+    first_env_check(easy_env.dotenv_file, easy_env.user_home_dir)
     # This section is for hard coding new settings for current users.
     safety_defaults()
     # always set conf to 13 keys, shard max
