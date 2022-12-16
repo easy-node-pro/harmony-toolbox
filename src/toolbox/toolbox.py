@@ -89,7 +89,7 @@ def menu_topper_regular() -> None:
     subprocess.run("clear")
     # Print Menu
     print_stars()
-    print(f'{Fore.GREEN}* validator-toolbox for Harmony ONE Validators by Easy Node   v{str(environ.get("EASY_VERSION"))}{Fore.WHITE}   https://easynode.one {Fore.GREEN}*')
+    print(f'{Fore.GREEN}* validator-toolbox for Harmony ONE Validators by Easy Node   v{environ.get("EASY_VERSION")}{Fore.WHITE}   https://easynode.one {Fore.GREEN}*')
     print_stars()
     print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.BLUE}{str(round(total_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.MAGENTA}{str(round(get_rewards_balance(easy_env.rpc_endpoints, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {Fore.BLUE}{easy_env.server_host_name}{Fore.GREEN} - {Fore.YELLOW}{easy_env.external_ip}{Fore.GREEN}')
     harmony_service_status()
@@ -111,7 +111,7 @@ def menu_topper_full() -> None:
     subprocess.run("clear")
     # Print Menu
     print_stars()
-    print(f'{Fore.GREEN}* validator-toolbox for Harmony ONE Validators by Easy Node   v{str(environ.get("EASY_VERSION"))}{Fore.WHITE}   https://easynode.one {Fore.GREEN}*')
+    print(f'{Fore.GREEN}* validator-toolbox for Harmony ONE Validators by Easy Node   v{environ.get("EASY_VERSION")}{Fore.WHITE}   https://easynode.one {Fore.GREEN}*')
     print_stars()
     print(f'* Server Hostname & IP:             {Fore.BLUE}{easy_env.server_host_name}{Fore.GREEN} - {Fore.YELLOW}{easy_env.external_ip}{Fore.GREEN}')
     harmony_service_status()
@@ -290,6 +290,7 @@ def safety_defaults() -> None:
     if environ.get("GAS_RESERVE") is None: set_var(easy_env.dotenv_file, "GAS_RESERVE", "5")
     if environ.get("REFRESH_TIME") is None: set_var(easy_env.dotenv_file, "REFRESH_TIME", "30")
     if environ.get("REFRESH_OPTION") is None: set_var(easy_env.dotenv_file, "REFRESH_OPTION", "True")
+    set_var(easy_env.dotenv_file, "EASY_VERSION", easy_env.easy_version)
 
 def refresh_toggle() -> None:
     if environ.get("REFRESH_OPTION") == "True":

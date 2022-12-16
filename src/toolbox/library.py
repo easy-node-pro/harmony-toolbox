@@ -576,9 +576,6 @@ def version_checks(folder=f"harmony"):
 
 
 def first_setup():
-    # Update version if newer from conf file to .easynode.env
-    if environ.get("EASY_VERSION"):
-        set_var(easy_env.dotenv_file, "EASY_VERSION", easy_env.easy_version)
     # Find Shard #
     get_shard_menu()
     # Express - no prompts for each step, Manual - prompts for each step
