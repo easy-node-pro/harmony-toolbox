@@ -506,10 +506,11 @@ def menu_validator_stats():
     return remote_data_shard_0, local_data_shard, None
 
 def refresh_stats(clear=0) -> str:
+    print(Fore.GREEN)
     if clear == 0:
         subprocess.run("clear")
     print_stars()
-    print(f'{Fore.GREEN}* Getting the latest local & blockchain information now, one moment while we load...')
+    print(f'* Getting the latest local & blockchain information now, one moment while we load...')
     print_stars()
     return
 
