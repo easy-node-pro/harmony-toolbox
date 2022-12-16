@@ -64,6 +64,7 @@ def set_var(env_file, key_name, update_name):
 # loader intro splash screen
 def loader_intro():
     subprocess.run("clear")
+    print(Fore.GREEN)
     p = f"""
     {string_stars()}
                     ____ ____ ____ ____ _________ ____ ____ ____ ____           
