@@ -80,7 +80,7 @@ def rewards_collector(rewards_wallet, validator_wallet, rpc) -> None:
             send_rewards(environ.get("NETWORK_0_CALL"), suggested_send, rewards_wallet)
         return
 
-def menu_topper_regular() -> None:
+def menu_topper_regular(software_versions) -> None:
     # Get stats & balances
     load_1, load_5, load_15 = os.getloadavg()
     sign_percentage = get_sign_pct()
@@ -93,7 +93,7 @@ def menu_topper_regular() -> None:
     print_stars()
     print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.BLUE}{str(round(total_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.MAGENTA}{str(round(get_rewards_balance(easy_env.rpc_endpoints, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {Fore.BLUE}{easy_env.server_host_name}{Fore.GREEN} - {Fore.YELLOW}{easy_env.external_ip}{Fore.GREEN}')
     harmony_service_status()
-    print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current disk space free: {Fore.CYAN}{free_space_check(easy_env.harmony_dir): >6}{Fore.GREEN}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Fore.GREEN}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Fore.GREEN}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}')
+    print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current disk space free: {Fore.CYAN}{free_space_check(easy_env.harmony_dir): >6}{Fore.GREEN}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"])}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}')
     print_stars()
     if environ.get("SHARD") != "0":
         print(f"* Note: Running on shard {environ.get('SHARD')}, Shard 0 is no longer needed locally and should be under 200MB\n* Remote Shard 0 Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}, Local Shard 0 Size: {get_db_size(easy_env.harmony_dir, '0')}")
@@ -121,8 +121,8 @@ def menu_topper_full() -> None:
     print(f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min")
     print_stars()
 
-def menu_regular() -> None:
-    menu_topper_regular()
+def menu_regular(software_versions) -> None:
+    menu_topper_regular(software_versions)
     for x in return_txt(easy_env.main_menu_regular):
         x = x.strip()
         try:
@@ -342,7 +342,7 @@ def run_regular_node(software_versions) -> None:
     }
     while True:
         load_var_file(easy_env.dotenv_file)
-        menu_regular()
+        menu_regular(software_versions)
         if software_versions["harmony_upgrade"] == "True":
             print(
                 f'* The harmony binary has an update available to version {software_versions["online_harmony_version"]}\n* Option #10 will upgrade you, but you may miss a block while it upgrades & restarts.\n* Currently installed version {software_versions["harmony_version"]}'
