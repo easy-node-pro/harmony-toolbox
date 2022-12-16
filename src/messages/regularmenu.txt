@@ -4,7 +4,7 @@ print("*   1 - Refresh Toolbox Info      - Use this option to reload to get upda
 print("*   2 - Show Active BLS Keys      - Keys Active for the Next Election")
 print("*   4 - Collect Pending $ONE      - Collect Rewards & Send to Rewards Wallet")
 print("*   5 - Show Last 10 BINGOs       - Check that ViewID is sequential, re-run to update")
-print(f"*                                   {Fore.RED}{Back.GREEN}The Danger Zone:{Style.RESET_ALL}")
+print(f"*                                   {Fore.RED}{Back.GREEN}The Danger Zone:{Style.RESET_ALL}{Fore.GREEN}")
 print("*   7 - Set Rewards Wallet        - Input a one1 wallet address to send rewards using option #4!")
 service_menu_option()
 print("*  10 - Update Harmony Binary     - For New Harmony Releases ONLY")
