@@ -7,7 +7,6 @@ import subprocess
 import requests
 import pyhmy
 import shutil
-import docker
 import hashlib
 from os import environ
 from dotenv import load_dotenv
