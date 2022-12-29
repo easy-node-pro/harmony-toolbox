@@ -82,10 +82,13 @@ def rewards_collector(rewards_wallet, validator_wallet, rpc) -> None:
 
 def menu_topper_regular(software_versions) -> None:
     # Get stats & balances
-    load_1, load_5, load_15 = os.getloadavg()
-    sign_percentage = get_sign_pct()
-    total_balance, total_balance_test = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
-    remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
+    try:
+        load_1, load_5, load_15 = os.getloadavg()
+        sign_percentage = get_sign_pct()
+        total_balance, total_balance_test = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
+        remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
+    except (ValueError, KeyError, TypeError) as e:
+        print(f'* Error fetching data: {e}')
     subprocess.run("clear")
     # Print Menu
     print_stars()
@@ -106,8 +109,11 @@ def menu_topper_regular(software_versions) -> None:
     print_stars()
 
 def menu_topper_full() -> None:
-    load_1, load_5, load_15 = os.getloadavg()
-    remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
+    try:
+        load_1, load_5, load_15 = os.getloadavg()
+        remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
+    except (ValueError, KeyError, TypeError) as e:
+        print(f'* Error fetching data: {e}')
     subprocess.run("clear")
     # Print Menu
     print_stars()
@@ -244,7 +250,7 @@ def run_full_node() -> None:
         7: set_rewards_wallet,
         8: menu_service_stop_start,
         9: menu_service_restart,
-        10: menu_binary_updates,
+        10: harmony_binary_upgrade,
         11: hmy_cli_upgrade,
         12: menu_ubuntu_updates,
         13: drive_check,
@@ -331,7 +337,7 @@ def run_regular_node(software_versions) -> None:
         7: set_rewards_wallet,
         8: menu_service_stop_start,
         9: menu_service_restart,
-        10: menu_binary_updates,
+        10: harmony_binary_upgrade,
         11: hmy_cli_upgrade,
         12: menu_ubuntu_updates,
         13: drive_check,
@@ -477,17 +483,17 @@ def menu_validator_stats():
         "latest-headers",
         f'--node=https://api.s0.{environ.get("NETWORK_SWITCH")}.hmny.io',
     ]
-    result_remote_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     try:
+        result_remote_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
-    except:
-        print(f'* Remote Shard 0 Offline')
-    local_shard = [f"{easy_env.hmy_app}", "blockchain", "latest-headers"]
-    result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    except (ValueError, KeyError, TypeError) as e:
+        print(f'* Remote Shard 0 Offline, Error {e}')
     try:
+        local_shard = [f"{easy_env.hmy_app}", "blockchain", "latest-headers"]
+        result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data_shard = json.loads(result_local_shard.stdout)
-    except:
-        print(f'* Local Server Offline, restart your service or troubleshoot the issue by running the following in your ~/harmony directory:\n* ./harmony -c harmony.conf')
+    except (ValueError, KeyError, TypeError) as e:
+        print(f'* Local Server Offline, restart your service or troubleshoot the issue by running the following in your ~/harmony directory:\n* ./harmony -c harmony.conf, Error: {e}')
             
     if environ.get("SHARD") != "0":
         remote_shard = [
@@ -543,7 +549,7 @@ def shard_stats(our_shard) -> str:
         """
         )
 
-def menu_binary_updates():
+def harmony_binary_upgrade():
     test_or_main = environ.get("NETWORK")
     question = ask_yes_no(
         Fore.RED
