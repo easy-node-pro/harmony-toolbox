@@ -82,10 +82,13 @@ def rewards_collector(rewards_wallet, validator_wallet, rpc) -> None:
 
 def menu_topper_regular(software_versions) -> None:
     # Get stats & balances
-    load_1, load_5, load_15 = os.getloadavg()
-    sign_percentage = get_sign_pct()
-    total_balance, total_balance_test = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
-    remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
+    try:
+        load_1, load_5, load_15 = os.getloadavg()
+        sign_percentage = get_sign_pct()
+        total_balance, total_balance_test = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
+        remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
+    except (ValueError, KeyError, TypeError) as e:
+        print(f'* Error fetching data: {e}')
     subprocess.run("clear")
     # Print Menu
     print_stars()
@@ -106,8 +109,11 @@ def menu_topper_regular(software_versions) -> None:
     print_stars()
 
 def menu_topper_full() -> None:
-    load_1, load_5, load_15 = os.getloadavg()
-    remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
+    try:
+        load_1, load_5, load_15 = os.getloadavg()
+        remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
+    except (ValueError, KeyError, TypeError) as e:
+        print(f'* Error fetching data: {e}')
     subprocess.run("clear")
     # Print Menu
     print_stars()
@@ -244,7 +250,7 @@ def run_full_node() -> None:
         7: set_rewards_wallet,
         8: menu_service_stop_start,
         9: menu_service_restart,
-        10: menu_binary_updates,
+        10: harmony_binary_upgrade,
         11: hmy_cli_upgrade,
         12: menu_ubuntu_updates,
         13: drive_check,
@@ -331,7 +337,7 @@ def run_regular_node(software_versions) -> None:
         7: set_rewards_wallet,
         8: menu_service_stop_start,
         9: menu_service_restart,
-        10: menu_binary_updates,
+        10: harmony_binary_upgrade,
         11: hmy_cli_upgrade,
         12: menu_ubuntu_updates,
         13: drive_check,
@@ -543,7 +549,7 @@ def shard_stats(our_shard) -> str:
         """
         )
 
-def menu_binary_updates():
+def harmony_binary_upgrade():
     test_or_main = environ.get("NETWORK")
     question = ask_yes_no(
         Fore.RED
