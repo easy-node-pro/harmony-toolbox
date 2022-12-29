@@ -480,14 +480,14 @@ def menu_validator_stats():
     try:
         result_remote_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
-    except:
-        print(f'* Remote Shard 0 Offline')
+    except (ValueError, KeyError, TypeError) as e:
+        print(f'* Remote Shard 0 Offline, Error {e}')
     try:
         local_shard = [f"{easy_env.hmy_app}", "blockchain", "latest-headers"]
         result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data_shard = json.loads(result_local_shard.stdout)
-    except:
-        print(f'* Local Server Offline, restart your service or troubleshoot the issue by running the following in your ~/harmony directory:\n* ./harmony -c harmony.conf')
+    except (ValueError, KeyError, TypeError) as e:
+        print(f'* Local Server Offline, restart your service or troubleshoot the issue by running the following in your ~/harmony directory:\n* ./harmony -c harmony.conf, Error: {e}')
             
     if environ.get("SHARD") != "0":
         remote_shard = [
