@@ -6,7 +6,7 @@ from toolbox.library import loader_intro, set_wallet_env, load_var_file, passphr
 from toolbox.toolbox import run_regular_node, run_full_node, refresh_stats, safety_defaults
 
 if __name__ == "__main__":
-    if os.path.exists(f'{easy_env.user_home_dir}/validatortoolbox_fra'):
+    if os.path.exists(f'{easy_env.user_home_dir}/validatortoolbox'):
         subprocess.run('clear') 
         print_stars()
         print('*\n* Old folder found, Exiting\n*\n* Please renmae your ~/validatortoolbox folder to ~/harmony-toolbox and update your command paths!\n*\n* Run: cd ~/ && mv ~/validatortoolbox ~/harmony-toolbox\n*\n* After you run the move command, relaunch with: python3 ~/harmony-toolbox/src/menu.py\n*')
