@@ -209,7 +209,7 @@ def passphrase_set():
         return
     import getpass
 
-    print("* Setup ~/harmony/passphrase.txt file for use with autobidder & validatortoolbox.")
+    print("* Setup ~/harmony/passphrase.txt file for use with autobidder & harmony-toolbox.")
     print_stars()
     # take input
     while True:
@@ -791,7 +791,7 @@ def finish_node_install():
         print(
             "* Post installation quick tips:"
             + "\n* To recover your wallet on this server run:"
-            + f"\n* python3 ~/validatortoolboxload_wallet.py"
+            + f"\n* python3 ~/harmony-toolboxload_wallet.py"
             + "\n*"
             + "\n* To create BLS keys run:"
             + f'\n* ./hmy keys generate-bls-keys --count 1 --shard {environ.get("SHARD")} --passphrase'
@@ -801,7 +801,7 @@ def finish_node_install():
         print(
             "* Post installation quick tips:"
             + "\n* To recover your wallet again, run:"
-            + f"\n* python3 ~/validatortoolboxload_wallet.py"
+            + f"\n* python3 ~/harmony-toolboxload_wallet.py"
             + "\n*"
             + "\n* To create BLS keys run:"
             + f'\n* ./hmy keys generate-bls-keys --count 1 --shard {environ.get("SHARD")} {environ.get("PASS_SWITCH")}'

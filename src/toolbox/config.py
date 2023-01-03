@@ -12,7 +12,7 @@ def get_url() -> None:
     return result
 
 class easy_env:
-    easy_version = "1.9.1"
+    easy_version = "1.0.0"
     server_host_name = socket.gethostname()
     user_home_dir = os.path.expanduser("~")
     dotenv_file = f"{user_home_dir}/.easynode.env"
@@ -25,7 +25,7 @@ class easy_env:
     harmony_conf = os.path.join(harmony_dir, "harmony.conf")
     bls_key_dir = os.path.join(hmy_app, ".hmy", "blskeys")
     hmy_wallet_store = os.path.join(user_home_dir, ".hmy_cli", "account-keys", active_user)
-    toolbox_location = os.path.join(user_home_dir, "validatortoolbox")
+    toolbox_location = os.path.join(user_home_dir, "harmony-toolbox")
     validator_data = os.path.join(toolbox_location, "metadata", "validator.json")
     password_path = os.path.join(harmony_dir, "passphrase.txt")
     external_ip = get_url()

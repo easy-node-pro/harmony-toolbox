@@ -1,16 +1,23 @@
-import os
+import os, subprocess
 from os import environ
+from colorama import Fore
 from toolbox.config import easy_env
-from toolbox.library import loader_intro, set_wallet_env, load_var_file, passphrase_status, set_var, version_checks, recheck_vars, recover_wallet, update_text_file, first_env_check
+from toolbox.library import loader_intro, set_wallet_env, load_var_file, passphrase_status, set_var, version_checks, recheck_vars, recover_wallet, update_text_file, first_env_check, print_stars
 from toolbox.toolbox import run_regular_node, run_full_node, refresh_stats, safety_defaults
 
 if __name__ == "__main__":
+    if os.path.exists(f'{easy_env.user_home_dir}/validatortoolbox_fra'):
+        subprocess.run('clear') 
+        print_stars()
+        print('*\n* Old folder found, Exiting\n*\n* Please renmae your ~/validatortoolbox folder to ~/harmony-toolbox and update your command paths!\n*\n* Run: cd ~/ && mv ~/validatortoolbox ~/harmony-toolbox\n*\n* After you run the move command, relaunch with: python3 ~/harmony-toolbox/src/menu.py\n*')
+        print_stars()
+        raise SystemExit(0)
     # clear screen, show logo
     loader_intro()
     # check for .env file, if none we have a first timer.
     if os.path.exists(easy_env.dotenv_file) is None:
         # they should run the installer, goodbye!
-        print("Install Harmony First!!!\nRun python3 ~/validatortoolboxinstall.py")
+        print("Install Harmony First!!!\nRun python3 ~/harmony-toolboxinstall.py")
         raise SystemExit(0)
     # passed .env check, let's load it!
     first_env_check(easy_env.dotenv_file, easy_env.user_home_dir)
