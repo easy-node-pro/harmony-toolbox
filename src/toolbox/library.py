@@ -543,7 +543,7 @@ def check_online_version():
         harmony_ver = subprocess.getoutput(f"{easy_env.harmony_tmp_path} -V")
         harmony_ver = harmony_ver[35:-35]
     except subprocess.CalledProcessError:
-        print(f"* Error - Harmony website link offline, returning current version as both for now")
+        print(f"* Error - Website for harmony upgrade is offline, setting to offline.")
         harmony_ver = "Offline"
     try:
         subprocess.check_output(
@@ -553,7 +553,7 @@ def check_online_version():
         hmy_ver = subprocess.getoutput(f"{easy_env.hmy_tmp_path} version")
         hmy_ver = hmy_ver[62:-15]
     except subprocess.CalledProcessError:
-        print(f"* Error - Harmony website link offline, returning current version as both for now")
+        print(f"* Error - Website for hmy upgrade is offline, setting to offline.")
         hmy_ver = "Offline"
     return harmony_ver, hmy_ver
 
