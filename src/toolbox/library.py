@@ -535,17 +535,22 @@ def set_mod_x(file):
 
 
 def check_online_version():
-    subprocess.check_output(
-        ["wget", "https://harmony.one/binary", "-O", easy_env.harmony_tmp_path], stderr=subprocess.STDOUT
-    )
-    set_mod_x(easy_env.harmony_tmp_path)
-    harmony_ver = subprocess.getoutput(f"{easy_env.harmony_tmp_path} -V")
-    subprocess.check_output(
-        ["wget", "https://harmony.one/hmycli", "-O", easy_env.hmy_tmp_path], stderr=subprocess.STDOUT
-    )
-    set_mod_x(easy_env.hmy_tmp_path)
-    hmy_ver = subprocess.getoutput(f"{easy_env.hmy_tmp_path} version")
-    return harmony_ver[35:-35], hmy_ver[62:-15]
+    try:
+        subprocess.check_output(
+            ["wget", "https://harmony.one/binary", "-O", easy_env.harmony_tmp_path], stderr=subprocess.STDOUT
+        )
+        set_mod_x(easy_env.harmony_tmp_path)
+        harmony_ver = subprocess.getoutput(f"{easy_env.harmony_tmp_path} -V")
+        subprocess.check_output(
+            ["wget", "https://harmony.one/hmycli", "-O", easy_env.hmy_tmp_path], stderr=subprocess.STDOUT
+        )
+        set_mod_x(easy_env.hmy_tmp_path)
+        hmy_ver = subprocess.getoutput(f"{easy_env.hmy_tmp_path} version")
+        return harmony_ver[35:-35], hmy_ver[62:-15]
+    except subprocess.CalledProcessError:
+        print(f"* Error - Harmony website link offline, returning current version as both for now")
+        return "Offline", "Offline"
+
 
 
 def first_env_check(env_file, home_dir) -> None:
