@@ -541,15 +541,21 @@ def check_online_version():
         )
         set_mod_x(easy_env.harmony_tmp_path)
         harmony_ver = subprocess.getoutput(f"{easy_env.harmony_tmp_path} -V")
+        harmony_ver = harmony_ver[35:-35]
+    except subprocess.CalledProcessError:
+        print(f"* Error - Harmony website link offline, returning current version as both for now")
+        harmony_ver = "Offline"
+    try:
         subprocess.check_output(
             ["wget", "https://harmony.one/hmycli", "-O", easy_env.hmy_tmp_path], stderr=subprocess.STDOUT
         )
         set_mod_x(easy_env.hmy_tmp_path)
         hmy_ver = subprocess.getoutput(f"{easy_env.hmy_tmp_path} version")
-        return harmony_ver[35:-35], hmy_ver[62:-15]
+        hmy_ver = hmy_ver[62:-15]
     except subprocess.CalledProcessError:
         print(f"* Error - Harmony website link offline, returning current version as both for now")
-        return "Offline", "Offline"
+        hmy_ver = "Offline"
+    return harmony_ver, hmy_ver
 
 
 
@@ -568,11 +574,11 @@ def version_checks(folder=f"harmony"):
     )
     software_versions["online_harmony_version"], software_versions["online_hmy_version"] = check_online_version()
     # Check versions, if matching False (No Upgrade Required), non-match True (Upgrade Required)
-    if software_versions["harmony_version"] == software_versions["online_harmony_version"]:
+    if software_versions["harmony_version"] == software_versions["online_harmony_version"] or software_versions["online_harmony_version"] == "Offline":
         software_versions["harmony_upgrade"] = "False"
     else:
         software_versions["harmony_upgrade"] = "True"
-    if software_versions["hmy_version"] == software_versions["online_hmy_version"]:
+    if software_versions["hmy_version"] == software_versions["online_hmy_version"] or software_versions["online_hmy_version"] == "Offline":
         software_versions["hmy_upgrade"] = "False"
     else:
         software_versions["hmy_upgrade"] = "True"
