@@ -7,7 +7,7 @@ from toolbox.library import loader_intro, load_var_file, first_setup, recover_wa
 if __name__ == "__main__":
     subprocess.run("clear")
     loader_intro()
-    if not os.path.exists(easy_env.dotenv_file):
+    if not os.path.exists(easy_env.hmy_app):
         first_setup()
     load_var_file(easy_env.dotenv_file)
     if not environ.get("VALIDATOR_WALLET"):
