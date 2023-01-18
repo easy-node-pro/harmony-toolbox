@@ -19,4 +19,4 @@ if __name__ == "__main__":
             )
             input("* Press any key to exit.")
             raise SystemExit(0)
-    exec(open(f"{easy_env.toolbox_location}menu.py").read())
+    exec(open(f"{easy_env.toolbox_location}/menu.py").read())
