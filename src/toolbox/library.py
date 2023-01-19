@@ -567,10 +567,10 @@ def first_env_check(env_file, home_dir) -> None:
         load_var_file(env_file)
 
 
-def version_checks(folder=f"harmony"):
+def version_checks(harmony_folder):
     software_versions = {}
     software_versions["harmony_version"], software_versions["hmy_version"] = get_local_version(
-        f"{easy_env.user_home_dir}/{folder}"
+        f"{harmony_folder}"
     )
     software_versions["online_harmony_version"], software_versions["online_hmy_version"] = check_online_version()
     # Check versions, if matching False (No Upgrade Required), non-match True (Upgrade Required)

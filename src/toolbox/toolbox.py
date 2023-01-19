@@ -296,6 +296,16 @@ def safety_defaults() -> None:
     if environ.get("GAS_RESERVE") is None: set_var(easy_env.dotenv_file, "GAS_RESERVE", "5")
     if environ.get("REFRESH_TIME") is None: set_var(easy_env.dotenv_file, "REFRESH_TIME", "30")
     if environ.get("REFRESH_OPTION") is None: set_var(easy_env.dotenv_file, "REFRESH_OPTION", "True")
+    if environ.get("HARMONY_FOLDER") is None: 
+        if os.path.isdir(f'{easy_env.user_home_dir}/harmony'):
+            set_var(easy_env.dotenv_file, "HARMONY_FOLDER", f'{easy_env.user_home_dir}/harmony')
+        if os.path.exists(f'{easy_env.user_home_dir}/harmony'):
+            try:
+                subprocess.run(f'{easy_env.user_home_dir}/harmony --version', check=True)
+                set_var(set_var(easy_env.dotenv_file, "HARMONY_FOLDER", f'{easy_env.user_home_dir}'))
+            except subprocess.CalledProcessError as e:
+                print('* Harmony not found, contact Easy Node for custom configs.')
+                raise SystemExit(0)
     set_var(easy_env.dotenv_file, "EASY_VERSION", easy_env.easy_version)
 
 def refresh_toggle() -> None:
