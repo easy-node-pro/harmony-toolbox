@@ -209,7 +209,7 @@ def passphrase_set():
         return
     import getpass
 
-    print("* Setup ~/harmony/passphrase.txt file for use with autobidder & harmony-toolbox.")
+    print(f"* Setup {easy_env.harmony_dir}/passphrase.txt file for use with autobidder & harmony-toolbox.")
     print_stars()
     # take input
     while True:
