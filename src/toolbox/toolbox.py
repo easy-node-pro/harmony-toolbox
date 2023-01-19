@@ -306,6 +306,9 @@ def safety_defaults() -> None:
             except subprocess.CalledProcessError as e:
                 print('* Harmony not found, contact Easy Node for custom configs.')
                 raise SystemExit(0)
+        else:
+            print('* Harmony not found, contact Easy Node for custom configs.')
+            raise SystemExit(0)
     set_var(easy_env.dotenv_file, "EASY_VERSION", easy_env.easy_version)
 
 def refresh_toggle() -> None:
