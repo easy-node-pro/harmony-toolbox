@@ -299,7 +299,7 @@ def safety_defaults() -> None:
     if environ.get("HARMONY_FOLDER") is None: 
         if os.path.isdir(f'{easy_env.user_home_dir}/harmony'):
             set_var(easy_env.dotenv_file, "HARMONY_FOLDER", f'{easy_env.user_home_dir}/harmony')
-        if os.path.exists(f'{easy_env.user_home_dir}/harmony'):
+        elif os.path.exists(f'{easy_env.user_home_dir}/harmony'):
             try:
                 subprocess.run(f'{easy_env.user_home_dir}/harmony --version', check=True)
                 set_var(set_var(easy_env.dotenv_file, "HARMONY_FOLDER", f'{easy_env.user_home_dir}'))
