@@ -17,7 +17,7 @@ if __name__ == "__main__":
     # check for .env file, if none we have a first timer.
     if os.path.exists(easy_env.dotenv_file) is None:
         # they should run the installer, goodbye!
-        print("Install Harmony First!!!\nRun python3 ~/harmony-toolboxinstall.py")
+        print("Install Harmony First!!!\nRun python3 ~/harmony-toolbox/install.py")
         raise SystemExit(0)
     # passed .env check, let's load it!
     first_env_check(easy_env.dotenv_file, easy_env.user_home_dir)

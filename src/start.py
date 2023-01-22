@@ -8,5 +8,5 @@ if __name__ == "__main__":
     loader_intro()
     subprocess.run("clear")
     print_stars()
-    print("We've split this into two applications, installer.py & menu.py - please update your startup commands.\n\npython3 ~/harmony-toolboxinstall.py\n\npython3 ~/harmony-toolboxmenu.py\n\n")
+    print("We've split this into two applications, installer.py & menu.py - please update your startup commands.\n\npython3 ~/harmony-toolbox/install.py\n\npython3 ~/harmony-toolbox/menu.py\n\n")
     print_stars()
