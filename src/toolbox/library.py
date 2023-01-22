@@ -125,15 +125,19 @@ def recover_wallet():
 
 
 def pull_harmony_update(harmony_dir, bls_key_file, harmony_conf):
+    arch = os.uname().machine
     os.chdir(f"{harmony_dir}")
     if environ.get("NETWORK") == "testnet":
         os.system("curl -LO https://harmony.one/binary_testnet && mv binary_testnet harmony && chmod +x harmony")
         os.system("./harmony config dump --network testnet harmony.conf")
         update_text_file(harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
     if environ.get("NETWORK") == "mainnet":
-        os.system("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
-        os.system("./harmony config dump harmony.conf")
-        update_text_file(harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
+        if arch.startswith('arm'):
+            os.system("curl -LO https://harmony.one/binary-arm64 && mv binary-arm64 harmony && chmod +x harmony")
+        if arch == 'x86_64':
+            os.system("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
+            os.system("./harmony config dump harmony.conf")
+            update_text_file(harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
     print_stars()
     print("* harmony.conf MaxKeys modified to 13")
     if os.path.exists(bls_key_file):
