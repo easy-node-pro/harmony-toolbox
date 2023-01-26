@@ -1,13 +1,4 @@
-import psutil
-import platform
-import dotenv
-import time
-import os
-import subprocess
-import requests
-import pyhmy
-import shutil
-import hashlib
+import psutil, platform, dotenv, time, os, subprocess, requests, pyhmmy, shutil, hashlib, re
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
@@ -530,9 +521,9 @@ def get_sign_pct() -> str:
 
 def get_local_version(folder):
     harmony_version = subprocess.getoutput(f"{folder}/harmony -V")
+    output_harmony_version = re.search(r'version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(', harmony_version)
     hmy_version = subprocess.getoutput(f"{folder}/hmy version")
-    return harmony_version[35:-35], hmy_version[62:-15]
-
+    return output_harmony_version.group(1)[:-2], hmy_version[62:-15]
 
 def set_mod_x(file):
     subprocess.run(["chmod", "+x", file])
