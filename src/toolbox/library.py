@@ -1,4 +1,4 @@
-import psutil, platform, dotenv, time, os, subprocess, requests, pyhmmy, shutil, hashlib, re
+import psutil, platform, dotenv, time, os, subprocess, requests, pyhmy, shutil, hashlib, re
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
