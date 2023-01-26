@@ -109,8 +109,8 @@ def stats_output_regular(folders) -> None:
     print(f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}")
     print_stars()
     for folder in folders:
-        software_versions = version_checks(folder)
         current_full_path = f'{easy_env.user_home_dir}/{folder}'
+        software_versions = version_checks(current_full_path)
         print(f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}')
         local_server = [f"{user_home}/{folder}/hmy", "utility", "metadata", f"--node=http://localhost:{folders[folder]}"]
         result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
