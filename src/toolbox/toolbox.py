@@ -384,20 +384,20 @@ def run_regular_node(software_versions) -> None:
                 # run timed input
                 option, timedOut = timedInteger(f"* Auto refresh enabled, Enter your menu choice: ", timeout=int(environ.get("REFRESH_TIME")), resetOnInput=True, allowNegative=False)
                 if timedOut:
-                    run_regular_node(software_versions)
+                    start_regular_node()
                 else:
                     subprocess.run("clear")
                     print_stars()
                     menu_options[option]()
                     if option != 1:
                         refresh_stats(1)
-                        run_regular_node(software_versions)
+                        start_regular_node()
             except KeyError:
                 print(f'* Bad option, try again. Press enter to continue.')
                 print_stars()
                 input()
                 refresh_stats(1)
-                run_regular_node(software_versions)
+                start_regular_node()
         else:
             try:
                 option, timedOut = timedInteger("* Auto refresh disabled, Enter your menu choice: ", timeout=-1, resetOnInput=True, allowNegative=False)
@@ -406,13 +406,13 @@ def run_regular_node(software_versions) -> None:
                 menu_options[option]()
                 if option != 1:
                     refresh_stats(1)
-                    run_regular_node(software_versions)
+                    start_regular_node()
             except KeyError:
                 print(f"* Bad option, try again. Press enter to continue.")
                 print_stars()
                 input()
                 refresh_stats(1)
-                run_regular_node(software_versions)
+                start_regular_node()
 
 def harmony_service_status() -> None:
     status = subprocess.call(["systemctl", "is-active", "--quiet", "harmony"])
