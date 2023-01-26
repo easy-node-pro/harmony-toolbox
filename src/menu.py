@@ -3,7 +3,7 @@ from os import environ
 from colorama import Fore
 from toolbox.config import easy_env
 from toolbox.library import loader_intro, set_wallet_env, load_var_file, passphrase_status, set_var, version_checks, recheck_vars, recover_wallet, update_text_file, first_env_check, print_stars
-from toolbox.toolbox import run_regular_node, run_full_node, refresh_stats, safety_defaults
+from toolbox.toolbox import run_regular_node, run_full_node, refresh_stats, safety_defaults, start_regular_node
 
 if __name__ == "__main__":
     if os.path.exists(f'{easy_env.user_home_dir}/validatortoolbox'):
@@ -35,9 +35,6 @@ if __name__ == "__main__":
             )
             input("* Press any key to exit.")
             raise SystemExit(0)
-    # Check online versions of harmony & hmy and compare to our local copy.
-    refresh_stats(1)
-    software_versions = version_checks(environ.get("HARMONY_FOLDER"))
     # Last check on setup status, if it never finished it will try again here.
     if environ.get("SETUP_STATUS") != "2":
         recheck_vars()
@@ -46,7 +43,7 @@ if __name__ == "__main__":
     if environ.get("NODE_TYPE") == "regular":
         if environ.get("VALIDATOR_WALLET") is None:
             set_wallet_env()
-        run_regular_node(software_versions)
+        start_regular_node()
     # Run full node
     if environ.get("NODE_TYPE") == "full":
         run_full_node()

@@ -35,7 +35,8 @@ from toolbox.library import (
     menu_error,
     menu_reboot_server,
     finish_node,
-    pull_harmony_update
+    pull_harmony_update,
+    version_checks
 )
 
 def collect_rewards(networkCall):
@@ -337,6 +338,12 @@ def refresh_status_option():
         print(f"*  20 - Disable auto-refresh      - Disable Refresh or Change Delay Timer: {str(environ.get('REFRESH_TIME'))} seconds")
     else:
         print(f"*  20 - Enable Auto refresh       - Enable Refresh Timeout")
+
+def start_regular_node() -> None:
+    # Check online versions of harmony & hmy and compare to our local copy.
+    refresh_stats(1)
+    software_versions = version_checks(environ.get("HARMONY_FOLDER"))
+    run_regular_node(software_versions)
 
 def run_regular_node(software_versions) -> None:
     menu_options = {
