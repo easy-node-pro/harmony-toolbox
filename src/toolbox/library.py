@@ -521,7 +521,6 @@ def get_sign_pct() -> str:
 
 def get_local_version(folder):
     harmony_version = subprocess.getoutput(f"{folder}/harmony -V")
-    print(harmony_version)
     output_harmony_version = re.search(r'version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(', harmony_version)
     hmy_version = subprocess.getoutput(f"{folder}/hmy version")
     return output_harmony_version.group(1)[:-2], hmy_version[62:-15]
