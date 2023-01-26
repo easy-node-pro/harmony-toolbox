@@ -488,8 +488,7 @@ def update_harmony_app(test_or_main):
                     print("Skipping removal of 0, but it's no longer required, fyi!")
             else:
                 print("Your database 0 is already trimmed, enjoy!")
-    else:
-        os.system("sudo service harmony restart")
+    os.system("sudo service harmony restart")
     print_stars()
     print("Harmony Service is restarting, waiting 10 seconds for restart.")
     set_var(easy_env.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
