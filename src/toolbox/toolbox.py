@@ -465,7 +465,7 @@ def update_harmony_app(test_or_main):
             for f in files:
                 fp = os.path.join(path, f)
                 size += os.path.getsize(fp)
-            if size >= 200000000:
+            if size >= 400000000:
                 question = ask_yes_no(
                     Fore.WHITE
                     + "* Are you sure you would like to proceed with upgrading and trimming database 0?\n\nType 'Yes' or 'No' to continue"
