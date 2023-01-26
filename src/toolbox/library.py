@@ -536,7 +536,7 @@ def check_online_version():
         )
         set_mod_x(easy_env.harmony_tmp_path)
         harmony_ver = subprocess.getoutput(f"{easy_env.harmony_tmp_path} -V")
-        harmony_ver = harmony_ver[35:-35]
+        output_harmony_version = re.search(r'version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(', harmony_ver)
     except subprocess.CalledProcessError:
         print(f"* Error - Website for harmony upgrade is offline, setting to offline.")
         harmony_ver = "Offline"
@@ -550,7 +550,7 @@ def check_online_version():
     except subprocess.CalledProcessError:
         print(f"* Error - Website for hmy upgrade is offline, setting to offline.")
         hmy_ver = "Offline"
-    return harmony_ver, hmy_ver
+    return output_harmony_version.group(1)[:-2], hmy_ver
 
 
 
