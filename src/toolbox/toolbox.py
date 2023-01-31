@@ -422,7 +422,7 @@ def service_menu_option() -> None:
         print(f'*   8 - Start Harmony Service')
 
 def make_backup_dir() -> str:
-    folder_name = f'{easy_env.harmony_dir}/harmony_backup/{datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}'
+    folder_name = f'{easy_env.harmony_dir}/harmony_backup/{datetime.now().strftime("%Y%m%d%H%M")}'
     os.system(f"mkdir -p {folder_name}")
     return folder_name
 
