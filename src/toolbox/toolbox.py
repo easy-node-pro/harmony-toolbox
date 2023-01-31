@@ -1,8 +1,4 @@
-import os
-import requests
-import time
-import json
-import subprocess
+import os, requests, time, json, subprocess, datetime
 from pytimedinput import timedInteger
 from subprocess import Popen, PIPE, run
 from ast import literal_eval
@@ -426,19 +422,17 @@ def service_menu_option() -> None:
         print(f'*   8 - Start Harmony Service')
 
 def make_backup_dir() -> str:
-    if not os.path.isdir(f"{easy_env.harmony_dir}/harmony_backup"):
-        print_stars()
-        print("Backup directory not found, creating folder")
-        os.system(f"mkdir -p {easy_env.harmony_dir}/harmony_backup")
+    folder_name = f'{easy_env.harmony_dir}/harmony_backup/{datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}'
+    os.system(f"mkdir -p {folder_name}")
+    return folder_name
 
 def hmy_cli_upgrade():
     question = ask_yes_no(
         "* Are you sure you would like to proceed with updating the Harmony CLI file?\n\nType 'Yes' or 'No' to continue"
     )
     if question:
-        os.chdir(f"{easy_env.harmony_dir}")
-        make_backup_dir()
-        os.system(f"cp {easy_env.hmy_app} {easy_env.harmony_dir}/harmony_backup")
+        folder_name = make_backup_dir()
+        os.system(f"cp {easy_env.hmy_app} {folder_name}")
         print_stars()
         install_hmy()
         print_stars()
@@ -453,8 +447,8 @@ def update_harmony_app():
     print_stars()
     print("Currently installed version: ")
     os.system("./harmony -V")
-    make_backup_dir()
-    os.system(f"cp {easy_env.harmony_dir}/harmony {easy_env.harmony_dir}/harmony.conf {easy_env.harmony_dir}/harmony_backup")
+    folder_name = make_backup_dir()
+    os.system(f"cp {easy_env.harmony_dir}/harmony {easy_env.harmony_dir}/harmony.conf {folder_name}")
     print_stars()
     print("Downloading current harmony binary file from harmony.one: ")
     print_stars()
