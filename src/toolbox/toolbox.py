@@ -390,13 +390,11 @@ def run_regular_node(software_versions) -> None:
                     print_stars()
                     menu_options[option]()
                     if option != 1:
-                        refresh_stats(1)
                         start_regular_node()
             except KeyError:
                 print(f'* Bad option, try again. Press enter to continue.')
                 print_stars()
                 input()
-                refresh_stats(1)
                 start_regular_node()
         else:
             try:
@@ -405,13 +403,11 @@ def run_regular_node(software_versions) -> None:
                 print_stars()
                 menu_options[option]()
                 if option != 1:
-                    refresh_stats(1)
                     start_regular_node()
             except KeyError:
                 print(f"* Bad option, try again. Press enter to continue.")
                 print_stars()
                 input()
-                refresh_stats(1)
                 start_regular_node()
 
 def harmony_service_status() -> None:
@@ -452,13 +448,13 @@ def hmy_cli_upgrade():
         set_var(easy_env.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
         input("* Update completed, press ENTER to return to the main menu. ")
 
-def update_harmony_app(test_or_main):
+def update_harmony_app():
     os.chdir(f"{easy_env.harmony_dir}")
     print_stars()
     print("Currently installed version: ")
     os.system("./harmony -V")
     make_backup_dir()
-    os.system(f"cp {easy_env.harmony_dir}/harmony {easy_env.harmony_dir}/harmony_backup")
+    os.system(f"cp {easy_env.harmony_dir}/harmony {easy_env.harmony_dir}/harmony.conf {easy_env.harmony_dir}/harmony_backup")
     print_stars()
     print("Downloading current harmony binary file from harmony.one: ")
     print_stars()
@@ -569,7 +565,6 @@ def shard_stats(our_shard) -> str:
         )
 
 def harmony_binary_upgrade():
-    test_or_main = environ.get("NETWORK")
     question = ask_yes_no(
         Fore.RED
         + "* WARNING: YOU WILL MISS BLOCKS WHILE YOU UPGRADE THE HARMONY SERVICE.\n\n"
@@ -577,7 +572,7 @@ def harmony_binary_upgrade():
         + "* Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
     )
     if question:
-        update_harmony_app(test_or_main)
+        update_harmony_app()
 
 def menu_service_stop_start() -> str:
     status = os.system("systemctl is-active --quiet harmony")
