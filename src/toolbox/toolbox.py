@@ -74,7 +74,7 @@ def rewards_collector(rewards_wallet, validator_wallet, rpc) -> None:
             f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
         )
         if question:
-            send_rewards(environ.get("NETWORK_0_CALL"), suggested_send, rewards_wallet)
+            send_rewards(easy_env.hmy_app, suggested_send, rewards_wallet)
         return
 
 def menu_topper_regular(software_versions) -> None:
