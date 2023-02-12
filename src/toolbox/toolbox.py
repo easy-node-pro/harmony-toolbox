@@ -52,7 +52,7 @@ def rewards_collector(rewards_wallet, validator_wallet, rpc) -> None:
         f"*\n* For your validator wallet {validator_wallet}\n* You have {get_rewards_balance(rpc, validator_wallet)} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
     )
     if question:
-        collect_rewards(easy_env.harmony_app)
+        collect_rewards(easy_env.hmy_app)
         print_stars()
         print(
             Fore.GREEN
