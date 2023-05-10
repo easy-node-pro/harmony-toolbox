@@ -2,7 +2,7 @@ import os
 import dotenv
 import subprocess
 from os import environ
-from toolbox.config import easy_env
+from toolbox.config import EnvironmentVariables
 from toolbox.library import loader_intro, set_wallet_env, ask_yes_no, print_stars, recover_wallet
 
 if __name__ == "__main__":
@@ -19,8 +19,8 @@ if __name__ == "__main__":
             + "\n* Restore an existing wallet now? (YES/NO) "
         )
     if question:
-        dotenv.unset_key(easy_env.dotenv_file, "VALIDATOR_WALLET")
-        dotenv.unset_key(easy_env.dotenv_file, "PASS_SWITCH")
-        dotenv.unset_key(easy_env.dotenv_file, "NODE_WALLET")
+        dotenv.unset_key(EnvironmentVariables.dotenv_file, "VALIDATOR_WALLET")
+        dotenv.unset_key(EnvironmentVariables.dotenv_file, "PASS_SWITCH")
+        dotenv.unset_key(EnvironmentVariables.dotenv_file, "NODE_WALLET")
         recover_wallet()
         set_wallet_env()

@@ -12,7 +12,7 @@ def get_url() -> None:
         pass
     return result
 
-class easy_env:
+class EnvironmentVariables:
     easy_version = "1.0.5"
     server_host_name = socket.gethostname()
     user_home_dir = os.path.expanduser("~")

@@ -1,15 +1,15 @@
 import os
 import subprocess
 from os import environ
-from toolbox.config import easy_env
+from toolbox.config import EnvironmentVariables
 from toolbox.library import loader_intro, load_var_file, first_setup, recover_wallet
 
 if __name__ == "__main__":
     subprocess.run("clear")
     loader_intro()
-    if not os.path.exists(easy_env.hmy_app):
+    if not os.path.exists(EnvironmentVariables.hmy_app):
         first_setup()
-    load_var_file(easy_env.dotenv_file)
+    load_var_file(EnvironmentVariables.dotenv_file)
     if not environ.get("VALIDATOR_WALLET"):
         recover_wallet()
         if not environ.get("VALIDATOR_WALLET"):
@@ -19,4 +19,4 @@ if __name__ == "__main__":
             )
             input("* Press any key to exit.")
             raise SystemExit(0)
-    exec(open(f"{easy_env.toolbox_location}/src/menu.py").read())
+    exec(open(f"{EnvironmentVariables.toolbox_location}/src/menu.py").read())

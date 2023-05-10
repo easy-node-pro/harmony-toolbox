@@ -3,14 +3,14 @@ import json
 import subprocess
 from os import environ
 from ast import literal_eval
-from toolbox.config import easy_env
+from toolbox.config import EnvironmentVariables
 from toolbox.library import load_var_file, get_sign_pct, get_wallet_balance, print_stars, set_var, loader_intro, ask_yes_no, version_checks
 from toolbox.toolbox import free_space_check, harmony_service_status, get_rewards_balance, get_db_size, refresh_stats
 from subprocess import PIPE, run
 from colorama import Fore, Back, Style
 from simple_term_menu import TerminalMenu
 
-load_var_file(easy_env.dotenv_file)
+load_var_file(EnvironmentVariables.dotenv_file)
 
 user_home = f'{os.path.expanduser("~")}'
 
@@ -19,7 +19,7 @@ if not environ.get("VALIDATOR_WALLET"):
     address = input(f'No Harmony $ONE address found, please input a one1 or 0x address: ')
     address_2 = input(f'Please re-enter your address to verify: ')
     if address == address_2:
-        set_var(easy_env.dotenv_file, "VALIDATOR_WALLET", address_2)
+        set_var(EnvironmentVariables.dotenv_file, "VALIDATOR_WALLET", address_2)
 
 if not environ.get("NETWORK_SWITCH"):
     # ask for mainnet or testnet
@@ -37,13 +37,13 @@ if not environ.get("NETWORK_SWITCH"):
     terminal_menu = TerminalMenu(menu_options, title="Mainnet or Testnet")
     results = terminal_menu.show()
     if results == 0:
-        set_var(easy_env.dotenv_file, "NETWORK", "mainnet")
-        set_var(easy_env.dotenv_file, "NETWORK_SWITCH", "t")
-        set_var(easy_env.dotenv_file, "RPC_NET", "https://rpc.s0.t.hmny.io")
+        set_var(EnvironmentVariables.dotenv_file, "NETWORK", "mainnet")
+        set_var(EnvironmentVariables.dotenv_file, "NETWORK_SWITCH", "t")
+        set_var(EnvironmentVariables.dotenv_file, "RPC_NET", "https://rpc.s0.t.hmny.io")
     if results == 1:
-        set_var(easy_env.dotenv_file, "NETWORK", "testnet")
-        set_var(easy_env.dotenv_file, "NETWORK_SWITCH", "b")
-        set_var(easy_env.dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
+        set_var(EnvironmentVariables.dotenv_file, "NETWORK", "testnet")
+        set_var(EnvironmentVariables.dotenv_file, "NETWORK_SWITCH", "b")
+        set_var(EnvironmentVariables.dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
     subprocess.run("clear")
 
 # Search harmony.conf for the proper port to hit
@@ -96,11 +96,11 @@ def stats_output_regular(folders) -> None:
     subprocess.run("clear")
     # Print Menu
     print_stars()
-    print(f'{Fore.GREEN}* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{easy_env.easy_version}{Style.RESET_ALL}{Fore.WHITE}   https://easynode.pro {Fore.GREEN}*')
+    print(f'{Fore.GREEN}* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{EnvironmentVariables.easy_version}{Style.RESET_ALL}{Fore.WHITE}   https://easynode.pro {Fore.GREEN}*')
     print_stars()
-    print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(total_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(easy_env.rpc_endpoints, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {easy_env.server_host_name} - {Fore.YELLOW}{easy_env.external_ip}{Fore.GREEN}')
+    print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(total_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(EnvironmentVariables.rpc_endpoints, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {EnvironmentVariables.server_host_name} - {Fore.YELLOW}{EnvironmentVariables.external_ip}{Fore.GREEN}')
     harmony_service_status()
-    print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current user home dir free space: {Fore.CYAN}{free_space_check(easy_env.user_home_dir): >6}{Fore.GREEN}')
+    print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current user home dir free space: {Fore.CYAN}{free_space_check(EnvironmentVariables.user_home_dir): >6}{Fore.GREEN}')
     print(f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min")
     print_stars()
     remote_shard_0 = [f"{user_home}/{list(folders.items())[0][0]}/hmy", "utility", "metadata", f"--node=https://api.s0.t.hmny.io"]
@@ -109,7 +109,7 @@ def stats_output_regular(folders) -> None:
     print(f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}")
     print_stars()
     for folder in folders:
-        current_full_path = f'{easy_env.user_home_dir}/{folder}'
+        current_full_path = f'{EnvironmentVariables.user_home_dir}/{folder}'
         software_versions = version_checks(current_full_path)
         print(f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}')
         local_server = [f"{user_home}/{folder}/hmy", "utility", "metadata", f"--node=http://localhost:{folders[folder]}"]
