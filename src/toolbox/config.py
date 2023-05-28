@@ -13,7 +13,7 @@ def get_url() -> None:
     return result
 
 class EnvironmentVariables:
-    easy_version = "1.0.5"
+    easy_version = "1.0.6"
     server_host_name = socket.gethostname()
     user_home_dir = os.path.expanduser("~")
     dotenv_file = f"{user_home_dir}/.easynode.env"
@@ -31,7 +31,7 @@ class EnvironmentVariables:
     external_ip = get_url()
     main_menu_regular = os.path.join(toolbox_location, "src", "messages", "regularmenu.txt")
     main_menu_full = os.path.join(toolbox_location, "src", "messages", "fullmenu.txt")
-    rpc_endpoints = ['https://api.s0.t.hmny.io', 'https://api.harmony.one', 'https://harmony-0-rpc.gateway.pokt.network']
+    rpc_endpoints = ['https://api.s0.t.hmny.io', 'https://api.harmony.one', 'https://rpc.ankr.com/harmony']
     rpc_endpoints_test = ['https://rpc.s0.b.hmny.io', 'https://api.s0.pops.one']
     rpc_endpoints_max_connection_retries = 10
     hmy_tmp_path = '/tmp/hmy'
