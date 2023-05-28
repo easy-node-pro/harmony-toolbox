@@ -426,10 +426,8 @@ def get_wallet_balance(wallet_addr):
 
     for i in range(endpoints_count):
         wallet_balance = get_wallet_balance_by_endpoint(EnvironmentVariables.rpc_endpoints[i], wallet_addr)
-        wallet_balance_test = get_wallet_balance_by_endpoint(EnvironmentVariables.rpc_endpoints_test[i], wallet_addr)
-
-        if wallet_balance >= 0 and wallet_balance_test >= 0:
-            return wallet_balance, wallet_balance_test
+        if wallet_balance is not None and wallet_balance > 0:
+            return wallet_balance
 
     raise ConnectionError("Couldn't fetch RPC data for current epoch.")
 
