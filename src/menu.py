@@ -54,6 +54,7 @@ if __name__ == "__main__":
         recheck_vars()
         passphrase_status()
     # Run regular validator node
+    loading = False
     if environ.get("NODE_TYPE") == "regular":
         if environ.get("VALIDATOR_WALLET") is None:
             set_wallet_env()
