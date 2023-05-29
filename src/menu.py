@@ -2,14 +2,27 @@ import os, subprocess
 from os import environ
 from colorama import Fore
 from toolbox.config import EnvironmentVariables
-from toolbox.library import loader_intro, set_wallet_env, passphrase_status, recheck_vars, recover_wallet, update_text_file, first_env_check, print_stars
+from toolbox.library import (
+    loader_intro,
+    set_wallet_env,
+    passphrase_status,
+    recheck_vars,
+    recover_wallet,
+    update_text_file,
+    first_env_check,
+    print_stars,
+)
 from toolbox.toolbox import run_full_node, safety_defaults, start_regular_node
 
 if __name__ == "__main__":
-    if os.path.exists(f'{EnvironmentVariables.user_home_dir}/validatortoolbox'):
-        subprocess.run('clear') 
+    loading = True
+    if os.path.exists(f"{EnvironmentVariables.user_home_dir}/validatortoolbox"):
+        subprocess.run("clear")
         print_stars()
-        print('*\n* Old folder found, Exiting\n*\n* Please renmae your ~/validatortoolbox folder to ~/harmony-toolbox and update your command paths!\n*\n* Run: cd ~/ && mv ~/validatortoolbox ~/harmony-toolbox\n*\n* After you run the move command, relaunch with: python3 ~/harmony-toolbox/src/menu.py\n*')
+        print(
+            Fore.GREEN
+            + "*\n* Old folder found, Exiting\n*\n* Please renmae your ~/validatortoolbox folder to ~/harmony-toolbox and update your command paths!\n*\n* Run: cd ~/ && mv ~/validatortoolbox ~/harmony-toolbox\n*\n* After you run the move command, relaunch with: python3 ~/harmony-toolbox/src/menu.py\n*"
+        )
         print_stars()
         raise SystemExit(0)
     # clear screen, show logo
@@ -24,7 +37,8 @@ if __name__ == "__main__":
     # This section is for hard coding new settings for current users.
     safety_defaults()
     # always set conf to 13 keys, shard max
-    if os.path.exists(EnvironmentVariables.harmony_conf): update_text_file(EnvironmentVariables.harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
+    if os.path.exists(EnvironmentVariables.harmony_conf):
+        update_text_file(EnvironmentVariables.harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
     # Make sure they have a wallet or wallet address in the .env file, if none, get one.
     if environ.get("VALIDATOR_WALLET") is None:
         recover_wallet()
