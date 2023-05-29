@@ -82,7 +82,7 @@ def menu_topper_regular(software_versions) -> None:
     try:
         load_1, load_5, load_15 = os.getloadavg()
         sign_percentage = get_sign_pct()
-        total_balance, total_balance_test = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
+        total_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
         remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
     except (ValueError, KeyError, TypeError) as e:
         print(f'* Error fetching data: {e}')
