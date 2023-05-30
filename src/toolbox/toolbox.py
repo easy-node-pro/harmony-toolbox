@@ -63,7 +63,7 @@ def rewards_collector(rewards_wallet, validator_wallet, rpc) -> None:
         print_stars()
     else:
         return
-    wallet_balance, wallet_balance_test = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
+    wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
     suggested_send = wallet_balance - int(environ.get("GAS_RESERVE"))
     print("*\n*\n")
     print_stars()
