@@ -406,8 +406,8 @@ def run_regular_node(software_versions) -> None:
                 input()
                 start_regular_node()
 
-def harmony_service_status() -> None:
-    status = subprocess.call(["systemctl", "is-active", "--quiet", "harmony"])
+def harmony_service_status(service = "harmony") -> None:
+    status = subprocess.call(["systemctl", "is-active", "--quiet", service])
     if status == 0:
         print("* Harmony Service is:               " + Fore.BLACK + Back.GREEN + "   Online  " + Style.RESET_ALL + Fore.GREEN)
     else:
