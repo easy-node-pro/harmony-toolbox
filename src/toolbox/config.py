@@ -2,14 +2,20 @@ import os
 import socket
 import urllib.request
 from os import environ
+from concurrent.futures import ThreadPoolExecutor, TimeoutError
 
-def get_url() -> None:
-    try:
-        result = urllib.request.urlopen("https://ident.me").read().decode("utf8")
-    except Exception as x:
-        print(type(x),x)
-        result = '0.0.0.0'
-        pass
+def get_url(timeout=5) -> str:
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        future = executor.submit(urllib.request.urlopen, "https://ident.me")
+        try:
+            response = future.result(timeout)
+            result = response.read().decode("utf8")
+        except TimeoutError:
+            print("Request timed out.")
+            result = '0.0.0.0'
+        except Exception as x:
+            print(type(x), x)
+            result = '0.0.0.0'
     return result
 
 class EnvironmentVariables:
