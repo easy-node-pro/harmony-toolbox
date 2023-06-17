@@ -9,7 +9,7 @@ if [ -d "$HOME_DIR/harmony-toolbox" ]; then
 else
   # If it doesn't exist, clone the repository
   git clone https://github.com/easy-node-pro/harmony-toolbox.git ~/harmony-toolbox
-  # Go into the new directory, we already ahve updates
+  # Go into the new directory, we already have updates
   cd ~/harmony-toolbox
 fi
 

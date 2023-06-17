@@ -42,3 +42,24 @@ class EnvironmentVariables:
     rpc_endpoints_max_connection_retries = 10
     hmy_tmp_path = '/tmp/hmy'
     harmony_tmp_path = '/tmp/harmony'
+    
+    @classmethod
+    def get_working_endpoint(cls, endpoints):
+        for endpoint in endpoints:
+            try:
+                response = requests.get(endpoint, timeout=5)
+                if response.status_code == 200:
+                    return endpoint
+            except requests.exceptions.RequestException:
+                pass  # We'll just move on to the next endpoint
+        return None  # If we get here, none of the endpoints worked
+
+    @property
+    @classmethod
+    def working_rpc_endpoint(cls):
+        return cls.get_working_endpoint(cls.rpc_endpoints)
+
+    @property
+    @classmethod
+    def working_rpc_endpoint_test(cls):
+        return cls.get_working_endpoint(cls.rpc_endpoints_test)

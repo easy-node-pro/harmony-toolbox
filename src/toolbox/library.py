@@ -375,20 +375,6 @@ def get_wallet_address():
     raise SystemExit(0)
 
 
-def set_api_paths():
-    if not environ.get("NETWORK_0_CALL"):
-        set_var(
-            EnvironmentVariables.dotenv_file,
-            "NETWORK_0_CALL",
-            f"{EnvironmentVariables.hmy_app} --node='https://api.s0.{environ.get('NETWORK_SWITCH')}.hmny.io' ",
-        )
-        set_var(
-            EnvironmentVariables.dotenv_file,
-            "NETWORK_S_CALL",
-            f"{EnvironmentVariables.hmy_app} --node='https://api.s{environ.get('SHARD')}.{environ.get('NETWORK_SWITCH')}.hmny.io' ",
-        )
-
-
 def get_validator_info():
     if environ.get("NETWORK") == "mainnet":
         endpoint = len(EnvironmentVariables.rpc_endpoints)
@@ -503,8 +489,9 @@ def wallet_pending_rewards(wallet):
 
 
 def get_sign_pct() -> str:
+    rpc_endpoint = EnvironmentVariables.working_rpc_endpoint
     output = subprocess.getoutput(
-        f"{environ.get('NETWORK_0_CALL')} blockchain validator information {environ.get('VALIDATOR_WALLET')} | grep signing-percentage"
+        f"{rpc_endpoint} blockchain validator information {environ.get('VALIDATOR_WALLET')} | grep signing-percentage"
     )
     output_stripped = output.lstrip('        "current-epoch-signing-percentage": "').rstrip('",')
     try:
@@ -587,8 +574,6 @@ def first_setup():
     get_node_type()
     # Get Mainnet or Testnet
     set_main_or_test()
-    # Set the API for previous choices
-    set_api_paths()
     # Setup status done
     set_var(EnvironmentVariables.dotenv_file, "SETUP_STATUS", "0")
     # Look for a harmony install or install.
@@ -603,7 +588,6 @@ def recheck_vars():
     get_shard_menu()
     get_node_type()
     set_main_or_test()
-    set_api_paths()
     return
 
 
