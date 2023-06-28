@@ -79,7 +79,7 @@ def parse_flags(parser):
         
     if args.collect_send:
         rewards_collector(EnvironmentVariables.hmy_app, True, True)
-        finish_node()  
+        finish_node()
 
 
 def run_multistats():
@@ -109,7 +109,8 @@ def rewards_collector(rpc, bypass = False, send_rewards = False, rewards_wallet 
         question = ask_yes_no(
             f"*\n* For your validator wallet {validator_wallet}\n* You have {get_rewards_balance(rpc, validator_wallet)} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
         )
-    if question or bypass:
+        bypass = True
+    if bypass:
         collect_rewards(EnvironmentVariables.hmy_app)
         print_stars()
         print(
@@ -129,7 +130,8 @@ def rewards_collector(rpc, bypass = False, send_rewards = False, rewards_wallet 
             question = ask_yes_no(
                 f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
             )
-        if question or send_rewards:
+            send_rewards = True
+        if send_rewards:
             send_rewards(EnvironmentVariables.hmy_app, suggested_send, rewards_wallet)
         return
 
