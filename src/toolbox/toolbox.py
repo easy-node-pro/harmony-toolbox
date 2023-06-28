@@ -36,7 +36,8 @@ from toolbox.library import (
     harmony_service_status,
     loader_intro,
     get_folders,
-    stats_output_regular
+    stats_output_regular,
+    get_db_size
 )
 
 
@@ -649,13 +650,6 @@ def refresh_stats(clear=0) -> str:
     print(f"* Getting the latest local & blockchain information now, one moment while we load...")
     print_stars()
     return
-
-
-def get_db_size(harmony_dir, our_shard) -> str:
-    harmony_db_size = subprocess.getoutput(f"du -h {harmony_dir}/harmony_db_{our_shard}")
-    harmony_db_size = harmony_db_size.rstrip("\t")
-    countTrim = len(EnvironmentVariables.harmony_dir) + 13
-    return harmony_db_size[:-countTrim]
 
 
 def shard_stats(our_shard) -> str:

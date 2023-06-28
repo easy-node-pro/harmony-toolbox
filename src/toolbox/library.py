@@ -248,6 +248,13 @@ def set_wallet_env():
             return validator_wallet
 
 
+def get_db_size(harmony_dir, our_shard) -> str:
+    harmony_db_size = subprocess.getoutput(f"du -h {harmony_dir}/harmony_db_{our_shard}")
+    harmony_db_size = harmony_db_size.rstrip("\t")
+    countTrim = len(EnvironmentVariables.harmony_dir) + 13
+    return harmony_db_size[:-countTrim]
+
+
 def recovery_type():
     subprocess.run("clear")
     set_var(EnvironmentVariables.dotenv_file, "NODE_WALLET", "true")
