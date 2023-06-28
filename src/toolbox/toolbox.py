@@ -121,19 +121,25 @@ def rewards_collector(rpc, bypass = False, send_out_rewards = False, rewards_wal
         return
     wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
     suggested_send = wallet_balance - int(environ.get("GAS_RESERVE"))
-    print("*\n*\n")
-    print_stars()
-    print("\n* Send your Harmony ONE Rewards?")
-    print_stars()
     if suggested_send >= 1:
         if send_rewards == False:
+            print("*\n*\n")
+            print_stars()
+            print("\n* Send your Harmony ONE Rewards?")
+            print_stars()
             question = ask_yes_no(
                 f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
             )
             if question:
                 send_out_rewards = True
         if send_out_rewards:
+            print("*\n*\n")
+            print_stars()
+            print("\n* Sending your Harmony ONE Rewards, awaiting confirmation...")
+            print_stars()
             send_rewards(EnvironmentVariables.hmy_app, suggested_send, rewards_wallet)
+            wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
+            print(f"*\n*\n* Current Wallet Balance: {wallet_balance} $ONE")
         return
 
 
