@@ -102,7 +102,7 @@ def send_rewards(networkCall, sendAmount, rewards_wallet):
     )
 
 
-def rewards_collector(rpc, bypass = False, send_rewards = False, rewards_wallet = environ.get('REWARDS_WALLET'), validator_wallet = environ.get('VALIDATOR_WALLET')) -> None:
+def rewards_collector(rpc, bypass = False, send_out_rewards = False, rewards_wallet = environ.get('REWARDS_WALLET'), validator_wallet = environ.get('VALIDATOR_WALLET')) -> None:
     print("* Harmony ONE Rewards Collection")
     print_stars()
     if bypass == False:
@@ -131,8 +131,8 @@ def rewards_collector(rpc, bypass = False, send_rewards = False, rewards_wallet 
                 f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
             )
             if question:
-                send_rewards = True
-        if send_rewards:
+                send_out_rewards = True
+        if send_out_rewards:
             send_rewards(EnvironmentVariables.hmy_app, suggested_send, rewards_wallet)
         return
 
