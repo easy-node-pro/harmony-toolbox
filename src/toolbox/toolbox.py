@@ -139,7 +139,7 @@ def rewards_collector(rpc, bypass = False, send_out_rewards = False, rewards_wal
             print_stars()
             send_rewards(EnvironmentVariables.hmy_app, suggested_send, rewards_wallet)
             wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
-            print(f"*\n*\n* Current Wallet Balance: {wallet_balance} $ONE")
+            print(f"*\n*\n* Current Wallet Balance: {wallet_balance} $ONE\n*\n*")
         return
 
 
