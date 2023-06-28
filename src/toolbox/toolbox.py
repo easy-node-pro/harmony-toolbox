@@ -57,6 +57,7 @@ def parse_flags(parser):
 
     if args.stats:
         run_multistats()
+        return SystemExit(0)
 
 
 def run_multistats():
