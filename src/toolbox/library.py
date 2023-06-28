@@ -489,7 +489,7 @@ def wallet_pending_rewards(wallet):
 
 
 def get_sign_pct() -> str:
-    hmy_external_rpc = f"{EnvironmentVariables.hmy_app} --node='{EnvironmentVariables.working_rpc_endpoint}'"
+    hmy_external_rpc = f"{EnvironmentVariables.hmy_app} --node='{EnvironmentVariables().working_rpc_endpoint}'"
     output = subprocess.getoutput(
         f"{hmy_external_rpc} blockchain validator information {environ.get('VALIDATOR_WALLET')} | grep signing-percentage"
     )
