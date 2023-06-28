@@ -52,5 +52,5 @@ class EnvironmentVariables:
         return None  # If we get here, none of the endpoints worked
 
     @property
-    def working_rpc_endpoint(cls):
-        return cls.get_working_endpoint(cls.rpc_endpoints)
+    def working_rpc_endpoint(self):
+        return self.get_working_endpoint(self.rpc_endpoints)
