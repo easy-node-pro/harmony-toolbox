@@ -119,7 +119,7 @@ def rewards_collector(rpc, bypass = False, send_out_rewards = False, rewards_wal
         print_stars()
     else:
         return
-    wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
+    wallet_balance = get_wallet_balance(validator_wallet)
     suggested_send = wallet_balance - int(environ.get("GAS_RESERVE"))
     if suggested_send >= 1:
         if send_rewards == False:
@@ -138,8 +138,12 @@ def rewards_collector(rpc, bypass = False, send_out_rewards = False, rewards_wal
             print("\n* Sending your Harmony ONE Rewards, awaiting confirmation...")
             print_stars()
             send_rewards(EnvironmentVariables.hmy_app, suggested_send, rewards_wallet)
-            wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
-            print(f"*\n*\n* Current Wallet Balance: {wallet_balance} $ONE\n*\n*")
+        wallet_balance = get_wallet_balance(validator_wallet)
+        print(f"*\n*\n* Current Wallet Balance: {wallet_balance} $ONE\n*\n*")
+        return
+    else:
+        wallet_balance = get_wallet_balance(validator_wallet)
+        print(f"*\n*\n* Current Wallet Balance: {wallet_balance} $ONE\n*\n*")
         return
 
 
