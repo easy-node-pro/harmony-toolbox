@@ -5,7 +5,7 @@ from os import environ
 from ast import literal_eval
 from toolbox.config import EnvironmentVariables
 from toolbox.library import load_var_file, get_sign_pct, get_wallet_balance, print_stars, set_var, loader_intro, ask_yes_no, version_checks, get_folders, stats_output_regular
-from toolbox.toolbox import free_space_check, harmony_service_status, get_rewards_balance, get_db_size, refresh_stats
+from toolbox.toolbox import free_space_check, get_rewards_balance, get_db_size, refresh_stats
 from subprocess import PIPE, run
 from colorama import Fore, Back, Style
 from simple_term_menu import TerminalMenu
@@ -51,7 +51,4 @@ def run_multistats():
     stats_output_regular(folders)
 
 if __name__ == "__main__":
-    loader_intro()
-    refresh_stats(1)
-    folders = get_folders()
-    stats_output_regular(folders)
+    run_multistats()
