@@ -1223,8 +1223,8 @@ def finish_node():
         "* Thanks for using Easy Node Toolbox - Making everything Easy Mode!"
         + "\n*\n* We serve up free tools and guides for validators every day."
         + "\n*\n* Check our guides out at https://docs.easynode.pro\n*\n"
-        + "* Please consider joining our discord & supporting us one time or monthly for our tools"
-        + " and guides at https://bit.ly/easynodediscord today!\n*\n* Goodbye!"
+        + "* Please consider joining our discord & supporting us one time or monthly\n* for our"
+        + " tools and guides at https://bit.ly/easynodediscord today!\n*\n* Goodbye!"
     )
     print_stars()
     raise SystemExit(0)
