@@ -49,6 +49,20 @@ def parse_flags(parser):
         action="store_true",
         help="Run your stats if Harmony is installed and running.",
     )
+    
+    parser.add_argument(
+        "-c",
+        "--collect",
+        action="store_true",
+        help="Collect your rewards to your validator wallet",
+    )
+    
+    parser.add_argument(
+        "-cs",
+        "--collect-send",
+        action="store_true",
+        help="Collect your rewards to your validator wallet and send them to your rewards wallet",
+    )
 
     args = parser.parse_args()
 
@@ -58,6 +72,10 @@ def parse_flags(parser):
     if args.stats:
         run_multistats()
         finish_node()
+        
+    if args.collect:
+        rewards_collector(EnvironmentVariables.hmy_app)
+        finish_node()       
 
 
 def run_multistats():
@@ -80,13 +98,14 @@ def send_rewards(networkCall, sendAmount, rewards_wallet):
     )
 
 
-def rewards_collector(rewards_wallet, validator_wallet, rpc) -> None:
+def rewards_collector(rpc, rewards_wallet = environ.get('REWARDS_WALLET'), validator_wallet = environ.get('VALIDATOR_WALLET'), bypass = False) -> None:
     print("* Harmony ONE Rewards Collection")
     print_stars()
-    question = ask_yes_no(
-        f"*\n* For your validator wallet {validator_wallet}\n* You have {get_rewards_balance(rpc, validator_wallet)} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
-    )
-    if question:
+    if bypass == False:
+        question = ask_yes_no(
+            f"*\n* For your validator wallet {validator_wallet}\n* You have {get_rewards_balance(rpc, validator_wallet)} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
+        )
+    if question or bypass:
         collect_rewards(EnvironmentVariables.hmy_app)
         print_stars()
         print(
@@ -364,7 +383,7 @@ def bingo_checker():
 
 def run_rewards_collector() -> None:
     rewards_collector(
-        environ.get("REWARDS_WALLET"), environ.get("VALIDATOR_WALLET"), EnvironmentVariables.rpc_endpoints
+        EnvironmentVariables.hmy_app
     )
     return
 
