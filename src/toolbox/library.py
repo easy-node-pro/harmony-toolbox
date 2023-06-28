@@ -507,7 +507,7 @@ def get_sign_pct() -> str:
 def get_local_version():
     harmony_version = subprocess.getoutput(f"{EnvironmentVariables.harmony_app} -V")
     output_harmony_version = re.search(r'version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(', harmony_version)
-    hmy_version = subprocess.getoutput(f"{EnvironmentVariables.hmy_app}/hmy version")
+    hmy_version = subprocess.getoutput(f"{EnvironmentVariables.hmy_app} version")
     return output_harmony_version.group(1)[:-2], hmy_version[62:-15]
 
 def set_mod_x(file):
