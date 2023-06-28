@@ -1,13 +1,12 @@
-import psutil, platform, dotenv, time, os, subprocess, requests, pyhmy, shutil, hashlib, re, json, subprocess
+import psutil, platform, dotenv, os, subprocess, requests, pyhmy, shutil, hashlib, re, json, subprocess
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
 from colorama import Fore, Style, Back
 from pathlib import Path
-from pyhmy import validator, account, staking, numbers
+from pyhmy import account, staking
 from json import load, dump
 from toolbox.config import EnvironmentVariables
-from multi_stats import run_multistats
 from collections import namedtuple
 from datetime import datetime
 from subprocess import PIPE, run
@@ -52,25 +51,6 @@ def set_var(env_file, key_name, update_name):
     dotenv.set_key(env_file, key_name, update_name)
     load_var_file(env_file)
     return
-
-
-def parse_flags(parser):
-    # Add the arguments
-    parser.add_argument(
-        "-s",
-        "--stats",
-        action="store_true",
-        help="Run your stats if Harmony is installed and running.",
-    )
-    
-    args = parser.parse_args()
-    
-    subprocess.run("clear")
-    print(Fore.RESET)
-    
-    if args.stats:
-        run_multistats()
-        
 
 
 # loader intro splash screen
