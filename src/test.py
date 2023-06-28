@@ -43,7 +43,8 @@ print_stars_reset = print_stuff(reset=1).printStars
 string_stars_reset = print_stuff(reset=1).stringStars
 
 def get_sign_pct() -> str:
-    hmy_external_rpc = f"{EnvironmentVariables.hmy_app} --node='{EnvironmentVariables.working_rpc_endpoint}'"
+    rpc_endpoint = EnvironmentVariables.working_rpc_endpoint
+    hmy_external_rpc = f"{EnvironmentVariables.hmy_app} --node='{rpc_endpoint}'"
     print(hmy_external_rpc)
     output = subprocess.getoutput(
         f"{hmy_external_rpc} blockchain validator information {environ.get('VALIDATOR_WALLET')} | grep signing-percentage"
