@@ -41,7 +41,7 @@ class EnvironmentVariables:
     harmony_tmp_path = '/tmp/harmony'
     
     @staticmethod
-    def get_working_endpoint(cls, endpoints):
+    def get_working_endpoint(endpoints):
         for endpoint in endpoints:
             try:
                 response = requests.get(endpoint, timeout=5)
