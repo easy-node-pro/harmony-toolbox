@@ -74,8 +74,12 @@ def parse_flags(parser):
         finish_node()
         
     if args.collect:
-        rewards_collector(EnvironmentVariables.hmy_app)
-        finish_node()       
+        rewards_collector(EnvironmentVariables.hmy_app, True)
+        finish_node()
+        
+    if args.collect_send:
+        rewards_collector(EnvironmentVariables.hmy_app, True, True)
+        finish_node()  
 
 
 def run_multistats():
@@ -98,7 +102,7 @@ def send_rewards(networkCall, sendAmount, rewards_wallet):
     )
 
 
-def rewards_collector(rpc, rewards_wallet = environ.get('REWARDS_WALLET'), validator_wallet = environ.get('VALIDATOR_WALLET'), bypass = False) -> None:
+def rewards_collector(rpc, bypass = False, send_rewards = False, rewards_wallet = environ.get('REWARDS_WALLET'), validator_wallet = environ.get('VALIDATOR_WALLET')) -> None:
     print("* Harmony ONE Rewards Collection")
     print_stars()
     if bypass == False:
@@ -121,10 +125,11 @@ def rewards_collector(rpc, rewards_wallet = environ.get('REWARDS_WALLET'), valid
     print("\n* Send your Harmony ONE Rewards?")
     print_stars()
     if suggested_send >= 1:
-        question = ask_yes_no(
-            f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
-        )
-        if question:
+        if send_rewards == False:
+            question = ask_yes_no(
+                f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
+            )
+        if question or send_rewards:
             send_rewards(EnvironmentVariables.hmy_app, suggested_send, rewards_wallet)
         return
 
