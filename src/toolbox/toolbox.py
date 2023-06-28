@@ -130,7 +130,8 @@ def rewards_collector(rpc, bypass = False, send_rewards = False, rewards_wallet 
             question = ask_yes_no(
                 f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
             )
-            send_rewards = True
+            if question:
+                send_rewards = True
         if send_rewards:
             send_rewards(EnvironmentVariables.hmy_app, suggested_send, rewards_wallet)
         return
