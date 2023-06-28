@@ -7,6 +7,7 @@ from pathlib import Path
 from pyhmy import validator, account, staking, numbers
 from json import load, dump
 from toolbox.config import EnvironmentVariables
+from multi_stats import run_multistats
 from collections import namedtuple
 from datetime import datetime
 from subprocess import PIPE, run
@@ -68,6 +69,7 @@ def parse_flags(parser):
     print(Fore.RESET)
     
     if args.stats:
+        run_multistats()
         
 
 
