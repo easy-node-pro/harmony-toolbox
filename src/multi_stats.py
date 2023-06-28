@@ -4,7 +4,7 @@ import subprocess
 from os import environ
 from ast import literal_eval
 from toolbox.config import EnvironmentVariables
-from toolbox.library import load_var_file, get_sign_pct, get_wallet_balance, print_stars, set_var, loader_intro, ask_yes_no, version_checks
+from toolbox.library import load_var_file, get_sign_pct, get_wallet_balance, print_stars, set_var, loader_intro, ask_yes_no, version_checks, finish_node
 from toolbox.toolbox import free_space_check, harmony_service_status, get_rewards_balance, get_db_size, refresh_stats
 from subprocess import PIPE, run
 from colorama import Fore, Back, Style
@@ -127,3 +127,4 @@ if __name__ == "__main__":
     refresh_stats(1)
     folders = get_folders()
     validator_stats_output(folders)
+    finish_node()
