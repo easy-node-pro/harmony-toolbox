@@ -1,4 +1,4 @@
-import os, subprocess
+import argparse, os, subprocess
 from os import environ
 from colorama import Fore
 from toolbox.config import EnvironmentVariables
@@ -12,7 +12,7 @@ from toolbox.library import (
     first_env_check,
     print_stars,
 )
-from toolbox.toolbox import run_full_node, safety_defaults, start_regular_node
+from toolbox.toolbox import run_full_node, safety_defaults, start_regular_node, parse_flags
 
 if __name__ == "__main__":
     loading = True
@@ -26,6 +26,8 @@ if __name__ == "__main__":
         print_stars()
         raise SystemExit(0)
     # clear screen, show logo
+    parser = argparse.ArgumentParser(description='Findora Validator Toolbox - Help Menu')
+    parse_flags(parser)
     loader_intro()
     # check for .env file, if none we have a first timer.
     if os.path.exists(EnvironmentVariables.dotenv_file) is None:

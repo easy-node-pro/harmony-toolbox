@@ -4,7 +4,7 @@ import subprocess
 from os import environ
 from ast import literal_eval
 from toolbox.config import EnvironmentVariables
-from toolbox.library import load_var_file, get_sign_pct, get_wallet_balance, print_stars, set_var, loader_intro, ask_yes_no, version_checks
+from toolbox.library import load_var_file, get_sign_pct, get_wallet_balance, print_stars, set_var, loader_intro, ask_yes_no, version_checks, finish_node
 from toolbox.toolbox import free_space_check, harmony_service_status, get_rewards_balance, get_db_size, refresh_stats
 from subprocess import PIPE, run
 from colorama import Fore, Back, Style
@@ -88,7 +88,7 @@ def get_folders():
         print_stars()
     return folders
 
-def stats_output_regular(folders) -> None:
+def validator_stats_output(folders) -> None:
     # Get server stats & wallet balances
     load_1, load_5, load_15 = os.getloadavg()
     sign_percentage = get_sign_pct()
@@ -126,4 +126,5 @@ if __name__ == "__main__":
     loader_intro()
     refresh_stats(1)
     folders = get_folders()
-    stats_output_regular(folders)
+    validator_stats_output(folders)
+    finish_node()
