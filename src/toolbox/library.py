@@ -1,14 +1,15 @@
-import psutil, platform, dotenv, time, os, subprocess, requests, pyhmy, shutil, hashlib, re
+import psutil, platform, dotenv, time, os, subprocess, requests, pyhmy, shutil, hashlib, re, json, subprocess
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
-from colorama import Fore, Style
+from colorama import Fore, Style, Back
 from pathlib import Path
 from pyhmy import validator, account, staking, numbers
 from json import load, dump
 from toolbox.config import EnvironmentVariables
 from collections import namedtuple
 from datetime import datetime
+from subprocess import PIPE, run
 
 load_dotenv(EnvironmentVariables.dotenv_file)
 
@@ -42,6 +43,7 @@ string_stars = print_stuff().stringStars
 print_stars_reset = print_stuff(reset=1).printStars
 string_stars_reset = print_stuff(reset=1).stringStars
 
+
 # check if a var exists in your .env file, unset and reset if exists to avoid bad stuff
 def set_var(env_file, key_name, update_name):
     if environ.get(key_name):
@@ -49,6 +51,24 @@ def set_var(env_file, key_name, update_name):
     dotenv.set_key(env_file, key_name, update_name)
     load_var_file(env_file)
     return
+
+
+def parse_flags(parser):
+    # Add the arguments
+    parser.add_argument(
+        "-s",
+        "--stats",
+        action="store_true",
+        help="Run your stats if Harmony is installed and running.",
+    )
+    
+    args = parser.parse_args()
+    
+    subprocess.run("clear")
+    print(Fore.RESET)
+    
+    if args.stats:
+        
 
 
 # loader intro splash screen
@@ -75,6 +95,7 @@ def loader_intro():
                             |/__\|/__\|/__\|/__\|/__\|/__\|/__\|   
     """
     print(p)
+
 
 # Install Harmony ONE
 def install_hmy():
@@ -123,9 +144,9 @@ def pull_harmony_update(harmony_dir, bls_key_file, harmony_conf):
         os.system("./harmony config dump --network testnet harmony.conf")
         update_text_file(harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
     if environ.get("NETWORK") == "mainnet":
-        if arch.startswith('arm'):
+        if arch.startswith("arm"):
             os.system("curl -LO https://harmony.one/binary-arm64 && mv binary-arm64 harmony && chmod +x harmony")
-        if arch == 'x86_64':
+        if arch == "x86_64":
             os.system("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
             os.system("./harmony config dump harmony.conf")
             update_text_file(harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
@@ -139,10 +160,102 @@ def pull_harmony_update(harmony_dir, bls_key_file, harmony_conf):
     return
 
 
+# Search harmony.conf for the proper port to hit
+def find_port(folder):
+    with open(f'{EnvironmentVariables.user_home_dir}/{folder}/harmony.conf') as f:
+        data_file = f.readlines()
+    count = 0
+    for line in data_file:
+        line = line.rstrip()
+        if 'Port =' in line:
+            if count == 3:
+                return line[9:]
+            count += 1
+            
+
+# build list of installs
+def get_folders():
+    folders = {}
+    if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony/harmony.conf"):
+        port = find_port(f'harmony')
+        folders['harmony'] = port
+        print(f'* Found ~/harmony folder, on port {port}')
+        print_stars()
+    if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony0/harmony.conf"):
+        port = find_port(f'harmony0')
+        folders['harmony0'] = port
+        print(f'* Found ~/harmony1 folder, on port {port}')
+        print_stars()
+    if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony1/harmony.conf"):
+        port = find_port(f'harmony1')
+        folders['harmony1'] = port
+        print(f'* Found ~/harmony1 folder, on port {port}')
+        print_stars()
+    if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony2/harmony.conf"):
+        port = find_port(f'harmony2')
+        folders['harmony2'] = port
+        print(f'* Found ~/harmony2 folder, on port {port}')
+        print_stars()
+    if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony3/harmony.conf"):
+        port = find_port(f'harmony3')
+        folders['harmony3'] = port
+        print(f'* Found ~/harmony3 folder, on port {port}')
+        print_stars()
+    return folders
+
+
+def stats_output_regular(folders) -> None:
+    # Get server stats & wallet balances
+    load_1, load_5, load_15 = os.getloadavg()
+    sign_percentage = get_sign_pct()
+    total_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
+    # Print Menu
+    print_stars()
+    print(f'{Fore.GREEN}* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{EnvironmentVariables.easy_version}{Style.RESET_ALL}{Fore.WHITE}   https://easynode.pro {Fore.GREEN}*')
+    print_stars()
+    print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(total_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(EnvironmentVariables.rpc_endpoints, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {EnvironmentVariables.server_host_name} - {Fore.YELLOW}{EnvironmentVariables.external_ip}{Fore.GREEN}')
+    for folder in folders:
+        harmony_service_status(folder)
+    print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current user home dir free space: {Fore.CYAN}{free_space_check(EnvironmentVariables.user_home_dir): >6}{Fore.GREEN}')
+    print(f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min")
+    print_stars()
+    remote_shard_0 = [f"{EnvironmentVariables.user_home_dir}/{list(folders.items())[0][0]}/hmy", "utility", "metadata", f"--node=https://api.s0.t.hmny.io"]
+    result_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    remote_0_data = json.loads(result_shard_0.stdout)
+    print(f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}")
+    print_stars()
+    for folder in folders:
+        current_full_path = f'{EnvironmentVariables.user_home_dir}/{folder}'
+        software_versions = version_checks(current_full_path)
+        print(f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}')
+        local_server = [f"{EnvironmentVariables.user_home_dir}/{folder}/hmy", "utility", "metadata", f"--node=http://localhost:{folders[folder]}"]
+        result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+        local_data = json.loads(result_local_server.stdout)
+        remote_server = [f"{EnvironmentVariables.user_home_dir}/{folder}/hmy", "utility", "metadata", f"--node=https://api.s{local_data['result']['shard-id']}.t.hmny.io"]
+        result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+        remote_data = json.loads(result_remote_server.stdout)
+        print(f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}")
+        print(f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}\n*   Local Shard 0 Size: {get_db_size(f'{current_full_path}', '0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}")
+        print_stars()
+        
+
+def harmony_service_status(service = "harmony") -> None:
+    status = subprocess.call(["systemctl", "is-active", "--quiet", service])
+    if status == 0:
+        if service == "harmony":
+            print(f"* {service} Service is:               " + Fore.BLACK + Back.GREEN + "   Online  " + Style.RESET_ALL + Fore.GREEN)
+        else:
+            print(f"* {service} Service is:              " + Fore.BLACK + Back.GREEN + "   Online  " + Style.RESET_ALL + Fore.GREEN)
+    else:
+        print(f"* {service} Service is:               " + Fore.WHITE + Back.RED + "  *** Offline *** " + Style.RESET_ALL + Fore.GREEN)
+        
+
 def set_wallet_env():
     if environ.get("NODE_WALLET") == "true":
         if not environ.get("VALIDATOR_WALLET"):
-            output = subprocess.getoutput(f"{EnvironmentVariables.hmy_app} keys list | grep {EnvironmentVariables.active_user}")
+            output = subprocess.getoutput(
+                f"{EnvironmentVariables.hmy_app} keys list | grep {EnvironmentVariables.active_user}"
+            )
             output_stripped = output.lstrip(EnvironmentVariables.active_user)
             output_stripped = output_stripped.strip()
             set_var(EnvironmentVariables.dotenv_file, "VALIDATOR_WALLET", output_stripped)
@@ -174,14 +287,18 @@ def recovery_type():
     results = terminal_menu.show()
     if results == 0:
         # Mnemonic Recovery Here
-        os.system(f"{EnvironmentVariables.hmy_app} keys recover-from-mnemonic {EnvironmentVariables.active_user} {passphrase_switch}")
+        os.system(
+            f"{EnvironmentVariables.hmy_app} keys recover-from-mnemonic {EnvironmentVariables.active_user} {passphrase_switch}"
+        )
         print_stars()
         set_wallet_env()
     elif results == 1:
         # Private Key Recovery Here
         print("* Private key recovery requires your private information in the command itself.")
         private = input("* Please enter your private key to restore your wallet: ")
-        os.system(f"{EnvironmentVariables.hmy_app} keys import-private-key {private} {EnvironmentVariables.active_user} --passphrase")
+        os.system(
+            f"{EnvironmentVariables.hmy_app} keys import-private-key {private} {EnvironmentVariables.active_user} --passphrase"
+        )
         print_stars()
         set_wallet_env()
 
@@ -507,9 +624,10 @@ def get_sign_pct() -> str:
 
 def get_local_version(folder):
     harmony_version = subprocess.getoutput(f"{folder}/harmony -V")
-    output_harmony_version = re.search(r'version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(', harmony_version)
+    output_harmony_version = re.search(r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_version)
     hmy_version = subprocess.getoutput(f"{folder}/hmy version")
     return output_harmony_version.group(1)[:-2], hmy_version[62:-15]
+
 
 def set_mod_x(file):
     subprocess.run(["chmod", "+x", file])
@@ -518,11 +636,12 @@ def set_mod_x(file):
 def check_online_version():
     try:
         subprocess.check_output(
-            ["wget", "https://harmony.one/binary", "-O", EnvironmentVariables.harmony_tmp_path], stderr=subprocess.STDOUT
+            ["wget", "https://harmony.one/binary", "-O", EnvironmentVariables.harmony_tmp_path],
+            stderr=subprocess.STDOUT,
         )
         set_mod_x(EnvironmentVariables.harmony_tmp_path)
         harmony_ver = subprocess.getoutput(f"{EnvironmentVariables.harmony_tmp_path} -V")
-        output_harmony_version = re.search(r'version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(', harmony_ver)
+        output_harmony_version = re.search(r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_ver)
     except subprocess.CalledProcessError:
         print(f"* Error - Website for harmony upgrade is offline, setting to offline.")
         harmony_ver = "Offline"
@@ -539,7 +658,6 @@ def check_online_version():
     return output_harmony_version.group(1)[:-2], hmy_ver
 
 
-
 def first_env_check(env_file, home_dir) -> None:
     if os.path.exists(env_file):
         load_var_file(env_file)
@@ -550,16 +668,20 @@ def first_env_check(env_file, home_dir) -> None:
 
 def version_checks(harmony_folder):
     software_versions = {}
-    software_versions["harmony_version"], software_versions["hmy_version"] = get_local_version(
-        f"{harmony_folder}"
-    )
+    software_versions["harmony_version"], software_versions["hmy_version"] = get_local_version(f"{harmony_folder}")
     software_versions["online_harmony_version"], software_versions["online_hmy_version"] = check_online_version()
     # Check versions, if matching False (No Upgrade Required), non-match True (Upgrade Required)
-    if software_versions["harmony_version"] == software_versions["online_harmony_version"] or software_versions["online_harmony_version"] == "Offline":
+    if (
+        software_versions["harmony_version"] == software_versions["online_harmony_version"]
+        or software_versions["online_harmony_version"] == "Offline"
+    ):
         software_versions["harmony_upgrade"] = "False"
     else:
         software_versions["harmony_upgrade"] = "True"
-    if software_versions["hmy_version"] == software_versions["online_hmy_version"] or software_versions["online_hmy_version"] == "Offline":
+    if (
+        software_versions["hmy_version"] == software_versions["online_hmy_version"]
+        or software_versions["online_hmy_version"] == "Offline"
+    ):
         software_versions["hmy_upgrade"] = "False"
     else:
         software_versions["hmy_upgrade"] = "True"
@@ -668,7 +790,9 @@ def install_harmony() -> None:
     install_hmy()
     print_stars()
     # Install harmony
-    pull_harmony_update(EnvironmentVariables.harmony_dir, EnvironmentVariables.bls_key_file, EnvironmentVariables.harmony_conf)
+    pull_harmony_update(
+        EnvironmentVariables.harmony_dir, EnvironmentVariables.bls_key_file, EnvironmentVariables.harmony_conf
+    )
     # install hmy files
     print("* Installing rclone application & rclone configuration files")
     print_stars()
