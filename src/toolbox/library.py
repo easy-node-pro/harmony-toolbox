@@ -491,7 +491,7 @@ def wallet_pending_rewards(wallet):
 def get_sign_pct() -> str:
     rpc_endpoint = EnvironmentVariables.working_rpc_endpoint
     output = subprocess.getoutput(
-        f"{rpc_endpoint} blockchain validator information {environ.get('VALIDATOR_WALLET')} | grep signing-percentage"
+        f"/home/serviceharmony/harmony/hmy --node='{rpc_endpoint}' blockchain validator information {environ.get('VALIDATOR_WALLET')} | grep signing-percentage"
     )
     output_stripped = output.lstrip('        "current-epoch-signing-percentage": "').rstrip('",')
     try:
