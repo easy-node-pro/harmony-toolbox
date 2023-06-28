@@ -504,10 +504,10 @@ def get_sign_pct() -> str:
         return str(output_stripped)
 
 
-def get_local_version():
-    harmony_version = subprocess.getoutput(f"{EnvironmentVariables.harmony_app} -V")
+def get_local_version(folder):
+    harmony_version = subprocess.getoutput(f"{folder}/harmony -V")
     output_harmony_version = re.search(r'version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(', harmony_version)
-    hmy_version = subprocess.getoutput(f"{EnvironmentVariables.hmy_app} version")
+    hmy_version = subprocess.getoutput(f"{folder}/hmy version")
     return output_harmony_version.group(1)[:-2], hmy_version[62:-15]
 
 def set_mod_x(file):
@@ -549,7 +549,9 @@ def first_env_check(env_file, home_dir) -> None:
 
 def version_checks(harmony_folder):
     software_versions = {}
-    software_versions["harmony_version"], software_versions["hmy_version"] = get_local_version()
+    software_versions["harmony_version"], software_versions["hmy_version"] = get_local_version(
+        f"{harmony_folder}"
+    )
     software_versions["online_harmony_version"], software_versions["online_hmy_version"] = check_online_version()
     # Check versions, if matching False (No Upgrade Required), non-match True (Upgrade Required)
     if software_versions["harmony_version"] == software_versions["online_harmony_version"] or software_versions["online_harmony_version"] == "Offline":
