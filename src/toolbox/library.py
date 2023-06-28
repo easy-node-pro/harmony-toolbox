@@ -144,44 +144,44 @@ def pull_harmony_update(harmony_dir, bls_key_file, harmony_conf):
 
 # Search harmony.conf for the proper port to hit
 def find_port(folder):
-    with open(f'{EnvironmentVariables.user_home_dir}/{folder}/harmony.conf') as f:
+    with open(f"{EnvironmentVariables.user_home_dir}/{folder}/harmony.conf") as f:
         data_file = f.readlines()
     count = 0
     for line in data_file:
         line = line.rstrip()
-        if 'Port =' in line:
+        if "Port =" in line:
             if count == 3:
                 return line[9:]
             count += 1
-            
+
 
 # build list of installs
 def get_folders():
     folders = {}
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony/harmony.conf"):
-        port = find_port(f'harmony')
-        folders['harmony'] = port
-        print(f'* Found ~/harmony folder, on port {port}')
+        port = find_port(f"harmony")
+        folders["harmony"] = port
+        print(f"* Found ~/harmony folder, on port {port}")
         print_stars()
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony0/harmony.conf"):
-        port = find_port(f'harmony0')
-        folders['harmony0'] = port
-        print(f'* Found ~/harmony1 folder, on port {port}')
+        port = find_port(f"harmony0")
+        folders["harmony0"] = port
+        print(f"* Found ~/harmony1 folder, on port {port}")
         print_stars()
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony1/harmony.conf"):
-        port = find_port(f'harmony1')
-        folders['harmony1'] = port
-        print(f'* Found ~/harmony1 folder, on port {port}')
+        port = find_port(f"harmony1")
+        folders["harmony1"] = port
+        print(f"* Found ~/harmony1 folder, on port {port}")
         print_stars()
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony2/harmony.conf"):
-        port = find_port(f'harmony2')
-        folders['harmony2'] = port
-        print(f'* Found ~/harmony2 folder, on port {port}')
+        port = find_port(f"harmony2")
+        folders["harmony2"] = port
+        print(f"* Found ~/harmony2 folder, on port {port}")
         print_stars()
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony3/harmony.conf"):
-        port = find_port(f'harmony3')
-        folders['harmony3'] = port
-        print(f'* Found ~/harmony3 folder, on port {port}')
+        port = find_port(f"harmony3")
+        folders["harmony3"] = port
+        print(f"* Found ~/harmony3 folder, on port {port}")
         print_stars()
     return folders
 
@@ -193,44 +193,96 @@ def validator_stats_output(folders) -> None:
     total_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
     # Print Menu
     print_stars()
-    print(f'{Fore.GREEN}* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{EnvironmentVariables.easy_version}{Style.RESET_ALL}{Fore.WHITE}   https://easynode.pro {Fore.GREEN}*')
+    print(
+        f"{Fore.GREEN}* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{EnvironmentVariables.easy_version}{Style.RESET_ALL}{Fore.WHITE}   https://easynode.pro {Fore.GREEN}*"
+    )
     print_stars()
-    print(f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(total_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(EnvironmentVariables.rpc_endpoints, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {EnvironmentVariables.server_host_name} - {Fore.YELLOW}{EnvironmentVariables.external_ip}{Fore.GREEN}')
+    print(
+        f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(total_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(EnvironmentVariables.rpc_endpoints, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {EnvironmentVariables.server_host_name} - {Fore.YELLOW}{EnvironmentVariables.external_ip}{Fore.GREEN}'
+    )
     for folder in folders:
         harmony_service_status(folder)
-    print(f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current user home dir free space: {Fore.CYAN}{free_space_check(EnvironmentVariables.user_home_dir): >6}{Fore.GREEN}')
-    print(f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min")
+    print(
+        f"* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current user home dir free space: {Fore.CYAN}{free_space_check(EnvironmentVariables.user_home_dir): >6}{Fore.GREEN}"
+    )
+    print(
+        f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min"
+    )
     print_stars()
-    remote_shard_0 = [f"{EnvironmentVariables.user_home_dir}/{list(folders.items())[0][0]}/hmy", "utility", "metadata", f"--node=https://api.s0.t.hmny.io"]
+    remote_shard_0 = [
+        f"{EnvironmentVariables.user_home_dir}/{list(folders.items())[0][0]}/hmy",
+        "utility",
+        "metadata",
+        f"--node=https://api.s0.t.hmny.io",
+    ]
     result_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     remote_0_data = json.loads(result_shard_0.stdout)
-    print(f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}")
+    print(
+        f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}"
+    )
     print_stars()
     for folder in folders:
-        current_full_path = f'{EnvironmentVariables.user_home_dir}/{folder}'
+        current_full_path = f"{EnvironmentVariables.user_home_dir}/{folder}"
         software_versions = version_checks(current_full_path)
-        print(f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}')
-        local_server = [f"{EnvironmentVariables.user_home_dir}/{folder}/hmy", "utility", "metadata", f"--node=http://localhost:{folders[folder]}"]
+        print(
+            f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
+        )
+        local_server = [
+            f"{EnvironmentVariables.user_home_dir}/{folder}/hmy",
+            "utility",
+            "metadata",
+            f"--node=http://localhost:{folders[folder]}",
+        ]
         result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data = json.loads(result_local_server.stdout)
-        remote_server = [f"{EnvironmentVariables.user_home_dir}/{folder}/hmy", "utility", "metadata", f"--node=https://api.s{local_data['result']['shard-id']}.t.hmny.io"]
+        remote_server = [
+            f"{EnvironmentVariables.user_home_dir}/{folder}/hmy",
+            "utility",
+            "metadata",
+            f"--node=https://api.s{local_data['result']['shard-id']}.t.hmny.io",
+        ]
         result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         remote_data = json.loads(result_remote_server.stdout)
-        print(f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}")
-        print(f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}\n*   Local Shard 0 Size: {get_db_size(f'{current_full_path}', '0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}")
+        print(
+            f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
+        )
+        print(
+            f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}\n*   Local Shard 0 Size: {get_db_size(f'{current_full_path}', '0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
+        )
         print_stars()
-        
 
-def harmony_service_status(service = "harmony") -> None:
+
+def harmony_service_status(service="harmony") -> None:
     status = subprocess.call(["systemctl", "is-active", "--quiet", service])
     if status == 0:
         if service == "harmony":
-            print(f"* {service} Service is:               " + Fore.BLACK + Back.GREEN + "   Online  " + Style.RESET_ALL + Fore.GREEN)
+            print(
+                f"* {service} Service is:               "
+                + Fore.BLACK
+                + Back.GREEN
+                + "   Online  "
+                + Style.RESET_ALL
+                + Fore.GREEN
+            )
         else:
-            print(f"* {service} Service is:              " + Fore.BLACK + Back.GREEN + "   Online  " + Style.RESET_ALL + Fore.GREEN)
+            print(
+                f"* {service} Service is:              "
+                + Fore.BLACK
+                + Back.GREEN
+                + "   Online  "
+                + Style.RESET_ALL
+                + Fore.GREEN
+            )
     else:
-        print(f"* {service} Service is:               " + Fore.WHITE + Back.RED + "  *** Offline *** " + Style.RESET_ALL + Fore.GREEN)
-        
+        print(
+            f"* {service} Service is:               "
+            + Fore.WHITE
+            + Back.RED
+            + "  *** Offline *** "
+            + Style.RESET_ALL
+            + Fore.GREEN
+        )
+
 
 def set_wallet_env():
     if environ.get("NODE_WALLET") == "true":
@@ -1170,9 +1222,9 @@ def finish_node():
     print(
         "* Thanks for using Easy Node Toolbox - Making everything Easy Mode!"
         + "\n*\n* We serve up free tools and guides for validators every day."
-        + "\n*\n* Check our guides out at https://guides.easynode.pro\n*\n"
-        + "* Please consider joining our discord & supporting us one time or monthly"
-        + " at https://discord.gg/Rcz5T6D9CV today!\n*\n* Goodbye!"
+        + "\n*\n* Check our guides out at https://docs.easynode.pro\n*\n"
+        + "* Please consider joining our discord & supporting us one time or monthly for our tools"
+        + " and guides at https://bit.ly/easynodediscord today!\n*\n* Goodbye!"
     )
     print_stars()
     raise SystemExit(0)
