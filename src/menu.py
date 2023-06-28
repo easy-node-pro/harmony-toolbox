@@ -11,9 +11,8 @@ from toolbox.library import (
     update_text_file,
     first_env_check,
     print_stars,
-    parse_flags
 )
-from toolbox.toolbox import run_full_node, safety_defaults, start_regular_node
+from toolbox.toolbox import run_full_node, safety_defaults, start_regular_node, parse_flags
 
 if __name__ == "__main__":
     loading = True
