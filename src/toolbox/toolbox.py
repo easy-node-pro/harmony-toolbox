@@ -36,7 +36,7 @@ from toolbox.library import (
     harmony_service_status,
     loader_intro,
     get_folders,
-    stats_output_regular,
+    validator_stats_output,
     get_db_size
 )
 
@@ -57,14 +57,15 @@ def parse_flags(parser):
 
     if args.stats:
         run_multistats()
-        return SystemExit(0)
+        raise SystemExit(0)
 
 
 def run_multistats():
     loader_intro()
     refresh_stats(1)
     folders = get_folders()
-    stats_output_regular(folders)
+    validator_stats_output(folders)
+    return
 
 
 def collect_rewards(networkCall):

@@ -186,7 +186,7 @@ def get_folders():
     return folders
 
 
-def stats_output_regular(folders) -> None:
+def validator_stats_output(folders) -> None:
     # Get server stats & wallet balances
     load_1, load_5, load_15 = os.getloadavg()
     sign_percentage = get_sign_pct()
