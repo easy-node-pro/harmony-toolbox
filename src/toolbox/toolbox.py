@@ -416,15 +416,17 @@ def safety_defaults() -> None:
     if environ.get("HARMONY_FOLDER") is None:
         if os.path.isdir(f"{EnvironmentVariables.user_home_dir}/harmony"):
             set_var(EnvironmentVariables.dotenv_file, "HARMONY_FOLDER", f"{EnvironmentVariables.user_home_dir}/harmony")
-        elif os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony"):
+            return
+        if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony"):
             try:
                 subprocess.run(f"{EnvironmentVariables.user_home_dir}/harmony -V", check=True)
                 set_var(EnvironmentVariables.dotenv_file, "HARMONY_FOLDER", f"{EnvironmentVariables.user_home_dir}")
+                return
             except subprocess.CalledProcessError as e:
-                print("* Harmony not found, contact Easy Node for custom configs.")
+                print("* Harmony not found, contact Easy Node for custom configuration help.")
                 raise SystemExit(0)
         else:
-            print("* Harmony not found, contact Easy Node for custom configs.")
+            print("* Harmony not found, contact Easy Node for custom configuration help.")
             raise SystemExit(0)
     set_var(EnvironmentVariables.dotenv_file, "EASY_VERSION", EnvironmentVariables.easy_version)
 
