@@ -5,10 +5,8 @@ from toolbox.config import EnvironmentVariables
 from toolbox.library import loader_intro, first_env_check, print_stars, load_var_file
 from toolbox.toolbox import safety_defaults, start_regular_node, parse_flags
 
-if __name__ == "__main__":
+def app():
     load_var_file(EnvironmentVariables.dotenv_file)
-    # Clear screen, show logo
-    loader_intro()
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/validatortoolbox"):
         subprocess.run("clear")
         print_stars()
@@ -27,3 +25,8 @@ if __name__ == "__main__":
     safety_defaults()
     # Run regular validator node
     start_regular_node()
+
+if __name__ == "__main__":
+    # Clear screen, show logo
+    loader_intro()
+    app()

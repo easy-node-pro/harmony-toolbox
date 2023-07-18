@@ -33,7 +33,6 @@ from toolbox.library import (
     pull_harmony_update,
     version_checks,
     harmony_service_status,
-    loader_intro,
     get_folders,
     validator_stats_output,
     get_db_size,
