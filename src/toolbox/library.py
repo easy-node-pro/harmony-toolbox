@@ -774,7 +774,7 @@ def install_harmony() -> None:
             os.system(f"sudo mkdir -p {os.environ.get('HARMONY_DIR')}")
             os.system(f"sudo chown {EnvironmentVariables.active_user} {os.environ.get('HARMONY_DIR')}")
             os.system(f"mkdir -p {os.environ.get('HARMONY_DIR')}/.hmy/blskeys")
-            os.system(f"ln -s {EnvironmentVariables.user_home_dir}/harmony {os.environ.get('HARMONY_DIR')}")
+            os.system(f"ln -s {os.environ.get('HARMONY_DIR')} {EnvironmentVariables.user_home_dir}/harmony")
 
     # Setup folders now that symlink exists or we know we're using ~/harmony
     if not os.path.isdir(f"{EnvironmentVariables.user_home_dir}/.hmy_cli/account-keys/"):
