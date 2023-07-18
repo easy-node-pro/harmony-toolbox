@@ -8,7 +8,7 @@ if __name__ == "__main__":
     subprocess.run("clear")
     print_stars()
     if os.path.isfile(EnvironmentVariables.user_home_dir + "/harmony.sh"):
-        print("* harmony.sh already exists in ~/\n*\n* This will exit, please run ~/harmony.sh to launch the toolbox.\n*")
+        print("* harmony.sh already exists in ~/\n*\n* This will exit, please change to your home directory and run ./harmony.sh to launch the toolbox.\n* Run ./harmony.sh -h for our new help menu!\n*")
     else:
         print("* Downloading harmony.sh to ~/")
         subprocess.run("cd ~/ && wget -O harmony.sh https://raw.githubusercontent.com/easy-node-pro/harmony-toolbox/main/src/bin/harmony.sh && chmod +x harmony.sh", shell=True)
