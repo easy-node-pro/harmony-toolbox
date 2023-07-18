@@ -48,13 +48,6 @@ from toolbox.library import (
 def parse_flags(parser):
     # Add the arguments
     parser.add_argument(
-        "-i",
-        "--install",
-        action="store_true",
-        help="Install Harmony ONE and hmy CLI if not installed.",
-    )
-
-    parser.add_argument(
         "-s",
         "--stats",
         action="store_true",
@@ -73,6 +66,13 @@ def parse_flags(parser):
         "--collect-send",
         action="store_true",
         help="Collect your rewards to your validator wallet and send them to your rewards wallet",
+    )
+    
+    parser.add_argument(
+        "-i",
+        "--install",
+        action="store_true",
+        help="Install Harmony ONE and hmy CLI if not installed.",
     )
 
     args = parser.parse_args()
