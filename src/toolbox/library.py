@@ -711,23 +711,9 @@ def first_setup():
 
 # looks for ~/harmony or installs it if it's not there. Asks to overwrite if it finds it, run at your own risk.
 def check_for_install() -> str:
-    if not os.path.exists(os.environ.get("HARMONY_DIR")):
-        print(f"* You selected Shard: {environ.get('SHARD')}. ")
-        install_harmony()
-        print_stars()
-        # Wallet Setup
-        recover_wallet()
-        print_stars()
-        # Check passphrase if wallet is added
-        passphrase_status()
-        print_stars()
-        print("* All harmony files now installed. Database download starting now...")
-        print_stars()
-        clone_shards()
-        finish_node_install()
-    else:
+    if os.path.exists(f'{EnvironmentVariables.user_home_dir}/harmony'):
         question = ask_yes_no(
-            "* You already have a harmony folder on this system, would you like to re-run installation and rclone? (YES/NO)"
+            "* You already have a harmony folder on this system, would you like to re-run installation and rclone on this server? (YES/NO)"
         )
         if question:
             install_harmony()
@@ -742,6 +728,27 @@ def check_for_install() -> str:
             print_stars()
             clone_shards()
             finish_node_install()
+        else:
+            if os.path.isdir(f'{EnvironmentVariables.user_home_dir}/harmony'):
+                print("* Exiting Harmony Validator Toolbox\n* You already have a folder at ~/harmony.\n* Contact Easy Node for help setting up if this is an existing Harmony server.")
+            if os.path.isfile(f'{EnvironmentVariables.user_home_dir}/harmony'):
+                print("* Exiting Harmony Validator Toolbox\n* You already have a file at ~/harmony.\n* Contact Easy Node for help setting up if this is an existing Harmony server with a custom configuration.")
+            raise SystemExit(0)
+    else:
+        print(f"* You selected Shard: {environ.get('SHARD')}. ")
+        install_harmony()
+        print_stars()
+        # Wallet Setup
+        recover_wallet()
+        print_stars()
+        # Check passphrase if wallet is added
+        passphrase_status()
+        print_stars()
+        print("* All harmony files now installed. Database download starting now...")
+        print_stars()
+        clone_shards()
+        finish_node_install()
+    return
 
 
 # Installer Module
