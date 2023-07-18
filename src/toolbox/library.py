@@ -744,13 +744,16 @@ def check_for_install() -> str:
 # Installer Module
 def install_harmony() -> None:
     # Checks Passed at this point, only 1 folder in /mnt and it's probably our volume (can scope this down further later)
+    print_stars()
+    print("* Install Location")
+    print_stars()
     question = ask_yes_no(f"* Would you like to install Harmony in the folder ~/harmony on your main disk? (YES/NO)")
     if question:
         set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", EnvironmentVariables.harmony_dir)
         print("* Creating all Harmony Files & Folders")
         os.system(f"mkdir -p {EnvironmentVariables.harmony_dir}/.hmy/blskeys")
     else:
-        answer = input("* We can make a symlink to your volume, what is the full path to your volume? ")
+        answer = input("* If you'd like to use an alternative location or volume we can make a symlink.\n* What is the full path to your volume? ")
         answer2 = input("* Re-enter the path to your volume: ")
         if answer == answer2:
             set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", answer)
