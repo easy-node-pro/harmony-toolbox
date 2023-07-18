@@ -341,7 +341,6 @@ def recovery_type():
     )
     results = terminal_menu.show()
     if results == 0:
-        passphrase_set()
         passphrase_switch = environ.get("PASS_SWITCH")
         # Mnemonic Recovery Here
         os.system(
