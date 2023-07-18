@@ -100,6 +100,9 @@ def update_text_file(fileName, originalText, newText):
 
 # Setup a wallet, ask if they need to import one (not required but no toolbox menu without a wallet)
 def recover_wallet():
+    print_stars()
+    print("* Wallet Configuration                                                                      *")
+    print_stars
     question = ask_yes_no(
         f"* If you would like to import a wallet for manual wallet actions, and for using our claim and send functions, answer yes.\n* If you only want to load your validator address for stats answer no.\n* Would you like to add your wallet to this server? (YES/NO) "
     )
