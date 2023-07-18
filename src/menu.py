@@ -5,7 +5,6 @@ from toolbox.config import EnvironmentVariables
 from toolbox.library import (
     loader_intro,
     set_wallet_env,
-    passphrase_status,
     recheck_vars,
     recover_wallet,
     update_text_file,
@@ -26,7 +25,7 @@ if __name__ == "__main__":
         print_stars()
         raise SystemExit(0)
     # clear screen, show logo
-    parser = argparse.ArgumentParser(description='Findora Validator Toolbox - Help Menu')
+    parser = argparse.ArgumentParser(description="Findora Validator Toolbox - Help Menu")
     parse_flags(parser)
     loader_intro()
     # check for .env file, if none we have a first timer.
@@ -43,6 +42,7 @@ if __name__ == "__main__":
         update_text_file(EnvironmentVariables.harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
     # Make sure they have a wallet or wallet address in the .env file, if none, get one.
     if environ.get("VALIDATOR_WALLET") is None:
+        # Recover wallet or have them add address
         recover_wallet()
         if environ.get("VALIDATOR_WALLET") is None:
             print(
@@ -51,10 +51,7 @@ if __name__ == "__main__":
             )
             input("* Press any key to exit.")
             raise SystemExit(0)
-    # Last check on setup status, if it never finished it will try again here.
-    if environ.get("SETUP_STATUS") != "2":
-        recheck_vars()
-        passphrase_status()
+    recheck_vars()
     # Run regular validator node
     loading = False
     if environ.get("NODE_TYPE") == "regular":

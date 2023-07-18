@@ -100,7 +100,9 @@ def update_text_file(fileName, originalText, newText):
 
 # Setup a wallet, ask if they need to import one (not required but no toolbox menu without a wallet)
 def recover_wallet():
-    question = ask_yes_no(f"* If you would like to import a wallet for manual wallet actions, and for using our claim and send functions, answer yes.\n* If you only want to load your validator address for stats answer no.\n* Would you like to add your wallet to this server? (YES/NO) ")
+    question = ask_yes_no(
+        f"* If you would like to import a wallet for manual wallet actions, and for using our claim and send functions, answer yes.\n* If you only want to load your validator address for stats answer no.\n* Would you like to add your wallet to this server? (YES/NO) "
+    )
     # if yes, find recovery type
     if question:
         recovery_type()
@@ -117,9 +119,7 @@ def recover_wallet():
             )
             if wallet.startswith("one1"):
                 # Re-enter the wallet to verify
-                verify_wallet = input(
-                    f"* Please re-enter your wallet address for verification: "
-                )
+                verify_wallet = input(f"* Please re-enter your wallet address for verification: ")
                 if wallet == verify_wallet:
                     set_var(EnvironmentVariables.dotenv_file, "VALIDATOR_WALLET", wallet)
                     break
@@ -127,8 +127,9 @@ def recover_wallet():
                     print("The entered wallets do not match. Please try again.")
             else:
                 print("Invalid wallet address. It should start with 'one1'. Please try again.")
-        return
-
+    # Check passphrase if wallet is added
+    passphrase_status()
+    return
 
 
 def pull_harmony_update(harmony_dir, bls_key_file, harmony_conf):
@@ -324,9 +325,6 @@ def get_db_size(harmony_dir, our_shard) -> str:
 
 def recovery_type():
     subprocess.run("clear")
-    set_var(EnvironmentVariables.dotenv_file, "NODE_WALLET", "true")
-    passphrase_status()
-    passphrase_switch = environ.get("PASS_SWITCH")
     print_stars()
     print("* Wallet Recovery Type!                                                                     *")
     print_stars()
@@ -342,6 +340,8 @@ def recovery_type():
     )
     results = terminal_menu.show()
     if results == 0:
+        passphrase_set()
+        passphrase_switch = environ.get("PASS_SWITCH")
         # Mnemonic Recovery Here
         os.system(
             f"{EnvironmentVariables.hmy_app} keys recover-from-mnemonic {EnvironmentVariables.active_user} {passphrase_switch}"
@@ -361,15 +361,16 @@ def recovery_type():
 
 def passphrase_status():
     load_var_file(EnvironmentVariables.dotenv_file)
-    if environ.get("NODE_WALLET") == "true":
+    if os.path.exists(EnvironmentVariables.hmy_wallet_store):
         passphrase_set()
         set_var(
             EnvironmentVariables.dotenv_file,
             "PASS_SWITCH",
             f"--passphrase-file {EnvironmentVariables.harmony_dir}/passphrase.txt",
         )
-    if environ.get("NODE_WALLET") == "false":
+    else:
         set_var(EnvironmentVariables.dotenv_file, "PASS_SWITCH", "--passphrase")
+    load_var_file(EnvironmentVariables.dotenv_file)
 
 
 def passphrase_set():
@@ -516,22 +517,6 @@ def set_main_or_test() -> None:
             set_var(EnvironmentVariables.dotenv_file, "RPC_NET_SHARD", f"https://rpc.s{environ.get('SHARD')}.b.hmny.io")
         subprocess.run("clear")
     return
-
-
-def get_express_status() -> None:
-    if environ.get("SETUP_STATUS") == "0":
-        subprocess.run("clear")
-        print_stars()
-        print("* Express or Manual Setup?                                                                  *")
-        print_stars()
-        print("* Would you like the turbo express setup or Manual approval of each step?                   *")
-        print_stars()
-        menu_options = [
-            "[0] - Express Install",
-            "[1] - Manual Approval",
-        ]
-        terminal_menu = TerminalMenu(menu_options, title="* Express Or Manual Setup")
-        set_var(EnvironmentVariables.dotenv_file, "EXPRESS", str(terminal_menu.show()))
 
 
 def get_wallet_address():
@@ -741,14 +726,10 @@ def version_checks(harmony_folder):
 def first_setup():
     # Find Shard #
     get_shard_menu()
-    # Express - no prompts for each step, Manual - prompts for each step
-    get_express_status()
-    # Get Regular validator with/without wallet or Full RPC Node
-    get_node_type()
     # Get Mainnet or Testnet
     set_main_or_test()
-    # Setup status done
-    set_var(EnvironmentVariables.dotenv_file, "SETUP_STATUS", "0")
+    # Wallet Setup
+    recover_wallet()    
     # Look for a harmony install or install.
     check_for_install()
     print_stars()
@@ -770,8 +751,6 @@ def check_for_install() -> str:
     if not os.path.exists(EnvironmentVariables.harmony_dir):
         print(f"* You selected Shard: {environ.get('SHARD')}. ")
         install_harmony()
-        if environ.get("NODE_WALLET") == "true":
-            restore_wallet()
         print_stars()
         print("* All harmony files now installed. Database download starting now...")
         print_stars()
@@ -783,8 +762,6 @@ def check_for_install() -> str:
         )
         if question:
             install_harmony()
-            if environ.get("NODE_WALLET") == "true":
-                restore_wallet()
             print_stars()
             print("* All harmony files now installed. Database download starting now...")
             print_stars()
@@ -897,33 +874,6 @@ def clone_shards():
         )
 
 
-# Code to restore a wallet
-def restore_wallet() -> str:
-    if environ.get("NODE_WALLET") == "true":
-        if not os.path.exists(EnvironmentVariables.hmy_wallet_store):
-            subprocess.run("clear")
-            print_stars()
-            print("* Harmony ONE Validator Wallet Import")
-            print_stars()
-            if environ.get("EXPRESS") == "1":
-                question = ask_yes_no(
-                    "\n* You will directly utilize the harmony application interface"
-                    + "\n* We do not store any pass phrases  or data inside of our application"
-                    + "\n* Respond yes to recover your validator wallet via Mnemonic phrase now or say NO to create a new wallet post-install"
-                    + "\n* Restore an existing wallet now? (YES/NO) "
-                )
-                if question:
-                    passphrase_status()
-                    recover_wallet()
-                print_stars()
-                return
-            passphrase_status()
-            recover_wallet()
-            return
-        print_stars()
-        print("* Wallet already setup for this user account")
-
-
 # is this used?
 def set_mounted_point():
     # First let's make sure your volume is mounted
@@ -973,7 +923,6 @@ def finish_node_install():
     print_stars()
     print("* Thanks for using Easy Node - Validator Node Server Software Installer!")
     print_stars()
-    set_var(EnvironmentVariables.dotenv_file, "SETUP_STATUS", "1")
     raise SystemExit(0)
 
 
