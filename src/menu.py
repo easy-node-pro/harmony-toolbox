@@ -12,15 +12,15 @@ if __name__ == "__main__":
         print_stars()
         print(
             Fore.GREEN
-            + "*\n* Old folder found, Exiting\n*\n* Please renmae your ~/validatortoolbox folder to ~/harmony-toolbox and update your command paths!\n*\n* Run: cd ~/ && mv ~/validatortoolbox ~/harmony-toolbox\n*\n* After you run the move command, relaunch with: python3 ~/harmony-toolbox/src/menu.py\n*"
+            + "*\n* Old folder found, Exiting toolbox.\n*\n* Please renmae your ~/validatortoolbox folder to ~/harmony-toolbox and update your command paths!\n*\n* Run: cd ~/ && mv ~/validatortoolbox ~/harmony-toolbox\n*\n* After you run the move command, relaunch with: python3 ~/harmony-toolbox/src/menu.py\n*"
         )
         print_stars()
         raise SystemExit(0)
+    # Clear screen, show logo
+    loader_intro()
     # Run parser if flags added
     parser = argparse.ArgumentParser(description="Findora Validator Toolbox - Help Menu")
     parse_flags(parser)
-    # Clear screen, show logo
-    loader_intro()
     # passed .env check, let's load it!
     fec_result = first_env_check(EnvironmentVariables.dotenv_file, EnvironmentVariables.user_home_dir)
     # This section is for hard coding new settings for current users.

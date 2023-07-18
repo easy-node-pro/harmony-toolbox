@@ -3,7 +3,6 @@ from toolbox.config import EnvironmentVariables
 from toolbox.library import loader_intro, print_stars
 
 if __name__ == "__main__":
-    subprocess.run("clear")
     loader_intro()
     subprocess.run("clear")
     print_stars()

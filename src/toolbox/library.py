@@ -437,7 +437,6 @@ def load_var_file(var_file):
 
 def get_shard_menu() -> None:
     if not environ.get("SHARD"):
-        subprocess.run("clear")
         print_stars()
         print("* Gathering more information about your server.                                             *")
         print_stars()
@@ -701,7 +700,6 @@ def first_setup():
 
 # looks for ~/harmony or installs it if it's not there. Asks to overwrite if it finds it, run at your own risk.
 def check_for_install() -> str:
-    load_var_file(EnvironmentVariables.dotenv_file)
     if not os.path.exists(EnvironmentVariables.harmony_dir):
         print(f"* You selected Shard: {environ.get('SHARD')}. ")
         install_harmony()
@@ -1107,20 +1105,6 @@ def menu_ubuntu_updates() -> str:
     if question:
         run_ubuntu_updater()
         input("* OS Updates completed, press ENTER to return to the main menu. ")
-
-
-def menu_error() -> None:
-    subprocess.run("clear")
-    print_stars()
-    print(
-        "* "
-        + Fore.RED
-        + "WARNING"
-        + Fore.GREEN
-        + ": Only numbers are possible, please try your selection on the main menu once again.\n* Press enter to return to the menu."
-    )
-    print_stars()
-    return
 
 
 def menu_reboot_server() -> str:
