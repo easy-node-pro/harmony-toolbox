@@ -414,14 +414,14 @@ def safety_defaults() -> None:
         set_var(EnvironmentVariables.dotenv_file, "REFRESH_TIME", "30")
     if environ.get("REFRESH_OPTION") is None:
         set_var(EnvironmentVariables.dotenv_file, "REFRESH_OPTION", "True")
-    if environ.get("HARMONY_FOLDER") is None:
+    if environ.get("HARMONY_DIR") is None:
         if os.path.isdir(f"{EnvironmentVariables.user_home_dir}/harmony"):
-            set_var(EnvironmentVariables.dotenv_file, "HARMONY_FOLDER", f"{EnvironmentVariables.user_home_dir}/harmony")
+            set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{EnvironmentVariables.user_home_dir}/harmony")
             return
         if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony"):
             try:
                 subprocess.run(f"{EnvironmentVariables.user_home_dir}/harmony -V", check=True)
-                set_var(EnvironmentVariables.dotenv_file, "HARMONY_FOLDER", f"{EnvironmentVariables.user_home_dir}")
+                set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{EnvironmentVariables.user_home_dir}")
                 return
             except subprocess.CalledProcessError as e:
                 print("* Harmony not found, contact Easy Node for custom configuration help.")
@@ -481,7 +481,7 @@ def refresh_status_option():
 def start_regular_node() -> None:
     # Check online versions of harmony & hmy and compare to our local copy.
     refresh_stats(1)
-    software_versions = version_checks(environ.get("HARMONY_FOLDER"))
+    software_versions = version_checks(environ.get("HARMONY_DIR"))
     run_regular_node(software_versions)
 
 

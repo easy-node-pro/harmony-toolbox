@@ -22,7 +22,7 @@ class EnvironmentVariables:
     user_home_dir = os.path.expanduser("~")
     dotenv_file = f"{user_home_dir}/.easynode.env"
     active_user = os.path.split(user_home_dir)[-1]
-    harmony_dir = environ.get("HARMONY_FOLDER") or os.path.join(user_home_dir, "harmony")
+    harmony_dir = environ.get("HARMONY_DIR")
     harmony_app = os.path.join(harmony_dir, "harmony")
     bls_key_file = os.path.join(harmony_dir, "blskey.pass")
     hmy_app = os.path.join(harmony_dir, "hmy")
