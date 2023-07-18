@@ -102,7 +102,7 @@ def update_text_file(fileName, originalText, newText):
 def recover_wallet():
     print_stars()
     print("* Wallet Configuration                                                                      *")
-    print_stars
+    print_stars()
     question = ask_yes_no(
         f"* If you would like to import a wallet for manual wallet actions, and for using our claim and send functions, answer yes.\n* If you only want to load your validator address for stats answer no.\n* Would you like to add your wallet to this server? (YES/NO) "
     )
@@ -396,6 +396,8 @@ def passphrase_set():
             print("* Passwords Match!")
             break
     # Save file, we won't encrypt because if someone has access to the file, they will also have the salt and decrypt code at their disposal.
+    if not os.path.isdir(EnvironmentVariables.harmony_dir):
+        os.mkdir(EnvironmentVariables.harmony_dir)
     save_text(EnvironmentVariables.password_path, password_1)
     load_var_file(EnvironmentVariables.dotenv_file)
     passphrase_status()
