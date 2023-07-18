@@ -745,39 +745,24 @@ def check_for_install() -> str:
 
 # Installer Module
 def install_harmony() -> None:
-    # check disk space, find mounted disks
-    mntCount = 0
-    if os.path.isdir("/dev/disk/by-id/"):
-        testMnt = "/mnt"
-        for subdir, dirs, files in os.walk(testMnt):
-            for dir in dirs:
-                tester = os.path.join(subdir, dir)
-                if os.path.ismount(tester):
-                    myVolumePath = tester
-                    mntCount = mntCount + 1
-
-        # if you have more than one, we'll have to find a way to list them and let people choose
-        if mntCount > 1:
-            print("* You have multiple mounts in /mnt - Review mounts, only 1 allowed for our installer at this time!")
-            raise SystemExit(0)
-        # Checks Passed at this point, only 1 folder in /mnt and it's probably our volume (can scope this down further later)
-        if environ.get("SHARD") == "0":
-            if mntCount == 1:
-                myLongHmyPath = myVolumePath + "/harmony"
-                dotenv.set_key(EnvironmentVariables.dotenv_file, "MOUNT_POINT", myLongHmyPath)
-                print("* Creating all Harmony Files & Folders")
-                os.system(f"sudo chown {EnvironmentVariables.active_user} {myVolumePath}")
-                os.system(f"mkdir -p {myLongHmyPath}/.hmy/blskeys")
-                os.system(f"ln -s {myLongHmyPath} {EnvironmentVariables.harmony_dir}")
-            # Let's make sure your volume is mounted
-            if mntCount == 0:
-                question = ask_yes_no(
-                    "* You have a volume but it is not mounted.\n* Would you like to install Harmony in ~/harmony on your main disk instead of your volume? (Yes/No) "
-                )
-                if question:
-                    dotenv.set_key(EnvironmentVariables.dotenv_file, "MOUNT_POINT", EnvironmentVariables.harmony_dir)
-                else:
-                    raise SystemExit(0)
+    # Checks Passed at this point, only 1 folder in /mnt and it's probably our volume (can scope this down further later)
+    question = ask_yes_no(f"* Would you like to install Harmony in the folder ~/harmony on your main disk? (YES/NO)")
+    if question:
+        set_var(EnvironmentVariables.dotenv_file, "MOUNT_POINT", EnvironmentVariables.harmony_dir)
+        print("* Creating all Harmony Files & Folders")
+        os.system(f"mkdir -p {os.environ('MOUNT_POINT')}/.hmy/blskeys")
+        os.system(f"ln -s {os.environ('MOUNT_POINT')} {EnvironmentVariables.harmony_dir}")
+    else:
+        answer = input("* We can make a symlink to your volume, what is the full path to your volume? ")
+        answer2 = input("* Re-enter the path to your volume: ")
+        if answer == answer2:
+            set_var(EnvironmentVariables.dotenv_file, "MOUNT_POINT", answer)
+            print("* Creating base folder & symlink.")
+            os.system(f"sudo mkdir -p {os.environ('MOUNT_POINT')}/harmony")
+            os.system(f"sudo chown {EnvironmentVariables.active_user} {os.environ('MOUNT_POINT')}/harmony")
+            os.system(f"mkdir -p {os.environ('MOUNT_POINT')}/harmony/.hmy/blskeys")
+            os.system(f"ln -s {os.environ('MOUNT_POINT')}/harmony {EnvironmentVariables.harmony_dir}")
+        
     # Setup folders now that symlink exists or we know we're using ~/harmony
     if not os.path.isdir(f"{EnvironmentVariables.user_home_dir}/.hmy_cli/account-keys/"):
         os.system(f"mkdir -p {EnvironmentVariables.user_home_dir}/.hmy_cli/account-keys/")
@@ -837,7 +822,7 @@ def clone_shards():
             f"rclone -P sync release:pub.harmony.one/{environ.get('NETWORK')}.min/harmony_db_{environ.get('SHARD')} {EnvironmentVariables.harmony_dir}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 4 --transfers=32"
         )
         print_stars()
-        print(f"Shard {environ.get('SHARD')} completed.")
+        print(f"* Shard {environ.get('SHARD')} completed.\n* Shard 0 will be created when you start your service.")
         print_stars()
     else:
         # If we're on shard 0, grab the snap DB here.
