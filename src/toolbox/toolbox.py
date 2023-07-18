@@ -42,6 +42,7 @@ from toolbox.library import (
     get_shard_menu,
     set_main_or_test,
     recover_wallet,
+    refresh_stats
 )
 
 
@@ -662,16 +663,6 @@ def menu_validator_stats():
             return
 
     return remote_data_shard_0, local_data_shard, None
-
-
-def refresh_stats(clear=0) -> str:
-    print(Fore.GREEN)
-    if clear == 0:
-        subprocess.run("clear")
-    print_stars()
-    print(f"* Getting the latest local & blockchain information now, one moment while we load...")
-    print_stars()
-    return
 
 
 def shard_stats(our_shard) -> str:

@@ -14,8 +14,9 @@ from toolbox.library import (
     ask_yes_no,
     version_checks,
     finish_node,
+    refresh_stats
 )
-from toolbox.toolbox import free_space_check, harmony_service_status, get_rewards_balance, get_db_size, refresh_stats
+from toolbox.toolbox import free_space_check, harmony_service_status, get_rewards_balance, get_db_size
 from subprocess import PIPE, run
 from colorama import Fore, Back, Style
 from simple_term_menu import TerminalMenu
