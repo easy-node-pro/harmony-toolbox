@@ -77,7 +77,6 @@ def parse_flags(parser):
 
     args = parser.parse_args()
 
-    subprocess.run("clear")
     print(Fore.RESET)
 
     if args.install:
