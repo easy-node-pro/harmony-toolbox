@@ -749,7 +749,6 @@ def install_harmony() -> None:
         set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", EnvironmentVariables.harmony_dir)
         print("* Creating all Harmony Files & Folders")
         os.system(f"mkdir -p {EnvironmentVariables.harmony_dir}/.hmy/blskeys")
-        os.system(f"ln -s {EnvironmentVariables.harmony_dir} {EnvironmentVariables.harmony_dir}")
     else:
         answer = input("* We can make a symlink to your volume, what is the full path to your volume? ")
         answer2 = input("* Re-enter the path to your volume: ")
