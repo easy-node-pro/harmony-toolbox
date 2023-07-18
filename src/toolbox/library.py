@@ -754,16 +754,16 @@ def install_harmony() -> None:
         print("* Creating all Harmony Files & Folders")
         os.system(f"mkdir -p {EnvironmentVariables.harmony_dir}/.hmy/blskeys")
     else:
-        answer = input("* If you'd like to use an alternative location or volume we can make a symlink.\n* What is the full path to your volume? ")
+        answer = input("* If you'd like to use an alternative location or volume we can make a symlink.\n* What is the full path to your volume? (example: /mnt/mydisk) ")
         answer2 = input("* Re-enter the path to your volume: ")
         if answer == answer2:
-            set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", answer)
+            set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{answer}/harmony")
             print_stars()
             print("* Creating base folder, setting ownership & creating symlink.")
-            os.system(f"sudo mkdir -p {os.environ('HARMONY_DIR')}/harmony")
-            os.system(f"sudo chown {EnvironmentVariables.active_user} {os.environ('HARMONY_DIR')}/harmony")
-            os.system(f"mkdir -p {os.environ('HARMONY_DIR')}/harmony/.hmy/blskeys")
-            os.system(f"ln -s {os.environ('HARMONY_DIR')}/harmony {EnvironmentVariables.harmony_dir}")
+            os.system(f"sudo mkdir -p {os.environ('HARMONY_DIR')}")
+            os.system(f"sudo chown {EnvironmentVariables.active_user} {os.environ('HARMONY_DIR')}")
+            os.system(f"mkdir -p {os.environ('HARMONY_DIR')}/.hmy/blskeys")
+            os.system(f"ln -s {os.environ('HARMONY_DIR')} {EnvironmentVariables.harmony_dir}")
         
     # Setup folders now that symlink exists or we know we're using ~/harmony
     if not os.path.isdir(f"{EnvironmentVariables.user_home_dir}/.hmy_cli/account-keys/"):
