@@ -133,7 +133,7 @@ def recover_wallet():
     return
 
 
-def pull_harmony_update(harmony_dir, bls_key_file, harmony_conf):
+def pull_harmony_update(harmony_dir, harmony_conf):
     arch = os.uname().machine
     os.chdir(f"{harmony_dir}")
     if environ.get("NETWORK") == "testnet":
@@ -151,7 +151,7 @@ def pull_harmony_update(harmony_dir, bls_key_file, harmony_conf):
         update_text_file(harmony_conf, " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
     print_stars()
     print("* harmony.conf MaxKeys modified to 13")
-    if os.path.exists(bls_key_file):
+    if os.path.isdir(f"{os.environ.get('MOUNT_POINT')}/harmony/blskey.pass"):
         update_text_file(harmony_conf, 'PassFile = ""', f'PassFile = "blskey.pass"')
         print("* blskey.pass found, updated harmony.conf")
     print_stars()
@@ -777,7 +777,7 @@ def install_harmony() -> None:
     print_stars()
     # Install harmony
     pull_harmony_update(
-        os.environ.get('MOUNT_POINT'), EnvironmentVariables.bls_key_file, EnvironmentVariables.harmony_conf
+        os.environ.get('MOUNT_POINT'), f"{os.envrion.get('MOUNT_POINT')}/harmony/harmony.conf"
     )
     # install hmy files
     print("* Installing rclone application & rclone configuration files")
