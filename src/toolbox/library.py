@@ -92,7 +92,7 @@ def old_toolbox_check():
 
 # Install Harmony ONE
 def install_hmy():
-    os.chdir(f"{os.environ.get("HARMONY_DIR")}")
+    os.chdir(f"{os.environ.get('HARMONY_DIR')}")
     os.system(f"curl -LO https://harmony.one/hmycli && mv hmycli hmy && chmod +x hmy")
     print_stars()
     print("* hmy application installed.")
@@ -374,7 +374,7 @@ def passphrase_status():
         set_var(
             EnvironmentVariables.dotenv_file,
             "PASS_SWITCH",
-            f"--passphrase-file {os.environ.get("HARMONY_DIR")}/passphrase.txt",
+            f"--passphrase-file {os.environ.get('HARMONY_DIR')}/passphrase.txt",
         )
     else:
         set_var(EnvironmentVariables.dotenv_file, "PASS_SWITCH", "--passphrase")
@@ -386,7 +386,7 @@ def passphrase_set():
         return
     import getpass
 
-    print(f"* Setup {os.environ.get("HARMONY_DIR")}/passphrase.txt file for use with autobidder & harmony-toolbox.")
+    print(f"* Setup {os.environ.get('HARMONY_DIR')}/passphrase.txt file for use with autobidder & harmony-toolbox.")
     print_stars()
     # take input
     while True:
@@ -755,7 +755,7 @@ def install_harmony() -> None:
         set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", os.environ.get("HARMONY_DIR"))
         print_stars()
         print("* Creating all Harmony Files & Folders")
-        os.system(f"mkdir -p {os.environ.get("HARMONY_DIR")}/.hmy/blskeys")
+        os.system(f"mkdir -p {os.environ.get('HARMONY_DIR')}/.hmy/blskeys")
     else:
         answer = input(
             "* If you'd like to use an alternative location or volume we can make a symlink.\n* What is the full path to your volume? (example: /mnt/mydisk) "
@@ -771,16 +771,16 @@ def install_harmony() -> None:
             os.system(f"sudo mkdir -p {os.environ.get('HARMONY_DIR')}")
             os.system(f"sudo chown {EnvironmentVariables.active_user} {os.environ.get('HARMONY_DIR')}")
             os.system(f"mkdir -p {os.environ.get('HARMONY_DIR')}/.hmy/blskeys")
-            os.system(f"ln -s {os.environ.get('HARMONY_DIR')} {os.environ.get("HARMONY_DIR")}")
+            os.system(f"ln -s {os.environ.get('HARMONY_DIR')} {os.environ.get('HARMONY_DIR')}")
 
     # Setup folders now that symlink exists or we know we're using ~/harmony
     if not os.path.isdir(f"{EnvironmentVariables.user_home_dir}/.hmy_cli/account-keys/"):
         os.system(f"mkdir -p {EnvironmentVariables.user_home_dir}/.hmy_cli/account-keys/")
-    if not os.path.isdir(f"{os.environ.get("HARMONY_DIR")}/.hmy/blskeys"):
+    if not os.path.isdir(f"{os.environ.get('HARMONY_DIR')}/.hmy/blskeys"):
         print("* Creating all Harmony Files & Folders")
-        os.system(f"mkdir -p {os.environ.get("HARMONY_DIR")}/.hmy/blskeys")
+        os.system(f"mkdir -p {os.environ.get('HARMONY_DIR')}/.hmy/blskeys")
     # Change to ~/harmony folder
-    os.chdir(f"{os.environ.get("HARMONY_DIR")}")
+    os.chdir(f"{os.environ.get('HARMONY_DIR')}")
     print_stars()
     # Install hmy
     install_hmy()
@@ -820,14 +820,14 @@ def install_harmony() -> None:
 # Database Downloader
 def clone_shards():
     # Move to ~/harmony
-    os.chdir(f"{os.environ.get("HARMONY_DIR")}")
+    os.chdir(f"{os.environ.get('HARMONY_DIR')}")
 
     if environ.get("SHARD") != "0":
         # If we're not on shard 0, download the numbered shard DB here.
         print(f"* Now cloning shard {environ.get('SHARD')}")
         print_stars()
         os.system(
-            f"rclone -P sync release:pub.harmony.one/{environ.get('NETWORK')}.min/harmony_db_{environ.get('SHARD')} {os.environ.get("HARMONY_DIR")}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 4 --transfers=32"
+            f"rclone -P sync release:pub.harmony.one/{environ.get('NETWORK')}.min/harmony_db_{environ.get('SHARD')} {os.environ.get('HARMONY_DIR')}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 4 --transfers=32"
         )
         print_stars()
         print(f"* Shard {environ.get('SHARD')} completed.\n* Shard 0 will be created when you start your service.")
@@ -837,7 +837,7 @@ def clone_shards():
         print("* Now cloning Shard 0, kick back and relax for awhile...")
         print_stars()
         os.system(
-            f"rclone -P -L --checksum sync release:pub.harmony.one/{environ.get('NETWORK')}.snap/harmony_db_0 {os.environ.get("HARMONY_DIR")}/harmony_db_0 --multi-thread-streams 4 --transfers=32"
+            f"rclone -P -L --checksum sync release:pub.harmony.one/{environ.get('NETWORK')}.snap/harmony_db_0 {os.environ.get('HARMONY_DIR')}/harmony_db_0 --multi-thread-streams 4 --transfers=32"
         )
 
 
@@ -854,7 +854,7 @@ def set_mounted_point():
     if totalDir == 1:
         dotenv.set_key(EnvironmentVariables.dotenv_file, "HARMONY_DIR", myLongHmyPath)
     else:
-        dotenv.set_key(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{os.environ.get("HARMONY_DIR")}")
+        dotenv.set_key(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{os.environ.get('HARMONY_DIR')}")
 
 
 def finish_node_install():

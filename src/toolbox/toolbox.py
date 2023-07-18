@@ -191,13 +191,13 @@ def menu_topper_regular(software_versions) -> None:
     print_stars()
     if environ.get("SHARD") != "0":
         print(
-            f"* Note: Running on shard {environ.get('SHARD')}, Shard 0 is no longer needed locally and should be under 300MB\n* Remote Shard 0 Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}, Local Shard 0 Size: {get_db_size(os.environ.get("HARMONY_DIR"), '0')}"
+            f"* Note: Running on shard {environ.get('SHARD')}, Shard 0 is no longer needed locally and should be under 300MB\n* Remote Shard 0 Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}, Local Shard 0 Size: {get_db_size(os.environ.get('HARMONY_DIR'), '0')}"
         )
         print(
             f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}"
         )
         print(
-            f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}, Local Shard {environ.get('SHARD')} Size: {get_db_size(os.environ.get("HARMONY_DIR"), environ.get('SHARD'))}"
+            f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}, Local Shard {environ.get('SHARD')} Size: {get_db_size(os.environ.get('HARMONY_DIR'), environ.get('SHARD'))}"
         )
     if environ.get("SHARD") == "0":
         print(
@@ -366,7 +366,7 @@ def run_check_balance() -> None:
 
 
 def bingo_checker():
-    os.system(f"grep BINGO {os.environ.get("HARMONY_DIR")}/latest/zerolog-harmony.log | tail -10")
+    os.system(f"grep BINGO {os.environ.get('HARMONY_DIR')}/latest/zerolog-harmony.log | tail -10")
     print_stars()
     print("* Press enter to return to the main menu.")
     print_stars()
@@ -576,13 +576,13 @@ def hmy_cli_upgrade():
 
 
 def update_harmony_app():
-    os.chdir(f"{os.environ.get("HARMONY_DIR")}")
+    os.chdir(f"{os.environ.get('HARMONY_DIR')}")
     print_stars()
     print("Currently installed version: ")
     os.system("./harmony -V")
     folder_name = make_backup_dir()
     os.system(
-        f"cp {os.environ.get("HARMONY_DIR")}/harmony {os.environ.get("HARMONY_DIR")}/harmony.conf {folder_name}"
+        f"cp {os.environ.get('HARMONY_DIR')}/harmony {os.environ.get('HARMONY_DIR')}/harmony.conf {folder_name}"
     )
     print_stars()
     print("Downloading current harmony binary file from harmony.one: ")
@@ -595,7 +595,7 @@ def update_harmony_app():
     os.system("./harmony -V")
     if environ.get("SHARD") != "0":
         size = 0
-        for path, dirs, files in os.walk(f"{os.environ.get("HARMONY_DIR")}/harmony_db_0"):
+        for path, dirs, files in os.walk(f"{os.environ.get('HARMONY_DIR')}/harmony_db_0"):
             for f in files:
                 fp = os.path.join(path, f)
                 size += os.path.getsize(fp)
@@ -607,10 +607,10 @@ def update_harmony_app():
                 if question:
                     os.system("sudo service harmony stop")
                     os.system(
-                        f"mv {os.environ.get("HARMONY_DIR")}/harmony_db_0 {os.environ.get("HARMONY_DIR")}/harmony_db_0_old"
+                        f"mv {os.environ.get('HARMONY_DIR')}/harmony_db_0 {os.environ.get('HARMONY_DIR')}/harmony_db_0_old"
                     )
                     os.system("sudo service harmony start")
-                    os.system(f"rm -r {os.environ.get("HARMONY_DIR")}/harmony_db_0_old")
+                    os.system(f"rm -r {os.environ.get('HARMONY_DIR')}/harmony_db_0_old")
                 else:
                     print("Skipping removal of 0, but it's no longer required, fyi!")
             else:
