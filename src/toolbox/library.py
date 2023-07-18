@@ -100,7 +100,7 @@ def update_text_file(fileName, originalText, newText):
 
 # Setup a wallet, ask if they need to import one (not required but no toolbox menu without a wallet)
 def recover_wallet():
-    question = ask_yes_no(f"* Would you like to import a wallet? (YES/NO) ")
+    question = ask_yes_no(f"* If you would like to import a wallet for manual wallet actions, and for using our claim and send functions, answer yes.\n* If you only want to load your validator address for stats answer no.\n* Would you like to add your wallet to this server? (YES/NO) ")
     # if yes, find recovery type
     if question:
         recovery_type()
@@ -111,11 +111,24 @@ def recover_wallet():
         print_stars()
         input("* Verify your wallet information above.\n* Press ENTER to continue Installation.")
     else:
-        wallet = input(
-            f"* If you'd like to use the management menu, we need a one1 address, please input your address now: "
-        )
-        set_var(EnvironmentVariables.dotenv_file, "VALIDATOR_WALLET", wallet)
+        while True:
+            wallet = input(
+                f"* If you'd like to use the management menu, we need a one1 address, please input your address now: "
+            )
+            if wallet.startswith("one1"):
+                # Re-enter the wallet to verify
+                verify_wallet = input(
+                    f"* Please re-enter your wallet address for verification: "
+                )
+                if wallet == verify_wallet:
+                    set_var(EnvironmentVariables.dotenv_file, "VALIDATOR_WALLET", wallet)
+                    break
+                else:
+                    print("The entered wallets do not match. Please try again.")
+            else:
+                print("Invalid wallet address. It should start with 'one1'. Please try again.")
         return
+
 
 
 def pull_harmony_update(harmony_dir, bls_key_file, harmony_conf):
@@ -125,13 +138,15 @@ def pull_harmony_update(harmony_dir, bls_key_file, harmony_conf):
         os.system("curl -LO https://harmony.one/binary_testnet && mv binary_testnet harmony && chmod +x harmony")
         os.system("./harmony config dump --network testnet harmony.conf")
         update_text_file(harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
+        update_text_file(harmony_conf, " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
     if environ.get("NETWORK") == "mainnet":
         if arch.startswith("arm"):
             os.system("curl -LO https://harmony.one/binary-arm64 && mv binary-arm64 harmony && chmod +x harmony")
         if arch == "x86_64":
             os.system("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
-            os.system("./harmony config dump harmony.conf")
-            update_text_file(harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
+        os.system("./harmony config dump harmony.conf")
+        update_text_file(harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
+        update_text_file(harmony_conf, " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
     print_stars()
     print("* harmony.conf MaxKeys modified to 13")
     if os.path.exists(bls_key_file):
@@ -426,7 +441,7 @@ def get_shard_menu() -> None:
     if not environ.get("SHARD"):
         subprocess.run("clear")
         print_stars()
-        print("* First Boot - Gathering more information about your server                                 *")
+        print("* Gathering more information about your server.                                             *")
         print_stars()
         print("* Which shard do you want this node run on?                                                 *")
         print_stars()
@@ -449,28 +464,25 @@ def get_node_type() -> None:
             print_stars()
             print("* Which type of node would you like to run on this server?                                  *")
             print_stars()
-            print("* [0] - Standard w/ Wallet - Harmony Validator Signing Node with Wallet                     *")
-            print("* [1] - Standard No Wallet - Harmony Validator Signing Node no Wallet                       *")
-            print("* [2] - Full Node Dev/RPC - Non Validating Harmony Node                                     *")
+            print("* [0] - Validator w/ Wallet - Harmony Validator with Wallet loading (For claim & send)      *")
+            print("* [1] - Validator, No Wallet - Harmony Validator Signing Node no Wallet                     *")
             print_stars()
             menu_options = [
-                "[0] Signing Node w/ Wallet",
-                "[1] Signing Node No Wallet",
-                "[2] Full Node Non Validating Dev/RPC",
+                "[0] Signing Node w/ Wallet Setup",
+                "[1] Signing Node No Wallet Setup",
             ]
             terminal_menu = TerminalMenu(menu_options, title="Regular or Full Node Server")
             results = terminal_menu.show()
             if results == 0:
                 set_var(EnvironmentVariables.dotenv_file, "NODE_TYPE", "regular")
                 set_var(EnvironmentVariables.dotenv_file, "NODE_WALLET", "true")
+                set_wallet_env()
             if results == 1:
                 set_var(EnvironmentVariables.dotenv_file, "NODE_TYPE", "regular")
                 set_var(EnvironmentVariables.dotenv_file, "NODE_WALLET", "false")
-            if results == 2:
-                set_var(EnvironmentVariables.dotenv_file, "NODE_TYPE", "full")
             subprocess.run("clear")
             return
-        set_wallet_env()
+        return
     if not environ.get("NODE_TYPE"):
         set_var(EnvironmentVariables.dotenv_file, "NODE_TYPE", "regular")
     if not environ.get("NODE_WALLET"):

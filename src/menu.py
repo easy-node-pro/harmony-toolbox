@@ -11,6 +11,7 @@ from toolbox.library import (
     update_text_file,
     first_env_check,
     print_stars,
+    first_setup
 )
 from toolbox.toolbox import run_full_node, safety_defaults, start_regular_node, parse_flags
 
@@ -25,6 +26,9 @@ if __name__ == "__main__":
         )
         print_stars()
         raise SystemExit(0)
+    # start install if first time
+    if not os.path.exists(EnvironmentVariables.hmy_app):
+        first_setup()
     # clear screen, show logo
     parser = argparse.ArgumentParser(description='Findora Validator Toolbox - Help Menu')
     parse_flags(parser)

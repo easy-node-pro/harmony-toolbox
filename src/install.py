@@ -1,22 +1,12 @@
-import os
 import subprocess
-from os import environ
-from toolbox.config import EnvironmentVariables
-from toolbox.library import loader_intro, load_var_file, first_setup, recover_wallet
+from toolbox.library import loader_intro, print_stars
+
+# This is just a temp file to replace start.py to guide people to harmony.sh. 
 
 if __name__ == "__main__":
     subprocess.run("clear")
     loader_intro()
-    if not os.path.exists(EnvironmentVariables.hmy_app):
-        first_setup()
-    load_var_file(EnvironmentVariables.dotenv_file)
-    if not environ.get("VALIDATOR_WALLET"):
-        recover_wallet()
-        if not environ.get("VALIDATOR_WALLET"):
-            print(
-                "* You don't currently have a validator wallet address loaded in your .env file, please edit ~/.easynode.env and add a line with the following info:\n "
-                + "* VALIDATOR_WALLET='validatorONEaddress' "
-            )
-            input("* Press any key to exit.")
-            raise SystemExit(0)
-    exec(open(f"{EnvironmentVariables.toolbox_location}/src/menu.py").read())
+    subprocess.run("clear")
+    print_stars()
+    print("* We have moved to using harmony.sh to launch our toolbox and get stats.\n*\n* Run the following to download and setup the new harmony.sh file:\n*\n* cd ~/ && wget -O harmony.sh https://raw.githubusercontent.com/easy-node-pro/harmony-toolbox/main/src/bin/harmony.sh && chmod +x harmony.sh\n*\n* Now you can launch the toolbox with ./harmony.sh or get just stats with ./harmony.sh -s\n* See ./harmony.sh -h for help!\n*")    
+    print_stars()
