@@ -407,13 +407,13 @@ def refresh_toggle() -> None:
     return
 
 
-def refresh_status_option():
+def update_stats_option():
     if environ.get("REFRESH_OPTION") == "True":
         print(
-            f"*  20 - Disable auto-refresh      - Disable Refresh or Change Delay Timer: {str(environ.get('REFRESH_TIME'))} seconds"
+            f"*  20 - Disable auto-update       - Disable Refresh or Change Delay Timer: {str(environ.get('REFRESH_TIME'))} seconds"
         )
     else:
-        print(f"*  20 - Enable Auto refresh       - Enable Refresh Timeout")
+        print(f"*  20 - Enable Auto update        - Enable Update Timer")
 
 
 def start_regular_node() -> None:
