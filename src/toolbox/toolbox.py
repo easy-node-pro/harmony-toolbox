@@ -38,7 +38,7 @@ from toolbox.library import (
     get_folders,
     validator_stats_output,
     get_db_size,
-    first_setup
+    first_setup,
 )
 
 
@@ -50,14 +50,14 @@ def parse_flags(parser):
         action="store_true",
         help="Run your stats if Harmony is installed and running.",
     )
-    
+
     parser.add_argument(
         "-c",
         "--collect",
         action="store_true",
         help="Collect your rewards to your validator wallet",
     )
-    
+
     parser.add_argument(
         "-cs",
         "--collect-send",
@@ -73,11 +73,11 @@ def parse_flags(parser):
     if args.stats:
         run_multistats()
         finish_node()
-        
+
     if args.collect:
         rewards_collector(EnvironmentVariables.hmy_app, True)
         finish_node()
-        
+
     if args.collect_send:
         rewards_collector(EnvironmentVariables.hmy_app, True, True)
         finish_node()
@@ -103,7 +103,13 @@ def send_rewards(networkCall, sendAmount, rewards_wallet):
     )
 
 
-def rewards_collector(rpc, bypass = False, send_out_rewards = False, rewards_wallet = environ.get('REWARDS_WALLET'), validator_wallet = environ.get('VALIDATOR_WALLET')) -> None:
+def rewards_collector(
+    rpc,
+    bypass=False,
+    send_out_rewards=False,
+    rewards_wallet=environ.get("REWARDS_WALLET"),
+    validator_wallet=environ.get("VALIDATOR_WALLET"),
+) -> None:
     print("* Harmony ONE Rewards Collection")
     print_stars()
     if bypass == False:
@@ -348,50 +354,6 @@ def run_check_balance() -> None:
     menu_check_balance(EnvironmentVariables.rpc_endpoints, environ.get("VALIDATOR_WALLET"))
 
 
-def run_full_node() -> None:
-    menu_options = {
-        # 0: finish_node,
-        1: refresh_stats,
-        2: coming_soon,
-        3: coming_soon,
-        4: coming_soon,
-        5: coming_soon,
-        6: coming_soon,
-        7: set_rewards_wallet,
-        8: menu_service_stop_start,
-        9: menu_service_restart,
-        10: harmony_binary_upgrade,
-        11: hmy_cli_upgrade,
-        12: menu_ubuntu_updates,
-        13: drive_check,
-        14: coming_soon,
-        15: all_sys_info,
-        999: menu_reboot_server,
-    }
-    while True:
-        load_var_file(EnvironmentVariables.dotenv_file)
-        menu_full()
-        if environ.get("HARMONY_UPGRADE_AVAILABLE") == "True":
-            print(
-                f"* The harmony binary has an update available, Option #10 will upgrade you but you may miss a block while it restarts.\n"
-            )
-            print_stars()
-        if environ.get("HMY_UPGRADE_AVAILABLE") == "True":
-            print(
-                f"* The hmy binary has an update available, Option #11 will upgrade you but you may miss a block while it restarts.\n"
-            )
-            print_stars()
-        try:
-            option = int(input("Enter your option: "))
-        except ValueError:
-            menu_error()
-            run_full_node(environ.get("NODE_TYPE"))
-        if option == 0:
-            return finish_node()
-        subprocess.run("clear")
-        menu_options[option]()
-
-
 def bingo_checker():
     os.system(f"grep BINGO {EnvironmentVariables.harmony_dir}/latest/zerolog-harmony.log | tail -10")
     print_stars()
@@ -401,9 +363,7 @@ def bingo_checker():
 
 
 def run_rewards_collector() -> None:
-    rewards_collector(
-        EnvironmentVariables.hmy_app
-    )
+    rewards_collector(EnvironmentVariables.hmy_app)
     return
 
 

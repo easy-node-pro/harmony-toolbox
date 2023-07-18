@@ -56,12 +56,7 @@ if __name__ == "__main__":
     recheck_vars()
     # Run regular validator node
     loading = False
-    if environ.get("NODE_TYPE") == "regular":
-        if environ.get("VALIDATOR_WALLET") is None:
-            set_wallet_env()
-        start_regular_node()
-    # Run full node
-    if environ.get("NODE_TYPE") == "full":
-        run_full_node()
-    print("Uh oh, you broke me! Contact Easy Node")
+    if environ.get("VALIDATOR_WALLET") is None:
+        set_wallet_env()
+    start_regular_node()
     raise SystemExit(0)
