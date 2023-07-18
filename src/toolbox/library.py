@@ -80,7 +80,6 @@ def loader_intro():
 
 def old_toolbox_check():
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/validatortoolbox"):
-        subprocess.run("clear")
         print_stars()
         print(
             Fore.GREEN

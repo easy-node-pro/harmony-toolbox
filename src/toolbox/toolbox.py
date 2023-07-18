@@ -175,7 +175,6 @@ def menu_topper_regular(software_versions) -> None:
         remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
     except (ValueError, KeyError, TypeError) as e:
         print(f"* Error fetching data: {e}")
-    subprocess.run("clear")
     # Print Menu
     print_stars()
     print(
@@ -213,53 +212,9 @@ def menu_topper_regular(software_versions) -> None:
     print_stars()
 
 
-def menu_topper_full() -> None:
-    try:
-        load_1, load_5, load_15 = os.getloadavg()
-        remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
-    except (ValueError, KeyError, TypeError) as e:
-        print(f"* Error fetching data: {e}")
-    subprocess.run("clear")
-    # Print Menu
-    print_stars()
-    print(
-        f'{Fore.GREEN}* Validator Toolbox for Harmony ONE Validators by Easy Node   v{environ.get("EASY_VERSION")}{Fore.WHITE}   https://easynode.pro {Fore.GREEN}*'
-    )
-    print_stars()
-    print(
-        f"* Server Hostname & IP:             {Fore.BLUE}{EnvironmentVariables.server_host_name}{Fore.GREEN} - {Fore.YELLOW}{EnvironmentVariables.external_ip}{Fore.GREEN}"
-    )
-    harmony_service_status()
-    print(
-        f'* Current disk space free: {Fore.CYAN}{free_space_check(os.environ.get("HARMONY_DIR")): >6}{Fore.GREEN}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Fore.GREEN}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Fore.GREEN}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}'
-    )
-    print(
-        f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}"
-    )
-    print(
-        f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}"
-    )
-    print(
-        f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min"
-    )
-    print_stars()
-
-
 def menu_regular(software_versions) -> None:
     menu_topper_regular(software_versions)
     for x in return_txt(EnvironmentVariables.main_menu_regular):
-        x = x.strip()
-        try:
-            x = eval(x)
-        except SyntaxError:
-            pass
-        if x:
-            print(x)
-
-
-def menu_full() -> None:
-    menu_topper_full()
-    for x in return_txt(EnvironmentVariables.main_menu_full):
         x = x.strip()
         try:
             x = eval(x)
@@ -512,7 +467,6 @@ def run_regular_node(software_versions) -> None:
                 if timedOut:
                     start_regular_node()
                 else:
-                    subprocess.run("clear")
                     print_stars()
                     menu_options[option]()
                     if option != 1:
@@ -530,7 +484,6 @@ def run_regular_node(software_versions) -> None:
                     resetOnInput=True,
                     allowNegative=False,
                 )
-                subprocess.run("clear")
                 print_stars()
                 menu_options[option]()
                 if option != 1:
