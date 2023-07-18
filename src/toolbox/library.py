@@ -728,8 +728,6 @@ def first_setup():
     get_shard_menu()
     # Get Mainnet or Testnet
     set_main_or_test()
-    # Wallet Setup
-    recover_wallet()    
     # Look for a harmony install or install.
     check_for_install()
     print_stars()
@@ -752,6 +750,9 @@ def check_for_install() -> str:
         print(f"* You selected Shard: {environ.get('SHARD')}. ")
         install_harmony()
         print_stars()
+        # Wallet Setup
+        recover_wallet()    
+        print_stars()
         # Check passphrase if wallet is added
         passphrase_status()
         print_stars()
@@ -765,6 +766,9 @@ def check_for_install() -> str:
         )
         if question:
             install_harmony()
+            print_stars()
+            # Wallet Setup
+            recover_wallet()    
             print_stars()
             # Check passphrase if wallet is added
             passphrase_status()
