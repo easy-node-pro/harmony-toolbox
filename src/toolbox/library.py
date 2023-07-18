@@ -136,6 +136,7 @@ def recover_wallet():
                 verify_wallet = input(f"* Please re-enter your wallet address for verification: ")
                 if wallet == verify_wallet:
                     set_var(EnvironmentVariables.dotenv_file, "VALIDATOR_WALLET", wallet)
+                    return
                 else:
                     print("The entered wallets do not match. Please try again.")
             else:
