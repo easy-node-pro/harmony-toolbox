@@ -597,9 +597,10 @@ def menu_validator_stats():
         local_data_shard = json.loads(result_local_shard.stdout)
     except (ValueError, KeyError, TypeError) as e:
         print(
-            f"* Local Server Offline\n*\n* Run troubleshooting:\n* Restart your harmony service and view the status\n* If that doesn't bring you online troubleshoot the issue by running the following in your {os.environ.get('HARMONY_DIR')} directory:\n* ./harmony -c harmony.conf, Error: {e}"
+            f"* Local Server Offline\n*\n* Run troubleshooting, See our documents site for info on how to manually troubleshoot:\n* https://docs.easynode.pro/harmony/post#validator-toolbox-troubleshooting\n*"
         )
-        raise SystemExit(0)
+        print_stars()
+        finish_node()
 
     if environ.get("SHARD") != "0":
         remote_shard = [
