@@ -959,10 +959,8 @@ def get_HARMONY_DIR(pathname):
     return HARMONY_DIR
 
 
-def refresh_stats(clear=0) -> str:
+def refresh_stats() -> str:
     print(Fore.GREEN)
-    if clear == 0:
-        subprocess.run("clear")
     print_stars()
     print(f"* Getting the latest local & blockchain information now, one moment while we load...")
     print_stars()

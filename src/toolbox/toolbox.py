@@ -97,7 +97,7 @@ def parse_flags(parser):
 
 
 def run_multistats():
-    refresh_stats(1)
+    refresh_stats()
     folders = get_folders()
     validator_stats_output(folders)
     return
@@ -460,7 +460,7 @@ def refresh_status_option():
 
 def start_regular_node() -> None:
     # Check online versions of harmony & hmy and compare to our local copy.
-    refresh_stats(1)
+    refresh_stats()
     software_versions = version_checks(environ.get("HARMONY_DIR"))
     run_regular_node(software_versions)
 

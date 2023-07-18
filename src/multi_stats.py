@@ -170,7 +170,7 @@ def validator_stats_output(folders) -> None:
 
 if __name__ == "__main__":
     loader_intro()
-    refresh_stats(1)
+    refresh_stats()
     folders = get_folders()
     validator_stats_output(folders)
     finish_node()
