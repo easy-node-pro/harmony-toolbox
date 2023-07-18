@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv(f"{path.expanduser('~')}/.easynode.env")
 
+
 def get_url(timeout=5) -> str:
     try:
         response = requests.get("https://ident.me", timeout=timeout)
