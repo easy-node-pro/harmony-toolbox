@@ -1,4 +1,5 @@
 import argparse
+import os
 from toolbox.config import EnvironmentVariables
 from toolbox.library import loader_intro, first_env_check, load_var_file, old_toolbox_check, first_setup
 from toolbox.toolbox import safety_defaults, start_regular_node, parse_flags
@@ -11,11 +12,11 @@ def app():
     # Run parser if flags added
     parser = argparse.ArgumentParser(description="Harmony Validator Toolbox - Help Menu by EasyNode.pro")
     parse_flags(parser)
-    # passed .env check, let's load it!
-    first_time = first_env_check(EnvironmentVariables.dotenv_file)
     # If first time, run installer
-    if first_time:
+    if not os.path.exists(EnvironmentVariables.dotenv_file):
         first_setup()
+    # passed .env check, let's load it!
+    first_env_check(EnvironmentVariables.dotenv_file)
     # This section is for hard coding new settings for current users.
     safety_defaults()
     # Run regular validator node
