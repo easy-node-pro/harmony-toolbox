@@ -130,8 +130,6 @@ def recover_wallet():
                     print("The entered wallets do not match. Please try again.")
             else:
                 print("Invalid wallet address. It should start with 'one1'. Please try again.")
-    # Check passphrase if wallet is added
-    passphrase_status()
     return
 
 
@@ -396,8 +394,6 @@ def passphrase_set():
             print("* Passwords Match!")
             break
     # Save file, we won't encrypt because if someone has access to the file, they will also have the salt and decrypt code at their disposal.
-    if not os.path.isdir(EnvironmentVariables.harmony_dir):
-        os.mkdir(EnvironmentVariables.harmony_dir)
     save_text(EnvironmentVariables.password_path, password_1)
     load_var_file(EnvironmentVariables.dotenv_file)
     passphrase_status()
@@ -757,6 +753,9 @@ def check_for_install() -> str:
         print(f"* You selected Shard: {environ.get('SHARD')}. ")
         install_harmony()
         print_stars()
+        # Check passphrase if wallet is added
+        passphrase_status()
+        print_stars()
         print("* All harmony files now installed. Database download starting now...")
         print_stars()
         clone_shards()
@@ -768,6 +767,9 @@ def check_for_install() -> str:
         if question:
             install_harmony()
             print_stars()
+            # Check passphrase if wallet is added
+            passphrase_status()
+            print_stars()    
             print("* All harmony files now installed. Database download starting now...")
             print_stars()
             clone_shards()
