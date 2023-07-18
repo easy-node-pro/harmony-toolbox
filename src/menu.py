@@ -12,9 +12,6 @@ def app():
     # Run parser if flags added
     parser = argparse.ArgumentParser(description="Harmony Validator Toolbox - Help Menu by EasyNode.pro")
     parse_flags(parser)
-    # If first time, run installer
-    if not os.path.exists(EnvironmentVariables.dotenv_file):
-        first_setup()
     # passed .env check, let's load it!
     first_env_check(EnvironmentVariables.dotenv_file)
     # This section is for hard coding new settings for current users.

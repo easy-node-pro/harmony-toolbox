@@ -392,7 +392,7 @@ def safety_defaults() -> None:
         if os.path.isdir(f"{EnvironmentVariables.user_home_dir}/harmony"):
             set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{EnvironmentVariables.user_home_dir}/harmony")
             return
-        if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony"):
+        elif os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony"):
             try:
                 subprocess.run(f"{EnvironmentVariables.user_home_dir}/harmony -V", check=True)
                 set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{EnvironmentVariables.user_home_dir}")
@@ -402,6 +402,8 @@ def safety_defaults() -> None:
                     "* Well this is odd, somehow harmony was not found.\n*\n* You can add the HARMONY_DIR variable to your ~/.easynode.env file\n* Example default location: HARMONY_DIR = /home/serviceharmony/harmony\n*\n* Or contact Easy Node for custom configuration help."
                 )
                 raise SystemExit(0)
+        else:
+            first_setup()
     # always set conf to 13 keys, shard max
     if os.path.exists(EnvironmentVariables.harmony_conf):
         update_text_file(EnvironmentVariables.harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
