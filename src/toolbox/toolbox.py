@@ -41,7 +41,7 @@ from toolbox.library import (
     get_shard_menu,
     set_main_or_test,
     recover_wallet,
-    refresh_stats
+    refresh_stats,
 )
 
 
@@ -186,18 +186,18 @@ def menu_topper_regular(software_versions) -> None:
     )
     harmony_service_status()
     print(
-        f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current disk space free: {Fore.CYAN}{free_space_check(EnvironmentVariables.harmony_dir): >6}{Fore.GREEN}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
+        f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current disk space free: {Fore.CYAN}{free_space_check(os.environ.get("HARMONY_DIR")): >6}{Fore.GREEN}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
     )
     print_stars()
     if environ.get("SHARD") != "0":
         print(
-            f"* Note: Running on shard {environ.get('SHARD')}, Shard 0 is no longer needed locally and should be under 300MB\n* Remote Shard 0 Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}, Local Shard 0 Size: {get_db_size(EnvironmentVariables.harmony_dir, '0')}"
+            f"* Note: Running on shard {environ.get('SHARD')}, Shard 0 is no longer needed locally and should be under 300MB\n* Remote Shard 0 Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}, Local Shard 0 Size: {get_db_size(os.environ.get("HARMONY_DIR"), '0')}"
         )
         print(
             f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}"
         )
         print(
-            f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}, Local Shard {environ.get('SHARD')} Size: {get_db_size(EnvironmentVariables.harmony_dir, environ.get('SHARD'))}"
+            f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}, Local Shard {environ.get('SHARD')} Size: {get_db_size(os.environ.get("HARMONY_DIR"), environ.get('SHARD'))}"
         )
     if environ.get("SHARD") == "0":
         print(
@@ -230,7 +230,7 @@ def menu_topper_full() -> None:
     )
     harmony_service_status()
     print(
-        f'* Current disk space free: {Fore.CYAN}{free_space_check(EnvironmentVariables.harmony_dir): >6}{Fore.GREEN}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Fore.GREEN}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Fore.GREEN}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}'
+        f'* Current disk space free: {Fore.CYAN}{free_space_check(os.environ.get("HARMONY_DIR")): >6}{Fore.GREEN}\n* Current harmony version: {Fore.YELLOW}{environ.get("HARMONY_VERSION")}{Fore.GREEN}, has upgrade available: {environ.get("HARMONY_UPGRADE_AVAILABLE")}\n* Current hmy version: {Fore.YELLOW}{environ.get("HMY_VERSION")}{Fore.GREEN}, has upgrade available: {environ.get("HMY_UPGRADE_AVAILABLE")}'
     )
     print(
         f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}"
@@ -357,7 +357,7 @@ def set_reserve_total(reserve_total):
 
 
 def drive_check() -> None:
-    server_drive_check(EnvironmentVariables.dotenv_file, EnvironmentVariables.harmony_dir)
+    server_drive_check(EnvironmentVariables.dotenv_file, os.environ.get("HARMONY_DIR"))
     return
 
 
@@ -366,7 +366,7 @@ def run_check_balance() -> None:
 
 
 def bingo_checker():
-    os.system(f"grep BINGO {EnvironmentVariables.harmony_dir}/latest/zerolog-harmony.log | tail -10")
+    os.system(f"grep BINGO {os.environ.get("HARMONY_DIR")}/latest/zerolog-harmony.log | tail -10")
     print_stars()
     print("* Press enter to return to the main menu.")
     print_stars()
@@ -379,6 +379,8 @@ def run_rewards_collector() -> None:
 
 
 def safety_defaults() -> None:
+    # default settings section
+    set_var(EnvironmentVariables.dotenv_file, "EASY_VERSION", EnvironmentVariables.easy_version)
     if environ.get("GAS_RESERVE") is None:
         set_var(EnvironmentVariables.dotenv_file, "GAS_RESERVE", "5")
     if environ.get("REFRESH_TIME") is None:
@@ -395,13 +397,10 @@ def safety_defaults() -> None:
                 set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{EnvironmentVariables.user_home_dir}")
                 return
             except subprocess.CalledProcessError as e:
-                print("* Harmony not found, contact Easy Node for custom configuration help.")
+                print(
+                    "* Well this is odd, somehow harmony was not found.\n*\n* You can add the HARMONY_DIR variable to your ~/.easynode.env file\n* Example default location: HARMONY_DIR = /home/serviceharmony/harmony\n*\n* Or contact Easy Node for custom configuration help."
+                )
                 raise SystemExit(0)
-        else:
-            # start install if first time
-            if not os.path.exists(EnvironmentVariables.hmy_app):
-                first_setup()
-    set_var(EnvironmentVariables.dotenv_file, "EASY_VERSION", EnvironmentVariables.easy_version)
     # always set conf to 13 keys, shard max
     if os.path.exists(EnvironmentVariables.harmony_conf):
         update_text_file(EnvironmentVariables.harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
@@ -554,7 +553,7 @@ def service_menu_option() -> None:
 
 
 def make_backup_dir() -> str:
-    folder_name = f'{EnvironmentVariables.harmony_dir}/harmony_backup/{datetime.now().strftime("%Y%m%d%H%M")}'
+    folder_name = f'{os.environ.get("HARMONY_DIR")}/harmony_backup/{datetime.now().strftime("%Y%m%d%H%M")}'
     os.system(f"mkdir -p {folder_name}")
     return folder_name
 
@@ -577,26 +576,26 @@ def hmy_cli_upgrade():
 
 
 def update_harmony_app():
-    os.chdir(f"{EnvironmentVariables.harmony_dir}")
+    os.chdir(f"{os.environ.get("HARMONY_DIR")}")
     print_stars()
     print("Currently installed version: ")
     os.system("./harmony -V")
     folder_name = make_backup_dir()
     os.system(
-        f"cp {EnvironmentVariables.harmony_dir}/harmony {EnvironmentVariables.harmony_dir}/harmony.conf {folder_name}"
+        f"cp {os.environ.get("HARMONY_DIR")}/harmony {os.environ.get("HARMONY_DIR")}/harmony.conf {folder_name}"
     )
     print_stars()
     print("Downloading current harmony binary file from harmony.one: ")
     print_stars()
     pull_harmony_update(
-        EnvironmentVariables.harmony_dir, EnvironmentVariables.bls_key_file, EnvironmentVariables.harmony_conf
+        os.environ.get("HARMONY_DIR"), EnvironmentVariables.bls_key_file, EnvironmentVariables.harmony_conf
     )
     print_stars()
     print("Updated version: ")
     os.system("./harmony -V")
     if environ.get("SHARD") != "0":
         size = 0
-        for path, dirs, files in os.walk(f"{EnvironmentVariables.harmony_dir}/harmony_db_0"):
+        for path, dirs, files in os.walk(f"{os.environ.get("HARMONY_DIR")}/harmony_db_0"):
             for f in files:
                 fp = os.path.join(path, f)
                 size += os.path.getsize(fp)
@@ -608,10 +607,10 @@ def update_harmony_app():
                 if question:
                     os.system("sudo service harmony stop")
                     os.system(
-                        f"mv {EnvironmentVariables.harmony_dir}/harmony_db_0 {EnvironmentVariables.harmony_dir}/harmony_db_0_old"
+                        f"mv {os.environ.get("HARMONY_DIR")}/harmony_db_0 {os.environ.get("HARMONY_DIR")}/harmony_db_0_old"
                     )
                     os.system("sudo service harmony start")
-                    os.system(f"rm -r {EnvironmentVariables.harmony_dir}/harmony_db_0_old")
+                    os.system(f"rm -r {os.environ.get("HARMONY_DIR")}/harmony_db_0_old")
                 else:
                     print("Skipping removal of 0, but it's no longer required, fyi!")
             else:
@@ -664,7 +663,7 @@ def menu_validator_stats():
 
 def shard_stats(our_shard) -> str:
     our_uptime = subprocess.getoutput("uptime")
-    db_0_size = get_db_size(EnvironmentVariables.harmony_dir, "0")
+    db_0_size = get_db_size(os.environ.get("HARMONY_DIR"), "0")
     if our_shard == "0":
         print(
             f"""
@@ -678,7 +677,7 @@ def shard_stats(our_shard) -> str:
     * Uptime :: {our_uptime}
     *
     * Harmony DB 0 Size  ::  {db_0_size}
-    * Harmony DB {our_shard} Size  ::   {get_db_size(EnvironmentVariables.harmony_dir, str(our_shard))}
+    * Harmony DB {our_shard} Size  ::   {get_db_size(os.environ.get("HARMONY_DIR"), str(our_shard))}
     *
     *
     {string_stars()}
