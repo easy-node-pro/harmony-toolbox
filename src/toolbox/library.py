@@ -667,7 +667,7 @@ def check_online_version():
 
 
 def first_env_check(env_file, home_dir) -> None:
-    if os.path.exists(env_file):
+    if os.path.isfile(env_file):
         load_var_file(env_file)
         return False
     else:
