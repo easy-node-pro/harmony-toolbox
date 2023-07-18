@@ -5,6 +5,7 @@ import requests
 from os import environ
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
 
+
 def get_url(timeout=5) -> str:
     try:
         response = requests.get("https://ident.me", timeout=timeout)
@@ -12,7 +13,7 @@ def get_url(timeout=5) -> str:
         result = response.text
     except requests.exceptions.RequestException as x:
         print(type(x), x)
-        result = '0.0.0.0'
+        result = "0.0.0.0"
     return result
 
 
@@ -35,11 +36,11 @@ class EnvironmentVariables:
     external_ip = get_url()
     main_menu_regular = os.path.join(toolbox_location, "src", "messages", "regularmenu.txt")
     main_menu_full = os.path.join(toolbox_location, "src", "messages", "fullmenu.txt")
-    rpc_endpoints = ['https://api.s0.t.hmny.io', 'https://api.harmony.one', 'https://rpc.ankr.com/harmony']
+    rpc_endpoints = ["https://api.s0.t.hmny.io", "https://api.harmony.one", "https://rpc.ankr.com/harmony"]
     rpc_endpoints_max_connection_retries = 10
-    hmy_tmp_path = '/tmp/hmy'
-    harmony_tmp_path = '/tmp/harmony'
-    
+    hmy_tmp_path = "/tmp/hmy"
+    harmony_tmp_path = "/tmp/harmony"
+
     @staticmethod
     def get_working_endpoint(endpoints):
         for endpoint in endpoints:

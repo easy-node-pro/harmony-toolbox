@@ -707,7 +707,7 @@ def check_for_install() -> str:
         install_harmony()
         print_stars()
         # Wallet Setup
-        recover_wallet()    
+        recover_wallet()
         print_stars()
         # Check passphrase if wallet is added
         passphrase_status()
@@ -724,11 +724,11 @@ def check_for_install() -> str:
             install_harmony()
             print_stars()
             # Wallet Setup
-            recover_wallet()    
+            recover_wallet()
             print_stars()
             # Check passphrase if wallet is added
             passphrase_status()
-            print_stars()    
+            print_stars()
             print("* All harmony files now installed. Database download starting now...")
             print_stars()
             clone_shards()
@@ -748,12 +748,14 @@ def install_harmony() -> None:
         print("* Creating all Harmony Files & Folders")
         os.system(f"mkdir -p {EnvironmentVariables.harmony_dir}/.hmy/blskeys")
     else:
-        answer = input("* If you'd like to use an alternative location or volume we can make a symlink.\n* What is the full path to your volume? (example: /mnt/mydisk) ")
+        answer = input(
+            "* If you'd like to use an alternative location or volume we can make a symlink.\n* What is the full path to your volume? (example: /mnt/mydisk) "
+        )
         if not os.path.exists(answer):
-                print("* That path doesn't exist, please try again.")
-                install_harmony()
+            print("* That path doesn't exist, please try again.")
+            install_harmony()
         answer2 = input("* Re-enter the path to your volume: ")
-        if answer == answer2:    
+        if answer == answer2:
             set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{answer}/harmony")
             print_stars()
             print("* Creating base folder, setting ownership & creating symlink.")
@@ -761,7 +763,7 @@ def install_harmony() -> None:
             os.system(f"sudo chown {EnvironmentVariables.active_user} {os.environ.get('HARMONY_DIR')}")
             os.system(f"mkdir -p {os.environ.get('HARMONY_DIR')}/.hmy/blskeys")
             os.system(f"ln -s {os.environ.get('HARMONY_DIR')} {EnvironmentVariables.harmony_dir}")
-        
+
     # Setup folders now that symlink exists or we know we're using ~/harmony
     if not os.path.isdir(f"{EnvironmentVariables.user_home_dir}/.hmy_cli/account-keys/"):
         os.system(f"mkdir -p {EnvironmentVariables.user_home_dir}/.hmy_cli/account-keys/")
@@ -775,9 +777,7 @@ def install_harmony() -> None:
     install_hmy()
     print_stars()
     # Install harmony
-    pull_harmony_update(
-        os.environ.get('HARMONY_DIR'), f"{os.environ.get('HARMONY_DIR')}/harmony.conf"
-    )
+    pull_harmony_update(os.environ.get("HARMONY_DIR"), f"{os.environ.get('HARMONY_DIR')}/harmony.conf")
     # install hmy files
     print("* Installing rclone application & rclone configuration files")
     print_stars()

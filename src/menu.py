@@ -2,12 +2,7 @@ import argparse, os, subprocess
 from os import environ
 from colorama import Fore
 from toolbox.config import EnvironmentVariables
-from toolbox.library import (
-    loader_intro,
-    first_env_check,
-    print_stars,
-    load_var_file
-)
+from toolbox.library import loader_intro, first_env_check, print_stars, load_var_file
 from toolbox.toolbox import safety_defaults, start_regular_node, parse_flags
 
 if __name__ == "__main__":

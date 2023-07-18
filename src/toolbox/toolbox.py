@@ -42,7 +42,7 @@ from toolbox.library import (
     update_text_file,
     get_shard_menu,
     set_main_or_test,
-    recover_wallet
+    recover_wallet,
 )
 
 
@@ -54,7 +54,7 @@ def parse_flags(parser):
         action="store_true",
         help="Install Harmony ONE and hmy CLI if not installed.",
     )
-    
+
     parser.add_argument(
         "-s",
         "--stats",
@@ -80,11 +80,9 @@ def parse_flags(parser):
 
     subprocess.run("clear")
     print(Fore.RESET)
-    
+
     if args.install:
-        install_harmony()
-        install_hmy()
-        finish_node()
+        first_setup()
 
     if args.stats:
         run_multistats()
