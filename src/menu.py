@@ -7,6 +7,8 @@ from toolbox.toolbox import safety_defaults, start_regular_node, parse_flags
 
 if __name__ == "__main__":
     load_var_file(EnvironmentVariables.dotenv_file)
+    # Clear screen, show logo
+    loader_intro()
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/validatortoolbox"):
         subprocess.run("clear")
         print_stars()
@@ -16,8 +18,6 @@ if __name__ == "__main__":
         )
         print_stars()
         raise SystemExit(0)
-    # Clear screen, show logo
-    loader_intro()
     # Run parser if flags added
     parser = argparse.ArgumentParser(description="Findora Validator Toolbox - Help Menu")
     parse_flags(parser)
