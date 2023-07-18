@@ -750,6 +750,7 @@ def install_harmony() -> None:
     question = ask_yes_no(f"* Would you like to install Harmony in the folder ~/harmony on your main disk? (YES/NO)")
     if question:
         set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", EnvironmentVariables.harmony_dir)
+        print_stars()
         print("* Creating all Harmony Files & Folders")
         os.system(f"mkdir -p {EnvironmentVariables.harmony_dir}/.hmy/blskeys")
     else:
@@ -757,7 +758,8 @@ def install_harmony() -> None:
         answer2 = input("* Re-enter the path to your volume: ")
         if answer == answer2:
             set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", answer)
-            print("* Creating base folder & symlink.")
+            print_stars()
+            print("* Creating base folder, setting ownership & creating symlink.")
             os.system(f"sudo mkdir -p {os.environ('HARMONY_DIR')}/harmony")
             os.system(f"sudo chown {EnvironmentVariables.active_user} {os.environ('HARMONY_DIR')}/harmony")
             os.system(f"mkdir -p {os.environ('HARMONY_DIR')}/harmony/.hmy/blskeys")
