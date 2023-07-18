@@ -341,10 +341,9 @@ def recovery_type():
     results = terminal_menu.show()
     if results == 0:
         passphrase_set()
-        passphrase_switch = environ.get("PASS_SWITCH")
         # Mnemonic Recovery Here
         os.system(
-            f"{EnvironmentVariables.hmy_app} keys recover-from-mnemonic {EnvironmentVariables.active_user} {passphrase_switch}"
+            f"{EnvironmentVariables.hmy_app} keys recover-from-mnemonic {EnvironmentVariables.active_user} --passphrase-file passphrase.txt"
         )
         print_stars()
         set_wallet_env()
