@@ -15,7 +15,6 @@ from toolbox.library import (
 from toolbox.toolbox import safety_defaults, start_regular_node, parse_flags
 
 if __name__ == "__main__":
-    loading = True
     load_var_file(EnvironmentVariables.dotenv_file)
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/validatortoolbox"):
         subprocess.run("clear")
@@ -26,37 +25,14 @@ if __name__ == "__main__":
         )
         print_stars()
         raise SystemExit(0)
-    # clear screen, show logo
+    # Run parser if flags added
     parser = argparse.ArgumentParser(description="Findora Validator Toolbox - Help Menu")
     parse_flags(parser)
+    # Clear screen, show logo
     loader_intro()
-    # check for .env file, if none we have a first timer.
-    if os.path.exists(EnvironmentVariables.dotenv_file) is None:
-        # they should run the installer, goodbye!
-        print("Install Harmony First!!!\nRun python3 ~/harmony-toolbox/install.py")
-        raise SystemExit(0)
     # passed .env check, let's load it!
-    first_env_check(EnvironmentVariables.dotenv_file, EnvironmentVariables.user_home_dir)
+    fec_result = first_env_check(EnvironmentVariables.dotenv_file, EnvironmentVariables.user_home_dir)
     # This section is for hard coding new settings for current users.
     safety_defaults()
-    # always set conf to 13 keys, shard max
-    if os.path.exists(EnvironmentVariables.harmony_conf):
-        update_text_file(EnvironmentVariables.harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
-    # Make sure they have a wallet or wallet address in the .env file, if none, get one.
-    if environ.get("VALIDATOR_WALLET") is None:
-        # Recover wallet or have them add address
-        recover_wallet()
-        if environ.get("VALIDATOR_WALLET") is None:
-            print(
-                "* You don't currently have a validator wallet address loaded in your .env file, please edit ~/.easynode.env and add a line with the following info:\n "
-                + "* VALIDATOR_WALLET='validatorONEaddress' "
-            )
-            input("* Press any key to exit.")
-            raise SystemExit(0)
-    recheck_vars()
     # Run regular validator node
-    loading = False
-    if environ.get("VALIDATOR_WALLET") is None:
-        set_wallet_env()
     start_regular_node()
-    raise SystemExit(0)

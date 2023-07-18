@@ -39,11 +39,22 @@ from toolbox.library import (
     validator_stats_output,
     get_db_size,
     first_setup,
+    update_text_file,
+    get_shard_menu,
+    set_main_or_test,
+    recover_wallet
 )
 
 
 def parse_flags(parser):
     # Add the arguments
+    parser.add_argument(
+        "-i",
+        "--install",
+        action="store_true",
+        help="Install Harmony ONE and hmy CLI if not installed.",
+    )
+    
     parser.add_argument(
         "-s",
         "--stats",
@@ -69,6 +80,11 @@ def parse_flags(parser):
 
     subprocess.run("clear")
     print(Fore.RESET)
+    
+    if args.install:
+        install_harmony()
+        install_hmy()
+        finish_node()
 
     if args.stats:
         run_multistats()
@@ -391,6 +407,14 @@ def safety_defaults() -> None:
             if not os.path.exists(EnvironmentVariables.hmy_app):
                 first_setup()
     set_var(EnvironmentVariables.dotenv_file, "EASY_VERSION", EnvironmentVariables.easy_version)
+    # always set conf to 13 keys, shard max
+    if os.path.exists(EnvironmentVariables.harmony_conf):
+        update_text_file(EnvironmentVariables.harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
+    get_shard_menu()
+    set_main_or_test()
+    if environ.get("VALIDATOR_WALLET") is None:
+        # Recover wallet or have them add address
+        recover_wallet()
 
 
 def refresh_toggle() -> None:

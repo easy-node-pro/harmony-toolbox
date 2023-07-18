@@ -659,9 +659,11 @@ def check_online_version():
 def first_env_check(env_file, home_dir) -> None:
     if os.path.exists(env_file):
         load_var_file(env_file)
+        return True
     else:
         os.system(f"touch {home_dir}/.easynode.env")
         load_var_file(env_file)
+        return False
 
 
 def version_checks(harmony_folder):
@@ -694,14 +696,6 @@ def first_setup():
     # Look for a harmony install or install.
     check_for_install()
     print_stars()
-    return
-
-
-def recheck_vars():
-    # recheck some stuff just in case the .easynode.env isn't proper
-    load_var_file(EnvironmentVariables.dotenv_file)
-    get_shard_menu()
-    set_main_or_test()
     return
 
 
