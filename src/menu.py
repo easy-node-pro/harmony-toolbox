@@ -12,7 +12,7 @@ from toolbox.library import (
     print_stars,
     load_var_file
 )
-from toolbox.toolbox import run_full_node, safety_defaults, start_regular_node, parse_flags
+from toolbox.toolbox import safety_defaults, start_regular_node, parse_flags
 
 if __name__ == "__main__":
     loading = True
