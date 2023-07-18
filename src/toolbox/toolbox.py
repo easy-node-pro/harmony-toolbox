@@ -28,7 +28,6 @@ from toolbox.library import (
     all_sys_info,
     coming_soon,
     menu_ubuntu_updates,
-    menu_error,
     menu_reboot_server,
     finish_node,
     pull_harmony_update,
