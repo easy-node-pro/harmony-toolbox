@@ -184,7 +184,7 @@ def find_port(folder):
 # build list of installs
 def get_folders():
     folders = {}
-    if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony/harmony.conf"):
+    if os.path.exists(f"{os.environ.get('HARMONY_DIR')}/harmony.conf"):
         port = find_port(f"harmony")
         folders["harmony"] = port
         print(f"* Found ~/harmony folder, on port {port}")

@@ -1,8 +1,6 @@
-import argparse, os, subprocess
-from os import environ
-from colorama import Fore
+import argparse
 from toolbox.config import EnvironmentVariables
-from toolbox.library import loader_intro, first_env_check, print_stars, load_var_file, old_toolbox_check, first_setup
+from toolbox.library import loader_intro, first_env_check, load_var_file, old_toolbox_check, first_setup
 from toolbox.toolbox import safety_defaults, start_regular_node, parse_flags
 
 def app():
