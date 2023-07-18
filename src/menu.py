@@ -8,7 +8,7 @@ def app():
     # Check for old toolbox first
     old_toolbox_check()
     # Run parser if flags added
-    parser = argparse.ArgumentParser(description="Findora Validator Toolbox - Help Menu")
+    parser = argparse.ArgumentParser(description="Harmony Validator Toolbox - Help Menu")
     parse_flags(parser)
     # passed .env check, let's load it!
     first_time = first_env_check(EnvironmentVariables.dotenv_file, EnvironmentVariables.user_home_dir)
