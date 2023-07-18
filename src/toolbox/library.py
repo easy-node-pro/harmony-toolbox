@@ -139,19 +139,17 @@ def pull_harmony_update(harmony_dir, harmony_conf):
     if environ.get("NETWORK") == "testnet":
         os.system("curl -LO https://harmony.one/binary_testnet && mv binary_testnet harmony && chmod +x harmony")
         os.system("./harmony config dump --network testnet harmony.conf")
-        update_text_file(harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
-        update_text_file(harmony_conf, " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
     if environ.get("NETWORK") == "mainnet":
         if arch.startswith("arm"):
             os.system("curl -LO https://harmony.one/binary-arm64 && mv binary-arm64 harmony && chmod +x harmony")
         if arch == "x86_64":
             os.system("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
         os.system("./harmony config dump harmony.conf")
-        update_text_file(harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
-        update_text_file(harmony_conf, " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
+    update_text_file(harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
+    update_text_file(harmony_conf, " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
     print_stars()
     print("* harmony.conf MaxKeys modified to 13")
-    if os.path.isdir(f"{os.environ.get('MOUNT_POINT')}/harmony/blskey.pass"):
+    if os.path.isdir(f"{os.environ.get('HARMONY_DIR')}/blskey.pass"):
         update_text_file(harmony_conf, 'PassFile = ""', f'PassFile = "blskey.pass"')
         print("* blskey.pass found, updated harmony.conf")
     print_stars()
@@ -748,7 +746,7 @@ def install_harmony() -> None:
     # Checks Passed at this point, only 1 folder in /mnt and it's probably our volume (can scope this down further later)
     question = ask_yes_no(f"* Would you like to install Harmony in the folder ~/harmony on your main disk? (YES/NO)")
     if question:
-        set_var(EnvironmentVariables.dotenv_file, "MOUNT_POINT", EnvironmentVariables.harmony_dir)
+        set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", EnvironmentVariables.harmony_dir)
         print("* Creating all Harmony Files & Folders")
         os.system(f"mkdir -p {EnvironmentVariables.harmony_dir}/.hmy/blskeys")
         os.system(f"ln -s {EnvironmentVariables.harmony_dir} {EnvironmentVariables.harmony_dir}")
@@ -756,12 +754,12 @@ def install_harmony() -> None:
         answer = input("* We can make a symlink to your volume, what is the full path to your volume? ")
         answer2 = input("* Re-enter the path to your volume: ")
         if answer == answer2:
-            set_var(EnvironmentVariables.dotenv_file, "MOUNT_POINT", answer)
+            set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", answer)
             print("* Creating base folder & symlink.")
-            os.system(f"sudo mkdir -p {os.environ('MOUNT_POINT')}/harmony")
-            os.system(f"sudo chown {EnvironmentVariables.active_user} {os.environ('MOUNT_POINT')}/harmony")
-            os.system(f"mkdir -p {os.environ('MOUNT_POINT')}/harmony/.hmy/blskeys")
-            os.system(f"ln -s {os.environ('MOUNT_POINT')}/harmony {EnvironmentVariables.harmony_dir}")
+            os.system(f"sudo mkdir -p {os.environ('HARMONY_DIR')}/harmony")
+            os.system(f"sudo chown {EnvironmentVariables.active_user} {os.environ('HARMONY_DIR')}/harmony")
+            os.system(f"mkdir -p {os.environ('HARMONY_DIR')}/harmony/.hmy/blskeys")
+            os.system(f"ln -s {os.environ('HARMONY_DIR')}/harmony {EnvironmentVariables.harmony_dir}")
         
     # Setup folders now that symlink exists or we know we're using ~/harmony
     if not os.path.isdir(f"{EnvironmentVariables.user_home_dir}/.hmy_cli/account-keys/"):
@@ -777,7 +775,7 @@ def install_harmony() -> None:
     print_stars()
     # Install harmony
     pull_harmony_update(
-        os.environ.get('MOUNT_POINT'), f"{os.environ.get('MOUNT_POINT')}/harmony/harmony.conf"
+        os.environ.get('HARMONY_DIR'), f"{os.environ.get('HARMONY_DIR')}/harmony.conf"
     )
     # install hmy files
     print("* Installing rclone application & rclone configuration files")
@@ -844,9 +842,9 @@ def set_mounted_point():
     else:
         myVolumePath = EnvironmentVariables.harmony_dir
     if totalDir == 1:
-        dotenv.set_key(EnvironmentVariables.dotenv_file, "MOUNT_POINT", myLongHmyPath)
+        dotenv.set_key(EnvironmentVariables.dotenv_file, "HARMONY_DIR", myLongHmyPath)
     else:
-        dotenv.set_key(EnvironmentVariables.dotenv_file, "MOUNT_POINT", f"{EnvironmentVariables.harmony_dir}")
+        dotenv.set_key(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{EnvironmentVariables.harmony_dir}")
 
 
 def finish_node_install():
@@ -886,19 +884,19 @@ def finish_node_install():
 
 
 def free_space_check(mount) -> str:
-    ourDiskMount = get_mount_point(mount)
+    ourDiskMount = get_HARMONY_DIR(mount)
     _, _, free = shutil.disk_usage(ourDiskMount)
     freeConverted = str(converted_unit(free))
     return freeConverted
 
 
 def server_drive_check(dot_env, directory) -> None:
-    if environ.get("MOUNT_POINT") is not None:
-        ourDiskMount = environ.get("MOUNT_POINT")
+    if environ.get("HARMONY_DIR") is not None:
+        ourDiskMount = environ.get("HARMONY_DIR")
     else:
-        dotenv.set_key(dot_env, "MOUNT_POINT", directory)
+        dotenv.set_key(dot_env, "HARMONY_DIR", directory)
         load_var_file(dot_env)
-        ourDiskMount = environ.get("MOUNT_POINT")
+        ourDiskMount = environ.get("HARMONY_DIR")
     print_stars()
     print("Here are all of your mount points: ")
     for part in disk_partitions():
@@ -950,16 +948,16 @@ def disk_partitions(all=False):
     return retlist
 
 
-def get_mount_point(pathname):
+def get_HARMONY_DIR(pathname):
     pathname = os.path.normcase(os.path.realpath(pathname))
     parent_device = path_device = os.stat(pathname).st_dev
     while parent_device == path_device:
-        mount_point = pathname
+        HARMONY_DIR = pathname
         pathname = os.path.dirname(pathname)
-        if pathname == mount_point:
+        if pathname == HARMONY_DIR:
             break
         parent_device = os.stat(pathname).st_dev
-    return mount_point
+    return HARMONY_DIR
 
 
 def converted_unit(n):
