@@ -442,8 +442,10 @@ def return_txt(fn: str) -> list:
 def load_var_file(var_file):
     if os.path.exists(var_file):
         load_dotenv(var_file, override=True)
+        return False
     else:
         subprocess.run(["touch", var_file])
+        return True
 
 
 def get_shard_menu() -> None:
@@ -666,15 +668,9 @@ def check_online_version():
     return output_harmony_version.group(1)[:-2], hmy_ver
 
 
-def first_env_check(env_file, home_dir) -> None:
-    if os.path.isfile(env_file):
-        load_var_file(env_file)
-        return False
-    else:
-        os.system(f"touch {home_dir}/.easynode.env")
-        load_var_file(env_file)
-        return True
-
+def first_env_check(env_file) -> None:
+    first_time = load_var_file(env_file)
+    return first_time
 
 def version_checks(harmony_folder):
     software_versions = {}
