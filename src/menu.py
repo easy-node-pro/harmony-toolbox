@@ -4,10 +4,6 @@ from colorama import Fore
 from toolbox.config import EnvironmentVariables
 from toolbox.library import (
     loader_intro,
-    set_wallet_env,
-    recheck_vars,
-    recover_wallet,
-    update_text_file,
     first_env_check,
     print_stars,
     load_var_file
