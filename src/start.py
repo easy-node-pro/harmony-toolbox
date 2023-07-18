@@ -6,7 +6,7 @@ if __name__ == "__main__":
     loader_intro()
     subprocess.run("clear")
     print_stars()
-    if os.path.exists("~/harmony.sh"):
+    if os.path.isfile("~/harmony.sh"):
         print("* harmony.sh already exists in ~/\n*\n* This will exit, please run ~/harmony.sh to launch the toolbox.\n*")
     else:
         print("* Downloading harmony.sh to ~/")
