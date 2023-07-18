@@ -777,7 +777,7 @@ def install_harmony() -> None:
     print_stars()
     # Install harmony
     pull_harmony_update(
-        os.environ.get('MOUNT_POINT'), f"{os.envrion.get('MOUNT_POINT')}/harmony/harmony.conf"
+        os.environ.get('MOUNT_POINT'), f"{os.environ.get('MOUNT_POINT')}/harmony/harmony.conf"
     )
     # install hmy files
     print("* Installing rclone application & rclone configuration files")
