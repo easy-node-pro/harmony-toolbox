@@ -37,7 +37,8 @@ from toolbox.library import (
     loader_intro,
     get_folders,
     validator_stats_output,
-    get_db_size
+    get_db_size,
+    first_setup
 )
 
 
@@ -426,8 +427,9 @@ def safety_defaults() -> None:
                 print("* Harmony not found, contact Easy Node for custom configuration help.")
                 raise SystemExit(0)
         else:
-            print("* Harmony not found, contact Easy Node for custom configuration help.")
-            raise SystemExit(0)
+            # start install if first time
+            if not os.path.exists(EnvironmentVariables.hmy_app):
+                first_setup()
     set_var(EnvironmentVariables.dotenv_file, "EASY_VERSION", EnvironmentVariables.easy_version)
 
 
