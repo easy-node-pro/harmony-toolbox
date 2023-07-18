@@ -6,9 +6,9 @@ if __name__ == "__main__":
     loader_intro()
     subprocess.run("clear")
     print_stars()
-    if not os.path.exists("~/harmony.sh"):
+    if os.path.exists("~/harmony.sh"):
+        print("* harmony.sh already exists in ~/\n*\n* This will exit, please run ~/harmony.sh to launch the toolbox.\n*")
+    else:
         print("* Downloading harmony.sh to ~/")
         subprocess.run("cd ~/ && wget -O harmony.sh https://raw.githubusercontent.com/easy-node-pro/harmony-toolbox/main/src/bin/harmony.sh && chmod +x harmony.sh", shell=True)
-    else:
-        print("* harmony.sh already exists in ~/\n*\n* This will exit, please run ~/harmony.sh to launch the toolbox.\n*")
     print_stars()
