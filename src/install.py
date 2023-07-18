@@ -1,4 +1,5 @@
 import subprocess, os
+from toolbox.config import EnvironmentVariables
 from toolbox.library import loader_intro, print_stars
 
 if __name__ == "__main__":
@@ -6,7 +7,7 @@ if __name__ == "__main__":
     loader_intro()
     subprocess.run("clear")
     print_stars()
-    if os.path.isfile("~/harmony.sh"):
+    if os.path.isfile(EnvironmentVariables.user_home_dir + "/harmony.sh"):
         print("* harmony.sh already exists in ~/\n*\n* This will exit, please run ~/harmony.sh to launch the toolbox.\n*")
     else:
         print("* Downloading harmony.sh to ~/")
