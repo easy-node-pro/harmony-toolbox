@@ -302,19 +302,18 @@ def harmony_service_status(service="harmony") -> None:
 
 
 def set_wallet_env():
-    if environ.get("NODE_WALLET") == "true":
-        if not environ.get("VALIDATOR_WALLET"):
-            output = subprocess.getoutput(
-                f"{EnvironmentVariables.hmy_app} keys list | grep {EnvironmentVariables.active_user}"
-            )
-            output_stripped = output.lstrip(EnvironmentVariables.active_user)
-            output_stripped = output_stripped.strip()
-            set_var(EnvironmentVariables.dotenv_file, "VALIDATOR_WALLET", output_stripped)
-            return output_stripped
-        else:
-            load_var_file(EnvironmentVariables.dotenv_file)
-            validator_wallet = environ.get("VALIDATOR_WALLET")
-            return validator_wallet
+    load_var_file(EnvironmentVariables.dotenv_file)
+    if os.path.exists(EnvironmentVariables.hmy_wallet_store):
+        output = subprocess.getoutput(
+            f"{EnvironmentVariables.hmy_app} keys list | grep {EnvironmentVariables.active_user}"
+        )
+        output_stripped = output.lstrip(EnvironmentVariables.active_user)
+        output_stripped = output_stripped.strip()
+        set_var(EnvironmentVariables.dotenv_file, "VALIDATOR_WALLET", output_stripped)
+        return output_stripped
+    else:
+        validator_wallet = environ.get("VALIDATOR_WALLET")
+        return validator_wallet
 
 
 def get_db_size(harmony_dir, our_shard) -> str:
@@ -456,38 +455,6 @@ def get_shard_menu() -> None:
         our_shard = str(terminal_menu.show())
         set_var(EnvironmentVariables.dotenv_file, "SHARD", our_shard)
         return our_shard
-
-
-def get_node_type() -> None:
-    if not os.path.exists(EnvironmentVariables.hmy_wallet_store):
-        if environ.get("NODE_TYPE") == None:
-            subprocess.run("clear")
-            print_stars()
-            print("* Which type of node would you like to run on this server?                                  *")
-            print_stars()
-            print("* [0] - Validator w/ Wallet - Harmony Validator with Wallet loading (For claim & send)      *")
-            print("* [1] - Validator, No Wallet - Harmony Validator Signing Node no Wallet                     *")
-            print_stars()
-            menu_options = [
-                "[0] Signing Node w/ Wallet Setup",
-                "[1] Signing Node No Wallet Setup",
-            ]
-            terminal_menu = TerminalMenu(menu_options, title="Regular or Full Node Server")
-            results = terminal_menu.show()
-            if results == 0:
-                set_var(EnvironmentVariables.dotenv_file, "NODE_TYPE", "regular")
-                set_var(EnvironmentVariables.dotenv_file, "NODE_WALLET", "true")
-                set_wallet_env()
-            if results == 1:
-                set_var(EnvironmentVariables.dotenv_file, "NODE_TYPE", "regular")
-                set_var(EnvironmentVariables.dotenv_file, "NODE_WALLET", "false")
-            subprocess.run("clear")
-            return
-        return
-    if not environ.get("NODE_TYPE"):
-        set_var(EnvironmentVariables.dotenv_file, "NODE_TYPE", "regular")
-    if not environ.get("NODE_WALLET"):
-        set_var(EnvironmentVariables.dotenv_file, "NODE_WALLET", "true")
 
 
 def set_main_or_test() -> None:
@@ -736,7 +703,6 @@ def recheck_vars():
     # recheck some stuff just in case the .easynode.env isn't proper
     load_var_file(EnvironmentVariables.dotenv_file)
     get_shard_menu()
-    get_node_type()
     set_main_or_test()
     return
 
