@@ -325,7 +325,6 @@ def get_db_size(harmony_dir, our_shard) -> str:
 
 
 def recovery_type():
-    subprocess.run("clear")
     print_stars()
     print("* Wallet Recovery Type!                                                                     *")
     print_stars()
@@ -341,6 +340,7 @@ def recovery_type():
     )
     results = terminal_menu.show()
     if results == 0:
+        passphrase_set()
         passphrase_switch = environ.get("PASS_SWITCH")
         # Mnemonic Recovery Here
         os.system(
@@ -349,6 +349,7 @@ def recovery_type():
         print_stars()
         set_wallet_env()
     elif results == 1:
+        passphrase_set()
         # Private Key Recovery Here
         print("* Private key recovery requires your private information in the command itself.")
         private = input("* Please enter your private key to restore your wallet: ")
@@ -492,7 +493,6 @@ def get_node_type() -> None:
 
 def set_main_or_test() -> None:
     if not environ.get("NETWORK"):
-        subprocess.run("clear")
         print_stars()
         print("* Setup config not found, which blockchain does this node run on?                           *")
         print_stars()
@@ -515,7 +515,6 @@ def set_main_or_test() -> None:
             set_var(EnvironmentVariables.dotenv_file, "NETWORK_SWITCH", "b")
             set_var(EnvironmentVariables.dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
             set_var(EnvironmentVariables.dotenv_file, "RPC_NET_SHARD", f"https://rpc.s{environ.get('SHARD')}.b.hmny.io")
-        subprocess.run("clear")
     return
 
 
