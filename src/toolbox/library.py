@@ -755,7 +755,7 @@ def install_harmony() -> None:
     print_stars()
     question = ask_yes_no(f"* Would you like to install Harmony in the folder ~/harmony on your main disk? (YES/NO)")
     if question:
-        set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", os.environ.get("HARMONY_DIR"))
+        set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f'{EnvironmentVariables.user_home_dir}/harmony')
         print_stars()
         print("* Creating all Harmony Files & Folders")
         os.system(f"mkdir -p {os.environ.get('HARMONY_DIR')}/.hmy/blskeys")
