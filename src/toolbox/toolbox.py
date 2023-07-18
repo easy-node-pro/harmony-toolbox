@@ -597,8 +597,9 @@ def menu_validator_stats():
         local_data_shard = json.loads(result_local_shard.stdout)
     except (ValueError, KeyError, TypeError) as e:
         print(
-            f"* Local Server Offline, restart your service or troubleshoot the issue by running the following in your ~/harmony directory:\n* ./harmony -c harmony.conf, Error: {e}"
+            f"* Local Server Offline\n*\n* Run troubleshooting:\n* Restart your harmony service and view the status\n* If that doesn't bring you online troubleshoot the issue by running the following in your {os.environ.get('HARMONY_DIR')} directory:\n* ./harmony -c harmony.conf, Error: {e}"
         )
+        raise SystemExit(0)
 
     if environ.get("SHARD") != "0":
         remote_shard = [
