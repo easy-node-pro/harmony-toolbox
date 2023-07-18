@@ -2,7 +2,9 @@ import os
 import socket
 import requests
 from os import environ, path
+from dotenv import load_dotenv
 
+load_dotenv("~/.easynode.env")
 
 def get_url(timeout=5) -> str:
     try:
