@@ -1,9 +1,7 @@
 import os
 import socket
-import urllib.request
 import requests
-from os import environ
-from concurrent.futures import ThreadPoolExecutor, TimeoutError
+from os import environ, path
 
 
 def get_url(timeout=5) -> str:
@@ -20,21 +18,21 @@ def get_url(timeout=5) -> str:
 class EnvironmentVariables:
     easy_version = "1.1.0"
     server_host_name = socket.gethostname()
-    user_home_dir = os.path.expanduser("~")
+    user_home_dir = path.expanduser("~")
     dotenv_file = f"{user_home_dir}/.easynode.env"
-    active_user = os.path.split(user_home_dir)[-1]
-    harmony_dir = environ.get("HARMONY_DIR") or os.path.join(user_home_dir, "harmony")
-    bls_key_file = os.path.join(environ.get("HARMONY_DIR"), "blskey.pass")
-    hmy_app = os.path.join(environ.get("HARMONY_DIR"), "hmy")
-    harmony_conf = os.path.join(environ.get("HARMONY_DIR"), "harmony.conf")
-    bls_key_dir = os.path.join(environ.get("HARMONY_DIR"), ".hmy", "blskeys")
-    hmy_wallet_store = os.path.join(user_home_dir, ".hmy_cli", "account-keys", active_user)
-    toolbox_location = os.path.join(user_home_dir, "harmony-toolbox")
-    validator_data = os.path.join(toolbox_location, "metadata", "validator.json")
-    password_path = os.path.join(environ.get("HARMONY_DIR"), "passphrase.txt")
+    active_user = path.split(user_home_dir)[-1]
+    harmony_dir = environ.get("HARMONY_DIR")
+    bls_key_file = path.join(environ.get("HARMONY_DIR"), "blskey.pass")
+    hmy_app = path.join(environ.get("HARMONY_DIR"), "hmy")
+    harmony_conf = path.join(environ.get("HARMONY_DIR"), "harmony.conf")
+    bls_key_dir = path.join(environ.get("HARMONY_DIR"), ".hmy", "blskeys")
+    hmy_wallet_store = path.join(user_home_dir, ".hmy_cli", "account-keys", active_user)
+    toolbox_location = path.join(user_home_dir, "harmony-toolbox")
+    validator_data = path.join(toolbox_location, "metadata", "validator.json")
+    password_path = path.join(environ.get("HARMONY_DIR"), "passphrase.txt")
     external_ip = get_url()
-    main_menu_regular = os.path.join(toolbox_location, "src", "messages", "regularmenu.txt")
-    main_menu_full = os.path.join(toolbox_location, "src", "messages", "fullmenu.txt")
+    main_menu_regular = path.join(toolbox_location, "src", "messages", "regularmenu.txt")
+    main_menu_full = path.join(toolbox_location, "src", "messages", "fullmenu.txt")
     rpc_endpoints = ["https://api.s0.t.hmny.io", "https://api.harmony.one", "https://rpc.ankr.com/harmony"]
     rpc_endpoints_max_connection_retries = 10
     hmy_tmp_path = "/tmp/hmy"

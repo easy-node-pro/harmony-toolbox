@@ -3,8 +3,9 @@ from toolbox.config import EnvironmentVariables
 from toolbox.library import loader_intro, first_env_check, load_var_file, old_toolbox_check, first_setup
 from toolbox.toolbox import safety_defaults, start_regular_node, parse_flags
 
+load_var_file(EnvironmentVariables.dotenv_file)
+
 def app():
-    load_var_file(EnvironmentVariables.dotenv_file)
     # Check for old toolbox first
     old_toolbox_check()
     # Run parser if flags added
