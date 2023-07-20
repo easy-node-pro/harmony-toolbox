@@ -546,7 +546,7 @@ def update_harmony_app():
     print("Downloading current harmony binary file from harmony.one: ")
     print_stars()
     pull_harmony_update(
-        os.environ.get("HARMONY_DIR"), EnvironmentVariables.bls_key_file, EnvironmentVariables.harmony_conf
+        os.environ.get("HARMONY_DIR"), EnvironmentVariables.harmony_conf
     )
     print_stars()
     print("Updated version: ")
