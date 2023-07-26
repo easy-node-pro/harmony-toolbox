@@ -247,16 +247,19 @@ def validator_stats_output(folders) -> None:
     )
     print_stars()
     for folder in folders:
+        current_full_path = f"{EnvironmentVariables.user_home_dir}/{folder}"
+        software_versions = version_checks(current_full_path)
+        print(
+            f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
+        )
+        local_server = [
+            f"{EnvironmentVariables.user_home_dir}/{folder}/hmy",
+            "utility",
+            "metadata",
+            f"--node=http://localhost:{folders[folder]}",
+        ]
+        result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         try:
-            current_full_path = f"{EnvironmentVariables.user_home_dir}/{folder}"
-            software_versions = version_checks(current_full_path)
-            local_server = [
-                f"{EnvironmentVariables.user_home_dir}/{folder}/hmy",
-                "utility",
-                "metadata",
-                f"--node=http://localhost:{folders[folder]}",
-            ]
-            result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
             local_data = json.loads(result_local_server.stdout)
             remote_server = [
                 f"{EnvironmentVariables.user_home_dir}/{folder}/hmy",
@@ -266,9 +269,6 @@ def validator_stats_output(folders) -> None:
             ]
             result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
             remote_data = json.loads(result_remote_server.stdout)
-            print(
-                f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
-            )
             print(
                 f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
             )
