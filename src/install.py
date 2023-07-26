@@ -1,22 +1,19 @@
-import os
-import subprocess
-from os import environ
+import subprocess, os
 from toolbox.config import EnvironmentVariables
-from toolbox.library import loader_intro, load_var_file, first_setup, recover_wallet
+from toolbox.library import loader_intro, print_stars
 
 if __name__ == "__main__":
-    subprocess.run("clear")
     loader_intro()
-    if not os.path.exists(EnvironmentVariables.hmy_app):
-        first_setup()
-    load_var_file(EnvironmentVariables.dotenv_file)
-    if not environ.get("VALIDATOR_WALLET"):
-        recover_wallet()
-        if not environ.get("VALIDATOR_WALLET"):
-            print(
-                "* You don't currently have a validator wallet address loaded in your .env file, please edit ~/.easynode.env and add a line with the following info:\n "
-                + "* VALIDATOR_WALLET='validatorONEaddress' "
-            )
-            input("* Press any key to exit.")
-            raise SystemExit(0)
-    exec(open(f"{EnvironmentVariables.toolbox_location}/src/menu.py").read())
+    subprocess.run("clear")
+    print_stars()
+    if os.path.isfile(EnvironmentVariables.user_home_dir + "/harmony.sh"):
+        print(
+            "* harmony.sh already exists in ~/\n*\n* This will exit, please change to your home directory and run ./harmony.sh to launch the toolbox.\n*\n* Run ./harmony.sh -h for our new help menu!\n*"
+        )
+    else:
+        print("* Downloading harmony.sh to ~/")
+        subprocess.run(
+            "cd ~/ && wget -O harmony.sh https://raw.githubusercontent.com/easy-node-pro/harmony-toolbox/main/src/bin/harmony.sh && chmod +x harmony.sh",
+            shell=True,
+        )
+    print_stars()

@@ -1,12 +1,19 @@
-import subprocess
+import subprocess, os
+from toolbox.config import EnvironmentVariables
 from toolbox.library import loader_intro, print_stars
 
-# This is just a temp file to replace start.py to guide people to install.py or menu.py in the interim. 
-
 if __name__ == "__main__":
-    subprocess.run("clear")
     loader_intro()
     subprocess.run("clear")
     print_stars()
-    print("We've split this into two applications, installer.py & menu.py - please update your startup commands.\n\npython3 ~/harmony-toolbox/install.py\n\npython3 ~/harmony-toolbox/menu.py\n\n")
+    if os.path.isfile(EnvironmentVariables.user_home_dir + "/harmony.sh"):
+        print(
+            "* harmony.sh already exists in ~/\n*\n* This will exit, please change to your home directory and run ./harmony.sh to launch the toolbox.\n*\n* Run ./harmony.sh -h for our new help menu!\n*"
+        )
+    else:
+        print("* Downloading harmony.sh to ~/")
+        subprocess.run(
+            "cd ~/ && wget -O harmony.sh https://raw.githubusercontent.com/easy-node-pro/harmony-toolbox/main/src/bin/harmony.sh && chmod +x harmony.sh",
+            shell=True,
+        )
     print_stars()
