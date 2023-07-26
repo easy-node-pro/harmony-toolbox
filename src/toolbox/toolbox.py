@@ -55,6 +55,13 @@ def parse_flags(parser):
         action="store_true",
         help="Run your stats if Harmony is installed and running.",
     )
+    
+    parser.add_argument(
+        "-u",
+        "--upgrade",
+        action="store_true",
+        help="Upgrade your Harmony binary if an upgrade is available.",
+    )
 
     parser.add_argument(
         "-c",
@@ -83,6 +90,9 @@ def parse_flags(parser):
 
     if args.install:
         first_setup()
+        
+    if args.upgrade:
+        update_harmony_app()
 
     if args.stats:
         run_multistats()
