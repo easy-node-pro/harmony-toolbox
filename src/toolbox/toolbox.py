@@ -41,7 +41,7 @@ from toolbox.library import (
     get_shard_menu,
     set_main_or_test,
     recover_wallet,
-    refresh_stats,
+    refreshing_stats_message,
     passphrase_status
 )
 
@@ -108,7 +108,7 @@ def parse_flags(parser):
 
 
 def run_multistats():
-    refresh_stats()
+    refreshing_stats_message()
     folders = get_folders()
     validator_stats_output(folders)
     return
@@ -428,7 +428,7 @@ def update_stats_option():
 
 def start_regular_node() -> None:
     # Check online versions of harmony & hmy and compare to our local copy.
-    refresh_stats()
+    refreshing_stats_message()
     software_versions = version_checks(environ.get("HARMONY_DIR"))
     run_regular_node(software_versions)
 
@@ -436,7 +436,7 @@ def start_regular_node() -> None:
 def run_regular_node(software_versions) -> None:
     menu_options = {
         0: finish_node,
-        1: refresh_stats,
+        1: refreshing_stats_message,
         2: menu_active_bls,
         3: coming_soon,
         4: run_rewards_collector,

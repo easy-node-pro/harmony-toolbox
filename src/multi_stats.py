@@ -14,7 +14,7 @@ from toolbox.library import (
     ask_yes_no,
     version_checks,
     finish_node,
-    refresh_stats
+    refreshing_stats_message
 )
 from toolbox.toolbox import free_space_check, harmony_service_status, get_rewards_balance, get_db_size
 from subprocess import PIPE, run
@@ -170,7 +170,7 @@ def validator_stats_output(folders) -> None:
 
 if __name__ == "__main__":
     loader_intro()
-    refresh_stats()
+    refreshing_stats_message()
     folders = get_folders()
     validator_stats_output(folders)
     finish_node()

@@ -187,27 +187,23 @@ def get_folders():
         port = find_port(f"harmony")
         folders["harmony"] = port
         print(f"* Found ~/harmony folder, on port {port}")
-        print_stars()
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony0/harmony.conf"):
         port = find_port(f"harmony0")
         folders["harmony0"] = port
         print(f"* Found ~/harmony1 folder, on port {port}")
-        print_stars()
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony1/harmony.conf"):
         port = find_port(f"harmony1")
         folders["harmony1"] = port
         print(f"* Found ~/harmony1 folder, on port {port}")
-        print_stars()
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony2/harmony.conf"):
         port = find_port(f"harmony2")
         folders["harmony2"] = port
         print(f"* Found ~/harmony2 folder, on port {port}")
-        print_stars()
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony3/harmony.conf"):
         port = find_port(f"harmony3")
         folders["harmony3"] = port
         print(f"* Found ~/harmony3 folder, on port {port}")
-        print_stars()
+    print_stars()
     return folders
 
 
@@ -976,7 +972,7 @@ def get_HARMONY_DIR(pathname):
     return HARMONY_DIR
 
 
-def refresh_stats() -> str:
+def refreshing_stats_message() -> str:
     print(Fore.GREEN)
     print_stars()
     print(f"* Getting the latest local & blockchain information now, one moment while we load...")
