@@ -607,7 +607,7 @@ def menu_validator_stats():
         print(f"* Remote Shard 0 Offline, Error {e}")
     try:
         local_shard = [f"{EnvironmentVariables.hmy_app}", "blockchain", "latest-headers"]
-        result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+        result_local_shard = run(f'{environ.get("HARMONY_DIR")}/hmy', stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data_shard = json.loads(result_local_shard.stdout)
     except (ValueError, KeyError, TypeError) as e:
         print(
