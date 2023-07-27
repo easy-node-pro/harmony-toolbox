@@ -373,6 +373,8 @@ def safety_defaults() -> None:
     # always set conf to 13 keys, shard max
     if os.path.exists(EnvironmentVariables.harmony_conf):
         update_text_file(EnvironmentVariables.harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
+    if os.path.isfile(f"{os.environ.get('HARMONY_DIR')}/blskey.pass"):
+        update_text_file(EnvironmentVariables.harmony_conf, 'PassFile = ""', f'PassFile = "blskey.pass"')
     passphrase_status()
     get_shard_menu()
     set_main_or_test()

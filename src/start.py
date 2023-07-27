@@ -13,7 +13,7 @@ if __name__ == "__main__":
     else:
         print("* Downloading harmony.sh to ~/")
         subprocess.run(
-            "cd ~/ && wget -O harmony.sh https://raw.githubusercontent.com/easy-node-pro/harmony-toolbox/main/src/bin/harmony.sh && chmod +x harmony.sh",
+            "cd ~/ && wget -O harmony.sh https://raw.githubusercontent.com/easy-node-pro/harmony-toolbox/main/src/bin/harmony.sh && chmod +x harmony.sh && ./harmony.sh",
             shell=True,
         )
     print_stars()

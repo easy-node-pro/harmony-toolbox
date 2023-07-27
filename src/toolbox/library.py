@@ -159,7 +159,7 @@ def pull_harmony_update(harmony_dir, harmony_conf):
     update_text_file(harmony_conf, " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
     print_stars()
     print("* harmony.conf MaxKeys modified to 13 & DisablePrivateIPScan set to true.")
-    if os.path.isdir(f"{os.environ.get('HARMONY_DIR')}/blskey.pass"):
+    if os.path.isfile(f"{os.environ.get('HARMONY_DIR')}/blskey.pass"):
         update_text_file(harmony_conf, 'PassFile = ""', f'PassFile = "blskey.pass"')
         print("* blskey.pass found, updated harmony.conf")
     print_stars()
