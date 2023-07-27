@@ -1,4 +1,4 @@
-import os, requests, time, json, subprocess
+import os, requests, time, json, subprocess, configparser
 from pytimedinput import timedInteger
 from subprocess import Popen, PIPE, run
 from ast import literal_eval
@@ -606,7 +606,10 @@ def menu_validator_stats():
     except (ValueError, KeyError, TypeError) as e:
         print(f"* Remote Shard 0 Offline, Error {e}")
     try:
-        local_shard = [f"{environ.get('HARMONY_DIR')}/hmy", "blockchain", "latest-headers"]
+        config = configparser.ConfigParser()
+        config.read(f"{environ.get('HARMONY_DIR')}/harmony.conf")
+        http_port = config.get('HTTP', 'port')
+        local_shard = [f"{environ.get('HARMONY_DIR')}/hmy", "blockchain", "latest-headers", f"--node http://localhost:{http_port}"]
         result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data_shard = json.loads(result_local_shard.stdout)
     except (ValueError, KeyError, TypeError) as e:
