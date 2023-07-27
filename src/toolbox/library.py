@@ -1,4 +1,4 @@
-import psutil, platform, dotenv, os, subprocess, requests, pyhmy, shutil, hashlib, re, json, subprocess
+import psutil, platform, dotenv, os, subprocess, requests, pyhmy, shutil, hashlib, re, json, subprocess, getpass
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
@@ -121,25 +121,25 @@ def recover_wallet():
         recovery_type()
         load_var_file(EnvironmentVariables.dotenv_file)
         print(
-            f'\n* Verify the address above matches the address below:\n* Detected Wallet: {Fore.YELLOW}{environ.get("VALIDATOR_WALLET")}{Fore.GREEN}\n* If a different wallet is showing you can remove it and retry it after installation.\n*\n* .{EnvironmentVariables.hmy_app} keys remove {EnvironmentVariables.active_user}\n*\n* To restore a wallet once again, run the following:\n*\n* .{EnvironmentVariables.hmy_app} keys recover-from-mnemonic {EnvironmentVariables.active_user} {environ.get("PASS_SWITCH")}\n*'
+            f'\n* Verify the address above matches the address below:\n* Detected Wallet: {Fore.YELLOW}{environ.get("VALIDATOR_WALLET")}{Fore.GREEN}\n* If a different wallet is showing you can remove it and retry it after installation.\n*\n* .{environ.get("HARMONY_DIR")}/hmy keys remove {EnvironmentVariables.active_user}\n*\n* To restore a wallet once again, run the following:\n*\n* .{environ.get("HARMONY_DIR")}/hmy keys recover-from-mnemonic {EnvironmentVariables.active_user} {environ.get("PASS_SWITCH")}\n*'
         )
         print_stars()
         input("* Verify your wallet information above.\n* Press ENTER to continue Installation.")
     else:
         while True:
             wallet = input(
-                f"* If you'd like to use the management menu, we need a one1 address, please input your address now: "
+                f"* If you'd like to use the management menu, we need a one1 or 0x address, please input your address now: "
             )
-            if wallet.startswith("one1"):
+            if wallet.startswith("one1") or wallet.startswith("0x"):
                 # Re-enter the wallet to verify
                 verify_wallet = input(f"* Please re-enter your wallet address for verification: ")
                 if wallet == verify_wallet:
                     set_var(EnvironmentVariables.dotenv_file, "VALIDATOR_WALLET", wallet)
-                    return
+                    break
                 else:
                     print("The entered wallets do not match. Please try again.")
             else:
-                print("Invalid wallet address. It should start with 'one1'. Please try again.")
+                print("Invalid wallet address. It should start with one1 or 0x. Please try again.")
     return
 
 
@@ -169,7 +169,7 @@ def pull_harmony_update(harmony_dir, harmony_conf):
 
 # Search harmony.conf for the proper port to hit
 def find_port(folder):
-    with open(f"{EnvironmentVariables.user_home_dir}/{folder}/harmony.conf") as f:
+    with open(f"{folder}/harmony.conf") as f:
         data_file = f.readlines()
     count = 0
     for line in data_file:
@@ -183,24 +183,24 @@ def find_port(folder):
 # build list of installs
 def get_folders():
     folders = {}
-    if os.path.exists(f"{os.environ.get('HARMONY_DIR')}/harmony.conf"):
-        port = find_port(f"harmony")
+    if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony/harmony.conf"):
+        port = find_port(f"{EnvironmentVariables.user_home_dir}/harmony")
         folders["harmony"] = port
         print(f"* Found ~/harmony folder, on port {port}")
-    if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony0/harmony.conf"):
-        port = find_port(f"harmony0")
+    if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony0/harmony.conf"):
+        port = find_port(f"{EnvironmentVariables.user_home_dir}/harmony0")
         folders["harmony0"] = port
         print(f"* Found ~/harmony1 folder, on port {port}")
-    if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony1/harmony.conf"):
-        port = find_port(f"harmony1")
+    if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony1/harmony.conf"):
+        port = find_port(f"{EnvironmentVariables.user_home_dir}/harmony1")
         folders["harmony1"] = port
         print(f"* Found ~/harmony1 folder, on port {port}")
-    if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony2/harmony.conf"):
-        port = find_port(f"harmony2")
+    if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony2/harmony.conf"):
+        port = find_port(f"{EnvironmentVariables.user_home_dir}/harmony2")
         folders["harmony2"] = port
         print(f"* Found ~/harmony2 folder, on port {port}")
-    if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony3/harmony.conf"):
-        port = find_port(f"harmony3")
+    if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony3/harmony.conf"):
+        port = find_port(f"{EnvironmentVariables.user_home_dir}/harmony3")
         folders["harmony3"] = port
         print(f"* Found ~/harmony3 folder, on port {port}")
     print_stars()
@@ -268,7 +268,7 @@ def validator_stats_output(folders) -> None:
             print(
                 f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
             )
-            if local_data['result']['shard-id'] == 0:
+            if local_data["result"]["shard-id"] == 0:
                 print(
                     f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
                     + f"\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
@@ -278,7 +278,7 @@ def validator_stats_output(folders) -> None:
                     f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
                     + f"\n*   Local Shard 0 Size: {get_db_size(f'{current_full_path}', '0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
                 )
-                
+
             print_stars()
         except Exception as e:
             print(f"* Error, Service Offline or Unresponsive: {e}")
@@ -321,7 +321,7 @@ def set_wallet_env():
     load_var_file(EnvironmentVariables.dotenv_file)
     if os.path.exists(EnvironmentVariables.hmy_wallet_store):
         output = subprocess.getoutput(
-            f"{EnvironmentVariables.hmy_app} keys list | grep {EnvironmentVariables.active_user}"
+            f"{environ.get('HARMONY_DIR')}/hmy keys list | grep {EnvironmentVariables.active_user}"
         )
         output_stripped = output.lstrip(EnvironmentVariables.active_user)
         output_stripped = output_stripped.strip()
@@ -354,21 +354,20 @@ def recovery_type():
         menu_options, title="* Which type of restore method would you like to use for your validator wallet?"
     )
     results = terminal_menu.show()
+    passphrase_set()
     if results == 0:
-        passphrase_set()
         # Mnemonic Recovery Here
         os.system(
-            f"{EnvironmentVariables.hmy_app} keys recover-from-mnemonic {EnvironmentVariables.active_user} --passphrase-file passphrase.txt"
+            f"{environ.get('HARMONY_DIR')}/hmy keys recover-from-mnemonic {EnvironmentVariables.active_user} --passphrase-file passphrase.txt"
         )
         print_stars()
         set_wallet_env()
     elif results == 1:
-        passphrase_set()
         # Private Key Recovery Here
         print("* Private key recovery requires your private information in the command itself.")
         private = input("* Please enter your private key to restore your wallet: ")
         os.system(
-            f"{EnvironmentVariables.hmy_app} keys import-private-key {private} {EnvironmentVariables.active_user} --passphrase"
+            f"{environ.get('HARMONY_DIR')}/hmy keys import-private-key {private} {EnvironmentVariables.active_user} --passphrase-file passphrase.txt"
         )
         print_stars()
         set_wallet_env()
@@ -389,7 +388,7 @@ def passphrase_status():
 
 
 def passphrase_set():
-    if os.path.exists(EnvironmentVariables.password_path):
+    if os.path.exists(f"{environ.get('HARMONY_DIR')}/passphrase.txt"):
         return
     import getpass
 
@@ -408,7 +407,7 @@ def passphrase_set():
             print("* Passwords Match!")
             break
     # Save file, we won't encrypt because if someone has access to the file, they will also have the salt and decrypt code at their disposal.
-    save_text(EnvironmentVariables.password_path, password_1)
+    save_text(f"{environ.get('HARMONY_DIR')}/passphrase.txt", password_1)
     load_var_file(EnvironmentVariables.dotenv_file)
     passphrase_status()
 
@@ -624,7 +623,7 @@ def wallet_pending_rewards(wallet):
 
 def get_sign_pct() -> str:
     config = EnvironmentVariables()
-    hmy_external_rpc = f"{EnvironmentVariables.hmy_app} --node='{config.working_rpc_endpoint}'"
+    hmy_external_rpc = f"{environ.get('HARMONY_DIR')}/hmy --node='{config.working_rpc_endpoint}'"
     output = subprocess.getoutput(
         f"{hmy_external_rpc} blockchain validator information {environ.get('VALIDATOR_WALLET')} | grep signing-percentage"
     )
@@ -679,6 +678,7 @@ def first_env_check(env_file) -> None:
     first_time = load_var_file(env_file)
     return first_time
 
+
 def version_checks(harmony_folder):
     software_versions = {}
     software_versions["harmony_version"], software_versions["hmy_version"] = get_local_version(f"{harmony_folder}")
@@ -714,7 +714,7 @@ def first_setup():
 
 # looks for ~/harmony or installs it if it's not there. Asks to overwrite if it finds it, run at your own risk.
 def check_for_install() -> str:
-    if os.path.exists(f'{EnvironmentVariables.user_home_dir}/harmony'):
+    if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony"):
         question = ask_yes_no(
             "* You already have a harmony folder on this system, would you like to re-run installation and rclone on this server? (YES/NO)"
         )
@@ -732,10 +732,14 @@ def check_for_install() -> str:
             clone_shards()
             finish_node_install()
         else:
-            if os.path.isdir(f'{EnvironmentVariables.user_home_dir}/harmony'):
-                print("* Exiting Harmony Validator Toolbox\n* You already have a folder at ~/harmony.\n* Contact Easy Node for help setting up if this is an existing Harmony server.")
-            if os.path.isfile(f'{EnvironmentVariables.user_home_dir}/harmony'):
-                print("* Exiting Harmony Validator Toolbox\n* You already have a file at ~/harmony.\n* Contact Easy Node for help setting up if this is an existing Harmony server with a custom configuration.")
+            if os.path.isdir(f"{EnvironmentVariables.user_home_dir}/harmony"):
+                print(
+                    "* Exiting Harmony Validator Toolbox\n* You already have a folder at ~/harmony.\n* Contact Easy Node for help setting up if this is an existing Harmony server."
+                )
+            if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony"):
+                print(
+                    "* Exiting Harmony Validator Toolbox\n* You already have a file at ~/harmony.\n* Contact Easy Node for help setting up if this is an existing Harmony server with a custom configuration."
+                )
             raise SystemExit(0)
     else:
         print(f"* You selected Shard: {environ.get('SHARD')}. ")
@@ -760,28 +764,37 @@ def install_harmony() -> None:
     print_stars()
     print("* Install Location")
     print_stars()
-    question = ask_yes_no(f"* Would you like to install Harmony in the folder ~/harmony on your main disk? (YES/NO)")
+    question = ask_yes_no(
+        f"* Answer yes if you'd like to setup harmony in the default location\n* {EnvironmentVariables.user_home_dir}/harmony\n* Or answer no to choose a custom folder (for a volume or 2nd disk setup): (YES/NO) "
+    )
     if question:
-        set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f'{EnvironmentVariables.user_home_dir}/harmony')
-        print_stars()
-        print("* Creating all Harmony Files & Folders")
-        os.system(f"mkdir -p {os.environ.get('HARMONY_DIR')}/.hmy/blskeys")
+        set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{EnvironmentVariables.user_home_dir}/harmony")
     else:
         answer = input(
-            "* If you'd like to use an alternative location or volume we can make a symlink.\n* What is the full path to your volume? (example: /mnt/mydisk) "
+            "\n* Please enter the full path to a location you'd like to install harmony into.\n* The folder should not exist yet for best results (example: /mnt/volume1/harmony): "
         )
         if not os.path.exists(answer):
-            print("* That path doesn't exist, please try again.")
-            install_harmony()
-        answer2 = input("* Re-enter the path to your volume: ")
-        if answer == answer2:
-            set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{answer}/harmony")
-            print_stars()
-            print("* Creating base folder, setting ownership & creating symlink.")
-            os.system(f"sudo mkdir -p {os.environ.get('HARMONY_DIR')}")
-            os.system(f"sudo chown {EnvironmentVariables.active_user} {os.environ.get('HARMONY_DIR')}")
-            os.system(f"mkdir -p {os.environ.get('HARMONY_DIR')}/.hmy/blskeys")
-            os.system(f"ln -s {os.environ.get('HARMONY_DIR')} {EnvironmentVariables.user_home_dir}/harmony")
+            question = ask_yes_no(
+                f"* That path {answer} doesn't exist yet.\n* Do you want to create the folder {answer} and install the harmony files here? (YES/NO) "
+            )
+            if question:
+                set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{answer}")
+            else:
+                install_harmony()
+        else:
+            question = ask_yes_no(
+                f"* Are you sure you want to isntall into the already existing folder {answer}? (YES/NO) "
+            )
+            if question:
+                set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{answer}")
+            else:
+                install_harmony()
+        set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{answer}")
+        os.system(f"sudo mkdir -p {os.environ.get('HARMONY_DIR')}")
+        os.system(f"sudo chown {EnvironmentVariables.active_user} {os.environ.get('HARMONY_DIR')}")
+    print_stars()
+    print("* Creating all Harmony Files & Folders")
+    os.system(f"mkdir -p {os.environ.get('HARMONY_DIR')}/.hmy/blskeys")
 
     # Setup folders now that symlink exists or we know we're using ~/harmony
     if not os.path.isdir(f"{EnvironmentVariables.user_home_dir}/.hmy_cli/account-keys/"):
@@ -817,14 +830,26 @@ def install_harmony() -> None:
     print_stars()
     # Setup the harmony service file
     print("* Customizing, Moving & Enabling your harmony.service systemd file")
-    if EnvironmentVariables.active_user == "root":
-        os.system(
-            f"sudo cp {EnvironmentVariables.toolbox_location}/src/bin/harmony.service . && sed -i 's/home\/serviceharmony/{EnvironmentVariables.active_user}/g' 'harmony.service' && sed -i 's/serviceharmony/{EnvironmentVariables.active_user}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
-        )
-    else:
-        os.system(
-            f"sudo cp {EnvironmentVariables.toolbox_location}/src/bin/harmony.service . && sed -i 's/serviceharmony/{EnvironmentVariables.active_user}/g' 'harmony.service' && sudo mv harmony.service /etc/systemd/system/harmony.service && sudo chmod a-x /etc/systemd/system/harmony.service && sudo systemctl enable harmony.service"
-        )
+    service_file_path = f"{EnvironmentVariables.toolbox_location}/src/bin/harmony.service"
+    
+    # Read the service file
+    with open(service_file_path, 'r') as file:
+        filedata = file.read()
+
+    # Replace the paths with the value of HARMONY_DIR
+    harmony_dir = os.environ.get("HARMONY_DIR")
+    if harmony_dir:
+        filedata = filedata.replace('WorkingDirectory=/home/serviceharmony/harmony', f'WorkingDirectory={harmony_dir}')
+        filedata = filedata.replace('ExecStart=/home/serviceharmony/harmony/harmony -c harmony.conf', f'ExecStart={harmony_dir}/harmony -c harmony.conf')
+
+    # Write the file out again
+    with open('harmony.service', 'w') as file:
+        file.write(filedata)
+
+    # Move the modified service file into place, change the permissions and enable the service
+    subprocess.run(['sudo', 'mv', 'harmony.service', '/etc/systemd/system/harmony.service'], check=True)
+    subprocess.run(['sudo', 'chmod', 'a-x', '/etc/systemd/system/harmony.service'], check=True)
+    subprocess.run(['sudo', 'systemctl', 'enable', 'harmony.service'], check=True)
 
 
 # Database Downloader

@@ -15,7 +15,7 @@ from toolbox.library import (
     print_whitespace,
     ask_yes_no,
     return_txt,
-    install_harmony,
+    find_port,
     install_hmy,
     get_sign_pct,
     load_var_file,
@@ -195,7 +195,7 @@ def menu_topper_regular(software_versions) -> None:
     print(
         f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(total_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(EnvironmentVariables.rpc_endpoints, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {Fore.BLUE}{EnvironmentVariables.server_host_name}{Fore.GREEN} - {Fore.YELLOW}{EnvironmentVariables.external_ip}{Fore.GREEN}'
     )
-    harmony_service_status()
+    harmony_service_status(environ.get("SERVICE_NAME", "harmony"))
     print(
         f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current disk space free: {Fore.CYAN}{free_space_check(os.environ.get("HARMONY_DIR")): >6}{Fore.GREEN}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
     )
@@ -534,12 +534,12 @@ def hmy_cli_upgrade():
     )
     if question:
         folder_name = make_backup_dir()
-        os.system(f"cp {EnvironmentVariables.hmy_app} {folder_name}")
+        os.system(f"cp {environ.get('HARMONY_DIR')}/hmy {folder_name}")
         print_stars()
         install_hmy()
         print_stars()
         print("Harmony cli has been updated to: ")
-        os.system(f"{EnvironmentVariables.hmy_app} version")
+        os.system(f"{environ.get('HARMONY_DIR')}/hmy version")
         print_stars()
         set_var(EnvironmentVariables.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
         input("* Update completed, press ENTER to return to the main menu. ")
@@ -595,7 +595,7 @@ def update_harmony_app():
 def menu_validator_stats():
     load_var_file(EnvironmentVariables.dotenv_file)
     remote_shard_0 = [
-        f"{EnvironmentVariables.hmy_app}",
+        f"{environ.get('HARMONY_DIR')}/hmy",
         "blockchain",
         "latest-headers",
         f'--node=https://api.s0.{environ.get("NETWORK_SWITCH")}.hmny.io',
@@ -606,7 +606,8 @@ def menu_validator_stats():
     except (ValueError, KeyError, TypeError) as e:
         print(f"* Remote Shard 0 Offline, Error {e}")
     try:
-        local_shard = [f"{EnvironmentVariables.hmy_app}", "blockchain", "latest-headers"]
+        http_port = find_port(environ.get('HARMONY_DIR'))
+        local_shard = [f"{environ.get('HARMONY_DIR')}/hmy", "blockchain", "latest-headers", "--node", f"http://localhost:{http_port}"]
         result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data_shard = json.loads(result_local_shard.stdout)
     except (ValueError, KeyError, TypeError) as e:
@@ -618,7 +619,7 @@ def menu_validator_stats():
 
     if environ.get("SHARD") != "0":
         remote_shard = [
-            f"{EnvironmentVariables.hmy_app}",
+            f"{environ.get('HARMONY_DIR')}/hmy",
             "blockchain",
             "latest-headers",
             f'--node=https://api.s{environ.get("SHARD")}.{environ.get("NETWORK_SWITCH")}.hmny.io',
