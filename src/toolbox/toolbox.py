@@ -1,4 +1,4 @@
-import os, requests, time, json, subprocess, configparser
+import os, requests, time, json, subprocess
 from pytimedinput import timedInteger
 from subprocess import Popen, PIPE, run
 from ast import literal_eval
@@ -15,7 +15,7 @@ from toolbox.library import (
     print_whitespace,
     ask_yes_no,
     return_txt,
-    install_harmony,
+    find_port,
     install_hmy,
     get_sign_pct,
     load_var_file,
@@ -606,13 +606,7 @@ def menu_validator_stats():
     except (ValueError, KeyError, TypeError) as e:
         print(f"* Remote Shard 0 Offline, Error {e}")
     try:
-        # Read the original file
-        with open(f'{environ.get("HARMONY_DIR")}/harmony.conf', 'r') as f:
-            config_string = '[dummy_section]\n' + f.read()
-        config = configparser.ConfigParser()
-        # Read the configuration data with a dummy section
-        config.read_string(config_string)
-        http_port = config.get('HTTP', 'port')
+        http_port = find_port(environ.get('HARMONY_DIR'))
         local_shard = [f"{environ.get('HARMONY_DIR')}/hmy", "blockchain", "latest-headers", "--node", f"http://localhost:{http_port}"]
         result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data_shard = json.loads(result_local_shard.stdout)

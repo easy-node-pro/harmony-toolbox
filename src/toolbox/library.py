@@ -184,23 +184,23 @@ def find_port(folder):
 def get_folders():
     folders = {}
     if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony/harmony.conf"):
-        port = find_port(f"harmony")
+        port = find_port(f"{EnvironmentVariables.user_home_dir}/harmony")
         folders["harmony"] = port
         print(f"* Found ~/harmony folder, on port {port}")
     if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony0/harmony.conf"):
-        port = find_port(f"harmony0")
+        port = find_port(f"{EnvironmentVariables.user_home_dir}/harmony0")
         folders["harmony0"] = port
         print(f"* Found ~/harmony1 folder, on port {port}")
     if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony1/harmony.conf"):
-        port = find_port(f"harmony1")
+        port = find_port(f"{EnvironmentVariables.user_home_dir}/harmony1")
         folders["harmony1"] = port
         print(f"* Found ~/harmony1 folder, on port {port}")
     if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony2/harmony.conf"):
-        port = find_port(f"harmony2")
+        port = find_port(f"{EnvironmentVariables.user_home_dir}/harmony2")
         folders["harmony2"] = port
         print(f"* Found ~/harmony2 folder, on port {port}")
     if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony3/harmony.conf"):
-        port = find_port(f"harmony3")
+        port = find_port(f"{EnvironmentVariables.user_home_dir}/harmony3")
         folders["harmony3"] = port
         print(f"* Found ~/harmony3 folder, on port {port}")
     print_stars()
