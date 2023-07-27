@@ -128,18 +128,18 @@ def recover_wallet():
     else:
         while True:
             wallet = input(
-                f"* If you'd like to use the management menu, we need a one1 address, please input your address now: "
+                f"* If you'd like to use the management menu, we need a one1 or 0x address, please input your address now: "
             )
-            if wallet.startswith("one1"):
+            if wallet.startswith("one1") or wallet.startswith("0x"):
                 # Re-enter the wallet to verify
                 verify_wallet = input(f"* Please re-enter your wallet address for verification: ")
                 if wallet == verify_wallet:
                     set_var(EnvironmentVariables.dotenv_file, "VALIDATOR_WALLET", wallet)
-                    return
+                    break
                 else:
                     print("The entered wallets do not match. Please try again.")
             else:
-                print("Invalid wallet address. It should start with 'one1'. Please try again.")
+                print("Invalid wallet address. It should start with one1 or 0x. Please try again.")
     return
 
 

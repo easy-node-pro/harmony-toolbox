@@ -26,11 +26,20 @@ load_var_file(EnvironmentVariables.dotenv_file)
 user_home = f'{os.path.expanduser("~")}'
 
 if not environ.get("VALIDATOR_WALLET"):
-    # ask for wallet, save to env.
-    address = input(f"No Harmony $ONE address found, please input a one1 or 0x address: ")
-    address_2 = input(f"Please re-enter your address to verify: ")
-    if address == address_2:
-        set_var(EnvironmentVariables.dotenv_file, "VALIDATOR_WALLET", address_2)
+    while True:
+        wallet = input(
+            f"* If you'd like to use stats, we need a one1 or 0x address, please input your address now: "
+        )
+        if wallet.startswith("one1") or wallet.startswith("0x"):
+            # Re-enter the wallet to verify
+            verify_wallet = input(f"* Please re-enter your wallet address for verification: ")
+            if wallet == verify_wallet:
+                set_var(EnvironmentVariables.dotenv_file, "VALIDATOR_WALLET", wallet)
+                break
+            else:
+                print("The entered wallets do not match. Please try again.")
+        else:
+            print("Invalid wallet address. It should start with one1 or 0x. Please try again.")
 
 if not environ.get("NETWORK_SWITCH"):
     # ask for mainnet or testnet
