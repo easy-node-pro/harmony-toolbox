@@ -169,7 +169,7 @@ def pull_harmony_update(harmony_dir, harmony_conf):
 
 # Search harmony.conf for the proper port to hit
 def find_port(folder):
-    with open(f"{EnvironmentVariables.user_home_dir}/{folder}/harmony.conf") as f:
+    with open(f"{folder}/harmony.conf") as f:
         data_file = f.readlines()
     count = 0
     for line in data_file:
@@ -183,7 +183,7 @@ def find_port(folder):
 # build list of installs
 def get_folders():
     folders = {}
-    if os.path.exists(f"{os.environ.get('HARMONY_DIR')}/harmony.conf"):
+    if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony/harmony.conf"):
         port = find_port(f"harmony")
         folders["harmony"] = port
         print(f"* Found ~/harmony folder, on port {port}")
