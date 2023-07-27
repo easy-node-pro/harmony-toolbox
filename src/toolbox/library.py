@@ -121,7 +121,7 @@ def recover_wallet():
         recovery_type()
         load_var_file(EnvironmentVariables.dotenv_file)
         print(
-            f'\n* Verify the address above matches the address below:\n* Detected Wallet: {Fore.YELLOW}{environ.get("VALIDATOR_WALLET")}{Fore.GREEN}\n* If a different wallet is showing you can remove it and retry it after installation.\n*\n* .{EnvironmentVariables.hmy_app} keys remove {EnvironmentVariables.active_user}\n*\n* To restore a wallet once again, run the following:\n*\n* .{EnvironmentVariables.hmy_app} keys recover-from-mnemonic {EnvironmentVariables.active_user} {environ.get("PASS_SWITCH")}\n*'
+            f'\n* Verify the address above matches the address below:\n* Detected Wallet: {Fore.YELLOW}{environ.get("VALIDATOR_WALLET")}{Fore.GREEN}\n* If a different wallet is showing you can remove it and retry it after installation.\n*\n* .{environ.get("HARMONY_DIR")}/hmy keys remove {EnvironmentVariables.active_user}\n*\n* To restore a wallet once again, run the following:\n*\n* .{environ.get("HARMONY_DIR")}/hmy keys recover-from-mnemonic {EnvironmentVariables.active_user} {environ.get("PASS_SWITCH")}\n*'
         )
         print_stars()
         input("* Verify your wallet information above.\n* Press ENTER to continue Installation.")
@@ -321,7 +321,7 @@ def set_wallet_env():
     load_var_file(EnvironmentVariables.dotenv_file)
     if os.path.exists(EnvironmentVariables.hmy_wallet_store):
         output = subprocess.getoutput(
-            f"{EnvironmentVariables.hmy_app} keys list | grep {EnvironmentVariables.active_user}"
+            f"{environ.get("HARMONY_DIR")}/hmy keys list | grep {EnvironmentVariables.active_user}"
         )
         output_stripped = output.lstrip(EnvironmentVariables.active_user)
         output_stripped = output_stripped.strip()
@@ -358,7 +358,7 @@ def recovery_type():
     if results == 0:
         # Mnemonic Recovery Here
         os.system(
-            f"{EnvironmentVariables.hmy_app} keys recover-from-mnemonic {EnvironmentVariables.active_user} --passphrase-file passphrase.txt"
+            f"{environ.get('HARMONY_DIR')}/hmy keys recover-from-mnemonic {EnvironmentVariables.active_user} --passphrase-file passphrase.txt"
         )
         print_stars()
         set_wallet_env()
@@ -367,7 +367,7 @@ def recovery_type():
         print("* Private key recovery requires your private information in the command itself.")
         private = input("* Please enter your private key to restore your wallet: ")
         os.system(
-            f"{EnvironmentVariables.hmy_app} keys import-private-key {private} {EnvironmentVariables.active_user} --passphrase"
+            f"{environ.get('HARMONY_DIR')}/hmy keys import-private-key {private} {EnvironmentVariables.active_user} --passphrase"
         )
         print_stars()
         set_wallet_env()
@@ -623,7 +623,7 @@ def wallet_pending_rewards(wallet):
 
 def get_sign_pct() -> str:
     config = EnvironmentVariables()
-    hmy_external_rpc = f"{EnvironmentVariables.hmy_app} --node='{config.working_rpc_endpoint}'"
+    hmy_external_rpc = f"{environ.get("HARMONY_DIR")}/hmy --node='{config.working_rpc_endpoint}'"
     output = subprocess.getoutput(
         f"{hmy_external_rpc} blockchain validator information {environ.get('VALIDATOR_WALLET')} | grep signing-percentage"
     )

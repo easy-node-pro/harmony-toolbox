@@ -534,12 +534,12 @@ def hmy_cli_upgrade():
     )
     if question:
         folder_name = make_backup_dir()
-        os.system(f"cp {EnvironmentVariables.hmy_app} {folder_name}")
+        os.system(f"cp {environ.get('HARMONY_DIR')}/hmy {folder_name}")
         print_stars()
         install_hmy()
         print_stars()
         print("Harmony cli has been updated to: ")
-        os.system(f"{EnvironmentVariables.hmy_app} version")
+        os.system(f"{environ.get('HARMONY_DIR')}/hmy version")
         print_stars()
         set_var(EnvironmentVariables.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
         input("* Update completed, press ENTER to return to the main menu. ")
@@ -595,7 +595,7 @@ def update_harmony_app():
 def menu_validator_stats():
     load_var_file(EnvironmentVariables.dotenv_file)
     remote_shard_0 = [
-        f"{EnvironmentVariables.hmy_app}",
+        f"{environ.get('HARMONY_DIR')}/hmy",
         "blockchain",
         "latest-headers",
         f'--node=https://api.s0.{environ.get("NETWORK_SWITCH")}.hmny.io',
@@ -619,7 +619,7 @@ def menu_validator_stats():
 
     if environ.get("SHARD") != "0":
         remote_shard = [
-            f"{EnvironmentVariables.hmy_app}",
+            f"{environ.get('HARMONY_DIR')}/hmy",
             "blockchain",
             "latest-headers",
             f'--node=https://api.s{environ.get("SHARD")}.{environ.get("NETWORK_SWITCH")}.hmny.io',
