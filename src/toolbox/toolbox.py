@@ -607,7 +607,7 @@ def menu_validator_stats():
         print(f"* Remote Shard 0 Offline, Error {e}")
     try:
         # Read the original file
-        with open('~/harmony3/harmony.conf', 'r') as f:
+        with open(f'{environ.get("HARMONY_DIR")}/harmony.conf', 'r') as f:
             config_string = '[dummy_section]\n' + f.read()
         config = configparser.ConfigParser()
         # Read the configuration data with a dummy section
