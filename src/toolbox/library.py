@@ -159,7 +159,7 @@ def pull_harmony_update(harmony_dir, harmony_conf):
     update_text_file(harmony_conf, " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
     print_stars()
     print("* harmony.conf MaxKeys modified to 13 & DisablePrivateIPScan set to true.")
-    if os.path.isdir(f"{os.environ.get('HARMONY_DIR')}/blskey.pass"):
+    if os.path.isfile(f"{os.environ.get('HARMONY_DIR')}/blskey.pass"):
         update_text_file(harmony_conf, 'PassFile = ""', f'PassFile = "blskey.pass"')
         print("* blskey.pass found, updated harmony.conf")
     print_stars()
@@ -187,27 +187,23 @@ def get_folders():
         port = find_port(f"harmony")
         folders["harmony"] = port
         print(f"* Found ~/harmony folder, on port {port}")
-        print_stars()
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony0/harmony.conf"):
         port = find_port(f"harmony0")
         folders["harmony0"] = port
         print(f"* Found ~/harmony1 folder, on port {port}")
-        print_stars()
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony1/harmony.conf"):
         port = find_port(f"harmony1")
         folders["harmony1"] = port
         print(f"* Found ~/harmony1 folder, on port {port}")
-        print_stars()
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony2/harmony.conf"):
         port = find_port(f"harmony2")
         folders["harmony2"] = port
         print(f"* Found ~/harmony2 folder, on port {port}")
-        print_stars()
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/harmony3/harmony.conf"):
         port = find_port(f"harmony3")
         folders["harmony3"] = port
         print(f"* Found ~/harmony3 folder, on port {port}")
-        print_stars()
+    print_stars()
     return folders
 
 
@@ -259,22 +255,34 @@ def validator_stats_output(folders) -> None:
             f"--node=http://localhost:{folders[folder]}",
         ]
         result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-        local_data = json.loads(result_local_server.stdout)
-        remote_server = [
-            f"{EnvironmentVariables.user_home_dir}/{folder}/hmy",
-            "utility",
-            "metadata",
-            f"--node=https://api.s{local_data['result']['shard-id']}.t.hmny.io",
-        ]
-        result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-        remote_data = json.loads(result_remote_server.stdout)
-        print(
-            f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
-        )
-        print(
-            f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}\n*   Local Shard 0 Size: {get_db_size(f'{current_full_path}', '0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
-        )
-        print_stars()
+        try:
+            local_data = json.loads(result_local_server.stdout)
+            remote_server = [
+                f"{EnvironmentVariables.user_home_dir}/{folder}/hmy",
+                "utility",
+                "metadata",
+                f"--node=https://api.s{local_data['result']['shard-id']}.t.hmny.io",
+            ]
+            result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+            remote_data = json.loads(result_remote_server.stdout)
+            print(
+                f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
+            )
+            if local_data['result']['shard-id'] == 0:
+                print(
+                    f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
+                    + f"\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
+                )
+            else:
+                print(
+                    f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
+                    + f"\n*   Local Shard 0 Size: {get_db_size(f'{current_full_path}', '0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
+                )
+                
+            print_stars()
+        except Exception as e:
+            print(f"* Error, Service Offline or Unresponsive: {e}")
+            print_stars()
 
 
 def harmony_service_status(service="harmony") -> None:
@@ -972,7 +980,7 @@ def get_HARMONY_DIR(pathname):
     return HARMONY_DIR
 
 
-def refresh_stats() -> str:
+def refreshing_stats_message() -> str:
     print(Fore.GREEN)
     print_stars()
     print(f"* Getting the latest local & blockchain information now, one moment while we load...")
