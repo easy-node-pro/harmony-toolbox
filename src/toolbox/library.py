@@ -321,7 +321,7 @@ def set_wallet_env():
     load_var_file(EnvironmentVariables.dotenv_file)
     if os.path.exists(EnvironmentVariables.hmy_wallet_store):
         output = subprocess.getoutput(
-            f"{environ.get("HARMONY_DIR")}/hmy keys list | grep {EnvironmentVariables.active_user}"
+            f"{environ.get('HARMONY_DIR')}/hmy keys list | grep {EnvironmentVariables.active_user}"
         )
         output_stripped = output.lstrip(EnvironmentVariables.active_user)
         output_stripped = output_stripped.strip()
@@ -623,7 +623,7 @@ def wallet_pending_rewards(wallet):
 
 def get_sign_pct() -> str:
     config = EnvironmentVariables()
-    hmy_external_rpc = f"{environ.get("HARMONY_DIR")}/hmy --node='{config.working_rpc_endpoint}'"
+    hmy_external_rpc = f"{environ.get('HARMONY_DIR')}/hmy --node='{config.working_rpc_endpoint}'"
     output = subprocess.getoutput(
         f"{hmy_external_rpc} blockchain validator information {environ.get('VALIDATOR_WALLET')} | grep signing-percentage"
     )
