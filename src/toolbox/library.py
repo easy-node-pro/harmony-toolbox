@@ -760,7 +760,7 @@ def install_harmony() -> None:
     print_stars()
     print("* Install Location")
     print_stars()
-    question = ask_yes_no(f"* Answer yes if you'd like to setup harmony in the default location {EnvironmentVariables.user_home_dir}/harmony or answer no to choose a custom folder (for a volume or 2nd disk setup): (YES/NO) ")
+    question = ask_yes_no(f"* Answer yes if you'd like to setup harmony in the default location\n* {EnvironmentVariables.user_home_dir}/harmony\n* Or answer no to choose a custom folder (for a volume or 2nd disk setup): (YES/NO) ")
     if question:
         set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f'{EnvironmentVariables.user_home_dir}/harmony')
     else:
