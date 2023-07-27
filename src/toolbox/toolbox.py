@@ -606,8 +606,12 @@ def menu_validator_stats():
     except (ValueError, KeyError, TypeError) as e:
         print(f"* Remote Shard 0 Offline, Error {e}")
     try:
+        # Read the original file
+        with open('~/harmony3/harmony.conf', 'r') as f:
+            config_string = '[dummy_section]\n' + f.read()
         config = configparser.ConfigParser()
-        config.read(f"{environ.get('HARMONY_DIR')}/harmony.conf")
+        # Read the configuration data with a dummy section
+        config.read_string(config_string)
         http_port = config.get('HTTP', 'port')
         local_shard = [f"{environ.get('HARMONY_DIR')}/hmy", "blockchain", "latest-headers", f"--node http://localhost:{http_port}"]
         result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
