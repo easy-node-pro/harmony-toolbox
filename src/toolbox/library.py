@@ -830,6 +830,8 @@ def install_harmony() -> None:
     print_stars()
     # Setup the harmony service file
     print("* Customizing, Moving & Enabling your harmony.service systemd file")
+    
+    # Set initial file for customization
     service_file_path = f"{EnvironmentVariables.toolbox_location}/src/bin/harmony.service"
     
     # Read the service file
@@ -847,6 +849,7 @@ def install_harmony() -> None:
         file.write(filedata)
 
     # Move the modified service file into place, change the permissions and enable the service
+    # Update these steps in the future to use a dynamic harmony.service name?
     subprocess.run(['sudo', 'mv', 'harmony.service', '/etc/systemd/system/harmony.service'], check=True)
     subprocess.run(['sudo', 'chmod', 'a-x', '/etc/systemd/system/harmony.service'], check=True)
     subprocess.run(['sudo', 'systemctl', 'enable', 'harmony.service'], check=True)
