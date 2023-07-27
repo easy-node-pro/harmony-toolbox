@@ -832,30 +832,28 @@ def install_harmony() -> None:
     print("* Customizing, Moving & Enabling your harmony.service systemd file")
 
     service_file_path = f"{EnvironmentVariables.toolbox_location}/src/bin/harmony.service"
-    service_file_target_path = "/etc/systemd/system/harmony.service"
 
     # Read the service file
-    with open(service_file_path, "r") as file:
+    with open(service_file_path, 'r') as file:
         filedata = file.read()
 
     # Replace the target strings
-    filedata = filedata.replace("home/serviceharmony", EnvironmentVariables.active_user)
-    filedata = filedata.replace("serviceharmony", EnvironmentVariables.active_user)
+    filedata = filedata.replace('home/serviceharmony', EnvironmentVariables.active_user)
+    filedata = filedata.replace('serviceharmony', EnvironmentVariables.active_user)
 
     # Replace the paths with the value of HARMONY_DIR
     harmony_dir = os.environ.get("HARMONY_DIR")
     if harmony_dir:
-        filedata = filedata.replace("/home/serviceharmony/harmony", harmony_dir)
+        filedata = filedata.replace('/home/serviceharmony/harmony', harmony_dir)
 
     # Write the file out again
-    with open("harmony.service", "w") as file:
+    with open('harmony.service', 'w') as file:
         file.write(filedata)
 
-    # Move the modified service file into place
-    shutil.move("harmony.service", service_file_target_path)
-
-    # Change the permissions and enable the service
-    os.system(f"sudo chmod a-x {service_file_target_path} && sudo systemctl enable harmony.service")
+    # Move the modified service file into place, change the permissions and enable the service
+    subprocess.run(['sudo', 'mv', 'harmony.service', '/etc/systemd/system/harmony.service'], check=True)
+    subprocess.run(['sudo', 'chmod', 'a-x', '/etc/systemd/system/harmony.service'], check=True)
+    subprocess.run(['sudo', 'systemctl', 'enable', 'harmony.service'], check=True)
 
 
 # Database Downloader
