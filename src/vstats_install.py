@@ -3,7 +3,7 @@ import sys
 import subprocess
 from os import environ
 from toolbox.config import EnvironmentVariables
-from toolbox.library import loader_intro, load_var_file, ask_yes_no, set_var, update_text_file, print_stars
+from toolbox.library import loader_intro, load_var_file, ask_yes_no, set_var, update_text_file, print_stars, process_command
 
 def install_vstats(vstatsToken) -> None:
     # Check if it exists already
@@ -13,18 +13,18 @@ def install_vstats(vstatsToken) -> None:
             raise SystemExit(0)
         else:
             # Start install by stopping and wipe for re-install if yes
-            os.system("sudo service harmony_node_stats stop")
-            os.system(f"sudo rm -r {EnvironmentVariables.user_home_dir}/harmony_node_stats")
+            process_command("sudo service harmony_node_stats stop")
+            process_command(f"sudo rm -r {EnvironmentVariables.user_home_dir}/harmony_node_stats")
         
     # Install it bud, pull git repo
     os.chdir(f"{EnvironmentVariables.user_home_dir}")
-    os.system("git clone https://github.com/FortuneV13/harmony_node_stats")
+    process_command("git clone https://github.com/FortuneV13/harmony_node_stats")
     os.chdir(f"{EnvironmentVariables.user_home_dir}/harmony_node_stats")
     # setup python stuff
-    os.system("sudo apt install python3-pip -y")
-    os.system("pip3 install -r requirements.txt")
+    process_command("sudo apt install python3-pip -y")
+    process_command("pip3 install -r requirements.txt")
     # customize config file
-    os.system("cp config.example.py config.py")
+    process_command("cp config.example.py config.py")
     update_text_file(f"{EnvironmentVariables.user_home_dir}/harmony_node_stats/config.py", 'VSTATS_TOKEN=""', f'VSTATS_TOKEN="{vstatsToken}"')
     if os.path.isdir(f"{EnvironmentVariables.user_home_dir}/harmony"):
         update_text_file(f"{EnvironmentVariables.user_home_dir}/harmony_node_stats/config.py", '"harmony_folder":"/home/serviceharmony/harmony"', f'"harmony_folder":"{EnvironmentVariables.user_home_dir}/harmony"')
@@ -33,11 +33,11 @@ def install_vstats(vstatsToken) -> None:
             update_text_file(f"{EnvironmentVariables.user_home_dir}/harmony_node_stats/config.py", '"harmony_folder":"/home/serviceharmony/harmony"', f'"harmony_folder":"{EnvironmentVariables.user_home_dir}"')
     # Do service stuff here
     if EnvironmentVariables.active_user == 'root':
-        os.system(
+        process_command(
         f"sudo cp {EnvironmentVariables.toolbox_location}/src/bin/harmony_node_stats.service . && sed -i 's/home\/serviceharmony/{EnvironmentVariables.active_user}/g' 'harmony_node_stats.service' && sed -i 's/serviceharmony/{EnvironmentVariables.active_user}/g' 'harmony_node_stats.service' && sudo mv harmony_node_stats.service /etc/systemd/system/harmony_node_stats.service && sudo chmod a-x /etc/systemd/system/harmony_node_stats.service && sudo systemctl enable harmony_node_stats.service && sudo service harmony_node_stats start"
     )
     else:
-        os.system(
+        process_command(
         f"sudo cp {EnvironmentVariables.toolbox_location}/src/bin/harmony_node_stats.service . && sed -i 's/serviceharmony/{EnvironmentVariables.active_user}/g' 'harmony_node_stats.service' && sudo mv harmony_node_stats.service /etc/systemd/system/harmony_node_stats.service && sudo chmod a-x /etc/systemd/system/harmony_node_stats.service && sudo systemctl enable harmony_node_stats.service && sudo service harmony_node_stats start"
     )
     return

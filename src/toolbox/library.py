@@ -91,8 +91,8 @@ def old_toolbox_check():
 
 # Install Harmony ONE
 def install_hmy():
-    os.chdir(f"{os.environ.get('HARMONY_DIR')}")
-    os.system(f"curl -LO https://harmony.one/hmycli && mv hmycli hmy && chmod +x hmy")
+    os.chdir(f"{environ.get('HARMONY_DIR')}")
+    process_command(f"curl -LO https://harmony.one/hmycli && mv hmycli hmy && chmod +x hmy")
     print_stars()
     print("* hmy application installed.")
 
@@ -147,19 +147,19 @@ def pull_harmony_update(harmony_dir, harmony_conf):
     arch = os.uname().machine
     os.chdir(f"{harmony_dir}")
     if environ.get("NETWORK") == "testnet":
-        os.system("curl -LO https://harmony.one/binary_testnet && mv binary_testnet harmony && chmod +x harmony")
-        os.system("./harmony config dump --network testnet harmony.conf")
+        process_command("curl -LO https://harmony.one/binary_testnet && mv binary_testnet harmony && chmod +x harmony")
+        process_command("./harmony config dump --network testnet harmony.conf")
     if environ.get("NETWORK") == "mainnet":
         if arch.startswith("arm"):
-            os.system("curl -LO https://harmony.one/binary-arm64 && mv binary-arm64 harmony && chmod +x harmony")
+            process_command("curl -LO https://harmony.one/binary-arm64 && mv binary-arm64 harmony && chmod +x harmony")
         if arch == "x86_64":
-            os.system("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
-        os.system("./harmony config dump harmony.conf")
+            process_command("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
+        process_command("./harmony config dump harmony.conf")
     update_text_file(harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
     update_text_file(harmony_conf, " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
     print_stars()
     print("* harmony.conf MaxKeys modified to 13 & DisablePrivateIPScan set to true.")
-    if os.path.isfile(f"{os.environ.get('HARMONY_DIR')}/blskey.pass"):
+    if os.path.isfile(f"{environ.get('HARMONY_DIR')}/blskey.pass"):
         update_text_file(harmony_conf, 'PassFile = ""', f'PassFile = "blskey.pass"')
         print("* blskey.pass found, updated harmony.conf")
     print_stars()
@@ -335,7 +335,7 @@ def set_wallet_env():
 def get_db_size(harmony_dir, our_shard) -> str:
     harmony_db_size = subprocess.getoutput(f"du -h {harmony_dir}/harmony_db_{our_shard}")
     harmony_db_size = harmony_db_size.rstrip("\t")
-    countTrim = len(os.environ.get("HARMONY_DIR")) + 13
+    countTrim = len(environ.get("HARMONY_DIR")) + 13
     return harmony_db_size[:-countTrim]
 
 
@@ -357,7 +357,7 @@ def recovery_type():
     passphrase_set()
     if results == 0:
         # Mnemonic Recovery Here
-        os.system(
+        process_command(
             f"{environ.get('HARMONY_DIR')}/hmy keys recover-from-mnemonic {EnvironmentVariables.active_user} --passphrase-file passphrase.txt"
         )
         print_stars()
@@ -366,7 +366,7 @@ def recovery_type():
         # Private Key Recovery Here
         print("* Private key recovery requires your private information in the command itself.")
         private = input("* Please enter your private key to restore your wallet: ")
-        os.system(
+        process_command(
             f"{environ.get('HARMONY_DIR')}/hmy keys import-private-key {private} {EnvironmentVariables.active_user} --passphrase-file passphrase.txt"
         )
         print_stars()
@@ -380,7 +380,7 @@ def passphrase_status():
         set_var(
             EnvironmentVariables.dotenv_file,
             "PASS_SWITCH",
-            f"--passphrase-file {os.environ.get('HARMONY_DIR')}/passphrase.txt",
+            f"--passphrase-file {environ.get('HARMONY_DIR')}/passphrase.txt",
         )
     else:
         set_var(EnvironmentVariables.dotenv_file, "PASS_SWITCH", "--passphrase")
@@ -392,7 +392,7 @@ def passphrase_set():
         return
     import getpass
 
-    print(f"* Setup {os.environ.get('HARMONY_DIR')}/passphrase.txt file for use with autobidder & harmony-toolbox.")
+    print(f"* Setup {environ.get('HARMONY_DIR')}/passphrase.txt file for use with autobidder & harmony-toolbox.")
     print_stars()
     # take input
     while True:
@@ -790,32 +790,32 @@ def install_harmony() -> None:
             else:
                 install_harmony()
         set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{answer}")
-        os.system(f"sudo mkdir -p {os.environ.get('HARMONY_DIR')}")
-        os.system(f"sudo chown {EnvironmentVariables.active_user} {os.environ.get('HARMONY_DIR')}")
+        process_command(f"sudo mkdir -p {environ.get('HARMONY_DIR')}")
+        process_command(f"sudo chown {EnvironmentVariables.active_user} {environ.get('HARMONY_DIR')}")
     print_stars()
     print("* Creating all Harmony Files & Folders")
-    os.system(f"mkdir -p {os.environ.get('HARMONY_DIR')}/.hmy/blskeys")
+    process_command(f"mkdir -p {environ.get('HARMONY_DIR')}/.hmy/blskeys")
 
     # Setup folders now that symlink exists or we know we're using ~/harmony
     if not os.path.isdir(f"{EnvironmentVariables.user_home_dir}/.hmy_cli/account-keys/"):
-        os.system(f"mkdir -p {EnvironmentVariables.user_home_dir}/.hmy_cli/account-keys/")
-    if not os.path.isdir(f"{os.environ.get('HARMONY_DIR')}/.hmy/blskeys"):
+        process_command(f"mkdir -p {EnvironmentVariables.user_home_dir}/.hmy_cli/account-keys/")
+    if not os.path.isdir(f"{environ.get('HARMONY_DIR')}/.hmy/blskeys"):
         print("* Creating all Harmony Files & Folders")
-        os.system(f"mkdir -p {os.environ.get('HARMONY_DIR')}/.hmy/blskeys")
+        process_command(f"mkdir -p {environ.get('HARMONY_DIR')}/.hmy/blskeys")
     # Change to ~/harmony folder
-    os.chdir(f"{os.environ.get('HARMONY_DIR')}")
+    os.chdir(f"{environ.get('HARMONY_DIR')}")
     print_stars()
     # Install hmy
     install_hmy()
     print_stars()
     # Install harmony
-    pull_harmony_update(os.environ.get("HARMONY_DIR"), f"{os.environ.get('HARMONY_DIR')}/harmony.conf")
+    pull_harmony_update(environ.get("HARMONY_DIR"), f"{environ.get('HARMONY_DIR')}/harmony.conf")
     # install hmy files
     print("* Installing rclone application & rclone configuration files")
     print_stars()
     # check for working rclone site and download
     try:
-        os.system("curl https://rclone.org/install.sh | sudo bash")
+        process_command("curl https://rclone.org/install.sh | sudo bash")
     except (ValueError, KeyError, TypeError):
         result = ask_yes_no(
             "* rclone site is offline, we can install rclone from the Ubuntu repo as a workaround, do you want to continue? (Y/N): "
@@ -824,7 +824,7 @@ def install_harmony() -> None:
             # If rclone curl is down, install rclone with apt instead
             subprocess.run("sudo apt install rclone -y")
 
-    os.system(
+    process_command(
         f"mkdir -p {EnvironmentVariables.user_home_dir}/.config/rclone && cp {EnvironmentVariables.toolbox_location}/src/bin/rclone.conf {EnvironmentVariables.user_home_dir}/.config/rclone/"
     )
     print_stars()
@@ -839,7 +839,7 @@ def install_harmony() -> None:
         filedata = file.read()
 
     # Replace the paths with the value of HARMONY_DIR
-    harmony_dir = os.environ.get("HARMONY_DIR")
+    harmony_dir = environ.get("HARMONY_DIR")
     if harmony_dir:
         filedata = filedata.replace('WorkingDirectory=/home/serviceharmony/harmony', f'WorkingDirectory={harmony_dir}')
         filedata = filedata.replace('ExecStart=/home/serviceharmony/harmony/harmony -c harmony.conf', f'ExecStart={harmony_dir}/harmony -c harmony.conf')
@@ -858,14 +858,14 @@ def install_harmony() -> None:
 # Database Downloader
 def clone_shards():
     # Move to ~/harmony
-    os.chdir(f"{os.environ.get('HARMONY_DIR')}")
+    os.chdir(f"{environ.get('HARMONY_DIR')}")
 
     if environ.get("SHARD") != "0":
         # If we're not on shard 0, download the numbered shard DB here.
         print(f"* Now cloning shard {environ.get('SHARD')}")
         print_stars()
-        os.system(
-            f"rclone -P sync release:pub.harmony.one/{environ.get('NETWORK')}.min/harmony_db_{environ.get('SHARD')} {os.environ.get('HARMONY_DIR')}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 4 --transfers=32"
+        process_command(
+            f"rclone -P sync release:pub.harmony.one/{environ.get('NETWORK')}.min/harmony_db_{environ.get('SHARD')} {environ.get('HARMONY_DIR')}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 4 --transfers=32"
         )
         print_stars()
         print(f"* Shard {environ.get('SHARD')} completed.\n* Shard 0 will be created when you start your service.")
@@ -874,8 +874,8 @@ def clone_shards():
         # If we're on shard 0, grab the snap DB here.
         print("* Now cloning Shard 0, kick back and relax for awhile...")
         print_stars()
-        os.system(
-            f"rclone -P -L --checksum sync release:pub.harmony.one/{environ.get('NETWORK')}.snap/harmony_db_0 {os.environ.get('HARMONY_DIR')}/harmony_db_0 --multi-thread-streams 4 --transfers=32"
+        process_command(
+            f"rclone -P -L --checksum sync release:pub.harmony.one/{environ.get('NETWORK')}.snap/harmony_db_0 {environ.get('HARMONY_DIR')}/harmony_db_0 --multi-thread-streams 4 --transfers=32"
         )
 
 
@@ -888,11 +888,11 @@ def set_mounted_point():
         myVolumePath = "/mnt/" + str(volumeMountPath[0])
         myLongHmyPath = myVolumePath + "/harmony"
     else:
-        myVolumePath = os.environ.get("HARMONY_DIR")
+        myVolumePath = environ.get("HARMONY_DIR")
     if totalDir == 1:
         dotenv.set_key(EnvironmentVariables.dotenv_file, "HARMONY_DIR", myLongHmyPath)
     else:
-        dotenv.set_key(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{os.environ.get('HARMONY_DIR')}")
+        dotenv.set_key(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{environ.get('HARMONY_DIR')}")
 
 
 def finish_node_install():
@@ -1173,7 +1173,7 @@ def menu_reboot_server() -> str:
         + "Are you sure you would like to proceed with rebooting your server?\n\nType 'Yes' or 'No' to continue"
     )
     if question:
-        os.system("sudo reboot")
+        process_command("sudo reboot")
     else:
         print("Invalid option.")
 
