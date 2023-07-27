@@ -367,7 +367,7 @@ def recovery_type():
         print("* Private key recovery requires your private information in the command itself.")
         private = input("* Please enter your private key to restore your wallet: ")
         os.system(
-            f"{environ.get('HARMONY_DIR')}/hmy keys import-private-key {private} {EnvironmentVariables.active_user} --passphrase"
+            f"{environ.get('HARMONY_DIR')}/hmy keys import-private-key {private} {EnvironmentVariables.active_user} --passphrase-file passphrase.txt"
         )
         print_stars()
         set_wallet_env()
@@ -830,21 +830,17 @@ def install_harmony() -> None:
     print_stars()
     # Setup the harmony service file
     print("* Customizing, Moving & Enabling your harmony.service systemd file")
-
     service_file_path = f"{EnvironmentVariables.toolbox_location}/src/bin/harmony.service"
-
+    
     # Read the service file
     with open(service_file_path, 'r') as file:
         filedata = file.read()
 
-    # Replace the target strings
-    filedata = filedata.replace('home/serviceharmony', EnvironmentVariables.active_user)
-    filedata = filedata.replace('serviceharmony', EnvironmentVariables.active_user)
-
     # Replace the paths with the value of HARMONY_DIR
     harmony_dir = os.environ.get("HARMONY_DIR")
     if harmony_dir:
-        filedata = filedata.replace('/home/serviceharmony/harmony', harmony_dir)
+        filedata = filedata.replace('WorkingDirectory=/home/serviceharmony/harmony', f'WorkingDirectory={harmony_dir}')
+        filedata = filedata.replace('ExecStart=/home/serviceharmony/harmony/harmony -c harmony.conf', f'ExecStart={harmony_dir}/harmony -c harmony.conf')
 
     # Write the file out again
     with open('harmony.service', 'w') as file:
