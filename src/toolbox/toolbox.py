@@ -613,7 +613,7 @@ def menu_validator_stats():
         # Read the configuration data with a dummy section
         config.read_string(config_string)
         http_port = config.get('HTTP', 'port')
-        local_shard = [f"{environ.get('HARMONY_DIR')}/hmy", "blockchain", "latest-headers", f"--node http://localhost:{http_port}"]
+        local_shard = [f"{environ.get('HARMONY_DIR')}/hmy", "blockchain", "latest-headers", "--node", f"http://localhost:{http_port}"]
         result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data_shard = json.loads(result_local_shard.stdout)
     except (ValueError, KeyError, TypeError) as e:
