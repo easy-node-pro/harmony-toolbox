@@ -768,7 +768,7 @@ def install_harmony() -> None:
             "\n* Please enter the full path to a location you'd like to install harmony into.\n* The folder should not exist yet for best results (example: /mnt/volume1/harmony): "
         )
         if not os.path.exists(answer):
-            question = ask_yes_no(f"* That path {answer} doesn't exist yet. Do you want to create the folder {answer} and install the harmony files here? (YES/NO) ")
+            question = ask_yes_no(f"* That path {answer} doesn't exist yet.\n* Do you want to create the folder {answer} and install the harmony files here? (YES/NO) ")
             if question:
                 set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f'{answer}')
             else:
