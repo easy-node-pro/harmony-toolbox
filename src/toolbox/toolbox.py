@@ -152,7 +152,7 @@ def rewards_collector(
     wallet_balance = get_wallet_balance(validator_wallet)
     suggested_send = wallet_balance - int(environ.get("GAS_RESERVE"))
     if suggested_send >= 1:
-        if send_rewards == False:
+        if send_out_rewards == False:
             print("*\n*\n")
             print_stars()
             print("\n* Send your Harmony ONE Rewards?")
