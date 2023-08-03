@@ -115,13 +115,13 @@ def run_multistats():
 
 
 def collect_rewards(networkCall):
-    os.system(
+    process_command(
         f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 100 {environ.get('PASS_SWITCH')}"
     )
 
 
 def send_rewards(networkCall, sendAmount, rewards_wallet):
-    os.system(
+    process_command(
         f"{networkCall} transfer --amount {sendAmount} --from {environ.get('VALIDATOR_WALLET')} --from-shard 0 --to {rewards_wallet} --to-shard 0 --gas-price 100 {environ.get('PASS_SWITCH')}"
     )
 
@@ -140,19 +140,17 @@ def rewards_collector(
             f"*\n* For your validator wallet {validator_wallet}\n* You have {get_rewards_balance(rpc, validator_wallet)} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
         )
         bypass = True
-    if bypass:
+    elif bypass:
         collect_rewards(EnvironmentVariables.hmy_app)
         print_stars()
         print(
             Fore.GREEN + f"* mainnet rewards for {validator_wallet} have been collected." + Style.RESET_ALL + Fore.GREEN
         )
         print_stars()
-    else:
-        return
     wallet_balance = get_wallet_balance(validator_wallet)
     suggested_send = wallet_balance - int(environ.get("GAS_RESERVE"))
     if suggested_send >= 1:
-        if send_rewards == False:
+        if send_out_rewards == False:
             print("*\n*\n")
             print_stars()
             print("\n* Send your Harmony ONE Rewards?")
@@ -333,7 +331,7 @@ def run_check_balance() -> None:
 
 
 def bingo_checker():
-    os.system(f"grep BINGO {os.environ.get('HARMONY_DIR')}/latest/zerolog-harmony.log | tail -10")
+    process_command(f"grep BINGO {os.environ.get('HARMONY_DIR')}/latest/zerolog-harmony.log | tail -10")
     print_stars()
     print("* Press enter to return to the main menu.")
     print_stars()
@@ -510,7 +508,7 @@ def run_regular_node(software_versions) -> None:
 
 
 def service_menu_option() -> None:
-    status = os.system("systemctl is-active --quiet harmony")
+    status = process_command("systemctl is-active --quiet harmony")
     if status == 0:
         print(
             f"*   8 - {Fore.RED}Stop Harmony Service      {Fore.GREEN}- {Fore.YELLOW}{Back.RED}WARNING: You will miss blocks while stopped!   {Style.RESET_ALL}{Fore.GREEN}"
@@ -524,7 +522,7 @@ def service_menu_option() -> None:
 
 def make_backup_dir() -> str:
     folder_name = f'{os.environ.get("HARMONY_DIR")}/harmony_backup/{datetime.now().strftime("%Y%m%d%H%M")}'
-    os.system(f"mkdir -p {folder_name}")
+    process_command(f"mkdir -p {folder_name}")
     return folder_name
 
 
@@ -534,12 +532,12 @@ def hmy_cli_upgrade():
     )
     if question:
         folder_name = make_backup_dir()
-        os.system(f"cp {environ.get('HARMONY_DIR')}/hmy {folder_name}")
+        process_command(f"cp {environ.get('HARMONY_DIR')}/hmy {folder_name}")
         print_stars()
         install_hmy()
         print_stars()
         print("Harmony cli has been updated to: ")
-        os.system(f"{environ.get('HARMONY_DIR')}/hmy version")
+        process_command(f"{environ.get('HARMONY_DIR')}/hmy version")
         print_stars()
         set_var(EnvironmentVariables.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
         input("* Update completed, press ENTER to return to the main menu. ")
@@ -549,9 +547,9 @@ def update_harmony_app():
     os.chdir(f"{os.environ.get('HARMONY_DIR')}")
     print_stars()
     print("Currently installed version: ")
-    os.system("./harmony -V")
+    process_command("./harmony -V")
     folder_name = make_backup_dir()
-    os.system(
+    process_command(
         f"cp {os.environ.get('HARMONY_DIR')}/harmony {os.environ.get('HARMONY_DIR')}/harmony.conf {folder_name}"
     )
     print_stars()
@@ -562,7 +560,7 @@ def update_harmony_app():
     )
     print_stars()
     print("Updated version: ")
-    os.system("./harmony -V")
+    process_command("./harmony -V")
     if environ.get("SHARD") != "0":
         size = 0
         for path, dirs, files in os.walk(f"{os.environ.get('HARMONY_DIR')}/harmony_db_0"):
@@ -575,17 +573,17 @@ def update_harmony_app():
                     + "* Are you sure you would like to proceed with upgrading and trimming database 0?\n\nType 'Yes' or 'No' to continue"
                 )
                 if question:
-                    os.system("sudo service harmony stop")
-                    os.system(
+                    process_command("sudo service harmony stop")
+                    process_command(
                         f"mv {os.environ.get('HARMONY_DIR')}/harmony_db_0 {os.environ.get('HARMONY_DIR')}/harmony_db_0_old"
                     )
-                    os.system("sudo service harmony start")
-                    os.system(f"rm -r {os.environ.get('HARMONY_DIR')}/harmony_db_0_old")
+                    process_command("sudo service harmony start")
+                    process_command(f"rm -r {os.environ.get('HARMONY_DIR')}/harmony_db_0_old")
                 else:
                     print("Skipping removal of 0, but it's no longer required, fyi!")
             else:
                 print("Your database 0 is already trimmed, enjoy!")
-    os.system("sudo service harmony restart")
+    process_command("sudo service harmony restart")
     print_stars()
     print("Harmony Service is restarting, waiting 10 seconds for restart.")
     set_var(EnvironmentVariables.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
@@ -670,9 +668,9 @@ def harmony_binary_upgrade():
 
 
 def menu_service_stop_start() -> str:
-    status = os.system("systemctl is-active --quiet harmony")
+    status = process_command("systemctl is-active --quiet harmony")
     if status != 0:
-        os.system("sudo service harmony start")
+        process_command("sudo service harmony start")
         print()
         print("* Harmony Service Has Been Started.")
         print()
@@ -686,7 +684,7 @@ def menu_service_stop_start() -> str:
             + "* Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
         )
         if question:
-            os.system("sudo service harmony stop")
+            process_command("sudo service harmony stop")
             print()
             print(
                 "* Harmony Service Has Been Stopped. "
@@ -708,7 +706,7 @@ def menu_service_restart() -> str:
         + "Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
     )
     if question:
-        os.system("sudo service harmony restart")
+        process_command("sudo service harmony restart")
         print()
         print("* The Harmony Service Has Been Restarted")
         input("* Press ENTER to return to the main menu.")
