@@ -140,15 +140,13 @@ def rewards_collector(
             f"*\n* For your validator wallet {validator_wallet}\n* You have {get_rewards_balance(rpc, validator_wallet)} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
         )
         bypass = True
-    if bypass:
+    elif bypass:
         collect_rewards(EnvironmentVariables.hmy_app)
         print_stars()
         print(
             Fore.GREEN + f"* mainnet rewards for {validator_wallet} have been collected." + Style.RESET_ALL + Fore.GREEN
         )
         print_stars()
-    else:
-        return
     wallet_balance = get_wallet_balance(validator_wallet)
     suggested_send = wallet_balance - int(environ.get("GAS_RESERVE"))
     if suggested_send >= 1:
