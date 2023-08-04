@@ -128,7 +128,6 @@ def send_rewards(networkCall, sendAmount, rewards_wallet):
     
     
 def send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet, bypass = False):
-    
     print("*\n*\n")
     print_stars()
     print("\n* Send your Harmony ONE Rewards?")
@@ -193,7 +192,7 @@ def rewards_collector(
     validator_wallet_balance = get_wallet_balance(validator_wallet)
     suggested_send = validator_wallet_balance - int(environ.get("GAS_RESERVE"))
     if suggested_send >= 1:
-        send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet)
+        send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet, bypass)
     else:
         validator_wallet_balance = get_wallet_balance(validator_wallet)
         rewards_wallet_balance = get_wallet_balance(rewards_wallet)
