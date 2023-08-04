@@ -99,11 +99,11 @@ def parse_flags(parser):
         finish_node()
 
     if args.collect:
-        rewards_collector(EnvironmentVariables.hmy_app, True)
+        rewards_collector(EnvironmentVariables.working_rpc_endpoint, True)
         finish_node()
 
     if args.collect_send:
-        rewards_collector(EnvironmentVariables.hmy_app, True, True)
+        rewards_collector(EnvironmentVariables.working_rpc_endpoint, True, True)
         finish_node()
 
 
@@ -360,7 +360,7 @@ def bingo_checker():
 
 
 def run_rewards_collector() -> None:
-    rewards_collector(EnvironmentVariables.hmy_app)
+    rewards_collector()
     return
 
 

@@ -544,8 +544,7 @@ def current_price():
 
 
 def get_wallet_balance(wallet_addr):
-    config = EnvironmentVariables()
-    rpc_endpoint = config.working_rpc_endpoint
+    rpc_endpoint = EnvironmentVariables.working_rpc_endpoint
     wallet_balance = get_wallet_balance_by_endpoint(rpc_endpoint, wallet_addr)
     if wallet_balance is not None:
         return wallet_balance
@@ -568,31 +567,18 @@ def get_wallet_balance_by_endpoint(endpoint, wallet_addr):
 
 
 def get_rewards_balance(endpoint, wallet_addr):
-    endpoints_count = len(endpoint)
-
-    for i in range(endpoints_count):
-        wallet_balance = get_rewards_balance_by_endpoint(endpoint[i], wallet_addr)
-
-        if wallet_balance >= 0:
-            return wallet_balance
-
-    raise ConnectionError("Couldn't fetch RPC data for current epoch.")
-
-
-def get_rewards_balance_by_endpoint(endpoint, wallet_addr):
-    current = 0
-    max_tries = EnvironmentVariables.rpc_endpoints_max_connection_retries
     totalRewards = 0
-
     try:
         validator_rewards = staking.get_delegations_by_delegator(wallet_addr, endpoint)
-    except Exception:
+    except (Exception, ConnectionError) as e:
         return totalRewards
 
     for i in validator_rewards:
         totalRewards = totalRewards + i["reward"]
     totalRewards = pyhmy.numbers.convert_atto_to_one(totalRewards)
-    return totalRewards
+    
+    if totalRewards >= 0:
+        return totalRewards
 
 
 def save_json(fn: str, data: dict) -> dict:
@@ -622,8 +608,7 @@ def wallet_pending_rewards(wallet):
 
 
 def get_sign_pct() -> str:
-    config = EnvironmentVariables()
-    hmy_external_rpc = f"{environ.get('HARMONY_DIR')}/hmy --node='{config.working_rpc_endpoint}'"
+    hmy_external_rpc = f"{environ.get('HARMONY_DIR')}/hmy --node='{EnvironmentVariables.working_rpc_endpoint}'"
     output = subprocess.getoutput(
         f"{hmy_external_rpc} blockchain validator information {environ.get('VALIDATOR_WALLET')} | grep signing-percentage"
     )
