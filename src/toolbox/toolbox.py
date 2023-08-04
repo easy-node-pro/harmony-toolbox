@@ -133,14 +133,16 @@ def rewards_collector(
     rewards_wallet=environ.get("REWARDS_WALLET"),
     validator_wallet=environ.get("VALIDATOR_WALLET"),
 ) -> None:
+    print_stars()
     print("* Harmony ONE Rewards Collection")
     print_stars()
     if bypass == False:
         question = ask_yes_no(
             f"*\n* For your validator wallet {validator_wallet}\n* You have {get_rewards_balance(rpc, validator_wallet)} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
         )
-        bypass = True
-    if bypass:
+        if question:
+            bypass = True
+    if bypass == True:
         collect_rewards(EnvironmentVariables.hmy_app)
         print_stars()
         print(
