@@ -6,7 +6,6 @@ print("*   3 - Show Last 10 BINGOs       - Check that ViewID is sequential, re-r
 print("*   4 - Collect Pending $ONE      - Collect Rewards & Send to Rewards Wallet")
 rewards_sender_option()
 print(f"*                                   {Fore.RED}{Back.GREEN}The Danger Zone:{Style.RESET_ALL}{Fore.GREEN}")
-
 service_menu_option()
 print(f"*  10 - Update Harmony App Binary - For New Harmony Releases ONLY, {Fore.YELLOW}{Back.RED}WARNING: You will miss blocks during upgrade.{Style.RESET_ALL}{Fore.GREEN}")
 print("*  11 - Update hmy CLI App        - Update harmony binary file, run anytime!")
