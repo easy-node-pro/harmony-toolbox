@@ -588,9 +588,19 @@ def service_menu_option() -> None:
 
 
 def hip_voting_option() -> None:
-    active_vote = True
+    # Specify the deadline in server's local time
+    deadline = datetime(2023, 8, 9, 20, 59)
+
+    # Get the current time in server's local time
+    current_time = datetime.now()
+
+    # Check if the current time is before or after the deadline
+    active_vote = current_time < deadline
+
     if active_vote:
-        print("*   7 - Vote on HIP-30v2          - Cast your vote for HIP-30v2")
+        print("*   7 - Harmony Governance Voting - Cast your vote for HIP-30v2")
+    else:
+        print("*   7 - Harmony Governance Voting - No votes currently active.")
 
 
 def rewards_sender_option() -> None:
