@@ -504,6 +504,11 @@ def harmony_voting() -> None:
                 f"* Voting for {vote_choice_option} - {vote_choice_names_list} on proposal {proposal}\n* Please enter your validator wallet password now: \n"
             )
             command = f"{environ.get('HARMONY_DIR')}/hmy governance vote-proposal --space harmony-mainnet.eth --proposal 0x80b87627254aa71870407a3c95742aa30c0e5ccdc81da23a1a54dcf0108778ae --proposal-type approval --choice \"{vote_choice_option}\" --key {validator_wallet_name} --passphrase"
+            process_command(
+                command,
+                True,
+                True,
+            )
         else:
             print("*\n* Returning to menu...")
 
