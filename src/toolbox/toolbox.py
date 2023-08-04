@@ -126,14 +126,14 @@ def send_rewards(networkCall, sendAmount, rewards_wallet):
     )
     
     
-def send_rewards_func(suggested_send, wallet_balance, rewards_wallet, validator_wallet):
+def send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet):
     if send_out_rewards == False:
             print("*\n*\n")
             print_stars()
             print("\n* Send your Harmony ONE Rewards?")
             print_stars()
             question = ask_yes_no(
-                f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
+                f"* You have {validator_wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
             )
             if question:
                 send_out_rewards = True
@@ -143,8 +143,8 @@ def send_rewards_func(suggested_send, wallet_balance, rewards_wallet, validator_
         print("\n* Sending your Harmony ONE Rewards, awaiting confirmation...")
         print_stars()
         send_rewards(EnvironmentVariables.hmy_app, suggested_send, rewards_wallet)
-    wallet_balance = get_wallet_balance(validator_wallet)
-    print(f"*\n*\n* Current Wallet Balance: {wallet_balance} $ONE\n*\n*")
+    validator_wallet_balance = get_wallet_balance(validator_wallet)
+    print(f"*\n*\n* Current Wallet Balance: {validator_wallet_balance} $ONE\n*\n*")
     return
 
 
@@ -152,13 +152,15 @@ def rewards_sender(
     rewards_wallet=environ.get("REWARDS_WALLET"),
     validator_wallet=environ.get("VALIDATOR_WALLET"),
 ) -> None:
-    wallet_balance = get_wallet_balance(validator_wallet)
-    suggested_send = wallet_balance - int(environ.get("GAS_RESERVE"))
+    validator_wallet_balance = get_wallet_balance(validator_wallet)
+    suggested_send = validator_wallet_balance - int(environ.get("GAS_RESERVE"))
     if suggested_send >= 1:
-        send_rewards_func(suggested_send, wallet_balance, rewards_wallet, validator_wallet)
+        send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet)
+        validator_wallet_balance = get_wallet_balance(validator_wallet)
+        rewards_wallet_balance = get_wallet_balance(rewards_wallet)
+        print(f"*\n*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE\n*\n* Current Rewards Wallet Balance: {rewards_wallet_balance}\n*\n*")
     else:
-        wallet_balance = get_wallet_balance(validator_wallet)
-        print(f"*\n*\n* Current Wallet Balance: {wallet_balance} $ONE\n*\n*")
+        print("* Wallet balance is less than your gas reservation, please try again later.")
     return
 
 
@@ -184,13 +186,13 @@ def rewards_collector(
             Fore.GREEN + f"* mainnet rewards for {validator_wallet} have been collected." + Style.RESET_ALL + Fore.GREEN
         )
         print_stars()
-    wallet_balance = get_wallet_balance(validator_wallet)
-    suggested_send = wallet_balance - int(environ.get("GAS_RESERVE"))
+    validator_wallet_balance = get_wallet_balance(validator_wallet)
+    suggested_send = validator_wallet_balance - int(environ.get("GAS_RESERVE"))
     if suggested_send >= 1:
-        send_rewards_func(suggested_send, wallet_balance, rewards_wallet, validator_wallet)
+        send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet)
     else:
-        wallet_balance = get_wallet_balance(validator_wallet)
-        print(f"*\n*\n* Current Wallet Balance: {wallet_balance} $ONE\n*\n*")
+        validator_wallet_balance = get_wallet_balance(validator_wallet)
+        print(f"*\n*\n* Current Wallet Balance: {validator_wallet_balance} $ONE\n*\n*")
     return
 
 
