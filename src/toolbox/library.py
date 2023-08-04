@@ -509,14 +509,14 @@ def governance_member_voting():
     selected_options = []
 
     for _ in range(7):
-        print("Please select an option (pick up to 7, or 'Quit' to finish):")
+        print("Please select an option (pick up to 7, 'Quit' to finish if less than 7 selections):")
         terminal_menu = TerminalMenu(options, title="Choose a governance member:")
         choice_index = terminal_menu.show()
 
         # Check if the "Quit" option was selected
         if choice_index == len(options) - 1:
             print("Quitting the selection process.")
-            return "Quit"
+            break
 
         # Check if the same option was not selected previously
         if choice_index not in selected_options:
