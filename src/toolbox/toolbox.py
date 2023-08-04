@@ -100,11 +100,11 @@ def parse_flags(parser):
         finish_node()
 
     if args.collect:
-        rewards_collector(config.working_rpc_endpoint, True)
+        rewards_collector(config.working_rpc_endpoint)
         finish_node()
 
     if args.collect_send:
-        rewards_collector(config.working_rpc_endpoint, True, True)
+        rewards_collector(config.working_rpc_endpoint, True)
         finish_node()
 
 
@@ -139,7 +139,7 @@ def send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, 
         if question == False: 
             print("*\n*\n* Skipping sending of rewards.\n")
             return
-    print("*\n*\n* Sending your Harmony ONE Rewards, awaiting confirmation...\n")
+    print(f"*\n*\n* Sending {suggested_send} $ONE Rewards to {rewards_wallet}, awaiting confirmation...\n")
     send_rewards(EnvironmentVariables.hmy_app, suggested_send, rewards_wallet)
     validator_wallet_balance = get_wallet_balance(validator_wallet)
     rewards_wallet_balance = get_wallet_balance(rewards_wallet)
