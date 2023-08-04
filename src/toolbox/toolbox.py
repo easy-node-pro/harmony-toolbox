@@ -493,6 +493,8 @@ def harmony_voting() -> None:
         )
     if proposal == "Governance for Harmony Recovery Wallet":
         choices = governance_member_voting()
+        if choices == "Quit":
+            return
         print(f"*\n* {choices}")
     return
 

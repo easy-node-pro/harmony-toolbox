@@ -516,7 +516,7 @@ def governance_member_voting():
         # Check if the "Quit" option was selected
         if choice_index == len(options) - 1:
             print("Quitting the selection process.")
-            break
+            return "Quit"
 
         # Check if the same option was not selected previously
         if choice_index not in selected_options:
