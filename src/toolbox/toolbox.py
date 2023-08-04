@@ -42,7 +42,7 @@ from toolbox.library import (
     set_main_or_test,
     recover_wallet,
     refreshing_stats_message,
-    passphrase_status
+    passphrase_status,
 )
 
 
@@ -56,7 +56,7 @@ def parse_flags(parser):
         action="store_true",
         help="Run your stats if Harmony is installed and running.",
     )
-    
+
     parser.add_argument(
         "-u",
         "--upgrade",
@@ -77,7 +77,7 @@ def parse_flags(parser):
         action="store_true",
         help="Collect your rewards to your validator wallet and send them to your rewards wallet",
     )
-    
+
     parser.add_argument(
         "-i",
         "--install",
@@ -91,7 +91,7 @@ def parse_flags(parser):
 
     if args.install:
         first_setup()
-        
+
     if args.upgrade:
         update_harmony_app()
 
@@ -115,12 +115,10 @@ def run_multistats():
     return
 
 
-def collect_rewards(pending_rewards_balance, networkCall = EnvironmentVariables.hmy_app):
+def collect_rewards(pending_rewards_balance, networkCall=EnvironmentVariables.hmy_app):
     print(f"*\n* Collecting {pending_rewards_balance} $ONE Rewards, awaiting confirmation...\n")
     command = f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 100 {environ.get('PASS_SWITCH')}"
-    result = process_command(
-        command, True, False
-    )
+    result = process_command(command, True, False)
     if result:
         print("*\n*\n* Rewards collection Finished.\n")
     else:
@@ -129,16 +127,14 @@ def collect_rewards(pending_rewards_balance, networkCall = EnvironmentVariables.
 
 def send_rewards(networkCall, sendAmount, rewards_wallet):
     command = f"{networkCall} transfer --amount {sendAmount} --from {environ.get('VALIDATOR_WALLET')} --from-shard 0 --to {rewards_wallet} --to-shard 0 --gas-price 100 {environ.get('PASS_SWITCH')}"
-    result = process_command(
-        command, True, False
-    )
+    result = process_command(command, True, False)
     if result:
         print("*\n*\n* Rewards sending Finished.\n")
     else:
         print("*\n*\n* Rewards sending Failed.\n")
-    
-    
-def send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet, bypass = False):
+
+
+def send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet, bypass=False):
     if bypass == False:
         print("*\n*\n")
         print_stars()
@@ -147,7 +143,7 @@ def send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, 
         question = ask_yes_no(
             f"* You have {validator_wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
         )
-        if question == False: 
+        if question == False:
             print("*\n*\n* Skipping sending of rewards.\n")
             return
     print(f"*\n*\n* Sending {suggested_send} $ONE Rewards to {rewards_wallet}, awaiting confirmation...\n")
@@ -171,7 +167,9 @@ def rewards_sender(
         print("*\n* Wallet balance is less than your gas reservation, please try again later.\n*\n")
     validator_wallet_balance = get_wallet_balance(validator_wallet)
     rewards_wallet_balance = get_wallet_balance(rewards_wallet)
-    print(f"*\n*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE\n*\n* Current Rewards Wallet Balance: {rewards_wallet_balance}\n*\n*")
+    print(
+        f"*\n*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE\n*\n* Current Rewards Wallet Balance: {rewards_wallet_balance}\n*\n*"
+    )
     return
 
 
@@ -566,10 +564,11 @@ def service_menu_option() -> None:
 def rewards_sender_option() -> None:
     if environ.get("REWARDS_WALLET"):
         print("*   5 - Send Wallet Balance       - Send your wallet balance - saved gas to rewards wallet")
-        print("*   6 - Set Rewards Wallet        - Update your saved wallet or gas reserve")   
+        print("*   6 - Set Rewards Wallet        - Update your saved wallet or gas reserve")
     else:
-        print("*   6 - Set Rewards Wallet        - Set up a one1 wallet address to send rewards when using option #4")   
+        print("*   6 - Set Rewards Wallet        - Set up a one1 wallet address to send rewards when using option #4")
     return
+
 
 def make_backup_dir() -> str:
     folder_name = f'{os.environ.get("HARMONY_DIR")}/harmony_backup/{datetime.now().strftime("%Y%m%d%H%M")}'
@@ -606,9 +605,7 @@ def update_harmony_app():
     print_stars()
     print("Downloading current harmony binary file from harmony.one: ")
     print_stars()
-    pull_harmony_update(
-        os.environ.get("HARMONY_DIR"), EnvironmentVariables.harmony_conf
-    )
+    pull_harmony_update(os.environ.get("HARMONY_DIR"), EnvironmentVariables.harmony_conf)
     print_stars()
     print("Updated version: ")
     process_command("./harmony -V")
@@ -655,8 +652,14 @@ def menu_validator_stats():
     except (ValueError, KeyError, TypeError) as e:
         print(f"* Remote Shard 0 Offline, Error {e}")
     try:
-        http_port = find_port(environ.get('HARMONY_DIR'))
-        local_shard = [f"{environ.get('HARMONY_DIR')}/hmy", "blockchain", "latest-headers", "--node", f"http://localhost:{http_port}"]
+        http_port = find_port(environ.get("HARMONY_DIR"))
+        local_shard = [
+            f"{environ.get('HARMONY_DIR')}/hmy",
+            "blockchain",
+            "latest-headers",
+            "--node",
+            f"http://localhost:{http_port}",
+        ]
         result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data_shard = json.loads(result_local_shard.stdout)
     except (ValueError, KeyError, TypeError) as e:

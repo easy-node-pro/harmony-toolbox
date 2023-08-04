@@ -563,7 +563,6 @@ def get_wallet_balance_by_endpoint(endpoint, wallet_addr):
         return get_balance
 
 
-
 def get_rewards_balance(endpoint, wallet_addr):
     totalRewards = 0
     try:
@@ -574,7 +573,7 @@ def get_rewards_balance(endpoint, wallet_addr):
     for i in validator_rewards:
         totalRewards = totalRewards + i["reward"]
     totalRewards = pyhmy.numbers.convert_atto_to_one(totalRewards)
-    
+
     if totalRewards >= 0:
         return totalRewards
 
@@ -814,29 +813,32 @@ def install_harmony() -> None:
     print_stars()
     # Setup the harmony service file
     print("* Customizing, Moving & Enabling your harmony.service systemd file")
-    
+
     # Set initial file for customization
     service_file_path = f"{EnvironmentVariables.toolbox_location}/src/bin/harmony.service"
-    
+
     # Read the service file
-    with open(service_file_path, 'r') as file:
+    with open(service_file_path, "r") as file:
         filedata = file.read()
 
     # Replace the paths with the value of HARMONY_DIR
     harmony_dir = environ.get("HARMONY_DIR")
     if harmony_dir:
-        filedata = filedata.replace('WorkingDirectory=/home/serviceharmony/harmony', f'WorkingDirectory={harmony_dir}')
-        filedata = filedata.replace('ExecStart=/home/serviceharmony/harmony/harmony -c harmony.conf', f'ExecStart={harmony_dir}/harmony -c harmony.conf')
+        filedata = filedata.replace("WorkingDirectory=/home/serviceharmony/harmony", f"WorkingDirectory={harmony_dir}")
+        filedata = filedata.replace(
+            "ExecStart=/home/serviceharmony/harmony/harmony -c harmony.conf",
+            f"ExecStart={harmony_dir}/harmony -c harmony.conf",
+        )
 
     # Write the file out again
-    with open('harmony.service', 'w') as file:
+    with open("harmony.service", "w") as file:
         file.write(filedata)
 
     # Move the modified service file into place, change the permissions and enable the service
     # Update these steps in the future to use a dynamic harmony.service name?
-    subprocess.run(['sudo', 'mv', 'harmony.service', '/etc/systemd/system/harmony.service'], check=True)
-    subprocess.run(['sudo', 'chmod', 'a-x', '/etc/systemd/system/harmony.service'], check=True)
-    subprocess.run(['sudo', 'systemctl', 'enable', 'harmony.service'], check=True)
+    subprocess.run(["sudo", "mv", "harmony.service", "/etc/systemd/system/harmony.service"], check=True)
+    subprocess.run(["sudo", "chmod", "a-x", "/etc/systemd/system/harmony.service"], check=True)
+    subprocess.run(["sudo", "systemctl", "enable", "harmony.service"], check=True)
 
 
 # Database Downloader
