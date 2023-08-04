@@ -369,7 +369,8 @@ def run_check_balance() -> None:
 
 
 def bingo_checker():
-    process_command(f"grep BINGO {os.environ.get('HARMONY_DIR')}/latest/zerolog-harmony.log | tail -10")
+    command = f"grep BINGO {os.environ.get('HARMONY_DIR')}/latest/zerolog-harmony.log | tail -10"
+    process_command(command)
     print_stars()
     print("* Press enter to return to the main menu.")
     print_stars()
