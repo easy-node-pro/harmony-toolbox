@@ -497,7 +497,7 @@ def harmony_voting() -> None:
             vote_choice_names_list[1:-1].split(", ")
         )  # Extracting the names and formatting them
         question = ask_yes_no(
-            f"* You have selected\n* {vote_choice_names}\n*\n* Are you sure you want to vote for this list?  (Yes/No) "
+            f"* You have selected\n*\n* {vote_choice_names}\n*\n* Are you sure you want to vote for this list?  (Yes/No) "
         )
         if question:
             print(
