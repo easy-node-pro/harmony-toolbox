@@ -465,7 +465,7 @@ def load_var_file(var_file):
 
 
 def get_validator_wallet_name(wallet_id):
-    command = "~/harmony/hmy keys list"
+    command = f"{environ.get('HARMONY_DIR')}/hmy keys list"
     result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
     if result.returncode != 0:
