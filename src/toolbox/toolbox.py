@@ -543,9 +543,9 @@ def service_menu_option() -> None:
 def rewards_sender_option() -> None:
     if environ.get("REWARDS_WALLET"):
         print("*   5 - Send Wallet Balance       - Send your wallet balance - saved gas to rewards wallet")
-        print("*   6 - Set Rewards Wallet        - Input a one1 wallet address to send rewards using option #4!")   
+        print("*   6 - Set Rewards Wallet        - Update your saved wallet or gas reserve")   
     else:
-        print("*   6 - Set Rewards Wallet        - Input a one1 wallet address to send rewards using option #4!")   
+        print("*   6 - Set Rewards Wallet        - Set up a one1 wallet address to send rewards when using option #4")   
     return
 
 def make_backup_dir() -> str:
