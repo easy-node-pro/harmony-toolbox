@@ -148,7 +148,9 @@ def send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, 
         print_stars()
         send_rewards(EnvironmentVariables.hmy_app, suggested_send, rewards_wallet)
     validator_wallet_balance = get_wallet_balance(validator_wallet)
-    print(f"*\n*\n* Current Wallet Balance: {validator_wallet_balance} $ONE\n*\n*")
+    rewards_wallet_balance = get_wallet_balance(rewards_wallet)
+    print(f"*\n*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE\n*\n*")
+    print(f"*\n*\n* Current Rewards Wallet Balance: {rewards_wallet_balance} $ONE\n*\n*")
     return
 
 
