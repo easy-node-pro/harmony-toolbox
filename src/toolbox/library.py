@@ -413,9 +413,19 @@ def passphrase_set():
     passphrase_status()
 
 
-def process_command(command: str) -> None:
-    process = subprocess.Popen(command, shell=True)
-    output, error = process.communicate()
+def process_command(command: str, shell=True, print_output=True) -> bool:
+    result = subprocess.run(command, shell=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    
+    if print_output and result.stdout:
+        print(result.stdout)
+    
+    if result.returncode != 0:
+        if print_output:
+            print(f"Error executing command: {result.stderr}")
+        return False
+
+    return True
+
 
 
 def ask_yes_no(question: str) -> bool:

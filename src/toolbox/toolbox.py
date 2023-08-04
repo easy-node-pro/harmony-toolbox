@@ -116,15 +116,23 @@ def run_multistats():
 
 
 def collect_rewards(networkCall):
-    process_command(
-        f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 100 {environ.get('PASS_SWITCH')}"
+    result = process_command(
+        f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 100 {environ.get('PASS_SWITCH')}", False
     )
+    if result:
+        print("*\n*\n* Rewards collection Finished.\n")
+    else:
+        print("*\n*\n* Rewards collection Failed.\n")
 
 
 def send_rewards(networkCall, sendAmount, rewards_wallet):
-    process_command(
-        f"{networkCall} transfer --amount {sendAmount} --from {environ.get('VALIDATOR_WALLET')} --from-shard 0 --to {rewards_wallet} --to-shard 0 --gas-price 100 {environ.get('PASS_SWITCH')}"
+    result = process_command(
+        f"{networkCall} transfer --amount {sendAmount} --from {environ.get('VALIDATOR_WALLET')} --from-shard 0 --to {rewards_wallet} --to-shard 0 --gas-price 100 {environ.get('PASS_SWITCH')}", False
     )
+    if result:
+        print("*\n*\n* Rewards sending Finished.\n")
+    else:
+        print("*\n*\n* Rewards sending Failed.\n")
     
     
 def send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet, bypass = False):
