@@ -19,7 +19,7 @@ def get_url(timeout=5) -> str:
 
 
 class EnvironmentVariables:
-    easy_version = "1.1.2"
+    easy_version = "1.2.0"
     server_host_name = socket.gethostname()
     user_home_dir = path.expanduser("~")
     dotenv_file = f"{user_home_dir}/.easynode.env"
