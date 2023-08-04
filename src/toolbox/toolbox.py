@@ -30,6 +30,7 @@ from toolbox.library import (
     get_vote_choice,
     get_validator_wallet_name,
     governance_member_voting,
+    proposal_choices_option,
     menu_ubuntu_updates,
     menu_reboot_server,
     finish_node,
@@ -467,17 +468,16 @@ def update_stats_option() -> None:
         )
     else:
         print(f"*  20 - Enable Auto update        - Enable Update Timer")
-
+        
 
 def harmony_voting() -> None:
     print_stars()
     print("* Harmony Voting")
     print_stars()
-    print("* Current proposals:\n*\n*")
-    print("* 1 - HIP-30v2 - 0xce5f516c683170e4164a06e42dcd487681f46f42606b639955eb7c0fa3b13b96")
-    print("* 2 - Governance for Harmony Recovery Wallet")
-    question = ask_yes_no("* Would you like to vote on this proposal 1? (YES/NO)")
-    if question:
+    question, proposal = proposal_choices_option()
+    if proposal == "Quit" or question == False:
+        return
+    if proposal == "HIP-30v2 - 0xce5f516c683170e4164a06e42dcd487681f46f42606b639955eb7c0fa3b13b96":
         vote_choice_option, vote_choice_text = get_vote_choice()
         if vote_choice_text == "Quit":
             return
@@ -491,8 +491,7 @@ def harmony_voting() -> None:
             True,
             True,
         )
-    question = ask_yes_no("* Would you like to vote on this proposal 2? (YES/NO)")
-    if question:
+    if proposal == "Governance for Harmony Recovery Wallet":
         choices = governance_member_voting()
         print(f"*\n* {choices}")
     return

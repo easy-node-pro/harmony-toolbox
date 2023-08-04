@@ -530,6 +530,31 @@ def governance_member_voting():
     return selected_options_str
 
 
+def proposal_choices_option() -> None:
+    options = [
+        "HIP-30v2 - 0xce5f516c683170e4164a06e42dcd487681f46f42606b639955eb7c0fa3b13b96",
+        "Governance for Harmony Recovery Wallet",
+        "Quit"
+    ]
+
+    print("* Current proposals:\n*\n*")
+
+    terminal_menu = TerminalMenu(options, title="Choose a proposal to vote on:")
+    choice_index = terminal_menu.show()
+
+    # Check if the "Quit" option was selected
+    if choice_index == len(options) - 1:
+        print("Quitting the voting process.")
+        return False, None
+
+    # Ask for a vote on the selected proposal
+    selected_proposal = options[choice_index]
+    question = ask_yes_no(f"* Would you like to vote on {selected_proposal}? (YES/NO): ")
+    if question:
+        return question, selected_proposal
+    else:
+        return question, None
+
 def get_vote_choice() -> (int, str):
     print("* How would you like to vote on this proposal?                                                 *")
     print_stars()
