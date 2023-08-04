@@ -117,9 +117,8 @@ def run_multistats():
 
 def collect_rewards(networkCall = EnvironmentVariables.hmy_app):
     command = f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 100 {environ.get('PASS_SWITCH')}"
-    print(command)
     result = process_command(
-        command, False
+        command, True, False
     )
     if result:
         print("*\n*\n* Rewards collection Finished.\n")
@@ -129,9 +128,8 @@ def collect_rewards(networkCall = EnvironmentVariables.hmy_app):
 
 def send_rewards(networkCall, sendAmount, rewards_wallet):
     command = f"{networkCall} transfer --amount {sendAmount} --from {environ.get('VALIDATOR_WALLET')} --from-shard 0 --to {rewards_wallet} --to-shard 0 --gas-price 100 {environ.get('PASS_SWITCH')}"
-    print(command)
     result = process_command(
-        command, False
+        command, True, False
     )
     if result:
         print("*\n*\n* Rewards sending Finished.\n")
