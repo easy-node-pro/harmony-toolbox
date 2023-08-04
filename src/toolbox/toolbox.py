@@ -198,6 +198,7 @@ def rewards_collector(
 
 
 def menu_topper_regular(software_versions) -> None:
+    config = EnvironmentVariables()
     # Get stats & balances
     try:
         load_1, load_5, load_15 = os.getloadavg()
@@ -213,7 +214,7 @@ def menu_topper_regular(software_versions) -> None:
     )
     print_stars()
     print(
-        f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(total_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(EnvironmentVariables.rpc_endpoints, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {Fore.BLUE}{EnvironmentVariables.server_host_name}{Fore.GREEN} - {Fore.YELLOW}{EnvironmentVariables.external_ip}{Fore.GREEN}'
+        f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(total_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {Fore.BLUE}{EnvironmentVariables.server_host_name}{Fore.GREEN} - {Fore.YELLOW}{EnvironmentVariables.external_ip}{Fore.GREEN}'
     )
     harmony_service_status(environ.get("SERVICE_NAME", "harmony"))
     print(
@@ -349,7 +350,8 @@ def drive_check() -> None:
 
 
 def run_check_balance() -> None:
-    menu_check_balance(EnvironmentVariables.rpc_endpoints, environ.get("VALIDATOR_WALLET"))
+    config = EnvironmentVariables()
+    menu_check_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET"))
 
 
 def bingo_checker():
@@ -807,31 +809,11 @@ def balanceCheckAny():
 
 
 def get_current_epoch():
-    if environ.get("NETWORK") == "mainnet":
-        endpoints_count = len(EnvironmentVariables.rpc_endpoints)
-    if environ.get("NETWORK") == "testnet":
-        endpoints_count = len(EnvironmentVariables.rpc_endpoints_test)
-
-    for i in range(endpoints_count):
-        current_epoch = get_current_epochByEndpoint(EnvironmentVariables.rpc_endpoints[i])
-
-        if current_epoch != -1:
-            return current_epoch
+    config = EnvironmentVariables()
     current_epoch = 0
-    return current_epoch
-
-
-def get_current_epochByEndpoint(endpoint):
-    current = 0
-    max_tries = EnvironmentVariables.rpc_endpoints_max_connection_retries
-    current_epoch = -1
-
-    while current < max_tries:
-        try:
-            current_epoch = blockchain.get_current_epoch(endpoint)
-            return current_epoch
-        except Exception:
-            current += 1
-            continue
-
-    return current_epoch
+    try:
+        current_epoch = blockchain.get_current_epoch(config.working_rpc_endpoint)
+        return current_epoch
+    except Exception as e:
+        print(f"* Error getting current epoch: {e}")
+        return current_epoch
