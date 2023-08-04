@@ -506,7 +506,8 @@ def governance_member_voting():
         "Quit"
     ]
 
-    selected_options = []
+    selected_indexes = []
+    selected_names = []
 
     for _ in range(7):
         print("Please select an option (pick up to 7, 'Quit' to finish if less than 7 selections):")
@@ -519,20 +520,22 @@ def governance_member_voting():
             break
 
         # Check if the same option was not selected previously
-        if choice_index not in selected_options:
-            selected_options.append(choice_index + 1)
+        if choice_index not in selected_indexes:
+            selected_indexes.append(choice_index)
+            selected_names.append(options[choice_index])
             print(f"You have selected: {options[choice_index]}")
         else:
             print(f"You have already selected {options[choice_index]}. Please choose another option.")
 
-    # Return selected options as a string in the requested format
-    selected_options_str = "[" + ", ".join(map(str, selected_options)) + "]"
-    return selected_options_str
+    # Return selected indexes and names as a string
+    selected_indexes_str = "[" + ", ".join(map(str, [index + 1 for index in selected_indexes])) + "]"
+    selected_names_str = "[" + ", ".join(selected_names) + "]"
+    return selected_indexes_str, selected_names_str
 
 
 def proposal_choices_option() -> None:
     options = [
-        "HIP-30v2 - 0xce5f516c683170e4164a06e42dcd487681f46f42606b639955eb7c0fa3b13b96",
+        "HIP-30v2",
         "Governance for Harmony Recovery Wallet",
         "Quit"
     ]

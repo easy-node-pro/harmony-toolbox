@@ -468,7 +468,7 @@ def update_stats_option() -> None:
         )
     else:
         print(f"*  20 - Enable Auto update        - Enable Update Timer")
-        
+
 
 def harmony_voting() -> None:
     print_stars()
@@ -477,13 +477,13 @@ def harmony_voting() -> None:
     question, proposal = proposal_choices_option()
     if proposal == "Quit" or question == False:
         return
-    if proposal == "HIP-30v2 - 0xce5f516c683170e4164a06e42dcd487681f46f42606b639955eb7c0fa3b13b96":
+    validator_wallet_name = get_validator_wallet_name(environ.get("VALIDATOR_WALLET"))
+    if proposal == "HIP-30v2":
         vote_choice_option, vote_choice_text = get_vote_choice()
         if vote_choice_text == "Quit":
             return
-        validator_wallet_name = get_validator_wallet_name(environ.get("VALIDATOR_WALLET"))
         print(
-            f"* Voting for {vote_choice_option} - {vote_choice_text} on proposal 0xce5f516c683170e4164a06e42dcd487681f46f42606b639955eb7c0fa3b13b96\n* Please enter your validator wallet password now: \n"
+            f"* Voting for {vote_choice_option} - {vote_choice_text} on proposal {proposal}\n* Please enter your validator wallet password now: \n"
         )
         command = f"{environ.get('HARMONY_DIR')}/hmy governance vote-proposal --space harmony-mainnet.eth --proposal 0xce5f516c683170e4164a06e42dcd487681f46f42606b639955eb7c0fa3b13b96 --proposal-type single-choice --choice {vote_choice_option} --key {validator_wallet_name} --passphrase"
         process_command(
@@ -492,12 +492,21 @@ def harmony_voting() -> None:
             True,
         )
     if proposal == "Governance for Harmony Recovery Wallet":
-        choices = governance_member_voting()
-        question = ask_yes_no(f"* Are you sure you want to vote for {choices}? (Yes/No) ")
+        vote_choice_option, vote_choice_names_list = governance_member_voting()
+        vote_choice_names = "\n* ".join(
+            vote_choice_names_list[1:-1].split(", ")
+        )  # Extracting the names and formatting them
+        question = ask_yes_no(
+            f"* You have selected\n* {vote_choice_names}\n*\n* Are you sure you want to vote for this list?  (Yes/No) "
+        )
         if question:
-            print(f"*\n* {choices}")
+            print(
+                f"* Voting for {vote_choice_option} - {vote_choice_names_list} on proposal {proposal}\n* Please enter your validator wallet password now: \n"
+            )
+            command = f"{environ.get('HARMONY_DIR')}/hmy governance vote-proposal --space harmony-mainnet.eth --proposal 0x80b87627254aa71870407a3c95742aa30c0e5ccdc81da23a1a54dcf0108778ae --proposal-type approval --choice \"{vote_choice_option}\" --key {validator_wallet_name} --passphrase"
         else:
             print("*\n* Returning to menu...")
+
     return
 
 
