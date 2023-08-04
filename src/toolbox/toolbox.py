@@ -140,7 +140,7 @@ def rewards_collector(
             f"*\n* For your validator wallet {validator_wallet}\n* You have {get_rewards_balance(rpc, validator_wallet)} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
         )
         bypass = True
-    elif bypass:
+    if bypass:
         collect_rewards(EnvironmentVariables.hmy_app)
         print_stars()
         print(
