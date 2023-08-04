@@ -464,6 +464,42 @@ def load_var_file(var_file):
         return True
 
 
+def get_validator_wallet_name(wallet_id):
+    command = "~/harmony/hmy keys list"
+    result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+    if result.returncode != 0:
+        print(f"Error executing command: {result.stderr}")
+        return None
+
+    lines = result.stdout.strip().split('\n')
+    for line in lines[1:]:  # Skip the header line
+        name, address = line.strip().split(None, 1)  # Split by whitespace, max 1 split
+        if address == wallet_id:
+            return name
+
+    print(f"Wallet ID {wallet_id} not found in the output.")
+    return None
+
+
+def get_vote_choice() -> (int, str):
+    print("* How would you like to vote on this proposal?                                                 *")
+    print_stars()
+    menu_options = [
+        "[1] - Yes",
+        "[2] - No",
+        "[3] - Abstain",
+        "[4] - Quit",
+    ]
+    terminal_menu = TerminalMenu(menu_options, title="* Which Shard will this node operate on? ")
+    vote_choice_index = terminal_menu.show()
+    if vote_choice_index == 3:  # The index of the "Quit" option
+        return None, "Quit"
+    vote_choice_num = vote_choice_index + 1
+    vote_choice_text = menu_options[vote_choice_index].split(" - ")[1]
+    return vote_choice_num, vote_choice_text
+
+
 def get_shard_menu() -> None:
     if not environ.get("SHARD"):
         print_stars()

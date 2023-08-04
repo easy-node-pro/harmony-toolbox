@@ -27,6 +27,8 @@ from toolbox.library import (
     server_drive_check,
     all_sys_info,
     coming_soon,
+    get_vote_choice,
+    get_validator_wallet_name,
     menu_ubuntu_updates,
     menu_reboot_server,
     finish_node,
@@ -457,13 +459,36 @@ def refresh_toggle() -> None:
     return
 
 
-def update_stats_option():
+def update_stats_option() -> None:
     if environ.get("REFRESH_OPTION") == "True":
         print(
             f"*  20 - Disable auto-update       - Disable Refresh or Change Delay Timer: {str(environ.get('REFRESH_TIME'))} seconds"
         )
     else:
         print(f"*  20 - Enable Auto update        - Enable Update Timer")
+
+
+def harmony_voting() -> None:
+    print_stars()
+    print("* Harmony Voting")
+    print_stars()
+    print("* Current proposals:\n*\n*")
+    print("* HIP-30v2 - 0xce5f516c683170e4164a06e42dcd487681f46f42606b639955eb7c0fa3b13b96")
+    question = ask_yes_no("* Would you like to vote on this proposal? (YES/NO)")
+    if question:
+        vote_choice_option, vote_choice_text = get_vote_choice()
+        if vote_choice_text == "Quit":
+            return
+        validator_wallet_name = get_validator_wallet_name(environ.get("VALIDATOR_WALLET"))
+        print(
+            f"* Voting for {vote_choice_option} - {vote_choice_text} on proposal 0xce5f516c683170e4164a06e42dcd487681f46f42606b639955eb7c0fa3b13b96"
+        )
+        process_command(
+            f"./hmy governance vote-proposal --space harmony-mainnet.eth --proposal 0xce5f516c683170e4164a06e42dcd487681f46f42606b639955eb7c0fa3b13b96 --proposal-type single-choice --choice {vote_choice} --key {validator_wallet_name} --passphrase",
+            True,
+            True,
+        )
+    return
 
 
 def start_regular_node() -> None:
@@ -482,7 +507,7 @@ def run_regular_node(software_versions) -> None:
         4: run_rewards_collector,
         5: rewards_sender,
         6: set_rewards_wallet,
-        7: coming_soon,
+        7: harmony_voting,
         8: menu_service_stop_start,
         9: menu_service_restart,
         10: harmony_binary_upgrade,
