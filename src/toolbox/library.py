@@ -414,7 +414,8 @@ def passphrase_set():
 
 
 def process_command(command: str, shell=True, print_output=True) -> bool:
-    result = subprocess.run(command, shell=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    command_list = command.split()
+    result = subprocess.run(command_list, shell=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     
     if print_output and result.stdout:
         print(result.stdout)
