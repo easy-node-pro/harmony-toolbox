@@ -482,6 +482,54 @@ def get_validator_wallet_name(wallet_id):
     return None
 
 
+def governance_member_voting():
+    options = [
+        "AffinityShard",
+        "BoxedCloud",
+        "Buttheadus",
+        "Crypt0Tech",
+        "ENTER Group",
+        "GGA",
+        "Hank The Crank",
+        "Kratos",
+        "Legion",
+        "MetaONE",
+        "Nick Vasilich",
+        "Octeka.One",
+        "One1000Lakes",
+        "ONECelestial",
+        "PeaceLoveHarmony",
+        "PiStake",
+        "Quick.One",
+        "TEC Viva",
+        "Tr4ck3r",
+        "Quit"
+    ]
+
+    selected_options = []
+
+    for _ in range(7):
+        print("Please select an option (pick up to 7, or 'Quit' to finish):")
+        terminal_menu = TerminalMenu(options, title="Choose a governance member:")
+        choice_index = terminal_menu.show()
+
+        # Check if the "Quit" option was selected
+        if choice_index == len(options) - 1:
+            print("Quitting the selection process.")
+            break
+
+        # Check if the same option was not selected previously
+        if choice_index not in selected_options:
+            selected_options.append(choice_index + 1)
+            print(f"You have selected: {options[choice_index]}")
+        else:
+            print(f"You have already selected {options[choice_index]}. Please choose another option.")
+
+    # Return selected options as a string in the requested format
+    selected_options_str = "[" + ", ".join(map(str, selected_options)) + "]"
+    return selected_options_str
+
+
 def get_vote_choice() -> (int, str):
     print("* How would you like to vote on this proposal?                                                 *")
     print_stars()
