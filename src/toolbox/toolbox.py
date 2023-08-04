@@ -115,8 +115,9 @@ def run_multistats():
     return
 
 
-def collect_rewards(networkCall):
+def collect_rewards(networkCall = EnvironmentVariables.hmy_app):
     command = f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 100 {environ.get('PASS_SWITCH')}"
+    print(command)
     result = process_command(
         command, False
     )
@@ -128,6 +129,7 @@ def collect_rewards(networkCall):
 
 def send_rewards(networkCall, sendAmount, rewards_wallet):
     command = f"{networkCall} transfer --amount {sendAmount} --from {environ.get('VALIDATOR_WALLET')} --from-shard 0 --to {rewards_wallet} --to-shard 0 --gas-price 100 {environ.get('PASS_SWITCH')}"
+    print(command)
     result = process_command(
         command, False
     )
@@ -192,7 +194,7 @@ def rewards_collector(
         else:
             print("*\n*\n* Skipping collection of rewards.\n")
     if bypass == True:
-        collect_rewards(EnvironmentVariables.hmy_app)
+        collect_rewards()
         print_stars()
         print(
             Fore.GREEN + f"* mainnet rewards for {validator_wallet} have been collected." + Style.RESET_ALL + Fore.GREEN
