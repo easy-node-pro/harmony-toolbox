@@ -473,7 +473,7 @@ def get_validator_wallet_name(wallet_id):
         return None
 
     lines = result.stdout.strip().split('\n')
-    for line in lines[1:]:  # Skip the header line
+    for line in lines[2:]:  # Skip the header line & blank
         name, address = line.strip().split(None, 1)  # Split by whitespace, max 1 split
         if address == wallet_id:
             return name
