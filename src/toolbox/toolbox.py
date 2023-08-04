@@ -115,10 +115,11 @@ def run_multistats():
     return
 
 
-def collect_rewards(networkCall):
+def collect_rewards(pending_rewards_balance, networkCall = EnvironmentVariables.hmy_app):
+    print(f"*\n* Collecting {pending_rewards_balance} $ONE Rewards, awaiting confirmation...\n")
     command = f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 100 {environ.get('PASS_SWITCH')}"
     result = process_command(
-        command, False
+        command, True, False
     )
     if result:
         print("*\n*\n* Rewards collection Finished.\n")
@@ -129,7 +130,7 @@ def collect_rewards(networkCall):
 def send_rewards(networkCall, sendAmount, rewards_wallet):
     command = f"{networkCall} transfer --amount {sendAmount} --from {environ.get('VALIDATOR_WALLET')} --from-shard 0 --to {rewards_wallet} --to-shard 0 --gas-price 100 {environ.get('PASS_SWITCH')}"
     result = process_command(
-        command, False
+        command, True, False
     )
     if result:
         print("*\n*\n* Rewards sending Finished.\n")
@@ -180,19 +181,20 @@ def rewards_collector(
     rewards_wallet=environ.get("REWARDS_WALLET"),
     validator_wallet=environ.get("VALIDATOR_WALLET"),
 ) -> None:
+    pending_rewards_balance = get_rewards_balance(rpc, validator_wallet)
     print_stars()
     print("* Harmony ONE Rewards Collection")
     print_stars()
     if bypass == False:
         question = ask_yes_no(
-            f"*\n* For your validator wallet {validator_wallet}\n* You have {get_rewards_balance(rpc, validator_wallet)} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
+            f"*\n* For your validator wallet {validator_wallet}\n* You have {pending_rewards_balance} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
         )
         if question:
             bypass = True
         else:
             print("*\n*\n* Skipping collection of rewards.\n")
     if bypass == True:
-        collect_rewards(EnvironmentVariables.hmy_app)
+        collect_rewards(pending_rewards_balance)
         print_stars()
         print(
             Fore.GREEN + f"* mainnet rewards for {validator_wallet} have been collected." + Style.RESET_ALL + Fore.GREEN
@@ -369,7 +371,8 @@ def run_check_balance() -> None:
 
 
 def bingo_checker():
-    process_command(f"grep BINGO {os.environ.get('HARMONY_DIR')}/latest/zerolog-harmony.log | tail -10")
+    command = f"grep BINGO {os.environ.get('HARMONY_DIR')}/latest/zerolog-harmony.log | tail -10"
+    process_command(command, shell=True, print_output=True)
     print_stars()
     print("* Press enter to return to the main menu.")
     print_stars()
@@ -547,7 +550,7 @@ def run_regular_node(software_versions) -> None:
 
 
 def service_menu_option() -> None:
-    status = process_command("systemctl is-active --quiet harmony")
+    status = process_command("systemctl is-active --quiet harmony", True, False)
     if status == 0:
         print(
             f"*   8 - {Fore.RED}Stop Harmony Service      {Fore.GREEN}- {Fore.YELLOW}{Back.RED}WARNING: You will miss blocks while stopped!   {Style.RESET_ALL}{Fore.GREEN}"
