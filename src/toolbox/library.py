@@ -483,6 +483,7 @@ def get_validator_wallet_name(wallet_id):
 
 
 def governance_member_voting():
+    print(Fore.GREEN)
     options = [
         "AffinityShard",
         "BoxedCloud",
@@ -510,7 +511,7 @@ def governance_member_voting():
     selected_names = []
 
     for _ in range(7):
-        print("Please select an option (pick up to 7, 'Quit' to finish if less than 7 selections):")
+        print("* Highlight an option and hit enter to add it to your list.\n* (pick up to 7, 'Quit' to finish if less than 7 selections):")
         terminal_menu = TerminalMenu(options, title="Choose a governance member:")
         choice_index = terminal_menu.show()
 
@@ -559,6 +560,7 @@ def proposal_choices_option() -> None:
         return question, None
 
 def get_vote_choice() -> (int, str):
+    print(Fore.GREEN)
     print("* How would you like to vote on this proposal?                                                 *")
     print_stars()
     menu_options = [
