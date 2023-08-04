@@ -156,11 +156,11 @@ def rewards_sender(
     suggested_send = validator_wallet_balance - int(environ.get("GAS_RESERVE"))
     if suggested_send >= 1:
         send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet)
-        validator_wallet_balance = get_wallet_balance(validator_wallet)
-        rewards_wallet_balance = get_wallet_balance(rewards_wallet)
-        print(f"*\n*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE\n*\n* Current Rewards Wallet Balance: {rewards_wallet_balance}\n*\n*")
     else:
-        print("* Wallet balance is less than your gas reservation, please try again later.")
+        print("*\n* Wallet balance is less than your gas reservation, please try again later.\n*\n")
+    validator_wallet_balance = get_wallet_balance(validator_wallet)
+    rewards_wallet_balance = get_wallet_balance(rewards_wallet)
+    print(f"*\n*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE\n*\n* Current Rewards Wallet Balance: {rewards_wallet_balance}\n*\n*")
     return
 
 
