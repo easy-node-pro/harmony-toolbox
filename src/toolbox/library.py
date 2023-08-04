@@ -552,19 +552,14 @@ def get_wallet_balance(wallet_addr):
 
 
 def get_wallet_balance_by_endpoint(endpoint, wallet_addr):
-    current = 0
-    max_tries = EnvironmentVariables.rpc_endpoints_max_connection_retries
     get_balance = 0
 
-    while current < max_tries:
-        try:
-            get_balance = pyhmy.numbers.convert_atto_to_one(account.get_balance(wallet_addr, endpoint))
-            return get_balance
-        except Exception:
-            current += 1
-            continue
+    try:
+        get_balance = pyhmy.numbers.convert_atto_to_one(account.get_balance(wallet_addr, endpoint))
+        return get_balance
+    except Exception:
+        return get_balance
 
-    return get_balance
 
 
 def get_rewards_balance(endpoint, wallet_addr):
@@ -609,7 +604,8 @@ def wallet_pending_rewards(wallet):
 
 
 def get_sign_pct() -> str:
-    hmy_external_rpc = f"{environ.get('HARMONY_DIR')}/hmy --node='{EnvironmentVariables.working_rpc_endpoint}'"
+    config = EnvironmentVariables()
+    hmy_external_rpc = f"{environ.get('HARMONY_DIR')}/hmy --node='{config.working_rpc_endpoint}'"
     output = subprocess.getoutput(
         f"{hmy_external_rpc} blockchain validator information {environ.get('VALIDATOR_WALLET')} | grep signing-percentage"
     )

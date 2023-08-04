@@ -47,6 +47,7 @@ from toolbox.library import (
 
 
 def parse_flags(parser):
+    config = EnvironmentVariables()
     print_stars()
     # Add the arguments
     parser.add_argument(
@@ -99,11 +100,11 @@ def parse_flags(parser):
         finish_node()
 
     if args.collect:
-        rewards_collector(EnvironmentVariables.working_rpc_endpoint, True)
+        rewards_collector(config.working_rpc_endpoint, True)
         finish_node()
 
     if args.collect_send:
-        rewards_collector(EnvironmentVariables.working_rpc_endpoint, True, True)
+        rewards_collector(config.working_rpc_endpoint, True, True)
         finish_node()
 
 
@@ -165,7 +166,7 @@ def rewards_sender(
 
 
 def rewards_collector(
-    rpc=EnvironmentVariables.working_rpc_endpoint,
+    rpc,
     bypass=False,
     rewards_wallet=environ.get("REWARDS_WALLET"),
     validator_wallet=environ.get("VALIDATOR_WALLET"),
@@ -360,7 +361,8 @@ def bingo_checker():
 
 
 def run_rewards_collector() -> None:
-    rewards_collector()
+    config = EnvironmentVariables()
+    rewards_collector(config.working_rpc_endpoint)
     return
 
 
