@@ -544,7 +544,8 @@ def current_price():
 
 
 def get_wallet_balance(wallet_addr):
-    rpc_endpoint = EnvironmentVariables.working_rpc_endpoint
+    config = EnvironmentVariables()
+    rpc_endpoint = config.working_rpc_endpoint
     wallet_balance = get_wallet_balance_by_endpoint(rpc_endpoint, wallet_addr)
     if wallet_balance is not None:
         return wallet_balance
