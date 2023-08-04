@@ -484,6 +484,7 @@ def harmony_voting() -> None:
             f"* Voting for {vote_choice_option} - {vote_choice_text} on proposal 0xce5f516c683170e4164a06e42dcd487681f46f42606b639955eb7c0fa3b13b96"
         )
         command = f"{environ.get('HARMONY_DIR')}/hmy governance vote-proposal --space harmony-mainnet.eth --proposal 0xce5f516c683170e4164a06e42dcd487681f46f42606b639955eb7c0fa3b13b96 --proposal-type single-choice --choice {vote_choice_option} --key {validator_wallet_name} --passphrase"
+        print(command)
         process_command(
             command,
             True,
