@@ -138,7 +138,10 @@ def send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, 
             )
             if question:
                 send_out_rewards = True
-    elif send_out_rewards == True:
+            else: 
+                print("*\n*\n* Skipping sending of rewards.\n")
+                return
+    if send_out_rewards == True:
         print("*\n*\n")
         print_stars()
         print("\n* Sending your Harmony ONE Rewards, awaiting confirmation...")
@@ -180,6 +183,8 @@ def rewards_collector(
         )
         if question:
             bypass = True
+        else:
+            print("*\n*\n* Skipping collection of rewards.\n")
     if bypass == True:
         collect_rewards(EnvironmentVariables.hmy_app)
         print_stars()
