@@ -586,6 +586,12 @@ def service_menu_option() -> None:
     return
 
 
+def hip_voting_option() -> None:
+    active_vote = True
+    if active_vote:
+        print("*   7 - Vote on HIP-30v2          - Cast your vote for HIP-30v2")
+
+
 def rewards_sender_option() -> None:
     if environ.get("REWARDS_WALLET"):
         print("*   5 - Send Wallet Balance       - Send your wallet balance - saved gas to rewards wallet")
