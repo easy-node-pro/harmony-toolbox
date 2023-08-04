@@ -124,12 +124,47 @@ def send_rewards(networkCall, sendAmount, rewards_wallet):
     process_command(
         f"{networkCall} transfer --amount {sendAmount} --from {environ.get('VALIDATOR_WALLET')} --from-shard 0 --to {rewards_wallet} --to-shard 0 --gas-price 100 {environ.get('PASS_SWITCH')}"
     )
+    
+    
+def send_rewards_func(suggested_send, wallet_balance, rewards_wallet, validator_wallet):
+    if send_out_rewards == False:
+            print("*\n*\n")
+            print_stars()
+            print("\n* Send your Harmony ONE Rewards?")
+            print_stars()
+            question = ask_yes_no(
+                f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
+            )
+            if question:
+                send_out_rewards = True
+    elif send_out_rewards == True:
+        print("*\n*\n")
+        print_stars()
+        print("\n* Sending your Harmony ONE Rewards, awaiting confirmation...")
+        print_stars()
+        send_rewards(EnvironmentVariables.hmy_app, suggested_send, rewards_wallet)
+    wallet_balance = get_wallet_balance(validator_wallet)
+    print(f"*\n*\n* Current Wallet Balance: {wallet_balance} $ONE\n*\n*")
+    return
+
+
+def rewards_sender(
+    rewards_wallet=environ.get("REWARDS_WALLET"),
+    validator_wallet=environ.get("VALIDATOR_WALLET"),
+) -> None:
+    wallet_balance = get_wallet_balance(validator_wallet)
+    suggested_send = wallet_balance - int(environ.get("GAS_RESERVE"))
+    if suggested_send >= 1:
+        send_rewards_func(suggested_send, wallet_balance, rewards_wallet, validator_wallet)
+    else:
+        wallet_balance = get_wallet_balance(validator_wallet)
+        print(f"*\n*\n* Current Wallet Balance: {wallet_balance} $ONE\n*\n*")
+    return
 
 
 def rewards_collector(
-    rpc,
+    rpc=EnvironmentVariables.working_rpc_endpoint,
     bypass=False,
-    send_out_rewards=False,
     rewards_wallet=environ.get("REWARDS_WALLET"),
     validator_wallet=environ.get("VALIDATOR_WALLET"),
 ) -> None:
@@ -152,29 +187,11 @@ def rewards_collector(
     wallet_balance = get_wallet_balance(validator_wallet)
     suggested_send = wallet_balance - int(environ.get("GAS_RESERVE"))
     if suggested_send >= 1:
-        if send_out_rewards == False:
-            print("*\n*\n")
-            print_stars()
-            print("\n* Send your Harmony ONE Rewards?")
-            print_stars()
-            question = ask_yes_no(
-                f"* You have {wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
-            )
-            if question:
-                send_out_rewards = True
-        if send_out_rewards:
-            print("*\n*\n")
-            print_stars()
-            print("\n* Sending your Harmony ONE Rewards, awaiting confirmation...")
-            print_stars()
-            send_rewards(EnvironmentVariables.hmy_app, suggested_send, rewards_wallet)
-        wallet_balance = get_wallet_balance(validator_wallet)
-        print(f"*\n*\n* Current Wallet Balance: {wallet_balance} $ONE\n*\n*")
-        return
+        send_rewards_func(suggested_send, wallet_balance, rewards_wallet, validator_wallet)
     else:
         wallet_balance = get_wallet_balance(validator_wallet)
         print(f"*\n*\n* Current Wallet Balance: {wallet_balance} $ONE\n*\n*")
-        return
+    return
 
 
 def menu_topper_regular(software_versions) -> None:
@@ -440,11 +457,11 @@ def run_regular_node(software_versions) -> None:
         0: finish_node,
         1: refreshing_stats_message,
         2: menu_active_bls,
-        3: coming_soon,
+        3: bingo_checker,
         4: run_rewards_collector,
-        5: bingo_checker,
-        6: coming_soon,
-        7: set_rewards_wallet,
+        5: rewards_sender,
+        6: set_rewards_wallet,
+        7: coming_soon,
         8: menu_service_stop_start,
         9: menu_service_restart,
         10: harmony_binary_upgrade,
@@ -520,7 +537,16 @@ def service_menu_option() -> None:
         )
     else:
         print(f"*   8 - Start Harmony Service")
+    return
 
+
+def rewards_sender_option() -> None:
+    if environ.get("REWARDS_WALLET"):
+        print("*   5 - Send Wallet Balance       - Send your wallet balance - saved gas to rewards wallet")
+        print("*   6 - Set Rewards Wallet        - Input a one1 wallet address to send rewards using option #4!")   
+    else:
+        print("*   6 - Set Rewards Wallet        - Input a one1 wallet address to send rewards using option #4!")   
+    return
 
 def make_backup_dir() -> str:
     folder_name = f'{os.environ.get("HARMONY_DIR")}/harmony_backup/{datetime.now().strftime("%Y%m%d%H%M")}'
