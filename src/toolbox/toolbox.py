@@ -1,18 +1,17 @@
 import os, requests, time, json, subprocess
 from pytimedinput import timedInteger
-from subprocess import Popen, PIPE, run
+from subprocess import PIPE, run
 from ast import literal_eval
 from toolbox.config import EnvironmentVariables
 from os import environ
 from datetime import datetime
 from colorama import Fore, Back, Style
-from pyhmy import blockchain, transaction
+from pyhmy import blockchain, numbers
 from requests.exceptions import HTTPError
 from toolbox.library import (
     process_command,
     print_stars,
     print_stars,
-    print_whitespace,
     ask_yes_no,
     return_txt,
     find_port,
@@ -26,7 +25,6 @@ from toolbox.library import (
     free_space_check,
     server_drive_check,
     all_sys_info,
-    coming_soon,
     get_vote_choice,
     get_validator_wallet_name,
     governance_member_voting,
