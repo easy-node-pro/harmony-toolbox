@@ -56,7 +56,7 @@ def set_var(env_file, key_name, update_name):
 def loader_intro():
     print(Fore.GREEN)
     print_stars()
-    p = f"""
+    p = """
                     ____ ____ ____ ____ _________ ____ ____ ____ ____           
                     ||E |||a |||s |||y |||       |||N |||o |||d |||e ||          
                     ||__|||__|||__|||__|||_______|||__|||__|||__|||__||          
@@ -91,7 +91,7 @@ def old_toolbox_check():
 # Install Harmony ONE
 def install_hmy():
     os.chdir(f"{environ.get('HARMONY_DIR')}")
-    process_command(f"curl -LO https://harmony.one/hmycli && mv hmycli hmy && chmod +x hmy")
+    process_command("curl -LO https://harmony.one/hmycli && mv hmycli hmy && chmod +x hmy")
     print_stars()
     print("* hmy application installed.")
 
@@ -113,7 +113,7 @@ def recover_wallet():
     print("* Wallet Configuration                                                                      *")
     print_stars()
     question = ask_yes_no(
-        f"* If you would like to import a wallet for manual wallet actions, and for using our claim and send functions, answer yes.\n* If you only want to load your validator address for stats answer no.\n* Would you like to add your wallet to this server? (YES/NO) "
+        "* If you would like to import a wallet for manual wallet actions, and for using our claim and send functions, answer yes.\n* If you only want to load your validator address for stats answer no.\n* Would you like to add your wallet to this server? (YES/NO) "
     )
     # if yes, find recovery type
     if question:
@@ -127,11 +127,11 @@ def recover_wallet():
     else:
         while True:
             wallet = input(
-                f"* If you'd like to use the management menu, we need a one1 or 0x address, please input your address now: "
+                "* If you'd like to use the management menu, we need a one1 or 0x address, please input your address now: "
             )
             if wallet.startswith("one1") or wallet.startswith("0x"):
                 # Re-enter the wallet to verify
-                verify_wallet = input(f"* Please re-enter your wallet address for verification: ")
+                verify_wallet = input("* Please re-enter your wallet address for verification: ")
                 if wallet == verify_wallet:
                     set_var(EnvironmentVariables.dotenv_file, "VALIDATOR_WALLET", wallet)
                     break
@@ -159,7 +159,7 @@ def pull_harmony_update(harmony_dir, harmony_conf):
     print_stars()
     print("* harmony.conf MaxKeys modified to 13 & DisablePrivateIPScan set to true.")
     if os.path.isfile(f"{environ.get('HARMONY_DIR')}/blskey.pass"):
-        update_text_file(harmony_conf, 'PassFile = ""', f'PassFile = "blskey.pass"')
+        update_text_file(harmony_conf, 'PassFile = ""', 'PassFile = "blskey.pass"')
         print("* blskey.pass found, updated harmony.conf")
     print_stars()
     print(f"* Harmony {environ.get('NETWORK')} application installed & ~/harmony/harmony.conf created. ")
@@ -234,7 +234,7 @@ def validator_stats_output(folders) -> None:
         f"{EnvironmentVariables.user_home_dir}/{list(folders.items())[0][0]}/hmy",
         "utility",
         "metadata",
-        f"--node=https://api.s0.t.hmny.io",
+        "--node=https://api.s0.t.hmny.io",
     ]
     result_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     remote_0_data = json.loads(result_shard_0.stdout)
@@ -471,7 +471,7 @@ def get_validator_wallet_name(wallet_id):
         print(f"Error executing command: {result.stderr}")
         return None
 
-    lines = result.stdout.strip().split('\n')
+    lines = result.stdout.strip().split("\n")
     for line in lines[2:]:  # Skip the header line & blank
         name, address = line.strip().split(None, 1)  # Split by whitespace, max 1 split
         if address == wallet_id:
@@ -503,14 +503,16 @@ def governance_member_voting():
         "Quick.One",
         "TEC Viva",
         "Tr4ck3r",
-        "Quit"
+        "Quit",
     ]
 
     selected_indexes = []
     selected_names = []
 
     for _ in range(7):
-        print("* Highlight an option and hit enter to add it to your list.\n* (pick up to 7, 'Quit' to finish if less than 7 selections):")
+        print(
+            "* Highlight an option and hit enter to add it to your list.\n* (pick up to 7, 'Quit' to finish if less than 7 selections):"
+        )
         terminal_menu = TerminalMenu(options, title="Choose a governance member:")
         choice_index = terminal_menu.show()
 
@@ -534,11 +536,7 @@ def governance_member_voting():
 
 
 def proposal_choices_option() -> None:
-    options = [
-        "HIP-30v2",
-        "Governance for Harmony Recovery Wallet",
-        "Quit"
-    ]
+    options = ["HIP-30v2", "Governance for Harmony Recovery Wallet", "Quit"]
 
     print("* Current proposals:\n*\n*")
 
@@ -557,6 +555,7 @@ def proposal_choices_option() -> None:
         return question, selected_proposal
     else:
         return question, None
+
 
 def get_vote_choice() -> (int, str):
     print(Fore.GREEN)
@@ -641,9 +640,7 @@ def get_validator_info():
         validator_data = staking.get_validator_information(environ.get("VALIDATOR_WALLET"), config.working_rpc_endpoint)
         return validator_data
     except Exception:
-        current += 1
-
-    return validator_data
+        return validator_data
 
 
 def current_price():
@@ -704,7 +701,7 @@ def return_json(fn: str, single_key: str = None) -> dict:
                 return data.get(single_key)
             return data
     except FileNotFoundError as e:
-        # print(f"File not Found  ::  {e}")
+        print(f"File not Found  ::  {e}")
         return {}
 
 
@@ -746,7 +743,7 @@ def check_online_version():
         harmony_ver = subprocess.getoutput(f"{EnvironmentVariables.harmony_tmp_path} -V")
         output_harmony_version = re.search(r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_ver)
     except subprocess.CalledProcessError:
-        print(f"* Error - Website for harmony upgrade is offline, setting to offline.")
+        print("* Error - Website for harmony upgrade is offline, setting to offline.")
         harmony_ver = "Offline"
     try:
         subprocess.check_output(
@@ -756,7 +753,7 @@ def check_online_version():
         hmy_ver = subprocess.getoutput(f"{EnvironmentVariables.hmy_tmp_path} version")
         hmy_ver = hmy_ver[62:-15]
     except subprocess.CalledProcessError:
-        print(f"* Error - Website for hmy upgrade is offline, setting to offline.")
+        print("* Error - Website for hmy upgrade is offline, setting to offline.")
         hmy_ver = "Offline"
     return output_harmony_version.group(1)[:-2], hmy_ver
 
@@ -999,7 +996,7 @@ def finish_node_install():
         print(
             "* Post installation quick tips:"
             + "\n* To recover your wallet on this server run:"
-            + f"\n* python3 ~/harmony-toolboxload_wallet.py"
+            + "\n* python3 ~/harmony-toolboxload_wallet.py"
             + "\n*"
             + "\n* To create BLS keys run:"
             + f'\n* ./hmy keys generate-bls-keys --count 1 --shard {environ.get("SHARD")} --passphrase'
@@ -1009,7 +1006,7 @@ def finish_node_install():
         print(
             "* Post installation quick tips:"
             + "\n* To recover your wallet again, run:"
-            + f"\n* python3 ~/harmony-toolboxload_wallet.py"
+            + "\n* python3 ~/harmony-toolboxload_wallet.py"
             + "\n*"
             + "\n* To create BLS keys run:"
             + f'\n* ./hmy keys generate-bls-keys --count 1 --shard {environ.get("SHARD")} {environ.get("PASS_SWITCH")}'
@@ -1101,7 +1098,7 @@ def get_HARMONY_DIR(pathname):
 def refreshing_stats_message() -> str:
     print(Fore.GREEN)
     print_stars()
-    print(f"* Getting the latest local & blockchain information now, one moment while we load...")
+    print("* Getting the latest local & blockchain information now, one moment while we load...")
     print_stars()
     return
 
@@ -1248,7 +1245,7 @@ def os_upgrades() -> None:
 
 
 def menu_ubuntu_updates() -> str:
-    question = ask_yes_no(f"* Are you sure you would like to proceed with Linux apt Upgrades? (Y/N) ")
+    question = ask_yes_no("* Are you sure you would like to proceed with Linux apt Upgrades? (Y/N) ")
     if question:
         run_ubuntu_updater()
         input("* OS Updates completed, press ENTER to return to the main menu. ")

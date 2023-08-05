@@ -15,7 +15,7 @@ def install_vstats(vstatsToken) -> None:
             # Start install by stopping and wipe for re-install if yes
             process_command("sudo service harmony_node_stats stop")
             process_command(f"sudo rm -r {EnvironmentVariables.user_home_dir}/harmony_node_stats")
-        
+
     # Install it bud, pull git repo
     os.chdir(f"{EnvironmentVariables.user_home_dir}")
     process_command("git clone https://github.com/FortuneV13/harmony_node_stats")
@@ -50,11 +50,11 @@ def get_token():
             load_var_file(EnvironmentVariables.dotenv_file)
     if environ.get("VSTATSBOT_TOKEN") is None:
         question = ask_yes_no(
-            f"* No token found, please run /token on vStats Bot to obtain your token. Would you like to enter one now? (YES/NO)"
+            "* No token found, please run /token on vStats Bot to obtain your token. Would you like to enter one now? (YES/NO)"
         )
         if question:
             vstatsToken = input(
-                f"* Please input your vStats token here: "
+                "* Please input your vStats token here: "
             )
             set_var(EnvironmentVariables.dotenv_file, "VSTATSBOT_TOKEN", vstatsToken)
         else:

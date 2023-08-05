@@ -310,7 +310,7 @@ def set_rewards_wallet() -> None:
     if rewards_wallet is None:
         question = ask_yes_no("* Would you like to add an address to send your rewards too? (YES/NO)")
         if question:
-            rewards_wallet = input(f"* Input your one1 address to send rewards into, please input your address now: ")
+            rewards_wallet = input("* Input your one1 address to send rewards into, please input your address now: ")
             if rewards_wallet.startswith("one1"):
                 set_var(EnvironmentVariables.dotenv_file, "REWARDS_WALLET", rewards_wallet)
             else:
@@ -405,7 +405,7 @@ def safety_defaults() -> None:
                 return
             except subprocess.CalledProcessError as e:
                 print(
-                    "* Well this is odd, somehow harmony was not found.\n*\n* You can add the HARMONY_DIR variable to your ~/.easynode.env file\n* Example default location: HARMONY_DIR = /home/serviceharmony/harmony\n*\n* Or contact Easy Node for custom configuration help."
+                    f"* Well this is odd, somehow harmony was not found.\n*\n* You can add the HARMONY_DIR variable to your ~/.easynode.env file\n* Example default location: HARMONY_DIR = /home/serviceharmony/harmony\n*\n* Or contact Easy Node for custom configuration help.\* Error: {e}"
                 )
                 raise SystemExit(0)
         else:
@@ -414,7 +414,7 @@ def safety_defaults() -> None:
     if os.path.exists(EnvironmentVariables.harmony_conf):
         update_text_file(EnvironmentVariables.harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
     if os.path.isfile(f"{os.environ.get('HARMONY_DIR')}/blskey.pass"):
-        update_text_file(EnvironmentVariables.harmony_conf, 'PassFile = ""', f'PassFile = "blskey.pass"')
+        update_text_file(EnvironmentVariables.harmony_conf, 'PassFile = ""', 'PassFile = "blskey.pass"')
     passphrase_status()
     get_shard_menu()
     set_main_or_test()
@@ -571,7 +571,7 @@ def run_regular_node(software_versions) -> None:
                     if option != 1:
                         start_regular_node()
             except KeyError:
-                print(f"* Bad option, try again. Press enter to continue.")
+                print("* Bad option, try again. Press enter to continue.")
                 print_stars()
                 input()
                 start_regular_node()
@@ -604,7 +604,7 @@ def service_menu_option() -> None:
             f"*   9 - Restart Harmony Service   - {Back.RED}{Fore.YELLOW}WARNING: You will miss blocks during a restart!{Style.RESET_ALL}{Fore.GREEN}"
         )
     else:
-        print(f"*   8 - Start Harmony Service")
+        print("*   8 - Start Harmony Service")
     return
 
 

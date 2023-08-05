@@ -30,7 +30,7 @@ if not environ.get("VALIDATOR_WALLET"):
         )
         if wallet.startswith("one1") or wallet.startswith("0x"):
             # Re-enter the wallet to verify
-            verify_wallet = input(f"* Please re-enter your wallet address for verification: ")
+            verify_wallet = input("* Please re-enter your wallet address for verification: ")
             if wallet == verify_wallet:
                 set_var(EnvironmentVariables.dotenv_file, "VALIDATOR_WALLET", wallet)
                 break
@@ -82,27 +82,27 @@ def find_port(folder):
 def get_folders():
     folders = {}
     if os.path.exists(f"{user_home}/harmony/harmony.conf"):
-        port = find_port(f"harmony")
+        port = find_port("harmony")
         folders["harmony"] = port
         print(f"* Found ~/harmony folder, on port {port}")
         print_stars()
     if os.path.exists(f"{user_home}/harmony0/harmony.conf"):
-        port = find_port(f"harmony0")
+        port = find_port("harmony0")
         folders["harmony0"] = port
         print(f"* Found ~/harmony1 folder, on port {port}")
         print_stars()
     if os.path.exists(f"{user_home}/harmony1/harmony.conf"):
-        port = find_port(f"harmony1")
+        port = find_port("harmony1")
         folders["harmony1"] = port
         print(f"* Found ~/harmony1 folder, on port {port}")
         print_stars()
     if os.path.exists(f"{user_home}/harmony2/harmony.conf"):
-        port = find_port(f"harmony2")
+        port = find_port("harmony2")
         folders["harmony2"] = port
         print(f"* Found ~/harmony2 folder, on port {port}")
         print_stars()
     if os.path.exists(f"{user_home}/harmony3/harmony.conf"):
-        port = find_port(f"harmony3")
+        port = find_port("harmony3")
         folders["harmony3"] = port
         print(f"* Found ~/harmony3 folder, on port {port}")
         print_stars()

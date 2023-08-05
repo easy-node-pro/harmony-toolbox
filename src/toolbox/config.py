@@ -1,4 +1,3 @@
-import os
 import socket
 import requests
 from os import environ, path
