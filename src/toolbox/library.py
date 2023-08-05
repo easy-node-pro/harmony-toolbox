@@ -1,10 +1,9 @@
-import psutil, platform, dotenv, os, subprocess, requests, pyhmy, shutil, hashlib, re, json, subprocess, getpass
+import psutil, platform, dotenv, os, subprocess, requests, pyhmy, shutil, hashlib, re, json, subprocess
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
 from colorama import Fore, Style, Back
-from pathlib import Path
-from pyhmy import account, staking, validator, numbers
+from pyhmy import account, staking
 from json import load, dump
 from toolbox.config import EnvironmentVariables
 from collections import namedtuple
@@ -681,7 +680,7 @@ def get_rewards_balance(endpoint, wallet_addr):
     totalRewards = 0
     try:
         validator_rewards = staking.get_delegations_by_delegator(wallet_addr, endpoint)
-    except (Exception, ConnectionError) as e:
+    except (Exception, ConnectionError):
         return totalRewards
 
     for i in validator_rewards:
@@ -710,7 +709,8 @@ def return_json(fn: str, single_key: str = None) -> dict:
 
 
 def wallet_pending_rewards(wallet):
-    res, walletBalance = get_rewards_balance(wallet, save_data=True, display=False)
+    config = EnvironmentVariables()
+    walletBalance = get_rewards_balance(config.working_rpc_endpoint, wallet)
     totalRewards = 0
     for i in walletBalance["result"]:
         totalRewards = totalRewards + i["reward"]

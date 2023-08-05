@@ -2,7 +2,6 @@ import os
 import json
 import subprocess
 from os import environ
-from ast import literal_eval
 from toolbox.config import EnvironmentVariables
 from toolbox.library import (
     load_var_file,
@@ -11,7 +10,6 @@ from toolbox.library import (
     print_stars,
     set_var,
     loader_intro,
-    ask_yes_no,
     version_checks,
     finish_node,
     refreshing_stats_message
@@ -112,6 +110,7 @@ def get_folders():
 
 
 def validator_stats_output(folders) -> None:
+    config = EnvironmentVariables()
     # Get server stats & wallet balances
     load_1, load_5, load_15 = os.getloadavg()
     sign_percentage = get_sign_pct()
@@ -123,7 +122,7 @@ def validator_stats_output(folders) -> None:
     )
     print_stars()
     print(
-        f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(total_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(EnvironmentVariables.rpc_endpoints, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {EnvironmentVariables.server_host_name} - {Fore.YELLOW}{EnvironmentVariables.external_ip}{Fore.GREEN}'
+        f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(total_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {EnvironmentVariables.server_host_name} - {Fore.YELLOW}{EnvironmentVariables.external_ip}{Fore.GREEN}'
     )
     for folder in folders:
         harmony_service_status(folder)

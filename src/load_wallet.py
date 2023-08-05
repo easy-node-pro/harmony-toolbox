@@ -1,7 +1,4 @@
-import os
 import dotenv
-import subprocess
-from os import environ
 from toolbox.config import EnvironmentVariables
 from toolbox.library import loader_intro, set_wallet_env, ask_yes_no, print_stars, recover_wallet
 
