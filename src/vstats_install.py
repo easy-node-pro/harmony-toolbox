@@ -41,7 +41,7 @@ def install_vstats(vstatsToken) -> None:
         f"sudo cp {EnvironmentVariables.toolbox_location}/src/bin/harmony_node_stats.service . && sed -i 's/serviceharmony/{EnvironmentVariables.active_user}/g' 'harmony_node_stats.service' && sudo mv harmony_node_stats.service /etc/systemd/system/harmony_node_stats.service && sudo chmod a-x /etc/systemd/system/harmony_node_stats.service && sudo systemctl enable harmony_node_stats.service && sudo service harmony_node_stats start"
     )
     return
-    
+
 
 def get_token():
     if len(sys.argv) > 1:
