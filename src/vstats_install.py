@@ -1,9 +1,8 @@
 import os
 import sys
-import subprocess
 from os import environ
 from toolbox.config import EnvironmentVariables
-from toolbox.library import loader_intro, load_var_file, ask_yes_no, set_var, update_text_file, print_stars, process_command
+from toolbox.library import loader_intro, load_var_file, ask_yes_no, set_var, update_text_file, print_stars, process_command, clear_screen
 
 def install_vstats(vstatsToken) -> None:
     # Check if it exists already
@@ -65,13 +64,13 @@ def get_token():
 
 
 if __name__ == '__main__':
-    subprocess.run("clear")
+    clear_screen()
     loader_intro()
     # check if it exists, load anyway if it does
     if os.path.exists(EnvironmentVariables.dotenv_file) is None:
         # ask a bunch of questions to gather data since we don't have env
         vstatsToken = get_token()
-    
+
     else:
         load_var_file(EnvironmentVariables.dotenv_file)
         # load env configuration

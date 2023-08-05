@@ -207,7 +207,7 @@ def rewards_collector(
     else:
         validator_wallet_balance = get_wallet_balance(validator_wallet)
         rewards_wallet_balance = get_wallet_balance(rewards_wallet)
-        print(f"*\n*\n* Balance too low to send to rewards wallet\n")
+        print("*\n*\n* Balance too low to send to rewards wallet\n")
         print(f"*\n*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE\n*")
         print(f"* Current Rewards Wallet Balance: {rewards_wallet_balance} $ONE\n*\n*")
     return
@@ -727,7 +727,7 @@ def menu_validator_stats():
         local_data_shard = json.loads(result_local_shard.stdout)
     except (ValueError, KeyError, TypeError) as e:
         print(
-            f"* Local Server Offline\n*\n* Run troubleshooting, See our documents site for info on how to manually troubleshoot:\n* https://docs.easynode.pro/harmony/post#validator-toolbox-troubleshooting\n*"
+            "* Local Server Offline\n*\n* Run troubleshooting, See our documents site for info on how to manually troubleshoot:\n* https://docs.easynode.pro/harmony/post#validator-toolbox-troubleshooting\n*"
         )
         print_stars()
         finish_node()

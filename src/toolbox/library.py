@@ -1251,6 +1251,9 @@ def menu_ubuntu_updates() -> str:
         input("* OS Updates completed, press ENTER to return to the main menu. ")
 
 
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
 def menu_reboot_server() -> str:
     question = ask_yes_no(
         Fore.RED
