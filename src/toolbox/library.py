@@ -708,16 +708,6 @@ def return_json(fn: str, single_key: str = None) -> dict:
         return {}
 
 
-def wallet_pending_rewards(wallet):
-    config = EnvironmentVariables()
-    walletBalance = get_rewards_balance(config.working_rpc_endpoint, wallet)
-    totalRewards = 0
-    for i in walletBalance["result"]:
-        totalRewards = totalRewards + i["reward"]
-    totalRewards = "{:,}".format(round(totalRewards * 0.000000000000000001, 2))
-    return totalRewards
-
-
 def get_sign_pct() -> str:
     config = EnvironmentVariables()
     hmy_external_rpc = f"{environ.get('HARMONY_DIR')}/hmy --node='{config.working_rpc_endpoint}'"
