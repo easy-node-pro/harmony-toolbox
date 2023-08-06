@@ -107,7 +107,7 @@ def update_hmy_binary():
 
         # Set execute permissions
         os.chmod(destination_path, 0o755)
-        
+
         # Get version string
         software_versions = version_checks(hmy_dir)
 
@@ -138,7 +138,9 @@ def update_text_file(fileName, originalText, newText):
 
 # Setup a wallet, ask if they need to import one (not required but no toolbox menu without a wallet)
 def recover_wallet():
-    print(f"{string_stars()}\n* Wallet Configuration                                                                      *\n{string_stars()}\n")
+    print(
+        f"{string_stars()}\n* Wallet Configuration                                                                      *\n{string_stars()}\n"
+    )
     question = ask_yes_no(
         "* If you would like to import a wallet for manual wallet actions, and for using our claim and send functions, answer yes.\n* If you only want to load your validator address for stats answer no.\n* Would you like to add your wallet to this server? (YES/NO) "
     )
@@ -170,7 +172,7 @@ def recover_wallet():
 
 def update_harmony_binary():
     arch = os.uname().machine
-    harmony_dir = environ.get('HARMONY_DIR')
+    harmony_dir = environ.get("HARMONY_DIR")
     os.chdir(f"{harmony_dir}")
     if arch.startswith("arm"):
         process_command("curl -LO https://harmony.one/binary-arm64 && mv binary-arm64 harmony && chmod +x harmony")
@@ -345,9 +347,13 @@ def get_db_size(harmony_dir, our_shard) -> str:
 
 def recovery_type():
     print_stars()
-    print(f"{string_stars()}\n* Wallet Recovery Type!                                                                     *\n{string_stars()}")
+    print(
+        f"{string_stars()}\n* Wallet Recovery Type!                                                                     *\n{string_stars()}"
+    )
     print("* [0] = Mnemonic phrase recovery (aka seed phrase)                                          *")
-    print(f"* [1] = Private Key recovery                                                                *\n{string_stars()}")
+    print(
+        f"* [1] = Private Key recovery                                                                *\n{string_stars()}"
+    )
     menu_options = [
         "[0] - Mnemonic Phrase Recovery",
         "[1] - Private Key Recovery",
@@ -393,7 +399,9 @@ def passphrase_set():
     if os.path.exists(f"{environ.get('HARMONY_DIR')}/passphrase.txt"):
         return
 
-    print(f"{Fore.GREEN}* Setup {environ.get('HARMONY_DIR')}/passphrase.txt file for use with autobidder & harmony-toolbox.\n{string_stars()}")
+    print(
+        f"{Fore.GREEN}* Setup {environ.get('HARMONY_DIR')}/passphrase.txt file for use with autobidder & harmony-toolbox.\n{string_stars()}"
+    )
     # take input
     while True:
         print("* ")
@@ -433,7 +441,7 @@ def run_command(command: str, shell=True, print_output=True) -> bool:
             subprocess.run(command, shell=shell, check=True)
         else:
             # Suppress the output if print_output is set to False
-            with open(os.devnull, 'w') as fnull:
+            with open(os.devnull, "w") as fnull:
                 subprocess.run(command, shell=shell, check=True, stdout=fnull, stderr=fnull)
         return True
     except subprocess.CalledProcessError as e:
@@ -575,7 +583,9 @@ def proposal_choices_option() -> None:
 
 def get_vote_choice() -> (int, str):
     print(Fore.GREEN)
-    print(f"* How would you like to vote on this proposal?                                                 *\n{string_stars()}")
+    print(
+        f"* How would you like to vote on this proposal?                                                 *\n{string_stars()}"
+    )
     menu_options = [
         "[1] - Yes",
         "[2] - No",
@@ -591,10 +601,27 @@ def get_vote_choice() -> (int, str):
     return vote_choice_num, vote_choice_text
 
 
+def get_available_space(directory: str) -> int:
+    """Returns available space in given directory in GB."""
+    statvfs = os.statvfs(directory)
+    return (statvfs.f_frsize * statvfs.f_bavail) / (1024**3)
+
+
+def check_space_requirements(shard: int, directory: str) -> bool:
+    available_space = get_available_space(directory)
+    if shard == 0 and available_space < 400:
+        input("* Warning: There is not enough space to load shard 0 on this server in your home directory.\n* If you install to the default location your disk may fill up.\n* Select a volume with more free space when prompted on the install location.\n* Press ENTER to continue.")
+        return False
+    elif shard in [1, 2, 3] and available_space < 50:
+        input(f"* Warning: There is not enough space to load shard {shard} on this server in your home directory.\n* If you install to the default location your disk may fill up.\n* Select a volume with more free space when prompted on the install location.\n* Press ENTER to continue.")
+        return False
+    return True
+
+
 def get_shard_menu() -> None:
     if not environ.get("SHARD"):
-        print(f"{string_stars()}\n* Gathering more information about your server.                                             *\n{string_stars()}")
-        print(f"* Which shard do you want this node to sign blocks on?                                      *\n{string_stars()}")
+        print(f"{string_stars()}\n* Gathering more information about your server.\n{string_stars()}")
+        print(f"* Which shard do you want this node to sign blocks on?\n{string_stars()}")
         menu_options = [
             "[0] - Shard 0",
             "[1] - Shard 1",
@@ -602,8 +629,13 @@ def get_shard_menu() -> None:
             "[3] - Shard 3",
         ]
         terminal_menu = TerminalMenu(menu_options, title="* Which Shard will this node sign blocks on? ")
-        our_shard = str(terminal_menu.show())
-        set_var(EnvironmentVariables.dotenv_file, "SHARD", our_shard)
+        our_shard = int(terminal_menu.show())
+
+        # Check space requirements for the selected shard
+        if not check_space_requirements(our_shard, EnvironmentVariables.user_home_dir):
+            return None
+
+        set_var(EnvironmentVariables.dotenv_file, "SHARD", str(our_shard))
         return our_shard
 
 
@@ -633,9 +665,13 @@ def set_main_or_test() -> None:
 def get_wallet_address():
     print("* Signing Node, No Wallet!                                                                  *")
     print("* You are attempting to launch the menu but no wallet has been loaded, as you chose         *")
-    print(f"* If you would like to use the menu on the server, complete the following:                  *\n{string_stars()}")
+    print(
+        f"* If you would like to use the menu on the server, complete the following:                  *\n{string_stars()}"
+    )
     print("* Edit ~/.easynode.env and add your wallet address on a new line like this example:         *")
-    print(f"* VALIDATOR_WALLET='one1thisisjustanexamplewalletreplaceme'                                 *\n{string_stars()}")
+    print(
+        f"* VALIDATOR_WALLET='one1thisisjustanexamplewalletreplaceme'                                 *\n{string_stars()}"
+    )
     raise SystemExit(0)
 
 
@@ -882,7 +918,9 @@ def install_rclone():
 
     # Execute the fetched content
     try:
-        process = subprocess.Popen(['sudo', 'bash'], stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        process = subprocess.Popen(
+            ["sudo", "bash"], stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
         process.communicate(input=script_content.encode())
         if process.returncode != 0:
             return False
@@ -1004,7 +1042,9 @@ def clone_shards():
         run_command(
             f"rclone -P sync release:pub.harmony.one/{environ.get('NETWORK')}.min/harmony_db_{environ.get('SHARD')} {environ.get('HARMONY_DIR')}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 4 --transfers=32"
         )
-        print(f"{string_stars()}\n* Shard {environ.get('SHARD')} completed.\n* Shard 0 will be created when you start your service.\n{string_stars()}")
+        print(
+            f"{string_stars()}\n* Shard {environ.get('SHARD')} completed.\n* Shard 0 will be created when you start your service.\n{string_stars()}"
+        )
     else:
         # If we're on shard 0, grab the snap DB here.
         print(f"* Now cloning Shard 0, kick back and relax for awhile...\n{string_stars()}")
@@ -1066,6 +1106,12 @@ def free_space_check(mount) -> str:
     _, _, free = shutil.disk_usage(ourDiskMount)
     freeConverted = str(converted_unit(free))
     return freeConverted
+
+
+def free_space_size(mount) -> str:
+    ourDiskMount = get_HARMONY_DIR(mount)
+    _, _, free = shutil.disk_usage(ourDiskMount)
+    return free
 
 
 def server_drive_check(dot_env, directory) -> None:
@@ -1138,7 +1184,9 @@ def get_HARMONY_DIR(pathname):
 
 
 def refreshing_stats_message() -> str:
-    print(f"{Fore.GREEN}{string_stars()}\n* Getting the latest local & blockchain information now, one moment while we load...\n{string_stars()}")
+    print(
+        f"{Fore.GREEN}{string_stars()}\n* Getting the latest local & blockchain information now, one moment while we load...\n{string_stars()}"
+    )
     return
 
 
