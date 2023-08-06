@@ -610,15 +610,9 @@ def set_main_or_test() -> None:
         terminal_menu = TerminalMenu(menu_options, title="Mainnet or Testnet")
         results = terminal_menu.show()
         if results == 0:
-            set_var(EnvironmentVariables.dotenv_file, "NETWORK", "mainnet")
-            set_var(EnvironmentVariables.dotenv_file, "NETWORK_SWITCH", "t")
-            set_var(EnvironmentVariables.dotenv_file, "RPC_NET", "https://rpc.s0.t.hmny.io")
-            set_var(EnvironmentVariables.dotenv_file, "RPC_NET_SHARD", f"https://rpc.s{environ.get('SHARD')}.t.hmny.io")
+            set_network("t")
         if results == 1:
-            set_var(EnvironmentVariables.dotenv_file, "NETWORK", "testnet")
-            set_var(EnvironmentVariables.dotenv_file, "NETWORK_SWITCH", "b")
-            set_var(EnvironmentVariables.dotenv_file, "RPC_NET", "https://rpc.s0.b.hmny.io")
-            set_var(EnvironmentVariables.dotenv_file, "RPC_NET_SHARD", f"https://rpc.s{environ.get('SHARD')}.b.hmny.io")
+            set_network("b")
     return
 
 
@@ -1242,6 +1236,15 @@ def os_upgrades() -> None:
     for x in upgrades:
         process_command(x)
     print_stars()
+
+
+def set_network(network):
+    set_var(EnvironmentVariables.dotenv_file, "NETWORK", "mainnet")
+    set_var(EnvironmentVariables.dotenv_file, "NETWORK_SWITCH", network)
+    set_var(EnvironmentVariables.dotenv_file, "RPC_NET", f"https://rpc.s0.{network}.hmny.io")
+    if environ.get("SHARD") != "0":
+        set_var(EnvironmentVariables.dotenv_file, "RPC_NET_SHARD", f"https://rpc.s{environ.get('SHARD')}.t.hmny.io")
+    return
 
 
 def menu_ubuntu_updates() -> str:
