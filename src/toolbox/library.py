@@ -110,12 +110,12 @@ def install_hmy():
         os.chmod(destination_path, 0o755)
         
         # Get version string
-        success, output = process_command(f"{environ.get('HARMONY_DIR')}/hmy version", print_output=False)
+        software_versions = version_checks(environ.get("HARMONY_DIR"))
 
-        if success:
+        if software_versions:
             print_stars()
             print("* hmy application installed.")
-            return output
+            return software_versions
         else:
             print_stars()
             print("* Version Check Failed.")
