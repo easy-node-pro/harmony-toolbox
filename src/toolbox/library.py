@@ -1041,20 +1041,20 @@ def finish_node_install():
         print(
             "* Post installation quick tips:"
             + "\n* To recover your wallet on this server run:"
-            + "\n* python3 ~/harmony-toolboxload_wallet.py"
+            + "\n* python3 ~/harmony-toolbox/load_wallet.py"
             + "\n*"
             + "\n* To create BLS keys run:"
-            + f'\n* ./hmy keys generate-bls-keys --count 1 --shard {environ.get("SHARD")} --passphrase'
+            + f'\n* {environ.get("HARMONY_DIR")}/hmy keys generate-bls-keys --count 1 --shard {environ.get("SHARD")} --passphrase'
             + f"\n*\n{string_stars()}"
         )
     else:
         print(
             "* Post installation quick tips:"
             + "\n* To recover your wallet again, run:"
-            + "\n* python3 ~/harmony-toolboxload_wallet.py"
+            + "\n* python3 ~/harmony-toolbox/load_wallet.py"
             + "\n*"
             + "\n* To create BLS keys run:"
-            + f'\n* ./hmy keys generate-bls-keys --count 1 --shard {environ.get("SHARD")} {environ.get("PASS_SWITCH")}'
+            + f'\n* {environ.get("HARMONY_DIR")}/hmy keys generate-bls-keys --count 1 --shard {environ.get("SHARD")} {environ.get("PASS_SWITCH")}'
             + f"\n*\n{string_stars()}"
         )
     print(f"* Thanks for using Easy Node - Validator Node Server Software Installer!\n{string_stars()}")
