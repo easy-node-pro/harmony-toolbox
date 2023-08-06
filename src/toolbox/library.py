@@ -109,11 +109,16 @@ def install_hmy():
         os.chmod(destination_path, 0o755)
         
         # Get version string
-        version = process_command_return_output(f"{environ.get('HARMONY_DIR')}/hmy version")
+        success, output = process_command(f"{environ.get('HARMONY_DIR')}/hmy version", print_output=False)
 
-        print_stars()
-        print("* hmy application installed.")
-        return version
+        if success:
+            print_stars()
+            print("* hmy application installed.")
+            return output
+        else:
+            print_stars()
+            print("* Version Check Failed.")
+            return None
 
     except requests.RequestException as e:
         print_stars()
@@ -421,30 +426,19 @@ def passphrase_set():
     passphrase_status()
 
 
-def process_command(command: str, shell=True, print_output=True) -> bool:
+def process_command(command: str, shell=True, print_output=True) -> Tuple[bool, str]:
     result = subprocess.run(command, shell=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
-    if print_output and result.stdout:
-        print(result.stdout)
+    # Command was successful
+    if result.returncode == 0:
+        if print_output and result.stdout:
+            print(result.stdout)
+        return True, result.stdout
 
-    if result.returncode != 0:
-        if print_output:
-            print(f"Error executing command: {result.stderr}")
-        return False
-
-    return True
-
-
-def process_command_return_output(command: str, shell=True, print_output=True) -> bool:
-    result = subprocess.run(command, shell=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
-    if print_output and result.stdout:
-        return print(result.stdout)
-
-    if result.returncode != 0:
-        if print_output:
-            print(f"Error executing command: {result.stderr}")
-        return False
+    # Command failed
+    if print_output:
+        print(f"Error executing command: {result.stderr}")
+    return False, result.stderr
 
 
 def ask_yes_no(question: str) -> bool:
