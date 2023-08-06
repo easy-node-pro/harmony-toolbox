@@ -1,5 +1,4 @@
-import socket
-import requests
+import socket, requests, json
 from os import environ, path
 from dotenv import load_dotenv
 
@@ -8,12 +7,20 @@ load_dotenv(f"{path.expanduser('~')}/.easynode.env")
 
 def get_url(timeout=5) -> str:
     try:
-        response = requests.get("https://ident.me", timeout=timeout)
+        response = requests.get("https://api64.ipify.org?format=json", timeout=timeout)
         response.raise_for_status()  # Raises a HTTPError if the response was unsuccessful
-        result = response.text
+
+        # Parse the JSON response
+        ip_data = response.json()
+        result = ip_data["ip"]
     except requests.exceptions.RequestException as x:
-        print(type(x), x)
-        result = "0.0.0.0"
+        try:
+            response = requests.get("https://ident.me", timeout=timeout)
+            response.raise_for_status()  # Raises a HTTPError if the response was unsuccessful
+            result = response.text
+        except requests.exceptions.RequestException as x:
+            print(type(x), x)
+            result = "0.0.0.0"
     return result
 
 
