@@ -90,6 +90,7 @@ def old_toolbox_check():
 
 # Install Harmony ONE
 def update_hmy_binary():
+    load_dotenv(EnvironmentVariables.dotenv_file)
     hmy_dir = environ.get("HARMONY_DIR")
     download_url = "https://harmony.one/hmycli"
     destination_path = f"{hmy_dir}/hmy"
