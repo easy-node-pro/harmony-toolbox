@@ -210,7 +210,6 @@ def rewards_collector(
     return
 
 
-
 def menu_topper_regular(software_versions) -> None:
     config = EnvironmentVariables()
     # Get stats & balances
@@ -595,6 +594,12 @@ def service_menu_option() -> None:
         print("*   8 - Start Harmony Service")
     return
 
+
+def update_menu_option(software_versions) -> None:
+    if software_versions["harmony_upgrade"]:
+        print(f"*  10 - Update Harmony App Binary - For New Harmony Releases ONLY, {Fore.YELLOW}{Back.RED}WARNING: You will miss blocks during upgrade.{Style.RESET_ALL}{Fore.GREEN}")
+    if software_versions["hmy_upgrade"]:
+        print("*  11 - Update hmy CLI App        - Update harmony binary file, run anytime!")
 
 def hip_voting_option() -> None:
     # Specify the deadline in UTC
