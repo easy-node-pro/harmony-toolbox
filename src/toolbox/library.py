@@ -193,14 +193,14 @@ def process_folder(folder, port):
         return
     current_full_path = f"{EnvironmentVariables.user_home_dir}/{folder}"
     software_versions = version_checks(current_full_path)
-    local_server = [
-        f"{EnvironmentVariables.user_home_dir}/{folder}/hmy",
-        "utility",
-        "metadata",
-        f"--node=http://localhost:{port}",
-    ]
-    result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     try:
+        local_server = [
+            f"{EnvironmentVariables.user_home_dir}/{folder}/hmy",
+            "utility",
+            "metadata",
+            f"--node=http://localhost:{port}",
+        ]
+        result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data = json.loads(result_local_server.stdout)
         remote_server = [
             f"{EnvironmentVariables.user_home_dir}/{folder}/hmy",
@@ -215,18 +215,19 @@ def process_folder(folder, port):
                 f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
                 + f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
                 + f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
-                + f"\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}\n{print_stars()}"
+                + f"\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
             )
         else:
             result_string = (
                 f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
                 + f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
                 + f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
-                + f"\n*   Local Shard 0 Size: {get_db_size(f'{current_full_path}', '0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}\n{print_stars()}"
+                + f"\n*   Local Shard 0 Size: {get_db_size(f'{current_full_path}', '0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
             )
+        result_string += f"\n{print_stars()}"
         return result_string
     except Exception as e:
-        error_message = (f"* Error, Service Offline or Unresponsive on port {port}: {e}")
+        error_message = f"* Error, Service Offline or Unresponsive on port {port}: {e}"
         return error_message
 
 
@@ -716,13 +717,21 @@ def check_online_version():
     harmony_version_str = "Offline"
     hmy_ver = "Offline"
     try:
-        with open(os.devnull, 'wb') as devnull:
-            subprocess.call(["wget", "https://harmony.one/binary", "-O", EnvironmentVariables.harmony_tmp_path], stdout=devnull, stderr=devnull)
+        with open(os.devnull, "wb") as devnull:
+            subprocess.call(
+                ["wget", "https://harmony.one/binary", "-O", EnvironmentVariables.harmony_tmp_path],
+                stdout=devnull,
+                stderr=devnull,
+            )
             set_mod_x(EnvironmentVariables.harmony_tmp_path)
             harmony_ver = subprocess.getoutput(f"{EnvironmentVariables.harmony_tmp_path} -V")
             output_harmony_version = re.search(r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_ver)
             harmony_version_str = output_harmony_version.group(1)[:-2]
-            subprocess.call(["wget", "https://harmony.one/hmycli", "-O", EnvironmentVariables.hmy_tmp_path], stdout=devnull, stderr=devnull)
+            subprocess.call(
+                ["wget", "https://harmony.one/hmycli", "-O", EnvironmentVariables.hmy_tmp_path],
+                stdout=devnull,
+                stderr=devnull,
+            )
             set_mod_x(EnvironmentVariables.hmy_tmp_path)
             hmy_ver = subprocess.getoutput(f"{EnvironmentVariables.hmy_tmp_path} version")
             hmy_ver = hmy_ver[62:-15]
