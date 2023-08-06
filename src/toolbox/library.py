@@ -1,4 +1,4 @@
-import psutil, platform, dotenv, os, subprocess, requests, pyhmy, shutil, hashlib, re, json, subprocess
+import psutil, platform, dotenv, os, subprocess, requests, pyhmy, shutil, hashlib, re, json, subprocess, getpass
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
@@ -367,7 +367,7 @@ def recovery_type():
     elif results == 1:
         # Private Key Recovery Here
         print("* Private key recovery requires your private information in the command itself.")
-        private = input("* Please enter your private key to restore your wallet: ")
+        private = getpass.getpass("* Please enter your private key to restore your wallet: ")
         # --passphrase-file passphrase.txt not working atm on ./hmy keys
         run_command(
             f"{environ.get('HARMONY_DIR')}/hmy keys import-private-key {private} {EnvironmentVariables.active_user} --passphrase"
@@ -392,7 +392,6 @@ def passphrase_status():
 def passphrase_set():
     if os.path.exists(f"{environ.get('HARMONY_DIR')}/passphrase.txt"):
         return
-    import getpass
 
     print(f"{Fore.GREEN}* Setup {environ.get('HARMONY_DIR')}/passphrase.txt file for use with autobidder & harmony-toolbox.\n{string_stars()}")
     # take input
