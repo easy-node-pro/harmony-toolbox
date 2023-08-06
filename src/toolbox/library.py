@@ -723,7 +723,7 @@ def check_online_version():
             set_mod_x(EnvironmentVariables.hmy_tmp_path)
             hmy_ver = subprocess.getoutput(f"{EnvironmentVariables.hmy_tmp_path} version")
             hmy_ver = hmy_ver[62:-15]
-    except subprocess.CalledProcessError:
+    except (AttributeError, subprocess.CalledProcessError):
         # print("* Error - Website for hmy upgrade is offline, setting to offline.")
         hmy_ver = "Offline"
 
