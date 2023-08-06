@@ -972,9 +972,8 @@ def install_harmony() -> None:
     process_command(f"sudo chown {EnvironmentVariables.active_user} {install_path}")
     
     # Check space requirements for the selected shard
-    if not check_space_requirements(environ.get('SHARD'), install_path):
-        return None
-
+    check_space_requirements(environ.get('SHARD'), install_path)
+    
     print(f"{string_stars()}\n* Creating all Harmony Files & Folders")
     process_command(f"mkdir -p {install_path}/.hmy/blskeys")
 
