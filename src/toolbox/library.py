@@ -3,7 +3,7 @@ from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
 from colorama import Fore, Style, Back
-from pyhmy import account, staking
+from pyhmy import account, staking, numbers
 from json import load, dump
 from toolbox.config import EnvironmentVariables
 from collections import namedtuple
