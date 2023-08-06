@@ -112,17 +112,17 @@ def update_hmy_binary():
         software_versions = version_checks(hmy_dir)
 
         if software_versions:
-            print(f"{string_stars()}\n* hmy application installed.")
+            print(f"* hmy application installed.")
             return software_versions
         else:
-            print(f"{string_stars()}\n* Version Check Failed.")
+            print(f"* Version Check Failed.")
             return None
 
     except requests.RequestException as e:
-        print(f"{string_stars()}\n* Error while downloading hmy using requests: {e}")
+        print(f"* Error while downloading hmy using requests: {e}")
 
     except OSError as e:
-        print(f"{string_stars()}\n* Error while saving or setting permissions for hmy: {e}")
+        print(f"* Error while saving or setting permissions for hmy: {e}")
 
 
 # Code to update the harmony.conf after an upgrade and other text files.
@@ -179,11 +179,11 @@ def update_harmony_binary():
     process_command("./harmony config dump harmony.conf")
     update_text_file(f"{harmony_dir}/harmony.conf", "MaxKeys = 10", "MaxKeys = 13")
     update_text_file(f"{harmony_dir}/harmony.conf", " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
-    print(f"{string_stars()}\n* harmony.conf MaxKeys modified to 13 & DisablePrivateIPScan set to true.")
+    print(f"* harmony.conf MaxKeys modified to 13 & DisablePrivateIPScan set to true.")
     if os.path.isfile(f"{harmony_dir}/blskey.pass"):
         update_text_file(f"{harmony_dir}/harmony.conf", 'PassFile = ""', 'PassFile = "blskey.pass"')
         print("* blskey.pass found, updated harmony.conf")
-    print(f"{string_stars()}\n* Harmony {environ.get('NETWORK')} application installed & ~/harmony/harmony.conf created. ")
+    print(f"* Harmony binary installed & {harmony_dir}/harmony.conf created. ")
     return
 
 
@@ -876,6 +876,31 @@ def check_for_install() -> str:
     return
 
 
+def install_rclone():
+    # Fetch the content of the script
+    url = "https://rclone.org/install.sh"
+    response = requests.get(url)
+
+    # Check if the request was successful
+    if response.status_code != 200:
+        print("Failed to download the script.")
+        return False
+
+    script_content = response.text
+
+    # Execute the fetched content
+    try:
+        process = subprocess.Popen(['sudo', 'bash'], stdin=subprocess.PIPE)
+        process.communicate(input=script_content.encode())
+        if process.returncode != 0:
+            print(f"Error executing script. Return code: {process.returncode}")
+            return False
+        return True
+    except Exception as e:
+        print(f"Error: {e}")
+        return False
+
+
 # Installer Module
 def install_harmony() -> None:
     while True:
@@ -925,7 +950,6 @@ def install_harmony() -> None:
     if not os.path.isdir(f"{EnvironmentVariables.user_home_dir}/.hmy_cli/account-keys/"):
         process_command(f"mkdir -p {EnvironmentVariables.user_home_dir}/.hmy_cli/account-keys/")
     if not os.path.isdir(f"{environ.get('HARMONY_DIR')}/.hmy/blskeys"):
-        print("* Creating all Harmony Files & Folders")
         process_command(f"mkdir -p {environ.get('HARMONY_DIR')}/.hmy/blskeys")
     # Change to ~/harmony folder
     os.chdir(f"{environ.get('HARMONY_DIR')}")
@@ -939,7 +963,7 @@ def install_harmony() -> None:
     print(f"* Installing rclone application & rclone configuration files\n{string_stars()}\n")
     # check for working rclone site and download
     try:
-        process_command("curl https://rclone.org/install.sh | sudo bash")
+        install_rclone()
     except (ValueError, KeyError, TypeError):
         result = ask_yes_no(
             "* rclone site is offline, we can install rclone from the Ubuntu repo as a workaround, do you want to continue? (Y/N): "
