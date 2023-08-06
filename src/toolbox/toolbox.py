@@ -116,12 +116,17 @@ def run_multistats():
     return
 
 
-def collect_rewards(pending_rewards_balance, networkCall=EnvironmentVariables.hmy_app):
+def collect_rewards(pending_rewards_balance, validator_wallet, networkCall=EnvironmentVariables.hmy_app):
     print(f"*\n* Collecting {pending_rewards_balance} $ONE Rewards, awaiting confirmation...\n")
     command = f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 100 {environ.get('PASS_SWITCH')}"
     result = process_command(command, True, False)
     if result:
-        print("*\n*\n* Rewards collection Finished.\n")
+        print("*\n*\n* Rewards collection Finished.")
+        print_stars()
+        print(
+            Fore.GREEN + f"* mainnet rewards for {validator_wallet} have been collected." + Style.RESET_ALL + Fore.GREEN
+        )
+        print_stars()
     else:
         print("*\n*\n* Rewards collection Failed.\n")
 
@@ -130,9 +135,9 @@ def send_rewards(networkCall, sendAmount, rewards_wallet):
     command = f"{networkCall} transfer --amount {sendAmount} --from {environ.get('VALIDATOR_WALLET')} --from-shard 0 --to {rewards_wallet} --to-shard 0 --gas-price 100 {environ.get('PASS_SWITCH')}"
     result = process_command(command, True, False)
     if result:
-        print("*\n*\n* Rewards sending Finished.\n")
+        print("*\n* Rewards sending Finished.")
     else:
-        print("*\n*\n* Rewards sending Failed.\n")
+        print("*\n* Rewards sending Failed.")
 
 
 def send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet, bypass=False):
@@ -181,35 +186,36 @@ def rewards_collector(
     validator_wallet=environ.get("VALIDATOR_WALLET"),
 ) -> None:
     pending_rewards_balance = get_rewards_balance(rpc, validator_wallet)
+    
     print_stars()
     print("* Harmony ONE Rewards Collection")
     print_stars()
-    if bypass == False:
-        question = ask_yes_no(
-            f"*\n* For your validator wallet {validator_wallet}\n* You have {pending_rewards_balance} $ONE pending.\n* Would you like to collect your rewards on the Harmony {environ.get('NETWORK')}? (YES/NO) "
-        )
-        if question:
-            bypass = True
-        else:
-            print("*\n*\n* Skipping collection of rewards.\n")
-    if bypass == True:
-        collect_rewards(pending_rewards_balance)
-        print_stars()
-        print(
-            Fore.GREEN + f"* mainnet rewards for {validator_wallet} have been collected." + Style.RESET_ALL + Fore.GREEN
-        )
-        print_stars()
+    
+    if bypass or ask_yes_no(
+        f"*\n* For your validator wallet {validator_wallet}\n* You have {pending_rewards_balance} $ONE pending.\n* Would you like to collect your rewards on the Harmony {environ.get('NETWORK')}? (YES/NO) "
+    ):
+        collect_rewards(pending_rewards_balance, validator_wallet)
+    else:
+        print("*\n* Skipping collection of rewards.")
+
     validator_wallet_balance = get_wallet_balance(validator_wallet)
     suggested_send = validator_wallet_balance - int(environ.get("GAS_RESERVE"))
+    
     if suggested_send >= 1:
-        send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet, bypass)
+        if bypass or ask_yes_no(
+            f"* You have {validator_wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
+        ):
+            send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet, bypass)
+        else:
+            print("*\n* Skipping sending of rewards.")
     else:
-        validator_wallet_balance = get_wallet_balance(validator_wallet)
         rewards_wallet_balance = get_wallet_balance(rewards_wallet)
-        print("*\n*\n* Balance too low to send to rewards wallet\n")
-        print(f"*\n*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE\n*")
-        print(f"* Current Rewards Wallet Balance: {rewards_wallet_balance} $ONE\n*\n*")
+        print("*\n*\n* Balance too low to send to rewards wallet")
+        print(f"*\n*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE*")
+        print(f"* Current Rewards Wallet Balance: {rewards_wallet_balance} $ONE\n*")
+    
     return
+
 
 
 def menu_topper_regular(software_versions) -> None:
