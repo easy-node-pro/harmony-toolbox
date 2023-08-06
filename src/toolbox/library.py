@@ -610,10 +610,12 @@ def get_available_space(directory: str) -> int:
 def check_space_requirements(shard: int, directory: str) -> bool:
     available_space = get_available_space(directory)
     if shard == 0 and available_space < 400:
+        os.remove(f"{environ.get('HARMONY_DIR')}")
         os.remove(f"{EnvironmentVariables.user_home_dir}/.easynode.env")
         input(f"* Warning: There is not enough space to load shard 0 into {directory}.\n* Restart the toolbox and select a volume with more free space when prompted on the install location.\n* Press ENTER to quit.")
         raise SystemExit(0)
     elif shard in [1, 2, 3] and available_space < 50:
+        os.remove(f"{environ.get('HARMONY_DIR')}")
         os.remove(f"{EnvironmentVariables.user_home_dir}/.easynode.env")
         input(f"* Warning: There is not enough space to load shard {shard} into {directory}.\n* Restart the toolbox and select a volume with more free space when prompted on the install location.\n* Press ENTER to quit.")
         raise SystemExit(0)
