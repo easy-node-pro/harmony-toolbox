@@ -725,6 +725,7 @@ def check_online_version():
             hmy_ver = hmy_ver[62:-15]
     except (AttributeError, subprocess.CalledProcessError):
         # print("* Error - Website for hmy upgrade is offline, setting to offline.")
+        harmony_version_str = "Offline"
         hmy_ver = "Offline"
 
     return harmony_version_str, hmy_ver
