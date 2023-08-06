@@ -1,4 +1,4 @@
-import os, requests, time, json, subprocess
+import os, requests, time, json, subprocess, pytz
 from pytimedinput import timedInteger
 from subprocess import PIPE, run
 from ast import literal_eval
@@ -608,11 +608,12 @@ def service_menu_option() -> None:
 
 
 def hip_voting_option() -> None:
-    # Specify the deadline in server's local time
-    deadline = datetime(2023, 8, 9, 20, 59)
+    # Specify the deadline in UTC
+    utc = pytz.utc
+    deadline = utc.localize(datetime(2023, 8, 9, 20, 59))
 
-    # Get the current time in server's local time
-    current_time = datetime.now()
+    # Get the current time in UTC
+    current_time = datetime.now(utc)
 
     # Check if the current time is before or after the deadline
     active_vote = current_time < deadline
