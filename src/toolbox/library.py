@@ -81,12 +81,10 @@ def loader_intro():
 
 def old_toolbox_check():
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/validatortoolbox"):
-        print_stars()
         print(
             Fore.GREEN
-            + "*\n* Old folder found, Exiting toolbox.\n*\n* Please renmae your ~/validatortoolbox folder to ~/harmony-toolbox and update your command paths!\n*\n* Run: cd ~/ && mv ~/validatortoolbox ~/harmony-toolbox\n*\n* After you run the move command, relaunch with: python3 ~/harmony-toolbox/src/menu.py\n*"
+            + f"{string_stars()}\n* Old folder found, Exiting toolbox.\n*\n* Please renmae your ~/validatortoolbox folder to ~/harmony-toolbox and update your command paths!\n*\n* Run: cd ~/ && mv ~/validatortoolbox ~/harmony-toolbox\n*\n* After you run the move command, relaunch with: python3 ~/harmony-toolbox/src/menu.py\n*{string_stars()}"
         )
-        print_stars()
         raise SystemExit(0)
 
 
@@ -113,21 +111,17 @@ def install_hmy():
         software_versions = version_checks(environ.get("HARMONY_DIR"))
 
         if software_versions:
-            print_stars()
-            print("* hmy application installed.")
+            print(f"{string_stars()}\n* hmy application installed.")
             return software_versions
         else:
-            print_stars()
-            print("* Version Check Failed.")
+            print(f"{string_stars()}\n* Version Check Failed.")
             return None
 
     except requests.RequestException as e:
-        print_stars()
-        print(f"* Error while downloading hmy using requests: {e}")
+        print(f"{string_stars()}\n* Error while downloading hmy using requests: {e}")
 
     except OSError as e:
-        print_stars()
-        print(f"* Error while saving or setting permissions for hmy: {e}")
+        print(f"{string_stars()}\n* Error while saving or setting permissions for hmy: {e}")
 
 
 # Code to update the harmony.conf after an upgrade and other text files.
@@ -143,9 +137,7 @@ def update_text_file(fileName, originalText, newText):
 
 # Setup a wallet, ask if they need to import one (not required but no toolbox menu without a wallet)
 def recover_wallet():
-    print_stars()
-    print("* Wallet Configuration                                                                      *")
-    print_stars()
+    print(f"{string_stars()}\n* Wallet Configuration                                                                      *{string_stars()}\n")
     question = ask_yes_no(
         "* If you would like to import a wallet for manual wallet actions, and for using our claim and send functions, answer yes.\n* If you only want to load your validator address for stats answer no.\n* Would you like to add your wallet to this server? (YES/NO) "
     )
@@ -154,9 +146,8 @@ def recover_wallet():
         recovery_type()
         load_var_file(EnvironmentVariables.dotenv_file)
         print(
-            f'\n* Verify the address above matches the address below:\n* Detected Wallet: {Fore.YELLOW}{environ.get("VALIDATOR_WALLET")}{Fore.GREEN}\n* If a different wallet is showing you can remove it and retry it after installation.\n*\n* .{environ.get("HARMONY_DIR")}/hmy keys remove {EnvironmentVariables.active_user}\n*\n* To restore a wallet once again, run the following:\n*\n* .{environ.get("HARMONY_DIR")}/hmy keys recover-from-mnemonic {EnvironmentVariables.active_user} {environ.get("PASS_SWITCH")}\n*'
+            f'\n* Verify the address above matches the address below:\n* Detected Wallet: {Fore.YELLOW}{environ.get("VALIDATOR_WALLET")}{Fore.GREEN}\n* If a different wallet is showing you can remove it and retry it after installation.\n*\n* .{environ.get("HARMONY_DIR")}/hmy keys remove {EnvironmentVariables.active_user}\n*\n* To restore a wallet once again, run the following:\n*\n* .{environ.get("HARMONY_DIR")}/hmy keys recover-from-mnemonic {EnvironmentVariables.active_user} {environ.get("PASS_SWITCH")}\n{string_stars()}'
         )
-        print_stars()
         input("* Verify your wallet information above.\n* Press ENTER to continue Installation.")
     else:
         while True:
@@ -186,13 +177,11 @@ def pull_harmony_update(harmony_dir, harmony_conf):
     process_command("./harmony config dump harmony.conf")
     update_text_file(harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
     update_text_file(harmony_conf, " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
-    print_stars()
-    print("* harmony.conf MaxKeys modified to 13 & DisablePrivateIPScan set to true.")
+    print(f"{string_stars()}\n* harmony.conf MaxKeys modified to 13 & DisablePrivateIPScan set to true.")
     if os.path.isfile(f"{environ.get('HARMONY_DIR')}/blskey.pass"):
         update_text_file(harmony_conf, 'PassFile = ""', 'PassFile = "blskey.pass"')
         print("* blskey.pass found, updated harmony.conf")
-    print_stars()
-    print(f"* Harmony {environ.get('NETWORK')} application installed & ~/harmony/harmony.conf created. ")
+    print(f"{string_stars()}\n* Harmony {environ.get('NETWORK')} application installed & ~/harmony/harmony.conf created. ")
     return
 
 
@@ -272,13 +261,11 @@ def validator_stats_output() -> None:
     sign_percentage = get_sign_pct()
     validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
     # Print Menu
-    print_stars()
     print(
-        f"{Fore.GREEN}* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{EnvironmentVariables.easy_version}{Style.RESET_ALL}{Fore.WHITE}   https://easynode.pro {Fore.GREEN}*"
-    )
-    print_stars()
+        f"{Fore.GREEN}{string_stars()}\n* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{EnvironmentVariables.easy_version}{Style.RESET_ALL}{Fore.WHITE}   https://easynode.pro {Fore.GREEN}*"
+    ))
     print(
-        f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {EnvironmentVariables.server_host_name} - {Fore.YELLOW}{EnvironmentVariables.external_ip}{Fore.GREEN}'
+        f'{string_stars()}\n* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {EnvironmentVariables.server_host_name} - {Fore.YELLOW}{EnvironmentVariables.external_ip}{Fore.GREEN}'
     )
     for folder in folders:
         harmony_service_status(folder)
@@ -356,11 +343,9 @@ def get_db_size(harmony_dir, our_shard) -> str:
 
 def recovery_type():
     print_stars()
-    print("* Wallet Recovery Type!                                                                     *")
-    print_stars()
+    print(f"{string_stars()}\n* Wallet Recovery Type!                                                                     *\n{string_stars()}")
     print("* [0] = Mnemonic phrase recovery (aka seed phrase)                                          *")
-    print("* [1] = Private Key recovery                                                                *")
-    print_stars()
+    print(f"* [1] = Private Key recovery                                                                *\n{string_stars()}")
     menu_options = [
         "[0] - Mnemonic Phrase Recovery",
         "[1] - Private Key Recovery",
@@ -407,8 +392,7 @@ def passphrase_set():
         return
     import getpass
 
-    print(f"* Setup {environ.get('HARMONY_DIR')}/passphrase.txt file for use with autobidder & harmony-toolbox.")
-    print_stars()
+    print(f"* Setup {environ.get('HARMONY_DIR')}/passphrase.txt file for use with autobidder & harmony-toolbox.\n{string_stars()}")
     # take input
     while True:
         print("* ")
@@ -575,8 +559,7 @@ def proposal_choices_option() -> None:
 
 def get_vote_choice() -> (int, str):
     print(Fore.GREEN)
-    print("* How would you like to vote on this proposal?                                                 *")
-    print_stars()
+    print(f"* How would you like to vote on this proposal?                                                 *\n{string_stars()}")
     menu_options = [
         "[1] - Yes",
         "[2] - No",
@@ -594,11 +577,8 @@ def get_vote_choice() -> (int, str):
 
 def get_shard_menu() -> None:
     if not environ.get("SHARD"):
-        print_stars()
-        print("* Gathering more information about your server.                                             *")
-        print_stars()
-        print("* Which shard do you want this node run on?                                                 *")
-        print_stars()
+        print(f"{string_stars()}\n* Gathering more information about your server.                                             *\n{string_stars()}")
+        print(f"* Which shard do you want this node run on?                                                 *\n{string_stars()}")
         menu_options = [
             "[0] - Shard 0",
             "[1] - Shard 1",
@@ -637,11 +617,9 @@ def set_main_or_test() -> None:
 def get_wallet_address():
     print("* Signing Node, No Wallet!                                                                  *")
     print("* You are attempting to launch the menu but no wallet has been loaded, as you chose         *")
-    print("* If you would like to use the menu on the server, complete the following:                  *")
-    print_stars()
+    print(f"* If you would like to use the menu on the server, complete the following:                  *\n{string_stars()}")
     print("* Edit ~/.easynode.env and add your wallet address on a new line like this example:         *")
-    print("* VALIDATOR_WALLET='one1thisisjustanexamplewalletreplaceme'                                 *")
-    print_stars()
+    print(f"* VALIDATOR_WALLET='one1thisisjustanexamplewalletreplaceme'                                 *\n{string_stars()}")
     raise SystemExit(0)
 
 
@@ -826,8 +804,7 @@ def check_for_install() -> str:
             # Check passphrase if wallet is added
             passphrase_status()
             print_stars()
-            print("* All harmony files now installed. Database download starting now...")
-            print_stars()
+            print(f"* All harmony files now installed. Database download starting now...\n{string_stars()}")
             clone_shards()
             finish_node_install()
         else:
@@ -850,8 +827,7 @@ def check_for_install() -> str:
         # Check passphrase if wallet is added
         passphrase_status()
         print_stars()
-        print("* All harmony files now installed. Database download starting now...")
-        print_stars()
+        print(f"* All harmony files now installed. Database download starting now...\n{string_stars()}")
         clone_shards()
         finish_node_install()
     return
@@ -860,9 +836,7 @@ def check_for_install() -> str:
 # Installer Module
 def install_harmony() -> None:
     # Checks Passed at this point, only 1 folder in /mnt and it's probably our volume (can scope this down further later)
-    print_stars()
-    print("* Install Location")
-    print_stars()
+    print(f"{string_stars()}\n* Install Location\n{string_stars()}")
     question = ask_yes_no(
         f"* Answer yes if you'd like to setup harmony in the default location\n* {EnvironmentVariables.user_home_dir}/harmony\n* Or answer no to choose a custom folder (for a volume or 2nd disk setup): (YES/NO) "
     )
@@ -891,8 +865,7 @@ def install_harmony() -> None:
         set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{answer}")
         process_command(f"sudo mkdir -p {environ.get('HARMONY_DIR')}")
         process_command(f"sudo chown {EnvironmentVariables.active_user} {environ.get('HARMONY_DIR')}")
-    print_stars()
-    print("* Creating all Harmony Files & Folders")
+    print(f"{string_stars()}\n* Creating all Harmony Files & Folders")
     process_command(f"mkdir -p {environ.get('HARMONY_DIR')}/.hmy/blskeys")
 
     # Setup folders now that symlink exists or we know we're using ~/harmony
@@ -910,8 +883,7 @@ def install_harmony() -> None:
     # Install harmony
     pull_harmony_update(environ.get("HARMONY_DIR"), f"{environ.get('HARMONY_DIR')}/harmony.conf")
     # install hmy files
-    print("* Installing rclone application & rclone configuration files")
-    print_stars()
+    print(f"* Installing rclone application & rclone configuration files\n{string_stars()}\n")
     # check for working rclone site and download
     try:
         process_command("curl https://rclone.org/install.sh | sudo bash")
@@ -926,9 +898,8 @@ def install_harmony() -> None:
     process_command(
         f"mkdir -p {EnvironmentVariables.user_home_dir}/.config/rclone && cp {EnvironmentVariables.toolbox_location}/src/bin/rclone.conf {EnvironmentVariables.user_home_dir}/.config/rclone/"
     )
-    print_stars()
     # Setup the harmony service file
-    print("* Customizing, Moving & Enabling your harmony.service systemd file")
+    print(f"{string_stars()}\n* Customizing, Moving & Enabling your harmony.service systemd file")
 
     # Set initial file for customization
     service_file_path = f"{EnvironmentVariables.toolbox_location}/src/bin/harmony.service"
@@ -969,13 +940,10 @@ def clone_shards():
         process_command(
             f"rclone -P sync release:pub.harmony.one/{environ.get('NETWORK')}.min/harmony_db_{environ.get('SHARD')} {environ.get('HARMONY_DIR')}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 4 --transfers=32"
         )
-        print_stars()
-        print(f"* Shard {environ.get('SHARD')} completed.\n* Shard 0 will be created when you start your service.")
-        print_stars()
+        print(f"{string_stars()}\n* Shard {environ.get('SHARD')} completed.\n* Shard 0 will be created when you start your service.\n{string_stars()}")
     else:
         # If we're on shard 0, grab the snap DB here.
-        print("* Now cloning Shard 0, kick back and relax for awhile...")
-        print_stars()
+        print(f"* Now cloning Shard 0, kick back and relax for awhile...\n{string_stars()}")
         process_command(
             f"rclone -P -L --checksum sync release:pub.harmony.one/{environ.get('NETWORK')}.snap/harmony_db_0 {environ.get('HARMONY_DIR')}/harmony_db_0 --multi-thread-streams 4 --transfers=32"
         )
@@ -999,14 +967,12 @@ def set_mounted_point():
 
 def finish_node_install():
     load_var_file(EnvironmentVariables.dotenv_file)
-    print_stars()
     print(
-        "* Installation is completed"
+        f"{string_stars()}\n* Installation is completed"
         + "\n* Create a new wallet or recover your existing wallet into ./hmy"
         + "\n* Create or upload your bls key & pass files into ~/harmony/.hmy/blskeys"
-        + "\n* Finally, reboot to start synchronization."
+        + f"\n* Finally, reboot to start synchronization.\n{string_stars()}"
     )
-    print_stars()
     if environ.get("NODE_WALLET") == "false":
         print(
             "* Post installation quick tips:"
@@ -1015,7 +981,7 @@ def finish_node_install():
             + "\n*"
             + "\n* To create BLS keys run:"
             + f'\n* ./hmy keys generate-bls-keys --count 1 --shard {environ.get("SHARD")} --passphrase'
-            + "\n*"
+            + f"\n*\n{string_stars()}"
         )
     else:
         print(
@@ -1025,11 +991,9 @@ def finish_node_install():
             + "\n*"
             + "\n* To create BLS keys run:"
             + f'\n* ./hmy keys generate-bls-keys --count 1 --shard {environ.get("SHARD")} {environ.get("PASS_SWITCH")}'
-            + "\n*"
+            + f"\n*\n{string_stars()}"
         )
-    print_stars()
-    print("* Thanks for using Easy Node - Validator Node Server Software Installer!")
-    print_stars()
+    print(f"* Thanks for using Easy Node - Validator Node Server Software Installer!\n{string_stars()}")
     raise SystemExit(0)
 
 
@@ -1066,8 +1030,7 @@ def server_drive_check(dot_env, directory) -> None:
         + total
         + " Total"
     )
-    print_stars()
-    input("Disk check complete, press ENTER to return to the main menu. ")
+    input(f"{string_stars()}\nDisk check complete, press ENTER to return to the main menu. ")
 
 
 def disk_partitions(all=False):
@@ -1111,10 +1074,7 @@ def get_HARMONY_DIR(pathname):
 
 
 def refreshing_stats_message() -> str:
-    print(Fore.GREEN)
-    print_stars()
-    print("* Getting the latest local & blockchain information now, one moment while we load...")
-    print_stars()
+    print(f"{Fore.GREEN}{string_stars()}\n* Getting the latest local & blockchain information now, one moment while we load...\n{string_stars()}")
     return
 
 
@@ -1236,8 +1196,7 @@ def all_sys_info():
 
 
 def coming_soon():
-    print("* This option isn't available on your system, yet!")
-    print_stars()
+    print(f"* This option isn't available on your system, yet!\n{string_stars()}")
     input("* Press enter to return to the main menu.")
 
 
@@ -1253,10 +1212,10 @@ def os_upgrades() -> None:
         "sudo apt dist-upgrade -y",
         "sudo apt autoremove -y",
     )
-    print_stars()
     for x in upgrades:
+        print_stars()
         process_command(x)
-    print_stars()
+        print_stars()
 
 
 def set_network(network):
@@ -1299,9 +1258,8 @@ def finish_node():
         + "\n*\n* We serve up free tools and guides for validators every day."
         + "\n*\n* Check our guides out at https://docs.easynode.pro\n*\n"
         + "* Please consider joining our discord & supporting us one time or monthly\n* for our"
-        + " tools and guides at https://bit.ly/easynodediscord today!\n*\n* Goodbye!"
+        + f" tools and guides at https://bit.ly/easynodediscord today!\n*\n* Goodbye!\n{string_stars()}"
     )
-    print_stars()
     raise SystemExit(0)
 
 
