@@ -724,7 +724,7 @@ def check_online_version():
         try:
             harmony_version_str = output_harmony_version.group(1)[:-2]
         except AttributeError:
-            print("* Error - Unexpected format for harmony version string. Setting to 'Unknown'.")
+            # print("* Error - Unexpected format for harmony version string. Setting to 'Unknown'.")
             harmony_version_str = "Unknown"
             
     except subprocess.CalledProcessError:
