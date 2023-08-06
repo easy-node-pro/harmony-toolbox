@@ -112,8 +112,7 @@ def parse_flags(parser):
 
 def run_multistats():
     refreshing_stats_message()
-    folders = get_folders()
-    validator_stats_output(folders)
+    validator_stats_output()
     return
 
 
