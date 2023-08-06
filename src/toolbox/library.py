@@ -253,9 +253,8 @@ def validator_stats_output() -> None:
         f"* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current user home dir free space: {Fore.CYAN}{free_space_check(EnvironmentVariables.user_home_dir): >6}{Fore.GREEN}"
     )
     print(
-        f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min"
+        f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min\n{string_stars()}"
     )
-    print_stars()
     remote_shard_0 = [
         f"{EnvironmentVariables.user_home_dir}/{list(folders.items())[0][0]}/hmy",
         "utility",
@@ -265,9 +264,8 @@ def validator_stats_output() -> None:
     result_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     remote_0_data = json.loads(result_shard_0.stdout)
     print(
-        f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}"
+        f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}\n{string_stars()}"
     )
-    print_stars()
 
     # Concurrently process each folder
     with ThreadPoolExecutor(max_workers=10) as executor:
