@@ -188,14 +188,14 @@ def get_folders():
     return folders
 
 
-def process_folder(folder):
+def process_folder(folder, port):
     current_full_path = f"{EnvironmentVariables.user_home_dir}/{folder}"
     software_versions = version_checks(current_full_path)
     local_server = [
         f"{EnvironmentVariables.user_home_dir}/{folder}/hmy",
         "utility",
         "metadata",
-        f"--node=http://localhost:{folders[folder]}",
+        f"--node=http://localhost:{port}",
     ]
     result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     try:
@@ -270,7 +270,7 @@ def validator_stats_output() -> None:
     
     # Concurrently process each folder
     with ThreadPoolExecutor(max_workers=10) as executor:
-        folder_results = list(executor.map(process_folder, folders))
+        folder_results = list(executor.map(process_folder, folders.keys(), folders.values()))
         
     # Now print results for each folder
     for result in folder_results:
