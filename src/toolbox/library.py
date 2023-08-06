@@ -772,23 +772,36 @@ def first_env_check(env_file) -> None:
 
 def version_checks(harmony_folder):
     software_versions = {}
-    software_versions["harmony_version"], software_versions["hmy_version"] = get_local_version(f"{harmony_folder}")
-    software_versions["online_harmony_version"], software_versions["online_hmy_version"] = check_online_version()
+    local_versions = get_local_version(f"{harmony_folder}")
+    online_versions = check_online_version()
+
+    # Check if the local versions exist. If not, set to a default value.
+    software_versions["harmony_version"] = local_versions[0] if local_versions else "Not Found"
+    software_versions["hmy_version"] = local_versions[1] if local_versions else "Not Found"
+
+    # Check if the online versions exist. If not, set to a default value.
+    software_versions["online_harmony_version"] = online_versions[0] if online_versions else "Not Found"
+    software_versions["online_hmy_version"] = online_versions[1] if online_versions else "Not Found"
+
     # Check versions, if matching False (No Upgrade Required), non-match True (Upgrade Required)
     if (
         software_versions["harmony_version"] == software_versions["online_harmony_version"]
         or software_versions["online_harmony_version"] == "Offline"
+        or software_versions["harmony_version"] == "Not Found"
     ):
         software_versions["harmony_upgrade"] = "False"
     else:
         software_versions["harmony_upgrade"] = "True"
+
     if (
         software_versions["hmy_version"] == software_versions["online_hmy_version"]
         or software_versions["online_hmy_version"] == "Offline"
+        or software_versions["hmy_version"] == "Not Found"
     ):
         software_versions["hmy_upgrade"] = "False"
     else:
         software_versions["hmy_upgrade"] = "True"
+
     return software_versions
 
 
