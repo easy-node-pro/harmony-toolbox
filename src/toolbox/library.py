@@ -209,8 +209,8 @@ def process_folder(folder, port):
         result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         remote_data = json.loads(result_remote_server.stdout)
         print(
-           f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
-        )   
+            f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
+        )
         print(
             f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
         )
@@ -267,11 +267,11 @@ def validator_stats_output() -> None:
         f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}"
     )
     print_stars()
-    
+
     # Concurrently process each folder
     with ThreadPoolExecutor(max_workers=10) as executor:
         folder_results = list(executor.map(process_folder, folders.keys(), folders.values()))
-        
+
     # Now print results for each folder
     for result in folder_results:
         print(result)
@@ -713,33 +713,17 @@ def set_mod_x(file):
 
 def check_online_version():
     try:
-        subprocess.check_output(
-            ["wget", "https://harmony.one/binary", "-O", EnvironmentVariables.harmony_tmp_path],
-            stderr=subprocess.STDOUT,
-        )
+        subprocess.call(["wget", "https://harmony.one/binary", "-O", EnvironmentVariables.harmony_tmp_path])
         set_mod_x(EnvironmentVariables.harmony_tmp_path)
         harmony_ver = subprocess.getoutput(f"{EnvironmentVariables.harmony_tmp_path} -V")
         output_harmony_version = re.search(r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_ver)
-        
-        try:
-            harmony_version_str = output_harmony_version.group(1)[:-2]
-        except AttributeError:
-            # print("* Error - Unexpected format for harmony version string. Setting to 'Unknown'.")
-            harmony_version_str = "Unknown"
-            
-    except subprocess.CalledProcessError:
-        print("* Error - Website for harmony upgrade is offline, setting to offline.")
-        harmony_version_str = "Offline"
-
-    try:
-        subprocess.check_output(
-            ["wget", "https://harmony.one/hmycli", "-O", EnvironmentVariables.hmy_tmp_path], stderr=subprocess.STDOUT
-        )
+        harmony_version_str = output_harmony_version.group(1)[:-2]
+        subprocess.call(["wget", "https://harmony.one/hmycli", "-O", EnvironmentVariables.hmy_tmp_path])
         set_mod_x(EnvironmentVariables.hmy_tmp_path)
         hmy_ver = subprocess.getoutput(f"{EnvironmentVariables.hmy_tmp_path} version")
         hmy_ver = hmy_ver[62:-15]
     except subprocess.CalledProcessError:
-        print("* Error - Website for hmy upgrade is offline, setting to offline.")
+        # print("* Error - Website for hmy upgrade is offline, setting to offline.")
         hmy_ver = "Offline"
 
     return harmony_version_str, hmy_ver
@@ -1248,7 +1232,8 @@ def menu_ubuntu_updates() -> str:
 
 
 def clear_screen():
-    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system("cls" if os.name == "nt" else "clear")
+
 
 def menu_reboot_server() -> str:
     question = ask_yes_no(
