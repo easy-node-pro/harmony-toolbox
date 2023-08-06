@@ -141,18 +141,7 @@ def send_rewards(networkCall, sendAmount, rewards_wallet):
 
 
 def send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet, bypass=False):
-    if bypass == False:
-        print("*\n*\n")
-        print_stars()
-        print("\n* Send your Harmony ONE Rewards?")
-        print_stars()
-        question = ask_yes_no(
-            f"* You have {validator_wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
-        )
-        if question == False:
-            print("*\n*\n* Skipping sending of rewards.\n")
-            return
-    print(f"*\n*\n* Sending {suggested_send} $ONE Rewards to {rewards_wallet}, awaiting confirmation...\n")
+    print(f"*\n*\n* Sending {suggested_send} $ONE Rewards to {rewards_wallet}, awaiting confirmation...")
     send_rewards(EnvironmentVariables.hmy_app, suggested_send, rewards_wallet)
     validator_wallet_balance = get_wallet_balance(validator_wallet)
     rewards_wallet_balance = get_wallet_balance(rewards_wallet)
