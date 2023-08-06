@@ -721,9 +721,17 @@ def check_online_version():
         set_mod_x(EnvironmentVariables.harmony_tmp_path)
         harmony_ver = subprocess.getoutput(f"{EnvironmentVariables.harmony_tmp_path} -V")
         output_harmony_version = re.search(r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_ver)
+        
+        try:
+            harmony_version_str = output_harmony_version.group(1)[:-2]
+        except AttributeError:
+            print("* Error - Unexpected format for harmony version string. Setting to 'Unknown'.")
+            harmony_version_str = "Unknown"
+            
     except subprocess.CalledProcessError:
         print("* Error - Website for harmony upgrade is offline, setting to offline.")
-        harmony_ver = "Offline"
+        harmony_version_str = "Offline"
+
     try:
         subprocess.check_output(
             ["wget", "https://harmony.one/hmycli", "-O", EnvironmentVariables.hmy_tmp_path], stderr=subprocess.STDOUT
@@ -734,7 +742,8 @@ def check_online_version():
     except subprocess.CalledProcessError:
         print("* Error - Website for hmy upgrade is offline, setting to offline.")
         hmy_ver = "Offline"
-    return output_harmony_version.group(1)[:-2], hmy_ver
+
+    return harmony_version_str, hmy_ver
 
 
 def first_env_check(env_file) -> None:
