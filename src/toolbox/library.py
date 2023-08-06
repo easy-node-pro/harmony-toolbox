@@ -89,7 +89,7 @@ def old_toolbox_check():
 
 
 # Install Harmony ONE
-def install_hmy():
+def update_hmy_binary():
     hmy_dir = environ.get("HARMONY_DIR")
     download_url = "https://harmony.one/hmycli"
     destination_path = f"{hmy_dir}/hmy"
@@ -167,7 +167,7 @@ def recover_wallet():
     return
 
 
-def pull_harmony_update(harmony_dir, harmony_conf):
+def update_harmony_binary(harmony_dir=environ.get('HARMONY_DIR')):
     arch = os.uname().machine
     os.chdir(f"{harmony_dir}")
     if arch.startswith("arm"):
@@ -175,11 +175,11 @@ def pull_harmony_update(harmony_dir, harmony_conf):
     if arch == "x86_64":
         process_command("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
     process_command("./harmony config dump harmony.conf")
-    update_text_file(harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
-    update_text_file(harmony_conf, " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
+    update_text_file(f"{harmony_dir}/harmony.conf", "MaxKeys = 10", "MaxKeys = 13")
+    update_text_file(f"{harmony_dir}/harmony.conf", " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
     print(f"{string_stars()}\n* harmony.conf MaxKeys modified to 13 & DisablePrivateIPScan set to true.")
-    if os.path.isfile(f"{environ.get('HARMONY_DIR')}/blskey.pass"):
-        update_text_file(harmony_conf, 'PassFile = ""', 'PassFile = "blskey.pass"')
+    if os.path.isfile(f"{harmony_dir}/blskey.pass"):
+        update_text_file(f"{harmony_dir}/harmony.conf", 'PassFile = ""', 'PassFile = "blskey.pass"')
         print("* blskey.pass found, updated harmony.conf")
     print(f"{string_stars()}\n* Harmony {environ.get('NETWORK')} application installed & ~/harmony/harmony.conf created. ")
     return
@@ -835,38 +835,44 @@ def check_for_install() -> str:
 
 # Installer Module
 def install_harmony() -> None:
-    # Checks Passed at this point, only 1 folder in /mnt and it's probably our volume (can scope this down further later)
-    print(f"{string_stars()}\n* Install Location\n{string_stars()}")
-    question = ask_yes_no(
-        f"* Answer yes if you'd like to setup harmony in the default location\n* {EnvironmentVariables.user_home_dir}/harmony\n* Or answer no to choose a custom folder (for a volume or 2nd disk setup): (YES/NO) "
-    )
-    if question:
-        set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{EnvironmentVariables.user_home_dir}/harmony")
-    else:
-        answer = input(
-            "\n* Please enter the full path to a location you'd like to install harmony into.\n* The folder should not exist yet for best results (example: /mnt/volume1/harmony): "
+    while True:
+        print(f"{string_stars()}\n* Install Location\n{string_stars()}")
+        default_path = f"{EnvironmentVariables.user_home_dir}/harmony"
+        question = ask_yes_no(
+            f"* Do you want to setup harmony in the default location?\n* {default_path}\n* "
+            "Or select 'No' to choose a custom folder (for a volume or 2nd disk setup): (YES/NO) "
         )
-        if not os.path.exists(answer):
-            question = ask_yes_no(
-                f"* That path {answer} doesn't exist yet.\n* Do you want to create the folder {answer} and install the harmony files here? (YES/NO) "
-            )
-            if question:
-                set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{answer}")
-            else:
-                install_harmony()
+        if question:
+            install_path = default_path
+            break
         else:
-            question = ask_yes_no(
-                f"* Are you sure you want to isntall into the already existing folder {answer}? (YES/NO) "
+            custom_path = input(
+                "\n* Please enter the full path to a location you'd like to install harmony into.\n* "
+                "We suggest using your shard number at the end of harmony for compatability with toolbox, ie: /home/serviceharmony/harmony1 : "
             )
-            if question:
-                set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{answer}")
+            if os.path.exists(custom_path):
+                question = ask_yes_no(
+                    f"* The folder {custom_path} already exists.\n* Are you sure you want to install into this existing folder? (YES/NO) "
+                )
+                if question:
+                    install_path = custom_path
+                    break
             else:
-                install_harmony()
-        set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{answer}")
-        process_command(f"sudo mkdir -p {environ.get('HARMONY_DIR')}")
-        process_command(f"sudo chown {EnvironmentVariables.active_user} {environ.get('HARMONY_DIR')}")
+                question = ask_yes_no(
+                    f"* The path {custom_path} doesn't exist yet.\n* Do you want to create it and install the harmony files here? (YES/NO) "
+                )
+                if question:
+                    install_path = custom_path
+                    break
+
+    set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", install_path)
+
+    # Create the directory if not exists, and set ownership
+    process_command(f"sudo mkdir -p {install_path}")
+    process_command(f"sudo chown {EnvironmentVariables.active_user} {install_path}")
+
     print(f"{string_stars()}\n* Creating all Harmony Files & Folders")
-    process_command(f"mkdir -p {environ.get('HARMONY_DIR')}/.hmy/blskeys")
+    process_command(f"mkdir -p {install_path}/.hmy/blskeys")
 
     # Setup folders now that symlink exists or we know we're using ~/harmony
     if not os.path.isdir(f"{EnvironmentVariables.user_home_dir}/.hmy_cli/account-keys/"):
@@ -878,10 +884,10 @@ def install_harmony() -> None:
     os.chdir(f"{environ.get('HARMONY_DIR')}")
     print_stars()
     # Install hmy
-    install_hmy()
+    update_hmy_binary()
     print_stars()
     # Install harmony
-    pull_harmony_update(environ.get("HARMONY_DIR"), f"{environ.get('HARMONY_DIR')}/harmony.conf")
+    update_harmony_binary()
     # install hmy files
     print(f"* Installing rclone application & rclone configuration files\n{string_stars()}\n")
     # check for working rclone site and download

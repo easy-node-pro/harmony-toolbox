@@ -15,7 +15,7 @@ from toolbox.library import (
     ask_yes_no,
     return_txt,
     find_port,
-    install_hmy,
+    update_hmy_binary,
     get_sign_pct,
     load_var_file,
     get_wallet_balance,
@@ -32,7 +32,7 @@ from toolbox.library import (
     menu_ubuntu_updates,
     menu_reboot_server,
     finish_node,
-    pull_harmony_update,
+    update_harmony_binary,
     version_checks,
     harmony_service_status,
     get_folders,
@@ -651,7 +651,7 @@ def hmy_cli_upgrade():
         print_stars()
         
         # Install the new version
-        software_versions = install_hmy()
+        software_versions = update_hmy_binary()
         print_stars()
         
         # Print the updated version
@@ -678,7 +678,7 @@ def update_harmony_app():
         f"cp {os.environ.get('HARMONY_DIR')}/harmony {os.environ.get('HARMONY_DIR')}/harmony.conf {folder_name}"
     )
     print(f"{string_stars()}\nDownloading current harmony binary file from harmony.one: \n{string_stars()}")
-    pull_harmony_update(os.environ.get("HARMONY_DIR"), EnvironmentVariables.harmony_conf)
+    update_harmony_binary(os.environ.get("HARMONY_DIR"), EnvironmentVariables.harmony_conf)
     print(f"{string_stars()}\nUpdated version: ")
     process_command("./harmony -V")
     if environ.get("SHARD") != "0":
