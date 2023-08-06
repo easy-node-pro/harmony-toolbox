@@ -583,8 +583,8 @@ def run_regular_node(software_versions) -> None:
                 start_regular_node()
 
 
-def service_menu_option(service) -> None:
-    status = process_command(f"systemctl is-active --quiet {service}", True, False)
+def service_menu_option() -> None:
+    status = process_command(f"systemctl is-active --quiet {environ.get('SERVICE_NAME')}", True, False)
     if status == 0:
         print(
             f"*   8 - {Fore.RED}Stop Harmony Service      {Fore.GREEN}- {Fore.YELLOW}{Back.RED}WARNING: You will miss blocks while stopped!   {Style.RESET_ALL}{Fore.GREEN}"

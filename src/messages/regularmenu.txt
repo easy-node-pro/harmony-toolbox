@@ -7,7 +7,7 @@ print("*   4 - Collect Pending $ONE      - Collect Rewards & Send to Rewards Wal
 rewards_sender_option()
 hip_voting_option()
 print(f"*                                   {Fore.RED}{Back.GREEN}The Danger Zone:{Style.RESET_ALL}{Fore.GREEN}")
-service_menu_option(environ.get("SERVICE_NAME"))
+service_menu_option()
 update_menu_option(software_versions)
 print("*  12 - Update Operating System   - Update hmy binary file, no missed blocks")
 print(f"*                                   {Fore.GREEN}{Back.BLUE}Informational Section:{Style.RESET_ALL}{Fore.GREEN}")
