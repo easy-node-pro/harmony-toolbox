@@ -189,6 +189,8 @@ def get_folders():
 
 
 def process_folder(folder, port):
+    if folder == "None":
+        return
     current_full_path = f"{EnvironmentVariables.user_home_dir}/{folder}"
     software_versions = version_checks(current_full_path)
     local_server = [
