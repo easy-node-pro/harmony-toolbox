@@ -712,6 +712,8 @@ def set_mod_x(file):
 
 
 def check_online_version():
+    harmony_version_str = "Offline"
+    hmy_ver = "Offline"
     try:
         with open(os.devnull, 'wb') as devnull:
             subprocess.call(["wget", "https://harmony.one/binary", "-O", EnvironmentVariables.harmony_tmp_path], stdout=devnull, stderr=devnull)
@@ -723,12 +725,10 @@ def check_online_version():
             set_mod_x(EnvironmentVariables.hmy_tmp_path)
             hmy_ver = subprocess.getoutput(f"{EnvironmentVariables.hmy_tmp_path} version")
             hmy_ver = hmy_ver[62:-15]
+            return harmony_version_str, hmy_ver
     except (AttributeError, subprocess.CalledProcessError):
         # print("* Error - Website for hmy upgrade is offline, setting to offline.")
-        harmony_version_str = "Offline"
-        hmy_ver = "Offline"
-
-    return harmony_version_str, hmy_ver
+        return harmony_version_str, hmy_ver
 
 
 def first_env_check(env_file) -> None:
