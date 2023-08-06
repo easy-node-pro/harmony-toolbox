@@ -860,13 +860,10 @@ def check_for_install() -> str:
     else:
         print(f"* You selected Shard: {environ.get('SHARD')}. ")
         install_harmony()
-        print_stars()
         # Wallet Setup
         recover_wallet()
-        print_stars()
         # Check passphrase if wallet is added
         passphrase_status()
-        print_stars()
         print(f"* All harmony files now installed. Database download starting now...\n{string_stars()}")
         clone_shards()
         finish_node_install()
@@ -880,7 +877,7 @@ def install_rclone():
 
     # Check if the request was successful
     if response.status_code != 200:
-        print("Failed to download the script.")
+        print("* Failed to download the script.")
         return False
 
     script_content = response.text
@@ -954,7 +951,7 @@ def install_harmony() -> None:
     # Install harmony
     update_harmony_binary()
     # install hmy files
-    print(f"* Installing rclone application & rclone configuration files\n{string_stars()}\n")
+    print(f"* Installing rclone application & rclone configuration files")
     # check for working rclone site and download
     try:
         install_rclone()
@@ -993,7 +990,6 @@ def install_harmony() -> None:
         file.write(filedata)
 
     # Move the modified service file into place, change the permissions and enable the service
-    # Update these steps in the future to use a dynamic harmony.service name?
     subprocess.run(["sudo", "mv", f"{service_name}.service", f"/etc/systemd/system/{service_name}.service"], check=True)
     subprocess.run(["sudo", "chmod", "a-x", f"/etc/systemd/system/{service_name}.service"], check=True)
     subprocess.run(["sudo", "systemctl", "enable", f"{service_name}.service"], check=True)
