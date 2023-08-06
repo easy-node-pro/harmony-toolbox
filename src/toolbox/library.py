@@ -187,7 +187,8 @@ def get_folders():
     return folders
 
 
-def validator_stats_output(folders) -> None:
+def validator_stats_output() -> None:
+    folders = get_folders()
     config = EnvironmentVariables()
     # Get server stats & wallet balances
     load_1, load_5, load_15 = os.getloadavg()

@@ -37,6 +37,5 @@ set_network("t")
 if __name__ == "__main__":
     loader_intro()
     refreshing_stats_message()
-    folders = get_folders()
-    validator_stats_output(folders)
+    validator_stats_output()
     finish_node()
