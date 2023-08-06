@@ -145,15 +145,11 @@ def recover_wallet():
 def pull_harmony_update(harmony_dir, harmony_conf):
     arch = os.uname().machine
     os.chdir(f"{harmony_dir}")
-    if environ.get("NETWORK") == "testnet":
-        process_command("curl -LO https://harmony.one/binary_testnet && mv binary_testnet harmony && chmod +x harmony")
-        process_command("./harmony config dump --network testnet harmony.conf")
-    if environ.get("NETWORK") == "mainnet":
-        if arch.startswith("arm"):
-            process_command("curl -LO https://harmony.one/binary-arm64 && mv binary-arm64 harmony && chmod +x harmony")
-        if arch == "x86_64":
-            process_command("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
-        process_command("./harmony config dump harmony.conf")
+    if arch.startswith("arm"):
+        process_command("curl -LO https://harmony.one/binary-arm64 && mv binary-arm64 harmony && chmod +x harmony")
+    if arch == "x86_64":
+        process_command("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
+    process_command("./harmony config dump harmony.conf")
     update_text_file(harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
     update_text_file(harmony_conf, " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
     print_stars()
@@ -211,7 +207,7 @@ def validator_stats_output(folders) -> None:
     # Get server stats & wallet balances
     load_1, load_5, load_15 = os.getloadavg()
     sign_percentage = get_sign_pct()
-    total_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
+    validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
     # Print Menu
     print_stars()
     print(
@@ -219,7 +215,7 @@ def validator_stats_output(folders) -> None:
     )
     print_stars()
     print(
-        f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(total_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {EnvironmentVariables.server_host_name} - {Fore.YELLOW}{EnvironmentVariables.external_ip}{Fore.GREEN}'
+        f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {EnvironmentVariables.server_host_name} - {Fore.YELLOW}{EnvironmentVariables.external_ip}{Fore.GREEN}'
     )
     for folder in folders:
         harmony_service_status(folder)
@@ -596,23 +592,25 @@ def get_shard_menu() -> None:
 
 
 def set_main_or_test() -> None:
-    if not environ.get("NETWORK"):
-        print_stars()
-        print("* Setup config not found, which blockchain does this node run on?                           *")
-        print_stars()
-        print("* [0] - Mainnet                                                                             *")
-        print("* [1] - Testnet                                                                             *")
-        print_stars()
-        menu_options = [
-            "[0] Mainnet",
-            "[1] Testnet",
-        ]
-        terminal_menu = TerminalMenu(menu_options, title="Mainnet or Testnet")
-        results = terminal_menu.show()
-        if results == 0:
-            set_network("t")
-        if results == 1:
-            set_network("b")
+    if environ.get("NETWORK") != "mainnet":
+        set_network("t")
+    # if not environ.get("NETWORK"):
+    #    print_stars()
+    #    print("* Setup config not found, which blockchain does this node run on?                           *")
+    #    print_stars()
+    #    print("* [0] - Mainnet                                                                             *")
+    #    print("* [1] - Testnet                                                                             *")
+    #    print_stars()
+    #    menu_options = [
+    #        "[0] Mainnet",
+    #        "[1] Testnet",
+    #    ]
+    #    terminal_menu = TerminalMenu(menu_options, title="Mainnet or Testnet")
+    #    results = terminal_menu.show()
+    #    if results == 0:
+    #        set_network("t")
+    #    if results == 1:
+    #        set_network("b")
     return
 
 

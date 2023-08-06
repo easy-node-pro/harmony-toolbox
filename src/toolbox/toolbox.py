@@ -187,7 +187,7 @@ def rewards_collector(
     print_stars()
     if bypass == False:
         question = ask_yes_no(
-            f"*\n* For your validator wallet {validator_wallet}\n* You have {pending_rewards_balance} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
+            f"*\n* For your validator wallet {validator_wallet}\n* You have {pending_rewards_balance} $ONE pending.\n* Would you like to collect your rewards on the Harmony {environ.get('NETWORK')}? (YES/NO) "
         )
         if question:
             bypass = True
@@ -219,7 +219,7 @@ def menu_topper_regular(software_versions) -> None:
     try:
         load_1, load_5, load_15 = os.getloadavg()
         sign_percentage = get_sign_pct()
-        total_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
+        validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
         remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
     except (ValueError, KeyError, TypeError) as e:
         print(f"* Error fetching data: {e}")
@@ -230,7 +230,7 @@ def menu_topper_regular(software_versions) -> None:
     )
     print_stars()
     print(
-        f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(total_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {Fore.BLUE}{EnvironmentVariables.server_host_name}{Fore.GREEN} - {Fore.YELLOW}{EnvironmentVariables.external_ip}{Fore.GREEN}'
+        f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {Fore.BLUE}{EnvironmentVariables.server_host_name}{Fore.GREEN} - {Fore.YELLOW}{EnvironmentVariables.external_ip}{Fore.GREEN}'
     )
     harmony_service_status(environ.get("SERVICE_NAME", "harmony"))
     print(
@@ -273,9 +273,8 @@ def menu_regular(software_versions) -> None:
 
 
 def get_wallet_json(wallet: str) -> str:
-    test_or_main = environ.get("NETWORK")
     try:
-        response = requests.get(f"https://api.stake.hmny.io/networks/{test_or_main}/validators/{wallet}")
+        response = requests.get(f"https://api.stake.hmny.io/networks/{environ.get('NETWORK')}/validators/{wallet}")
         response.raise_for_status()
         # access JSOn content
         json_response = response.json()
@@ -852,12 +851,11 @@ def is_float(value):
 
 def menu_check_balance(rpc, validator_wallet) -> None:
     if environ.get("NODE_TYPE") == "regular":
-        print("* Calling mainnet and testnet for balances...")
+        print("* Calling mainnet for balances...")
         print_stars()
-        total_balance, total_balance_test = get_wallet_balance(validator_wallet)
-        print(f"* Your Validator Wallet Balance on Mainnet is: {total_balance} Harmony ONE Coins")
+        validator_wallet_balance = get_wallet_balance(validator_wallet)
+        print(f"* Your Validator Wallet Balance on Mainnet is: {validator_wallet_balance} Harmony ONE Coins")
         print(f"* Your Pending Validator Rewards are: {get_rewards_balance(rpc, validator_wallet)}")
-        print(f"* Your Validator Wallet Balance on Testnet is: {total_balance_test} Harmony ONE Test Coins")
         print_stars()
         i = 0
         while i < 1:
@@ -881,11 +879,11 @@ def balanceCheckAny():
         "* Type the address of the Harmony ONE Wallet you would like to check.\n"
         + "* Only one wallets will work, no 0x addresses : "
     )
-    print("* Calling mainnet and testnet for balances...")
+    print("* Calling mainnet for balances...")
     print_stars()
-    total_balance, total_balance_test = get_wallet_balance(check_wallet)
+    wallet_balance = get_wallet_balance(check_wallet)
     print(
-        f"* The Mainnet Wallet Balance is: {total_balance} Harmony ONE Coins\n* The Testnet Wallet Balance is: {total_balance_test} Harmony ONE Test Coins"
+        f"* The Mainnet Wallet Balance is: {wallet_balance} Harmony ONE Coins\n*\n"
     )
     print_stars()
     input("* Press ENTER to continue.")
