@@ -7,7 +7,7 @@ load_dotenv(f"{path.expanduser('~')}/.easynode.env")
 
 def get_url(timeout=5) -> str:
     try:
-        response = requests.get("https://api64.ipify.org?format=json", timeout=timeout)
+        response = requests.get("https://api.ipify.org?format=json", timeout=timeout)
         response.raise_for_status()  # Raises a HTTPError if the response was unsuccessful
 
         # Parse the JSON response
