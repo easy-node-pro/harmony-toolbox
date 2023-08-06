@@ -938,9 +938,6 @@ def install_harmony() -> None:
             "Or select 'No' to choose a custom folder (for a volume or 2nd disk setup): (YES/NO) "
         )
         if question:
-            # Check space requirements for the selected shard
-            if not check_space_requirements(environ.get('SHARD'), default_path):
-                return None
             # Has the space, install away
             install_path = default_path
             service_name = os.path.basename(default_path)
@@ -950,9 +947,6 @@ def install_harmony() -> None:
                 "\n* Please enter the full path to a location you'd like to install harmony into.\n* "
                 "We suggest using your shard number at the end of harmony for compatability with toolbox, ie: /home/serviceharmony/harmony1 : "
             )
-            # Check space requirements for the selected shard
-            if not check_space_requirements(environ.get('SHARD'), custom_path):
-                return None
             if os.path.exists(custom_path):
                 question = ask_yes_no(
                     f"* The folder {custom_path} already exists.\n* Are you sure you want to install into this existing folder? (YES/NO) "
@@ -976,6 +970,10 @@ def install_harmony() -> None:
     # Create the directory if not exists, and set ownership
     process_command(f"sudo mkdir -p {install_path}")
     process_command(f"sudo chown {EnvironmentVariables.active_user} {install_path}")
+    
+    # Check space requirements for the selected shard
+    if not check_space_requirements(environ.get('SHARD'), install_path):
+        return None
 
     print(f"{string_stars()}\n* Creating all Harmony Files & Folders")
     process_command(f"mkdir -p {install_path}/.hmy/blskeys")
