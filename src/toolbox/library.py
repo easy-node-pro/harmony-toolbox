@@ -138,7 +138,7 @@ def update_text_file(fileName, originalText, newText):
 
 # Setup a wallet, ask if they need to import one (not required but no toolbox menu without a wallet)
 def recover_wallet():
-    print(f"{string_stars()}\n* Wallet Configuration                                                                      *{string_stars()}\n")
+    print(f"{string_stars()}\n* Wallet Configuration                                                                      *\n{string_stars()}\n")
     question = ask_yes_no(
         "* If you would like to import a wallet for manual wallet actions, and for using our claim and send functions, answer yes.\n* If you only want to load your validator address for stats answer no.\n* Would you like to add your wallet to this server? (YES/NO) "
     )
@@ -595,14 +595,14 @@ def get_vote_choice() -> (int, str):
 def get_shard_menu() -> None:
     if not environ.get("SHARD"):
         print(f"{string_stars()}\n* Gathering more information about your server.                                             *\n{string_stars()}")
-        print(f"* Which shard do you want this node run on?                                                 *\n{string_stars()}")
+        print(f"* Which shard do you want this node to sign blocks on?                                      *\n{string_stars()}")
         menu_options = [
             "[0] - Shard 0",
             "[1] - Shard 1",
             "[2] - Shard 2",
             "[3] - Shard 3",
         ]
-        terminal_menu = TerminalMenu(menu_options, title="* Which Shard will this node operate on? ")
+        terminal_menu = TerminalMenu(menu_options, title="* Which Shard will this node sign blocks on? ")
         our_shard = str(terminal_menu.show())
         set_var(EnvironmentVariables.dotenv_file, "SHARD", our_shard)
         return our_shard
@@ -828,7 +828,6 @@ def first_setup():
     set_main_or_test()
     # Look for a harmony install or install.
     check_for_install()
-    print_stars()
     return
 
 
@@ -858,7 +857,7 @@ def check_for_install() -> str:
                 )
             raise SystemExit(0)
     else:
-        print(f"* You selected Shard: {environ.get('SHARD')}. ")
+        print(f"{Fore.GREEN}* You selected Shard: {environ.get('SHARD')}. ")
         install_harmony()
         # Wallet Setup
         recover_wallet()
