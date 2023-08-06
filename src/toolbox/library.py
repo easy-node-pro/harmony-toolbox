@@ -714,12 +714,23 @@ def get_sign_pct() -> str:
 
 
 def get_local_version(folder):
+    output_harmony_version = None
+    hmy_version = None
+
     if os.path.exists(f"{folder}/harmony"):
         harmony_version = subprocess.getoutput(f"{folder}/harmony -V")
-        output_harmony_version = re.search(r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_version)
+        match = re.search(r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_version)
+        if match:
+            output_harmony_version = match.group(1)[:-2]
+
     if os.path.exists(f"{folder}/hmy"):
-        hmy_version = subprocess.getoutput(f"{folder}/hmy version")
-    return output_harmony_version.group(1)[:-2], hmy_version[62:-15]
+        hmy_version_raw = subprocess.getoutput(f"{folder}/hmy version")
+        hmy_version = hmy_version_raw[62:-15]
+
+    if not output_harmony_version or not hmy_version:
+        return None
+
+    return output_harmony_version, hmy_version
 
 
 def set_mod_x(file):
