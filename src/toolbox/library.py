@@ -428,6 +428,21 @@ def process_command(command: str, shell=True, print_output=True) -> Tuple[bool, 
     return False, result.stderr
 
 
+def run_command(command: str, shell=True, print_output=True) -> bool:
+    try:
+        if print_output:
+            subprocess.run(command, shell=shell, check=True)
+        else:
+            # Suppress the output if print_output is set to False
+            with open(os.devnull, 'w') as fnull:
+                subprocess.run(command, shell=shell, check=True, stdout=fnull, stderr=fnull)
+        return True
+    except subprocess.CalledProcessError as e:
+        if print_output:
+            print(f"Error executing command: {e}")
+        return False
+
+
 def ask_yes_no(question: str) -> bool:
     yes_no_answer = ""
     while not yes_no_answer.startswith(("Y", "N")):
@@ -973,16 +988,15 @@ def clone_shards():
 
     if environ.get("SHARD") != "0":
         # If we're not on shard 0, download the numbered shard DB here.
-        print(f"* Now cloning shard {environ.get('SHARD')}")
-        print_stars()
-        process_command(
+        print(f"* Now cloning shard {environ.get('SHARD')}\n{string_stars()}")
+        run_command(
             f"rclone -P sync release:pub.harmony.one/{environ.get('NETWORK')}.min/harmony_db_{environ.get('SHARD')} {environ.get('HARMONY_DIR')}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 4 --transfers=32"
         )
         print(f"{string_stars()}\n* Shard {environ.get('SHARD')} completed.\n* Shard 0 will be created when you start your service.\n{string_stars()}")
     else:
         # If we're on shard 0, grab the snap DB here.
         print(f"* Now cloning Shard 0, kick back and relax for awhile...\n{string_stars()}")
-        process_command(
+        run_command(
             f"rclone -P -L --checksum sync release:pub.harmony.one/{environ.get('NETWORK')}.snap/harmony_db_0 {environ.get('HARMONY_DIR')}/harmony_db_0 --multi-thread-streams 4 --transfers=32"
         )
 
