@@ -146,7 +146,7 @@ def send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, 
     validator_wallet_balance = get_wallet_balance(validator_wallet)
     rewards_wallet_balance = get_wallet_balance(rewards_wallet)
     print(f"*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE")
-    print(f"\n* Current Rewards Wallet Balance: {rewards_wallet_balance} $ONE\n*")
+    print(f"* Current Rewards Wallet Balance: {rewards_wallet_balance} $ONE\n*")
     return
 
 
@@ -157,7 +157,13 @@ def rewards_sender(
     validator_wallet_balance = get_wallet_balance(validator_wallet)
     suggested_send = validator_wallet_balance - int(environ.get("GAS_RESERVE"))
     if suggested_send >= 1:
-        send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet)
+        question = ask_yes_no(
+            f"* You have {validator_wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
+        )
+        if question:
+            send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet)
+        else:
+            print("*\n* Skipping sending of rewards.")
     else:
         print("*\n* Wallet balance is less than your gas reservation, please try again later.")
     validator_wallet_balance = get_wallet_balance(validator_wallet)
