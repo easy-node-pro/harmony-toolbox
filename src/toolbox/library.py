@@ -887,7 +887,7 @@ def install_rclone():
 
     # Execute the fetched content
     try:
-        process = subprocess.Popen(['sudo', 'bash'], stdin=subprocess.PIPE)
+        process = subprocess.Popen(['sudo', 'bash'], stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         process.communicate(input=script_content.encode())
         if process.returncode != 0:
             return False
