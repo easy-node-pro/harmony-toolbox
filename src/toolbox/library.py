@@ -610,11 +610,13 @@ def get_available_space(directory: str) -> int:
 def check_space_requirements(shard: int, directory: str) -> bool:
     available_space = get_available_space(directory)
     if shard == 0 and available_space < 400:
-        input("* Warning: There is not enough space to load shard 0 on this server in your home directory.\n* If you install to the default location your disk may fill up.\n* Select a volume with more free space when prompted on the install location.\n* Press ENTER to continue.")
-        return False
+        input(f"* Warning: There is not enough space to load shard 0 into {directory}.\n* Restart the toolbox and select a volume with more free space when prompted on the install location.\n* Press ENTER to quit.")
+        os.remove(f"{EnvironmentVariables.user_home_dir}/.easynode.env")
+        raise SystemExit(0)
     elif shard in [1, 2, 3] and available_space < 50:
-        input(f"* Warning: There is not enough space to load shard {shard} on this server in your home directory.\n* If you install to the default location your disk may fill up.\n* Select a volume with more free space when prompted on the install location.\n* Press ENTER to continue.")
-        return False
+        input(f"* Warning: There is not enough space to load shard {shard} into {directory}.\n* Restart the toolbox and select a volume with more free space when prompted on the install location.\n* Press ENTER to quit.")
+        os.remove(f"{EnvironmentVariables.user_home_dir}/.easynode.env")
+        raise SystemExit(0)
     return True
 
 
@@ -630,10 +632,6 @@ def get_shard_menu() -> None:
         ]
         terminal_menu = TerminalMenu(menu_options, title="* Which Shard will this node sign blocks on? ")
         our_shard = int(terminal_menu.show())
-
-        # Check space requirements for the selected shard
-        if not check_space_requirements(our_shard, EnvironmentVariables.user_home_dir):
-            return None
 
         set_var(EnvironmentVariables.dotenv_file, "SHARD", str(our_shard))
         return our_shard
@@ -940,6 +938,10 @@ def install_harmony() -> None:
             "Or select 'No' to choose a custom folder (for a volume or 2nd disk setup): (YES/NO) "
         )
         if question:
+            # Check space requirements for the selected shard
+            if not check_space_requirements(environ.get('SHARD'), default_path):
+                return None
+            # Has the space, install away
             install_path = default_path
             service_name = os.path.basename(default_path)
             break
@@ -948,6 +950,9 @@ def install_harmony() -> None:
                 "\n* Please enter the full path to a location you'd like to install harmony into.\n* "
                 "We suggest using your shard number at the end of harmony for compatability with toolbox, ie: /home/serviceharmony/harmony1 : "
             )
+            # Check space requirements for the selected shard
+            if not check_space_requirements(environ.get('SHARD'), custom_path):
+                return None
             if os.path.exists(custom_path):
                 question = ask_yes_no(
                     f"* The folder {custom_path} already exists.\n* Are you sure you want to install into this existing folder? (YES/NO) "
