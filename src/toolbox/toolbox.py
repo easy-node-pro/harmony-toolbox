@@ -596,9 +596,9 @@ def service_menu_option() -> None:
 
 
 def update_menu_option(software_versions) -> None:
-    if software_versions["harmony_upgrade"]:
+    if software_versions["harmony_upgrade"] == "True":
         print(f"*  10 - Update Harmony App Binary - For New Harmony Releases ONLY, {Fore.YELLOW}{Back.RED}WARNING: You will miss blocks during upgrade.{Style.RESET_ALL}{Fore.GREEN}")
-    if software_versions["hmy_upgrade"]:
+    if software_versions["hmy_upgrade"] == "True":
         print("*  11 - Update hmy CLI App        - Update harmony binary file, run anytime!")
 
 def hip_voting_option() -> None:
