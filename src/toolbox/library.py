@@ -177,27 +177,20 @@ def find_port(folder):
 
 # build list of installs
 def get_folders():
+    folder_checks = [
+        "harmony",
+        "harmony0",
+        "harmony1",
+        "harmony2",
+        "harmony3",
+        "harmony4"
+    ]
     folders = {}
-    if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony/harmony.conf"):
-        port = find_port(f"{EnvironmentVariables.user_home_dir}/harmony")
-        folders["harmony"] = port
-        print(f"* Found ~/harmony folder, on port {port}")
-    if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony0/harmony.conf"):
-        port = find_port(f"{EnvironmentVariables.user_home_dir}/harmony0")
-        folders["harmony0"] = port
-        print(f"* Found ~/harmony1 folder, on port {port}")
-    if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony1/harmony.conf"):
-        port = find_port(f"{EnvironmentVariables.user_home_dir}/harmony1")
-        folders["harmony1"] = port
-        print(f"* Found ~/harmony1 folder, on port {port}")
-    if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony2/harmony.conf"):
-        port = find_port(f"{EnvironmentVariables.user_home_dir}/harmony2")
-        folders["harmony2"] = port
-        print(f"* Found ~/harmony2 folder, on port {port}")
-    if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony3/harmony.conf"):
-        port = find_port(f"{EnvironmentVariables.user_home_dir}/harmony3")
-        folders["harmony3"] = port
-        print(f"* Found ~/harmony3 folder, on port {port}")
+    for f in folder_checks:
+        if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/{f}/harmony.conf"):
+            port = find_port(f"{EnvironmentVariables.user_home_dir}/{f}")
+            folders[f"{f}"] = port
+            print(f"* Found ~/{f} folder, on port {port}")
     print_stars()
     return folders
 
@@ -284,24 +277,14 @@ def validator_stats_output(folders) -> None:
 def harmony_service_status(service="harmony") -> None:
     status = subprocess.call(["systemctl", "is-active", "--quiet", service])
     if status == 0:
-        if service == "harmony":
-            print(
-                f"* {service} Service is:               "
-                + Fore.BLACK
-                + Back.GREEN
-                + "   Online  "
-                + Style.RESET_ALL
-                + Fore.GREEN
-            )
-        else:
-            print(
-                f"* {service} Service is:              "
-                + Fore.BLACK
-                + Back.GREEN
-                + "   Online  "
-                + Style.RESET_ALL
-                + Fore.GREEN
-            )
+        print(
+            f"* {service} Service is:               "
+            + Fore.BLACK
+            + Back.GREEN
+            + "   Online  "
+            + Style.RESET_ALL
+            + Fore.GREEN
+        )
     else:
         print(
             f"* {service} Service is:               "
