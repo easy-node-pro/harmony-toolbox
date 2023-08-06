@@ -91,10 +91,27 @@ def old_toolbox_check():
 
 # Install Harmony ONE
 def install_hmy():
-    os.chdir(f"{environ.get('HARMONY_DIR')}")
-    process_command("curl -LO https://harmony.one/hmycli && mv hmycli hmy && chmod +x hmy")
-    print_stars()
-    print("* hmy application installed.")
+    try:
+        os.chdir(f"{environ.get('HARMONY_DIR')}")
+
+        # It's generally safer to split the command and args into separate strings
+        cmd = ["curl", "-LO", "https://harmony.one/hmycli"]
+        process_command(cmd)
+
+        os.rename("hmycli", "hmy")
+        os.chmod("hmy", 0o755)
+
+        print_stars()
+        print("* hmy application installed.")
+
+    except OSError as e:
+        print_stars()
+        print(f"* Error while installing hmy: {e}")
+        # you can optionally re-raise the exception or handle it based on your needs
+
+    except Exception as e:  # This will catch other generic exceptions
+        print_stars()
+        print(f"* Unexpected error occurred: {e}")
 
 
 # Code to update the harmony.conf after an upgrade and other text files.

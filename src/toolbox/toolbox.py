@@ -643,17 +643,37 @@ def hmy_cli_upgrade():
     question = ask_yes_no(
         "* Are you sure you would like to proceed with updating the Harmony CLI file?\n\nType 'Yes' or 'No' to continue"
     )
-    if question:
+    
+    if not question:
+        print("* Update canceled.")
+        return
+    
+    try:
+        # Backup the current version of hmy CLI
         folder_name = make_backup_dir()
         process_command(f"cp {environ.get('HARMONY_DIR')}/hmy {folder_name}")
         print_stars()
+        
+        # Install the new version
         install_hmy()
         print_stars()
+        
+        # Print the updated version
         print("Harmony cli has been updated to: ")
         process_command(f"{environ.get('HARMONY_DIR')}/hmy version")
         print_stars()
+
+        # Update the environment variable
         set_var(EnvironmentVariables.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
-        input("* Update completed, press ENTER to return to the main menu. ")
+        
+    except Exception as e:  # Catch generic errors, though you might want to catch more specific exceptions
+        print_stars()
+        print(f"* An error occurred during the update: {e}")
+        print_stars()
+        # Handle the error or possibly re-raise it depending on your requirements
+        return
+
+    input("* Update completed, press ENTER to return to the main menu. ")
 
 
 def update_harmony_app():
