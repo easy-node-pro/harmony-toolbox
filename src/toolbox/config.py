@@ -45,6 +45,7 @@ class EnvironmentVariables:
     rpc_endpoints_max_connection_retries = 10
     hmy_tmp_path = "/tmp/hmy"
     harmony_tmp_path = "/tmp/harmony"
+    folder_checks = ["harmony", "harmony0", "harmony1", "harmony2", "harmony3", "harmony4"]
 
     @staticmethod
     def get_working_endpoint(endpoints):

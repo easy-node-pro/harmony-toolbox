@@ -177,16 +177,8 @@ def find_port(folder):
 
 # build list of installs
 def get_folders():
-    folder_checks = [
-        "harmony",
-        "harmony0",
-        "harmony1",
-        "harmony2",
-        "harmony3",
-        "harmony4"
-    ]
     folders = {}
-    for f in folder_checks:
+    for f in EnvironmentVariables.folder_checks:
         if os.path.isfile(f"{EnvironmentVariables.user_home_dir}/{f}/harmony.conf"):
             port = find_port(f"{EnvironmentVariables.user_home_dir}/{f}")
             folders[f"{f}"] = port
