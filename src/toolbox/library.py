@@ -840,13 +840,10 @@ def check_for_install() -> str:
         )
         if question:
             install_harmony()
-            print_stars()
             # Wallet Setup
             recover_wallet()
-            print_stars()
             # Check passphrase if wallet is added
             passphrase_status()
-            print_stars()
             print(f"* All harmony files now installed. Database download starting now...\n{string_stars()}")
             clone_shards()
             finish_node_install()
@@ -893,7 +890,6 @@ def install_rclone():
         process = subprocess.Popen(['sudo', 'bash'], stdin=subprocess.PIPE)
         process.communicate(input=script_content.encode())
         if process.returncode != 0:
-            print(f"Error executing script. Return code: {process.returncode}")
             return False
         return True
     except Exception as e:
@@ -953,10 +949,8 @@ def install_harmony() -> None:
         process_command(f"mkdir -p {environ.get('HARMONY_DIR')}/.hmy/blskeys")
     # Change to ~/harmony folder
     os.chdir(f"{environ.get('HARMONY_DIR')}")
-    print_stars()
     # Install hmy
     update_hmy_binary()
-    print_stars()
     # Install harmony
     update_harmony_binary()
     # install hmy files
@@ -978,7 +972,7 @@ def install_harmony() -> None:
         f"mkdir -p {EnvironmentVariables.user_home_dir}/.config/rclone && cp {EnvironmentVariables.toolbox_location}/src/bin/rclone.conf {EnvironmentVariables.user_home_dir}/.config/rclone/"
     )
     # Setup the harmony service file
-    print(f"{string_stars()}\n* Customizing, Moving & Enabling your {service_name}.service systemd file")
+    print(f"* Customizing, Moving & Enabling your {service_name}.service systemd file")
 
     # Set initial file for customization
     service_file_path = f"{EnvironmentVariables.toolbox_location}/src/bin/harmony.service"
