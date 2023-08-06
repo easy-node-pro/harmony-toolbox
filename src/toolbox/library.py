@@ -610,12 +610,12 @@ def get_available_space(directory: str) -> int:
 def check_space_requirements(shard: int, directory: str) -> bool:
     available_space = get_available_space(directory)
     if shard == 0 and available_space < 400:
-        input(f"* Warning: There is not enough space to load shard 0 into {directory}.\n* Restart the toolbox and select a volume with more free space when prompted on the install location.\n* Press ENTER to quit.")
         os.remove(f"{EnvironmentVariables.user_home_dir}/.easynode.env")
+        input(f"* Warning: There is not enough space to load shard 0 into {directory}.\n* Restart the toolbox and select a volume with more free space when prompted on the install location.\n* Press ENTER to quit.")
         raise SystemExit(0)
     elif shard in [1, 2, 3] and available_space < 50:
-        input(f"* Warning: There is not enough space to load shard {shard} into {directory}.\n* Restart the toolbox and select a volume with more free space when prompted on the install location.\n* Press ENTER to quit.")
         os.remove(f"{EnvironmentVariables.user_home_dir}/.easynode.env")
+        input(f"* Warning: There is not enough space to load shard {shard} into {directory}.\n* Restart the toolbox and select a volume with more free space when prompted on the install location.\n* Press ENTER to quit.")
         raise SystemExit(0)
     return True
 
@@ -972,7 +972,8 @@ def install_harmony() -> None:
     process_command(f"sudo chown {EnvironmentVariables.active_user} {install_path}")
     
     # Check space requirements for the selected shard
-    check_space_requirements(environ.get('SHARD'), install_path)
+    shard_value = int(environ.get('SHARD'))
+    check_space_requirements(shard_value, install_path)
     
     print(f"{string_stars()}\n* Creating all Harmony Files & Folders")
     process_command(f"mkdir -p {install_path}/.hmy/blskeys")
