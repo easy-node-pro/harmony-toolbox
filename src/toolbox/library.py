@@ -394,7 +394,7 @@ def passphrase_set():
         return
     import getpass
 
-    print(f"* Setup {environ.get('HARMONY_DIR')}/passphrase.txt file for use with autobidder & harmony-toolbox.\n{string_stars()}")
+    print(f"{Fore.GREEN}* Setup {environ.get('HARMONY_DIR')}/passphrase.txt file for use with autobidder & harmony-toolbox.\n{string_stars()}")
     # take input
     while True:
         print("* ")
