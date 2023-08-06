@@ -507,11 +507,10 @@ def harmony_voting() -> None:
 def start_regular_node() -> None:
     # Check online versions of harmony & hmy and compare to our local copy.
     refreshing_stats_message()
-    software_versions = version_checks(environ.get("HARMONY_DIR"))
-    run_regular_node(software_versions)
+    run_regular_node()
 
 
-def run_regular_node(software_versions) -> None:
+def run_regular_node() -> None:
     menu_options = {
         0: finish_node,
         1: refreshing_stats_message,
@@ -534,6 +533,7 @@ def run_regular_node(software_versions) -> None:
     }
     while True:
         load_var_file(EnvironmentVariables.dotenv_file)
+        software_versions = version_checks(environ.get("HARMONY_DIR"))
         menu_regular(software_versions)
         if software_versions["harmony_upgrade"] == "True":
             print(

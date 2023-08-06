@@ -8,7 +8,6 @@ from toolbox.library import (
     finish_node,
     refreshing_stats_message,
     set_network,
-    get_folders,
     validator_stats_output,
 )
 
