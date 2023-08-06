@@ -10,6 +10,7 @@ from collections import namedtuple
 from datetime import datetime
 from subprocess import PIPE, run
 from concurrent.futures import ThreadPoolExecutor
+from typing import Tuple
 
 load_dotenv(EnvironmentVariables.dotenv_file)
 
