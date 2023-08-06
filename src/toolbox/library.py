@@ -107,9 +107,13 @@ def install_hmy():
 
         # Set execute permissions
         os.chmod(destination_path, 0o755)
+        
+        # Get version string
+        version = process_command(f"{environ.get('HARMONY_DIR')}/hmy version")
 
         print_stars()
         print("* hmy application installed.")
+        return version
 
     except requests.RequestException as e:
         print_stars()
@@ -429,6 +433,18 @@ def process_command(command: str, shell=True, print_output=True) -> bool:
         return False
 
     return True
+
+
+def process_command_return_output(command: str, shell=True, print_output=True) -> bool:
+    result = subprocess.run(command, shell=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+    if print_output and result.stdout:
+        return result.stdout
+
+    if result.returncode != 0:
+        if print_output:
+            print(f"Error executing command: {result.stderr}")
+        return False
 
 
 def ask_yes_no(question: str) -> bool:

@@ -655,12 +655,11 @@ def hmy_cli_upgrade():
         print_stars()
         
         # Install the new version
-        install_hmy()
+        version = install_hmy()
         print_stars()
         
         # Print the updated version
-        print("Harmony cli has been updated to: ")
-        process_command(f"{environ.get('HARMONY_DIR')}/hmy version")
+        print(f"Harmony cli has been updated to: {version}")
         print_stars()
 
         # Update the environment variable
