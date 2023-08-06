@@ -844,6 +844,7 @@ def install_harmony() -> None:
         )
         if question:
             install_path = default_path
+            service_name = os.path.basename(default_path)
             break
         else:
             custom_path = input(
@@ -856,6 +857,7 @@ def install_harmony() -> None:
                 )
                 if question:
                     install_path = custom_path
+                    service_name = os.path.basename(custom_path)
                     break
             else:
                 question = ask_yes_no(
@@ -863,9 +865,11 @@ def install_harmony() -> None:
                 )
                 if question:
                     install_path = custom_path
+                    service_name = os.path.basename(custom_path)
                     break
 
     set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", install_path)
+    set_var(EnvironmentVariables.dotenv_file, "SERVICE_NAME", service_name)
 
     # Create the directory if not exists, and set ownership
     process_command(f"sudo mkdir -p {install_path}")
@@ -900,38 +904,38 @@ def install_harmony() -> None:
         if result:
             # If rclone curl is down, install rclone with apt instead
             subprocess.run("sudo apt install rclone -y")
+        else:
+            finish_node()
 
     process_command(
         f"mkdir -p {EnvironmentVariables.user_home_dir}/.config/rclone && cp {EnvironmentVariables.toolbox_location}/src/bin/rclone.conf {EnvironmentVariables.user_home_dir}/.config/rclone/"
     )
     # Setup the harmony service file
-    print(f"{string_stars()}\n* Customizing, Moving & Enabling your harmony.service systemd file")
+    print(f"{string_stars()}\n* Customizing, Moving & Enabling your {service_name}.service systemd file")
 
     # Set initial file for customization
-    service_file_path = f"{EnvironmentVariables.toolbox_location}/src/bin/harmony.service"
+    service_file_path = f"{EnvironmentVariables.toolbox_location}/src/bin/{service_name}.service"
 
     # Read the service file
     with open(service_file_path, "r") as file:
         filedata = file.read()
 
     # Replace the paths with the value of HARMONY_DIR
-    harmony_dir = environ.get("HARMONY_DIR")
-    if harmony_dir:
-        filedata = filedata.replace("WorkingDirectory=/home/serviceharmony/harmony", f"WorkingDirectory={harmony_dir}")
-        filedata = filedata.replace(
-            "ExecStart=/home/serviceharmony/harmony/harmony -c harmony.conf",
-            f"ExecStart={harmony_dir}/harmony -c harmony.conf",
-        )
+    filedata = filedata.replace("WorkingDirectory=/home/serviceharmony/harmony", f"WorkingDirectory={install_path}")
+    filedata = filedata.replace(
+        "ExecStart=/home/serviceharmony/harmony/harmony -c harmony.conf",
+        f"ExecStart={install_path}/harmony -c harmony.conf",
+    )
 
     # Write the file out again
-    with open("harmony.service", "w") as file:
+    with open(f"{service_name}.service", "w") as file:
         file.write(filedata)
 
     # Move the modified service file into place, change the permissions and enable the service
     # Update these steps in the future to use a dynamic harmony.service name?
-    subprocess.run(["sudo", "mv", "harmony.service", "/etc/systemd/system/harmony.service"], check=True)
-    subprocess.run(["sudo", "chmod", "a-x", "/etc/systemd/system/harmony.service"], check=True)
-    subprocess.run(["sudo", "systemctl", "enable", "harmony.service"], check=True)
+    subprocess.run(["sudo", "mv", f"{service_name}.service", f"/etc/systemd/system/{service_name}.service"], check=True)
+    subprocess.run(["sudo", "chmod", "a-x", f"/etc/systemd/system/{service_name}.service"], check=True)
+    subprocess.run(["sudo", "systemctl", "enable", f"{service_name}.service"], check=True)
 
 
 # Database Downloader
