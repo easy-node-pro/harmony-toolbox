@@ -211,24 +211,23 @@ def process_folder(folder, port):
         result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         remote_data = json.loads(result_remote_server.stdout)
         if local_data["result"]["shard-id"] == 0:
-            print(
+            result_string = (
                 f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
                 + f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
                 + f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
                 + f"\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
-                + print_stars()
             )
         else:
-            print(
+            result_string = (
                 f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
                 + f"* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
                 + f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
                 + f"\n*   Local Shard 0 Size: {get_db_size(f'{current_full_path}', '0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
-                + print_stars()
             )
+        return result_string
     except Exception as e:
-        print(f"* Error, Service Offline or Unresponsive: {e}")
-        print_stars()
+        error_message = (f"* Error, Service Offline or Unresponsive on port {port}: {e}")
+        return error_message
 
 
 def validator_stats_output() -> None:
@@ -275,7 +274,8 @@ def validator_stats_output() -> None:
 
     # Now print results for each folder
     for result in folder_results:
-        print(result)
+        if result:
+            print(result)
 
 
 def harmony_service_status(service="harmony") -> None:
