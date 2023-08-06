@@ -109,7 +109,7 @@ def install_hmy():
         os.chmod(destination_path, 0o755)
         
         # Get version string
-        version = process_command(f"{environ.get('HARMONY_DIR')}/hmy version")
+        version = process_command_return_output(f"{environ.get('HARMONY_DIR')}/hmy version")
 
         print_stars()
         print("* hmy application installed.")
@@ -439,7 +439,7 @@ def process_command_return_output(command: str, shell=True, print_output=True) -
     result = subprocess.run(command, shell=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
     if print_output and result.stdout:
-        return result.stdout
+        return print(result.stdout)
 
     if result.returncode != 0:
         if print_output:
