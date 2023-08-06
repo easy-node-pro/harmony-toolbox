@@ -386,11 +386,13 @@ def safety_defaults() -> None:
     if environ.get("HARMONY_DIR") is None:
         if os.path.isdir(f"{EnvironmentVariables.user_home_dir}/harmony"):
             set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{EnvironmentVariables.user_home_dir}/harmony")
+            set_var(EnvironmentVariables.dotenv_file, "SERVICE_NAME", "harmony")
             return
         elif os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony"):
             try:
                 subprocess.run(f"{EnvironmentVariables.user_home_dir}/harmony -V", check=True)
                 set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{EnvironmentVariables.user_home_dir}")
+                set_var(EnvironmentVariables.dotenv_file, "SERVICE_NAME", "harmony")
                 return
             except subprocess.CalledProcessError as e:
                 print(
@@ -399,6 +401,8 @@ def safety_defaults() -> None:
                 raise SystemExit(0)
         else:
             first_setup()
+    if environ.get("SERVICE_NAME") is None:
+        set_var(EnvironmentVariables.dotenv_file, "SERVICE_NAME", "harmony")
     # always set conf to 13 keys, shard max
     if os.path.exists(EnvironmentVariables.harmony_conf):
         update_text_file(EnvironmentVariables.harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
@@ -533,14 +537,12 @@ def run_regular_node(software_versions) -> None:
         menu_regular(software_versions)
         if software_versions["harmony_upgrade"] == "True":
             print(
-                f'* The harmony binary has an update available to version {software_versions["online_harmony_version"]}\n* Option #10 will upgrade you, but you may miss a block while it upgrades & restarts.\n* Currently installed version {software_versions["harmony_version"]}'
+                f'* The harmony binary has an update available to version {software_versions["online_harmony_version"]}\n* Option #10 will upgrade you, but you may miss a block while it upgrades & restarts.\n* Currently installed version {software_versions["harmony_version"]}\n{string_stars()}'
             )
-            print_stars()
         if software_versions["hmy_upgrade"] == "True":
             print(
-                f'* The hmy binary has an update available to version {software_versions["online_hmy_version"]}\n* Option #11 will upgrade you.\n* Currently installed version {software_versions["hmy_version"]}'
+                f'* The hmy binary has an update available to version {software_versions["online_hmy_version"]}\n* Option #11 will upgrade you.\n* Currently installed version {software_versions["hmy_version"]}\n{string_stars()}'
             )
-            print_stars()
         if environ.get("REFRESH_OPTION") == "True":
             try:
                 # run timed input
@@ -788,9 +790,11 @@ def harmony_binary_upgrade():
     if question:
         update_harmony_app()
 
+def menu_service_stop_start():
+    menu_service_stop_start_trigger(environ.get("HARMONY_SERVICE"))
 
-def menu_service_stop_start() -> str:
-    status = process_command("systemctl is-active --quiet harmony")
+def menu_service_stop_start_trigger(service) -> str:
+    status = process_command(f"systemctl is-active --quiet {service}")
     if status != 0:
         process_command("sudo service harmony start")
         print()
