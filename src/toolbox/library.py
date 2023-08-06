@@ -168,8 +168,9 @@ def recover_wallet():
     return
 
 
-def update_harmony_binary(harmony_dir=environ.get('HARMONY_DIR')):
+def update_harmony_binary():
     arch = os.uname().machine
+    harmony_dir = environ.get('HARMONY_DIR')
     os.chdir(f"{harmony_dir}")
     if arch.startswith("arm"):
         process_command("curl -LO https://harmony.one/binary-arm64 && mv binary-arm64 harmony && chmod +x harmony")
