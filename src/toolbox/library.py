@@ -359,19 +359,17 @@ def recovery_type():
     passphrase_set()
     if results == 0:
         # Mnemonic Recovery Here
-        process_command(
+        run_command(
             f"{environ.get('HARMONY_DIR')}/hmy keys recover-from-mnemonic {EnvironmentVariables.active_user} --passphrase-file passphrase.txt"
         )
-        print_stars()
         set_wallet_env()
     elif results == 1:
         # Private Key Recovery Here
         print("* Private key recovery requires your private information in the command itself.")
         private = input("* Please enter your private key to restore your wallet: ")
-        process_command(
+        run_command(
             f"{environ.get('HARMONY_DIR')}/hmy keys import-private-key {private} {EnvironmentVariables.active_user} --passphrase-file passphrase.txt"
         )
-        print_stars()
         set_wallet_env()
 
 
