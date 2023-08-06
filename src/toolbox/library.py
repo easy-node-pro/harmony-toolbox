@@ -224,6 +224,7 @@ def process_folder(folder, port):
                 + f"*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
                 + f"\n*   Local Shard 0 Size: {get_db_size(f'{current_full_path}', '0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
             )
+        result_string += f"\n{print_stars()}"
         return result_string
     except Exception as e:
         error_message = (f"* Error, Service Offline or Unresponsive on port {port}: {e}")
