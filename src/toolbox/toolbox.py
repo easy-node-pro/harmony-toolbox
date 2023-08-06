@@ -117,7 +117,7 @@ def run_multistats():
 
 
 def collect_rewards(pending_rewards_balance, validator_wallet, networkCall=EnvironmentVariables.hmy_app):
-    print(f"*\n* Collecting {pending_rewards_balance} $ONE Rewards, awaiting confirmation...\n")
+    print(f"*\n* Collecting {pending_rewards_balance} $ONE Rewards, awaiting confirmation...")
     command = f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 100 {environ.get('PASS_SWITCH')}"
     result = process_command(command, True, False)
     if result:
@@ -145,8 +145,8 @@ def send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, 
     send_rewards(EnvironmentVariables.hmy_app, suggested_send, rewards_wallet)
     validator_wallet_balance = get_wallet_balance(validator_wallet)
     rewards_wallet_balance = get_wallet_balance(rewards_wallet)
-    print(f"*\n*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE\n*")
-    print(f"*\n*\n* Current Rewards Wallet Balance: {rewards_wallet_balance} $ONE\n*\n*")
+    print(f"*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE")
+    print(f"\n* Current Rewards Wallet Balance: {rewards_wallet_balance} $ONE\n*")
     return
 
 
@@ -159,11 +159,11 @@ def rewards_sender(
     if suggested_send >= 1:
         send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet)
     else:
-        print("*\n* Wallet balance is less than your gas reservation, please try again later.\n*\n")
+        print("*\n* Wallet balance is less than your gas reservation, please try again later.")
     validator_wallet_balance = get_wallet_balance(validator_wallet)
     rewards_wallet_balance = get_wallet_balance(rewards_wallet)
     print(
-        f"*\n*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE\n*\n* Current Rewards Wallet Balance: {rewards_wallet_balance}\n*\n*"
+        f"*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE\n* Current Rewards Wallet Balance: {rewards_wallet_balance}\n*"
     )
     return
 
@@ -199,8 +199,8 @@ def rewards_collector(
             print("*\n* Skipping sending of rewards.")
     else:
         rewards_wallet_balance = get_wallet_balance(rewards_wallet)
-        print("*\n*\n* Balance too low to send to rewards wallet")
-        print(f"*\n*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE*")
+        print("*\n* Balance too low to send to rewards wallet")
+        print(f"*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE*")
         print(f"* Current Rewards Wallet Balance: {rewards_wallet_balance} $ONE\n*")
     
     return
