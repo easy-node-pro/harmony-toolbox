@@ -942,7 +942,7 @@ def install_harmony() -> None:
     print(f"{string_stars()}\n* Customizing, Moving & Enabling your {service_name}.service systemd file")
 
     # Set initial file for customization
-    service_file_path = f"{EnvironmentVariables.toolbox_location}/src/bin/{service_name}.service"
+    service_file_path = f"{EnvironmentVariables.toolbox_location}/src/bin/harmony.service"
 
     # Read the service file
     with open(service_file_path, "r") as file:
