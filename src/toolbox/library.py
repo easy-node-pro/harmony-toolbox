@@ -713,15 +713,16 @@ def set_mod_x(file):
 
 def check_online_version():
     try:
-        subprocess.call(["wget", "https://harmony.one/binary", "-O", EnvironmentVariables.harmony_tmp_path])
-        set_mod_x(EnvironmentVariables.harmony_tmp_path)
-        harmony_ver = subprocess.getoutput(f"{EnvironmentVariables.harmony_tmp_path} -V")
-        output_harmony_version = re.search(r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_ver)
-        harmony_version_str = output_harmony_version.group(1)[:-2]
-        subprocess.call(["wget", "https://harmony.one/hmycli", "-O", EnvironmentVariables.hmy_tmp_path])
-        set_mod_x(EnvironmentVariables.hmy_tmp_path)
-        hmy_ver = subprocess.getoutput(f"{EnvironmentVariables.hmy_tmp_path} version")
-        hmy_ver = hmy_ver[62:-15]
+        with open(os.devnull, 'wb') as devnull:
+            subprocess.call(["wget", "https://harmony.one/binary", "-O", EnvironmentVariables.harmony_tmp_path], stdout=devnull, stderr=devnull)
+            set_mod_x(EnvironmentVariables.harmony_tmp_path)
+            harmony_ver = subprocess.getoutput(f"{EnvironmentVariables.harmony_tmp_path} -V")
+            output_harmony_version = re.search(r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_ver)
+            harmony_version_str = output_harmony_version.group(1)[:-2]
+            subprocess.call(["wget", "https://harmony.one/hmycli", "-O", EnvironmentVariables.hmy_tmp_path], stdout=devnull, stderr=devnull)
+            set_mod_x(EnvironmentVariables.hmy_tmp_path)
+            hmy_ver = subprocess.getoutput(f"{EnvironmentVariables.hmy_tmp_path} version")
+            hmy_ver = hmy_ver[62:-15]
     except subprocess.CalledProcessError:
         # print("* Error - Website for hmy upgrade is offline, setting to offline.")
         hmy_ver = "Offline"
