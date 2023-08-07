@@ -182,7 +182,7 @@ def rewards_collector(
 ) -> None:
     pending_rewards_balance = get_rewards_balance(rpc, validator_wallet)
 
-    print(f"{string_stars()}\n* Harmony ONE Rewards Collection\n{string_stars()}")
+    print(f"{Fore.GREEN}{string_stars()}\n* Harmony ONE Rewards Collection\n{string_stars()}")
 
     if bypass or ask_yes_no(
         f"*\n* For your validator wallet {validator_wallet}\n* You have {pending_rewards_balance} $ONE pending.\n* Would you like to collect your rewards on the Harmony {environ.get('NETWORK')}? (YES/NO) "
