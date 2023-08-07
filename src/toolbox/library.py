@@ -171,13 +171,9 @@ def recover_wallet():
 
 
 def update_harmony_binary():
-    arch = os.uname().machine
     harmony_dir = environ.get("HARMONY_DIR")
     os.chdir(f"{harmony_dir}")
-    if arch.startswith("arm"):
-        process_command("curl -LO https://harmony.one/binary-arm64 && mv binary-arm64 harmony && chmod +x harmony")
-    if arch == "x86_64":
-        process_command("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
+    process_command("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
     process_command("./harmony config dump harmony.conf")
     update_text_file(f"{harmony_dir}/harmony.conf", "MaxKeys = 10", "MaxKeys = 13")
     update_text_file(f"{harmony_dir}/harmony.conf", " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
