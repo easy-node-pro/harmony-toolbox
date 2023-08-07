@@ -181,9 +181,9 @@ def rewards_collector(
     validator_wallet=environ.get("VALIDATOR_WALLET"),
 ) -> None:
     pending_rewards_balance = get_rewards_balance(rpc, validator_wallet)
-    
+
     print(f"{string_stars()}\n* Harmony ONE Rewards Collection\n{string_stars()}")
-    
+
     if bypass or ask_yes_no(
         f"*\n* For your validator wallet {validator_wallet}\n* You have {pending_rewards_balance} $ONE pending.\n* Would you like to collect your rewards on the Harmony {environ.get('NETWORK')}? (YES/NO) "
     ):
@@ -193,7 +193,7 @@ def rewards_collector(
 
     validator_wallet_balance = get_wallet_balance(validator_wallet)
     suggested_send = validator_wallet_balance - int(environ.get("GAS_RESERVE"))
-    
+
     if suggested_send >= 1:
         if bypass or ask_yes_no(
             f"* You have {validator_wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
@@ -206,7 +206,7 @@ def rewards_collector(
         print("*\n* Balance too low to send to rewards wallet")
         print(f"*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE*")
         print(f"* Current Rewards Wallet Balance: {rewards_wallet_balance} $ONE\n*")
-    
+
     return
 
 
@@ -599,9 +599,12 @@ def service_menu_option() -> None:
 
 def update_menu_option(software_versions) -> None:
     if software_versions["harmony_upgrade"] == "True":
-        print(f"*  10 - Update Harmony App Binary - For New Harmony Releases ONLY, {Fore.YELLOW}{Back.RED}WARNING: You will miss blocks during upgrade.{Style.RESET_ALL}{Fore.GREEN}")
+        print(
+            f"*  10 - Update Harmony App Binary - For New Harmony Releases ONLY, {Fore.YELLOW}{Back.RED}WARNING: You will miss blocks during upgrade.{Style.RESET_ALL}{Fore.GREEN}"
+        )
     if software_versions["hmy_upgrade"] == "True":
         print("*  11 - Update hmy CLI App        - Update harmony binary file, run anytime!")
+
 
 def hip_voting_option() -> None:
     # Specify the deadline in UTC
@@ -639,28 +642,28 @@ def hmy_cli_upgrade():
     question = ask_yes_no(
         "* Are you sure you would like to proceed with updating the Harmony CLI file?\n\nType 'Yes' or 'No' to continue"
     )
-    
+
     if not question:
         print("* Update canceled.")
         return
-    
+
     try:
         # Backup the current version of hmy CLI
         folder_name = make_backup_dir()
         process_command(f"cp {environ.get('HARMONY_DIR')}/hmy {folder_name}")
         print_stars()
-        
+
         # Install the new version
         software_versions = update_hmy_binary()
         print_stars()
-        
+
         # Print the updated version
         print(f"Harmony cli has been updated to: {software_versions['hmy_version']}")
         print_stars()
 
         # Update the environment variable
         set_var(EnvironmentVariables.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
-        
+
     except Exception as e:  # Catch generic errors, though you might want to catch more specific exceptions
         print(f"{string_stars()}\n* An error occurred during the update: {e}\n{string_stars()}")
         # Handle the error or possibly re-raise it depending on your requirements
@@ -790,8 +793,10 @@ def harmony_binary_upgrade():
     if question:
         update_harmony_app()
 
+
 def menu_service_stop_start():
     menu_service_stop_start_trigger(environ.get("HARMONY_SERVICE"))
+
 
 def menu_service_stop_start_trigger(service) -> str:
     status = process_command(f"systemctl is-active --quiet {service}")
@@ -887,9 +892,7 @@ def balanceCheckAny():
     )
     print(f"* Calling mainnet for balances...\n{string_stars()}")
     wallet_balance = get_wallet_balance(check_wallet)
-    print(
-        f"* The Mainnet Wallet Balance is: {wallet_balance} Harmony ONE Coins\n{string_stars()}"
-    )
+    print(f"* The Mainnet Wallet Balance is: {wallet_balance} Harmony ONE Coins\n{string_stars()}")
     input("* Press ENTER to continue.")
 
 
