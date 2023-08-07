@@ -964,6 +964,7 @@ def install_harmony() -> None:
                     service_name = os.path.basename(custom_path)
                     break
 
+    # Save envs
     set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", install_path)
     set_var(EnvironmentVariables.dotenv_file, "SERVICE_NAME", service_name)
 
@@ -1056,22 +1057,6 @@ def clone_shards():
         )
 
 
-# is this used?
-def set_mounted_point():
-    # First let's make sure your volume is mounted
-    totalDir = len(os.listdir("/mnt"))
-    if totalDir > 0:
-        volumeMountPath = os.listdir("/mnt")
-        myVolumePath = "/mnt/" + str(volumeMountPath[0])
-        myLongHmyPath = myVolumePath + "/harmony"
-    else:
-        myVolumePath = environ.get("HARMONY_DIR")
-    if totalDir == 1:
-        dotenv.set_key(EnvironmentVariables.dotenv_file, "HARMONY_DIR", myLongHmyPath)
-    else:
-        dotenv.set_key(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{environ.get('HARMONY_DIR')}")
-
-
 def finish_node_install():
     load_var_file(EnvironmentVariables.dotenv_file)
     print(
@@ -1105,14 +1090,14 @@ def finish_node_install():
 
 
 def free_space_check(mount) -> str:
-    ourDiskMount = get_HARMONY_DIR(mount)
+    ourDiskMount = get_harmony_dir_from_path(mount)
     _, _, free = shutil.disk_usage(ourDiskMount)
     freeConverted = str(converted_unit(free))
     return freeConverted
 
 
 def free_space_size(mount) -> str:
-    ourDiskMount = get_HARMONY_DIR(mount)
+    ourDiskMount = get_harmony_dir_from_path(mount)
     _, _, free = shutil.disk_usage(ourDiskMount)
     return free
 
@@ -1174,7 +1159,7 @@ def disk_partitions(all=False):
     return retlist
 
 
-def get_HARMONY_DIR(pathname):
+def get_harmony_dir_from_path(pathname):
     pathname = os.path.normcase(os.path.realpath(pathname))
     parent_device = path_device = os.stat(pathname).st_dev
     while parent_device == path_device:
