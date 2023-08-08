@@ -1037,6 +1037,7 @@ def install_harmony() -> None:
 
 # Database Downloader
 def clone_shards():
+    load_dotenv(EnvironmentVariables.dotenv_file)
     # Move to ~/harmony
     os.chdir(f"{environ.get('HARMONY_DIR')}")
 
