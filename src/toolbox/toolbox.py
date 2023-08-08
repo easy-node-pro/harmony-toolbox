@@ -35,7 +35,7 @@ from toolbox.library import (
     update_harmony_binary,
     version_checks,
     harmony_service_status,
-    get_folders,
+    run_command,
     validator_stats_output,
     get_db_size,
     first_setup,
@@ -119,7 +119,7 @@ def run_multistats():
 def collect_rewards(pending_rewards_balance, validator_wallet, networkCall=EnvironmentVariables.hmy_app):
     print(f"*\n* Collecting {pending_rewards_balance} $ONE Rewards, awaiting confirmation...")
     command = f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 100 {environ.get('PASS_SWITCH')}"
-    result = process_command(command, True, False)
+    result = run_command(command, print_output=True)
     if result:
         print("*\n*\n* Rewards collection Finished.")
         print_stars()
@@ -133,7 +133,7 @@ def collect_rewards(pending_rewards_balance, validator_wallet, networkCall=Envir
 
 def send_rewards(networkCall, sendAmount, rewards_wallet):
     command = f"{networkCall} transfer --amount {sendAmount} --from {environ.get('VALIDATOR_WALLET')} --from-shard 0 --to {rewards_wallet} --to-shard 0 --gas-price 100 {environ.get('PASS_SWITCH')}"
-    result = process_command(command, True, False)
+    result = run_command(command, print_output=True)
     if result:
         print("*\n* Rewards sending Finished.")
     else:
