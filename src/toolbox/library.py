@@ -588,7 +588,7 @@ def get_vote_choice() -> (int, str):
         "[3] - Abstain",
         "[4] - Quit",
     ]
-    terminal_menu = TerminalMenu(menu_options, title="* Which Shard will this node operate on? ")
+    terminal_menu = TerminalMenu(menu_options, title="* Please choose your voting option. ")
     vote_choice_index = terminal_menu.show()
     if vote_choice_index == 3:  # The index of the "Quit" option
         return None, "Quit"
