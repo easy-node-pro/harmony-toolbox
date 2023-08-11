@@ -695,7 +695,7 @@ def update_harmony_app():
         f"cp {os.environ.get('HARMONY_DIR')}/harmony {os.environ.get('HARMONY_DIR')}/harmony.conf {folder_name}"
     )
     print(f"{string_stars()}\nDownloading current harmony binary file from harmony.one: \n{string_stars()}")
-    update_harmony_binary(os.environ.get("HARMONY_DIR"), EnvironmentVariables.harmony_conf)
+    update_harmony_binary()
     print(f"{string_stars()}\nUpdated version: ")
     process_command("./harmony -V")
     if environ.get("SHARD") != "0":
