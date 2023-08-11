@@ -462,45 +462,56 @@ def update_stats_option() -> None:
 
 
 def harmony_voting() -> None:
-    print(f"{string_stars()}\n* Harmony Voting\n{string_stars()}")
-    question, proposal = proposal_choices_option()
-    if proposal == "Quit" or question == False:
-        return
-    validator_wallet_name = get_validator_wallet_name(environ.get("VALIDATOR_WALLET"))
-    if proposal == "HIP-30v2":
-        vote_choice_option, vote_choice_text = get_vote_choice()
-        if vote_choice_text == "Quit":
+    # Specify the deadline in UTC
+    utc = pytz.utc
+    # Deadline to go inactive, currently passed
+    deadline = utc.localize(datetime(2023, 8, 9, 20, 59))
+
+    # Get the current time in UTC
+    current_time = datetime.now(utc)
+
+    # Check if the current time is before or after the deadline
+    active_vote = current_time < deadline
+
+    if active_vote:
+        print(f"{string_stars()}\n* Harmony Voting\n{string_stars()}")
+        question, proposal = proposal_choices_option()
+        if proposal == "Quit" or question == False:
             return
-        print(
-            f"* Voting for {vote_choice_option} - {vote_choice_text} on proposal {proposal}\n* Please enter your validator wallet password now: \n"
-        )
-        command = f"{environ.get('HARMONY_DIR')}/hmy governance vote-proposal --space harmony-mainnet.eth --proposal 0xce5f516c683170e4164a06e42dcd487681f46f42606b639955eb7c0fa3b13b96 --proposal-type single-choice --choice {vote_choice_option} --key {validator_wallet_name} --passphrase"
-        process_command(
-            command,
-            True,
-            True,
-        )
-    if proposal == "Governance for Harmony Recovery Wallet":
-        vote_choice_option, vote_choice_names_list = governance_member_voting()
-        vote_choice_names = "\n* ".join(
-            vote_choice_names_list[1:-1].split(", ")
-        )  # Extracting the names and formatting them
-        question = ask_yes_no(
-            f"* You have selected\n*\n* {vote_choice_names}\n*\n* Are you sure you want to vote for this list?  (Yes/No) "
-        )
-        if question:
+        validator_wallet_name = get_validator_wallet_name(environ.get("VALIDATOR_WALLET"))
+        if proposal == "HIP-30v2":
+            vote_choice_option, vote_choice_text = get_vote_choice()
+            if vote_choice_text == "Quit":
+                return
             print(
-                f"* Voting for {vote_choice_option} - {vote_choice_names_list} on proposal {proposal}\n* Please enter your validator wallet password now: \n"
+                f"* Voting for {vote_choice_option} - {vote_choice_text} on proposal {proposal}\n* Please enter your validator wallet password now: \n"
             )
-            command = f"{environ.get('HARMONY_DIR')}/hmy governance vote-proposal --space harmony-mainnet.eth --proposal 0x80b87627254aa71870407a3c95742aa30c0e5ccdc81da23a1a54dcf0108778ae --proposal-type approval --choice \"{vote_choice_option}\" --key {validator_wallet_name} --passphrase"
+            command = f"{environ.get('HARMONY_DIR')}/hmy governance vote-proposal --space harmony-mainnet.eth --proposal 0xce5f516c683170e4164a06e42dcd487681f46f42606b639955eb7c0fa3b13b96 --proposal-type single-choice --choice {vote_choice_option} --key {validator_wallet_name} --passphrase"
             process_command(
                 command,
                 True,
                 True,
             )
-        else:
-            print("*\n* Returning to menu...")
-
+        if proposal == "Governance for Harmony Recovery Wallet":
+            vote_choice_option, vote_choice_names_list = governance_member_voting()
+            vote_choice_names = "\n* ".join(
+                vote_choice_names_list[1:-1].split(", ")
+            )  # Extracting the names and formatting them
+            question = ask_yes_no(
+                f"* You have selected\n*\n* {vote_choice_names}\n*\n* Are you sure you want to vote for this list?  (Yes/No) "
+            )
+            if question:
+                print(
+                    f"* Voting for {vote_choice_option} - {vote_choice_names_list} on proposal {proposal}\n* Please enter your validator wallet password now: \n"
+                )
+                command = f"{environ.get('HARMONY_DIR')}/hmy governance vote-proposal --space harmony-mainnet.eth --proposal 0x80b87627254aa71870407a3c95742aa30c0e5ccdc81da23a1a54dcf0108778ae --proposal-type approval --choice \"{vote_choice_option}\" --key {validator_wallet_name} --passphrase"
+                process_command(
+                    command,
+                    True,
+                    True,
+                )
+            else:
+                print("*\n* Returning to menu...")
     return
 
 
@@ -609,6 +620,7 @@ def update_menu_option(software_versions) -> None:
 def hip_voting_option() -> None:
     # Specify the deadline in UTC
     utc = pytz.utc
+    # Deadline to go inactive, currently passed
     deadline = utc.localize(datetime(2023, 8, 9, 20, 59))
 
     # Get the current time in UTC
