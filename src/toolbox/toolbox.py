@@ -512,6 +512,8 @@ def harmony_voting() -> None:
                 )
             else:
                 print("*\n* Returning to menu...")
+    else:
+        print(f"* Voting is currently closed, please try again later.")
     return
 
 
