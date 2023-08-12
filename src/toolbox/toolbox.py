@@ -711,7 +711,6 @@ def update_harmony_app():
     process_command(
         f"cp {os.environ.get('HARMONY_DIR')}/harmony {os.environ.get('HARMONY_DIR')}/harmony.conf {folder_name}"
     )
-    print(f"{string_stars()}\nDownloading current harmony binary file from harmony.one: \n{string_stars()}")
     update_harmony_binary()
     print(f"{string_stars()}\nUpdated version: ")
     process_command("./harmony -V")
