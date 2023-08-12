@@ -766,13 +766,13 @@ def get_local_version(folder):
     output_harmony_version = None
     hmy_version = None
 
-    if os.path.exists(f"{folder}/harmony"):
+    if os.path.isfile(f"{folder}/harmony"):
         harmony_version = subprocess.getoutput(f"{folder}/harmony -V")
         match = re.search(r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_version)
         if match:
             output_harmony_version = match.group(1)[:-2]
 
-    if os.path.exists(f"{folder}/hmy"):
+    if os.path.isfile(f"{folder}/hmy"):
         hmy_version_raw = subprocess.getoutput(f"{folder}/hmy version")
         hmy_version = hmy_version_raw[62:-15]
 
