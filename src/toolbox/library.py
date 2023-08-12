@@ -95,34 +95,36 @@ def update_hmy_binary():
     download_url = "https://harmony.one/hmycli"
     destination_path = f"{hmy_dir}/hmy"
 
-    try:
-        # Download the hmycli
-        response = requests.get(download_url, stream=True)
-        response.raise_for_status()
+    if os.path.isfile(EnvironmentVariables.hmy_tmp_path):
+        process_command(f"cp {EnvironmentVariables.hmy_tmp_path} {destination_path}")
+    else:
+        try:
+            # Download the hmycli
+            response = requests.get(download_url, stream=True)
+            response.raise_for_status()
 
-        # Save the downloaded content to the destination path
-        with open(destination_path, "wb") as file:
-            for chunk in response.iter_content(chunk_size=8192):
-                file.write(chunk)
+            # Save the downloaded content to the destination path
+            with open(destination_path, "wb") as file:
+                for chunk in response.iter_content(chunk_size=8192):
+                    file.write(chunk)
 
-        # Set execute permissions
-        os.chmod(destination_path, 0o755)
+            # Set execute permissions
+            os.chmod(destination_path, 0o755)
+        except requests.RequestException as e:
+            print(f"* Error while downloading hmy using requests: {e}")
 
-        # Get version string
-        software_versions = version_checks(hmy_dir)
+        except OSError as e:
+            print(f"* Error while saving or setting permissions for hmy: {e}")
 
-        if software_versions:
-            print(f"* hmy application installed.")
-            return software_versions
-        else:
-            print(f"* Version Check Failed.")
-            return None
+    # Get version string
+    software_versions = version_checks(hmy_dir)
 
-    except requests.RequestException as e:
-        print(f"* Error while downloading hmy using requests: {e}")
-
-    except OSError as e:
-        print(f"* Error while saving or setting permissions for hmy: {e}")
+    if software_versions:
+        print(f"* hmy application installed.")
+        return software_versions
+    else:
+        print(f"* Version Check Failed.")
+        return None
 
 
 # Code to update the harmony.conf after an upgrade and other text files.
@@ -173,15 +175,18 @@ def recover_wallet():
 def update_harmony_binary():
     harmony_dir = environ.get("HARMONY_DIR")
     os.chdir(f"{harmony_dir}")
-    process_command("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
+    if os.path.isfile(f"{EnvironmentVariables.harmony_tmp_path}/harmony"):
+        process_command(f"cp /tmp/harmony {harmony_dir}")
+    else:
+        process_command("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
     process_command("./harmony config dump harmony.conf")
     update_text_file(f"{harmony_dir}/harmony.conf", "MaxKeys = 10", "MaxKeys = 13")
     update_text_file(f"{harmony_dir}/harmony.conf", " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
-    print(f"* harmony.conf MaxKeys modified to 13 & DisablePrivateIPScan set to true.")
     if os.path.isfile(f"{harmony_dir}/blskey.pass"):
         update_text_file(f"{harmony_dir}/harmony.conf", 'PassFile = ""', 'PassFile = "blskey.pass"')
-        print("* blskey.pass found, updated harmony.conf")
-    print(f"* Harmony binary installed & {harmony_dir}/harmony.conf created. ")
+        print(f"* Harmony binary installed, {harmony_dir}/harmony.conf created and modified: 13 max keys, blskey.pass file, disabled private ip scan. ")
+    else:
+        print(f"* Harmony binary installed, {harmony_dir}/harmony.conf created and modified: 13 max keys, disabled private ip scan. ")
     return
 
 
