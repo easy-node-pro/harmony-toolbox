@@ -375,7 +375,8 @@ def run_rewards_collector() -> None:
 
 
 def clear_temp_files() -> None:
-    tmp_files = ["/tmp/hmy", "/tmp/harmony"]
+    # check and clear previous versions in /tmp
+    tmp_files = [EnvironmentVariables.harmony_tmp_path, EnvironmentVariables.hmy_tmp_path]
     
     for tmp_file in tmp_files:
         try:

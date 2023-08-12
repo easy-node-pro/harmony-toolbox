@@ -763,23 +763,23 @@ def get_sign_pct() -> str:
 
 
 def get_local_version(folder):
-    output_harmony_version = None
+    harmony_version = None
     hmy_version = None
 
     if os.path.isfile(f"{folder}/harmony"):
         harmony_version = subprocess.getoutput(f"{folder}/harmony -V")
         match = re.search(r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_version)
         if match:
-            output_harmony_version = match.group(1)[:-2]
+            harmony_version = match.group(1)[:-2]
 
     if os.path.isfile(f"{folder}/hmy"):
         hmy_version_raw = subprocess.getoutput(f"{folder}/hmy version")
         hmy_version = hmy_version_raw[62:-15]
 
-    if not output_harmony_version or not hmy_version:
+    if not harmony_version or not hmy_version:
         return None
 
-    return output_harmony_version, hmy_version
+    return harmony_version, hmy_version
 
 
 def set_mod_x(file):
@@ -837,18 +837,18 @@ def version_checks(harmony_folder):
     online_versions = check_online_version()
 
     # Check if the local versions exist. If not, set to a default value.
-    software_versions["harmony_version"] = local_versions[0] if local_versions else "Not Found"
-    software_versions["hmy_version"] = local_versions[1] if local_versions else "Not Found"
+    software_versions["harmony_version"] = local_versions[0] if local_versions else "Offline"
+    software_versions["hmy_version"] = local_versions[1] if local_versions else "Offline"
 
     # Check if the online versions exist. If not, set to a default value.
-    software_versions["online_harmony_version"] = online_versions[0] if online_versions else "Not Found"
-    software_versions["online_hmy_version"] = online_versions[1] if online_versions else "Not Found"
+    software_versions["online_harmony_version"] = online_versions[0] if online_versions else "Offline"
+    software_versions["online_hmy_version"] = online_versions[1] if online_versions else "Offline"
 
     # Check versions, if matching False (No Upgrade Required), non-match True (Upgrade Required)
     if (
         software_versions["harmony_version"] == software_versions["online_harmony_version"]
         or software_versions["online_harmony_version"] == "Offline"
-        or software_versions["harmony_version"] == "Not Found"
+        or software_versions["harmony_version"] == "Offline"
     ):
         software_versions["harmony_upgrade"] = "False"
     else:
@@ -857,7 +857,7 @@ def version_checks(harmony_folder):
     if (
         software_versions["hmy_version"] == software_versions["online_hmy_version"]
         or software_versions["online_hmy_version"] == "Offline"
-        or software_versions["hmy_version"] == "Not Found"
+        or software_versions["hmy_version"] == "Offline"
     ):
         software_versions["hmy_upgrade"] = "False"
     else:
