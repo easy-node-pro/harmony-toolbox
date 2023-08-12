@@ -374,7 +374,22 @@ def run_rewards_collector() -> None:
     return
 
 
+def clear_temp_files() -> None:
+    tmp_files = ["/tmp/hmy", "/tmp/harmony"]
+    
+    for tmp_file in tmp_files:
+        try:
+            os.remove(tmp_file)
+        except FileNotFoundError:
+            pass  # Silently ignore if file doesn't exist
+        except Exception as e:
+            # You can still log or handle other exceptions if desired
+            pass
+
+
 def safety_defaults() -> None:
+    # clean files
+    clear_temp_files()
     # default settings section
     set_var(EnvironmentVariables.dotenv_file, "EASY_VERSION", EnvironmentVariables.easy_version)
     if environ.get("GAS_RESERVE") is None:
