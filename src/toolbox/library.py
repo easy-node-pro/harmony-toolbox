@@ -786,7 +786,7 @@ def set_mod_x(file):
 
 
 def check_online_version():
-    print("* Checking online version of harmony & hmy...")
+    print(f"{string_stars()}* Checking online version of harmony & hmy...")
     harmony_version_str = "Offline"
     hmy_ver = "Offline"
     try:
