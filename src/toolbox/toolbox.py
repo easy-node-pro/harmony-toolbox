@@ -704,7 +704,7 @@ def update_harmony_app():
             for f in files:
                 fp = os.path.join(path, f)
                 size += os.path.getsize(fp)
-            if size >= 400000000:
+            if size >= 500000000:
                 question = ask_yes_no(
                     Fore.WHITE
                     + "* Are you sure you would like to proceed with upgrading and trimming database 0?\n\nType 'Yes' or 'No' to continue"
@@ -717,11 +717,11 @@ def update_harmony_app():
                     process_command(f"sudo service {environ.get('SERVICE_NAME')} start")
                     process_command(f"rm -r {os.environ.get('HARMONY_DIR')}/harmony_db_0_old")
                 else:
-                    print("Skipping removal of 0, but it's no longer required, fyi!")
+                    print("Skipping removal of 0, but it's no longer required, get your space back next time by running this prune, fyi!")
             else:
                 print("Your database 0 is already trimmed, enjoy!")
     process_command(f"sudo service {environ.get('SERVICE_NAME')} restart")
-    print(f"{string_stars()}\nHarmony Service is restarting, waiting 10 seconds for restart.")
+    print(f"{string_stars()}\nHarmony Service is restarting, waiting 10 seconds for processing to resume...")
     set_var(EnvironmentVariables.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
     time.sleep(10)
 
