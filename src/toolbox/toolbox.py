@@ -710,11 +710,11 @@ def update_harmony_app():
                     + "* Are you sure you would like to proceed with upgrading and trimming database 0?\n\nType 'Yes' or 'No' to continue"
                 )
                 if question:
-                    process_command("sudo service harmony stop")
+                    process_command(f"sudo service {environ.get('SERVICE_NAME')} stop")
                     process_command(
                         f"mv {os.environ.get('HARMONY_DIR')}/harmony_db_0 {os.environ.get('HARMONY_DIR')}/harmony_db_0_old"
                     )
-                    process_command("sudo service harmony start")
+                    process_command(f"sudo service {environ.get('SERVICE_NAME')} start")
                     process_command(f"rm -r {os.environ.get('HARMONY_DIR')}/harmony_db_0_old")
                 else:
                     print("Skipping removal of 0, but it's no longer required, fyi!")
@@ -815,7 +815,7 @@ def menu_service_stop_start():
 def menu_service_stop_start_trigger(service) -> str:
     status = process_command(f"systemctl is-active --quiet {service}")
     if status != 0:
-        process_command("sudo service harmony start")
+        process_command(f"sudo service {environ.get('SERVICE_NAME')} start")
         print()
         print("* Harmony Service Has Been Started.")
         print()
@@ -829,7 +829,7 @@ def menu_service_stop_start_trigger(service) -> str:
             + "* Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
         )
         if question:
-            process_command("sudo service harmony stop")
+            process_command(f"sudo service {environ.get('SERVICE_NAME')} stop")
             print()
             print(
                 "* Harmony Service Has Been Stopped. "
@@ -851,7 +851,7 @@ def menu_service_restart() -> str:
         + "Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
     )
     if question:
-        process_command("sudo service harmony restart")
+        process_command(f"sudo service {environ.get('SERVICE_NAME')} restart")
         print()
         print("* The Harmony Service Has Been Restarted")
         input("* Press ENTER to return to the main menu.")
