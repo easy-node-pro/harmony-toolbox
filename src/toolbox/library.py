@@ -206,7 +206,6 @@ def get_folders():
             port = find_port(f"{EnvironmentVariables.user_home_dir}/{f}")
             folders[f"{f}"] = port
             print(f"* Found ~/{f} folder, on port {port}")
-    print_stars()
     return folders
 
 
@@ -787,6 +786,7 @@ def set_mod_x(file):
 
 
 def check_online_version():
+    print("* Checking online version of harmony & hmy...")
     harmony_version_str = "Offline"
     hmy_ver = "Offline"
     try:
