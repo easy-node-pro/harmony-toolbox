@@ -11,8 +11,8 @@ from requests.exceptions import HTTPError
 from toolbox.library import (
     process_command,
     print_stars,
-    print_stars,
     ask_yes_no,
+    check_online_version,
     return_txt,
     find_port,
     update_hmy_binary,
@@ -391,6 +391,7 @@ def clear_temp_files() -> None:
 def safety_defaults() -> None:
     # clean files
     clear_temp_files()
+    check_online_version()
     # default settings section
     set_var(EnvironmentVariables.dotenv_file, "EASY_VERSION", EnvironmentVariables.easy_version)
     if environ.get("GAS_RESERVE") is None:

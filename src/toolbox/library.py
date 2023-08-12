@@ -804,6 +804,7 @@ def check_online_version():
         harmony_ver = subprocess.getoutput(f"{EnvironmentVariables.harmony_tmp_path} -V")
         output_harmony_version = re.search(r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_ver)
         harmony_version_str = output_harmony_version.group(1)[:-2]
+        set_var(EnvironmentVariables.dotenv_file, "ONLINE_HARMONY_VERSION", harmony_version_str)
 
         # Check if the hmycli binary exists before downloading
         if not os.path.exists(EnvironmentVariables.hmy_tmp_path):
@@ -818,11 +819,12 @@ def check_online_version():
         # Get hmy version
         hmy_ver = subprocess.getoutput(f"{EnvironmentVariables.hmy_tmp_path} version")
         hmy_ver = hmy_ver[62:-15]
+        set_var(EnvironmentVariables.dotenv_file, "ONLINE_HMY_VERSION", hmy_ver)
 
-        return harmony_version_str, hmy_ver
+        return
     except (AttributeError, subprocess.CalledProcessError):
         # print("* Error - Website for hmy upgrade is offline, setting to offline.")
-        return harmony_version_str, hmy_ver
+        return
 
 
 
@@ -834,15 +836,14 @@ def first_env_check(env_file) -> None:
 def version_checks(harmony_folder):
     software_versions = {}
     local_versions = get_local_version(f"{harmony_folder}")
-    online_versions = check_online_version()
 
     # Check if the local versions exist. If not, set to a default value.
     software_versions["harmony_version"] = local_versions[0] if local_versions else "Offline"
     software_versions["hmy_version"] = local_versions[1] if local_versions else "Offline"
 
     # Check if the online versions exist. If not, set to a default value.
-    software_versions["online_harmony_version"] = online_versions[0] if online_versions else "Offline"
-    software_versions["online_hmy_version"] = online_versions[1] if online_versions else "Offline"
+    software_versions["online_harmony_version"] = environ.get("ONLINE_HARMONY_VERSION") if environ.get("ONLINE_HARMONY_VERSION") else "Offline"
+    software_versions["online_hmy_version"] = environ.get("ONLINE_HMY_VERSION") if environ.get("ONLINE_HMY_VERSION") else "Offline"
 
     # Check versions, if matching False (No Upgrade Required), non-match True (Upgrade Required)
     if (
