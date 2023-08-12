@@ -790,28 +790,40 @@ def check_online_version():
     harmony_version_str = "Offline"
     hmy_ver = "Offline"
     try:
-        with open(os.devnull, "wb") as devnull:
-            subprocess.call(
-                ["wget", "https://harmony.one/binary", "-O", EnvironmentVariables.harmony_tmp_path],
-                stdout=devnull,
-                stderr=devnull,
-            )
-            set_mod_x(EnvironmentVariables.harmony_tmp_path)
-            harmony_ver = subprocess.getoutput(f"{EnvironmentVariables.harmony_tmp_path} -V")
-            output_harmony_version = re.search(r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_ver)
-            harmony_version_str = output_harmony_version.group(1)[:-2]
-            subprocess.call(
-                ["wget", "https://harmony.one/hmycli", "-O", EnvironmentVariables.hmy_tmp_path],
-                stdout=devnull,
-                stderr=devnull,
-            )
-            set_mod_x(EnvironmentVariables.hmy_tmp_path)
-            hmy_ver = subprocess.getoutput(f"{EnvironmentVariables.hmy_tmp_path} version")
-            hmy_ver = hmy_ver[62:-15]
-            return harmony_version_str, hmy_ver
+        # Check if the harmony binary exists before downloading
+        if not os.path.exists(EnvironmentVariables.harmony_tmp_path):
+            with open(os.devnull, "wb") as devnull:
+                subprocess.call(
+                    ["wget", "https://harmony.one/binary", "-O", EnvironmentVariables.harmony_tmp_path],
+                    stdout=devnull,
+                    stderr=devnull,
+                )
+                set_mod_x(EnvironmentVariables.harmony_tmp_path)
+
+        # Get harmony version
+        harmony_ver = subprocess.getoutput(f"{EnvironmentVariables.harmony_tmp_path} -V")
+        output_harmony_version = re.search(r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_ver)
+        harmony_version_str = output_harmony_version.group(1)[:-2]
+
+        # Check if the hmycli binary exists before downloading
+        if not os.path.exists(EnvironmentVariables.hmy_tmp_path):
+            with open(os.devnull, "wb") as devnull:
+                subprocess.call(
+                    ["wget", "https://harmony.one/hmycli", "-O", EnvironmentVariables.hmy_tmp_path],
+                    stdout=devnull,
+                    stderr=devnull,
+                )
+                set_mod_x(EnvironmentVariables.hmy_tmp_path)
+
+        # Get hmy version
+        hmy_ver = subprocess.getoutput(f"{EnvironmentVariables.hmy_tmp_path} version")
+        hmy_ver = hmy_ver[62:-15]
+
+        return harmony_version_str, hmy_ver
     except (AttributeError, subprocess.CalledProcessError):
         # print("* Error - Website for hmy upgrade is offline, setting to offline.")
         return harmony_version_str, hmy_ver
+
 
 
 def first_env_check(env_file) -> None:
