@@ -217,7 +217,7 @@ def process_folder(folder, port):
     software_versions = version_checks(current_full_path)
     try:
         local_server = [
-            f"{EnvironmentVariables.user_home_dir}/{folder}/hmy",
+            f"{current_full_path}/hmy",
             "utility",
             "metadata",
             f"--node=http://localhost:{port}",
@@ -225,7 +225,7 @@ def process_folder(folder, port):
         result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         local_data = json.loads(result_local_server.stdout)
         remote_server = [
-            f"{EnvironmentVariables.user_home_dir}/{folder}/hmy",
+            f"{current_full_path}/hmy",
             "utility",
             "metadata",
             f"--node=https://api.s{local_data['result']['shard-id']}.t.hmny.io",
