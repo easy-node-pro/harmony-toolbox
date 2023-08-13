@@ -382,7 +382,6 @@ def recovery_type():
 
 
 def passphrase_status():
-    load_var_file(EnvironmentVariables.dotenv_file)
     if os.path.exists(EnvironmentVariables.hmy_wallet_store):
         passphrase_set()
         set_var(

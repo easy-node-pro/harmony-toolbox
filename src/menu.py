@@ -3,8 +3,6 @@ from toolbox.config import EnvironmentVariables
 from toolbox.library import loader_intro, first_env_check, load_var_file, old_toolbox_check
 from toolbox.toolbox import safety_defaults, start_regular_node, parse_flags
 
-load_var_file(EnvironmentVariables.dotenv_file)
-
 def app():
     # Check for old toolbox first
     old_toolbox_check()
@@ -19,6 +17,8 @@ def app():
     start_regular_node()
 
 if __name__ == "__main__":
+    # load environment variables
+    load_var_file(EnvironmentVariables.dotenv_file)
     # Clear screen, show logo
     loader_intro()
     app()
