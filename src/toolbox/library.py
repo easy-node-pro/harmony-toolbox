@@ -1053,11 +1053,12 @@ def install_harmony() -> None:
 
 
 def update_rclone_conf():
-    comparison = compare_two_files(f"{EnvironmentVariables.toolbox_location}/src/bin/rclone.conf", f"{EnvironmentVariables.user_home_dir}/.config/rclone/rclone.conf")
-    if not comparison:
-        process_command(
-            f"cp {EnvironmentVariables.toolbox_location}/src/bin/rclone.conf {EnvironmentVariables.user_home_dir}/.config/rclone/"
-        )
+    if os.path.exists(f"{EnvironmentVariables.toolbox_location}/src/bin/rclone.conf"):
+        comparison = compare_two_files(f"{EnvironmentVariables.toolbox_location}/src/bin/rclone.conf", f"{EnvironmentVariables.user_home_dir}/.config/rclone/rclone.conf")
+        if not comparison:
+            process_command(
+                f"cp {EnvironmentVariables.toolbox_location}/src/bin/rclone.conf {EnvironmentVariables.user_home_dir}/.config/rclone/"
+            )
 
 # Database Downloader
 def clone_shards():
