@@ -7,9 +7,7 @@ def app():
     # Check for old toolbox first
     old_toolbox_check()
     # passed .env check, let's load it!
-    check_status = first_env_check(EnvironmentVariables.dotenv_file)
-    if check_status == False:
-        update_rclone_conf()
+    first_env_check(EnvironmentVariables.dotenv_file)
     # This section is for hard coding new settings for current users.
     safety_defaults()
     # Run parser if flags added

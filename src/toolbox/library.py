@@ -79,6 +79,18 @@ def loader_intro():
     print(p)
 
 
+def initialization_process():
+    update_rclone_conf()
+    old_toolbox_check()
+
+def update_rclone_conf():
+    if os.path.exists(f"{EnvironmentVariables.toolbox_location}/src/bin/rclone.conf"):
+        comparison = compare_two_files(f"{EnvironmentVariables.toolbox_location}/src/bin/rclone.conf", f"{EnvironmentVariables.user_home_dir}/.config/rclone/rclone.conf")
+        if comparison == False:
+            process_command(
+                f"cp {EnvironmentVariables.toolbox_location}/src/bin/rclone.conf {EnvironmentVariables.user_home_dir}/.config/rclone/"
+            )
+
 def old_toolbox_check():
     if os.path.exists(f"{EnvironmentVariables.user_home_dir}/validatortoolbox"):
         print(
@@ -86,7 +98,6 @@ def old_toolbox_check():
             + f"{string_stars()}\n* Old folder found, Exiting toolbox.\n*\n* Please renmae your ~/validatortoolbox folder to ~/harmony-toolbox and update your command paths!\n*\n* Run: cd ~/ && mv ~/validatortoolbox ~/harmony-toolbox\n*\n* After you run the move command, relaunch with: python3 ~/harmony-toolbox/src/menu.py\n*{string_stars()}"
         )
         raise SystemExit(0)
-
 
 # Install Harmony ONE
 def update_hmy_binary():
@@ -478,12 +489,13 @@ def return_txt(fn: str) -> list:
 
 
 def load_var_file(var_file):
+    # load .env file or create it if it doesn't exist
     if os.path.exists(var_file):
         load_dotenv(var_file, override=True)
-        return False
+        return True
     else:
         subprocess.run(["touch", var_file])
-        return True
+        return False
 
 
 def get_validator_wallet_name(wallet_id):
@@ -833,8 +845,8 @@ def check_online_version():
 
 
 def first_env_check(env_file) -> None:
-    first_time = load_var_file(env_file)
-    return first_time
+    load_var_file(env_file)
+    return
 
 
 def version_checks(harmony_folder):
@@ -1051,14 +1063,6 @@ def install_harmony() -> None:
     subprocess.run(["sudo", "chmod", "a-x", f"/etc/systemd/system/{service_name}.service"], check=True)
     subprocess.run(["sudo", "systemctl", "enable", f"{service_name}.service"], check=True)
 
-
-def update_rclone_conf():
-    if os.path.exists(f"{EnvironmentVariables.toolbox_location}/src/bin/rclone.conf"):
-        comparison = compare_two_files(f"{EnvironmentVariables.toolbox_location}/src/bin/rclone.conf", f"{EnvironmentVariables.user_home_dir}/.config/rclone/rclone.conf")
-        if not comparison:
-            process_command(
-                f"cp {EnvironmentVariables.toolbox_location}/src/bin/rclone.conf {EnvironmentVariables.user_home_dir}/.config/rclone/"
-            )
 
 # Database Downloader
 def clone_shards():
