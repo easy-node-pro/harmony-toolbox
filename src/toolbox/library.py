@@ -1052,26 +1052,34 @@ def install_harmony() -> None:
     subprocess.run(["sudo", "systemctl", "enable", f"{service_name}.service"], check=True)
 
 
+def update_rclone_conf():
+    comparison = compare_two_files(f"{EnvironmentVariables.toolbox_location}/src/bin/rclone.conf", f"{EnvironmentVariables.user_home_dir}/.config/rclone/rclone.conf")
+    if not comparison:
+        process_command(
+            f"cp {EnvironmentVariables.toolbox_location}/src/bin/rclone.conf {EnvironmentVariables.user_home_dir}/.config/rclone/"
+        )
+
 # Database Downloader
 def clone_shards():
+    our_shard = environ.get('SHARD')
     load_dotenv(EnvironmentVariables.dotenv_file)
     # Move to ~/harmony
     os.chdir(f"{environ.get('HARMONY_DIR')}")
 
     if environ.get("SHARD") != "0":
         # If we're not on shard 0, download the numbered shard DB here.
-        print(f"* Now cloning shard {environ.get('SHARD')}\n{string_stars()}")
+        print(f"* Now cloning shard {our_shard}\n{string_stars()}")
         run_command(
-            f"rclone -P sync release:pub.harmony.one/{environ.get('NETWORK')}.min/harmony_db_{environ.get('SHARD')} {environ.get('HARMONY_DIR')}/harmony_db_{environ.get('SHARD')} --multi-thread-streams 4 --transfers=32"
+            f"rclone -P -L --webdav-url 'https://fulldb.s{our_shard}.t.hmny.io/webdav' --checksum sync snap: harmony_db_{our_shard}  --multi-thread-streams 4 --transfers=32 --verbose"
         )
         print(
-            f"{string_stars()}\n* Shard {environ.get('SHARD')} completed.\n* Shard 0 will be created when you start your service.\n{string_stars()}"
+            f"{string_stars()}\n* Shard {our_shard} completed.\n* Shard 0 will be created when you start your service.\n{string_stars()}"
         )
     else:
         # If we're on shard 0, grab the snap DB here.
         print(f"* Now cloning Shard 0, kick back and relax for awhile...\n{string_stars()}")
         run_command(
-            f"rclone -P -L --checksum sync release:pub.harmony.one/{environ.get('NETWORK')}.snap/harmony_db_0 {environ.get('HARMONY_DIR')}/harmony_db_0 --multi-thread-streams 4 --transfers=32"
+            f"rclone -P -L --webdav-url 'https://snapdb.s{our_shard}.t.hmny.io/webdav' --checksum sync snap: harmony_db_snap  --multi-thread-streams 4 --transfers=32 --verbose"
         )
 
 
