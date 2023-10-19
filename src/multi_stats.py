@@ -1,6 +1,6 @@
 import os
 from os import environ
-from toolbox.config import EnvironmentVariables
+from toolbox.config import config
 from toolbox.library import (
     load_var_file,
     set_var,
@@ -11,7 +11,7 @@ from toolbox.library import (
     validator_stats_output,
 )
 
-load_var_file(EnvironmentVariables.dotenv_file)
+load_var_file(config.dotenv_file)
 
 user_home = f'{os.path.expanduser("~")}'
 
@@ -22,7 +22,7 @@ if not environ.get("VALIDATOR_WALLET"):
             # Re-enter the wallet to verify
             verify_wallet = input("* Please re-enter your wallet address for verification: ")
             if wallet == verify_wallet:
-                set_var(EnvironmentVariables.dotenv_file, "VALIDATOR_WALLET", wallet)
+                set_var(config.dotenv_file, "VALIDATOR_WALLET", wallet)
                 break
             else:
                 print("The entered wallets do not match. Please try again.")
