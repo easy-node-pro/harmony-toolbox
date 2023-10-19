@@ -5,15 +5,14 @@ from dotenv import load_dotenv
 
 
 class Config:
-    def __init__(self):
-        # Load env file
-        load_dotenv(self.dotenv_file)
-        
+    def __init__(self):       
         # Set constants
         self.easy_version = "1.2.4"
         self.server_host_name = socket.gethostname()
         self.user_home_dir = path.expanduser("~")
         self.dotenv_file = f"{self.user_home_dir}/.easynode.env"
+        # Load env file
+        load_dotenv(self.dotenv_file)
         self.active_user = path.split(self.user_home_dir)[-1]
         self.harmony_dir = environ.get("HARMONY_DIR") or f"{self.user_home_dir}/harmony"
         self.bls_key_file = path.join(self.harmony_dir, "blskey.pass")
