@@ -26,6 +26,9 @@ class Config:
         self.external_ip = self.get_url()
         self.rpc_endpoints = ["https://api.s0.t.hmny.io", "https://api.harmony.one", "https://rpc.ankr.com/harmony"]
         self.rpc_endpoints_max_connection_retries = 10
+        self.hmy_tmp_path = "/tmp/hmy"
+        self.harmony_tmp_path = "/tmp/harmony"
+        self.folder_checks = ["harmony", "harmony0", "harmony1", "harmony2", "harmony3", "harmony4"]
         self.shard = environ.get("SHARD")
 
     @staticmethod
@@ -79,6 +82,9 @@ class Config:
             "external_ip",
             "rpc_endpoints",
             "rpc_endpoints_max_connection_retries",
+            "hmy_tmp_path",
+            "harmony_tmp_path",
+            "folder_checks",
             "shard",
         ]
         for var in essential_vars:
