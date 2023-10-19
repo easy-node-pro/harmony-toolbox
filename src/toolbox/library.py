@@ -10,8 +10,7 @@ from datetime import datetime
 from subprocess import PIPE, run
 from concurrent.futures import ThreadPoolExecutor
 from typing import Tuple
-from config import config
-
+from toolbox.config import config
 
 class print_stuff:
     def __init__(self, reset: int = 0):
