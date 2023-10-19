@@ -1,51 +1,49 @@
-import socket, requests, json
+import socket
+import requests
 from os import environ, path
 from dotenv import load_dotenv
 
-load_dotenv(f"{path.expanduser('~')}/.easynode.env")
 
+class Config:
+    def __init__(self):
+        # Load env file
+        load_dotenv(self.dotenv_file)
+        
+        # Set constants
+        self.easy_version = "1.2.4"
+        self.server_host_name = socket.gethostname()
+        self.user_home_dir = path.expanduser("~")
+        self.dotenv_file = f"{self.user_home_dir}/.easynode.env"
+        self.active_user = path.split(self.user_home_dir)[-1]
+        self.harmony_dir = environ.get("HARMONY_DIR") or f"{self.user_home_dir}/harmony"
+        self.bls_key_file = path.join(self.harmony_dir, "blskey.pass")
+        self.hmy_app = path.join(self.harmony_dir, "hmy")
+        self.harmony_conf = path.join(self.harmony_dir, "harmony.conf")
+        self.bls_key_dir = path.join(self.harmony_dir, ".hmy", "blskeys")
+        self.hmy_wallet_store = path.join(self.user_home_dir, ".hmy_cli", "account-keys", self.active_user)
+        self.toolbox_location = path.join(self.user_home_dir, "harmony-toolbox")
+        self.validator_data = path.join(self.toolbox_location, "metadata", "validator.json")
+        self.password_path = path.join(self.harmony_dir, "passphrase.txt")
+        self.external_ip = self.get_url()
+        self.rpc_endpoints = ["https://api.s0.t.hmny.io", "https://api.harmony.one", "https://rpc.ankr.com/harmony"]
+        self.rpc_endpoints_max_connection_retries = 10
+        self.shard = environ.get("SHARD")
 
-def get_url(timeout=5) -> str:
-    try:
-        response = requests.get("https://api.ipify.org?format=json", timeout=timeout)
-        response.raise_for_status()  # Raises a HTTPError if the response was unsuccessful
-
-        # Parse the JSON response
-        ip_data = response.json()
-        result = ip_data["ip"]
-    except requests.exceptions.RequestException as x:
+    @staticmethod
+    def get_url(timeout=5) -> str:
         try:
-            response = requests.get("https://ident.me", timeout=timeout)
-            response.raise_for_status()  # Raises a HTTPError if the response was unsuccessful
-            result = response.text
-        except requests.exceptions.RequestException as x:
-            print(type(x), x)
-            result = "0.0.0.0"
-    return result
-
-
-class EnvironmentVariables:
-    easy_version = "1.2.4"
-    server_host_name = socket.gethostname()
-    user_home_dir = path.expanduser("~")
-    dotenv_file = f"{user_home_dir}/.easynode.env"
-    active_user = path.split(user_home_dir)[-1]
-    harmony_dir = environ.get("HARMONY_DIR") or f"{user_home_dir}/harmony"
-    bls_key_file = path.join(harmony_dir, "blskey.pass")
-    hmy_app = path.join(harmony_dir, "hmy")
-    harmony_conf = path.join(harmony_dir, "harmony.conf")
-    bls_key_dir = path.join(harmony_dir, ".hmy", "blskeys")
-    hmy_wallet_store = path.join(user_home_dir, ".hmy_cli", "account-keys", active_user)
-    toolbox_location = path.join(user_home_dir, "harmony-toolbox")
-    validator_data = path.join(toolbox_location, "metadata", "validator.json")
-    password_path = path.join(harmony_dir, "passphrase.txt")
-    external_ip = get_url()
-    main_menu_regular = path.join(toolbox_location, "src", "messages", "regularmenu.txt")
-    rpc_endpoints = ["https://api.s0.t.hmny.io", "https://api.harmony.one", "https://rpc.ankr.com/harmony"]
-    rpc_endpoints_max_connection_retries = 10
-    hmy_tmp_path = "/tmp/hmy"
-    harmony_tmp_path = "/tmp/harmony"
-    folder_checks = ["harmony", "harmony0", "harmony1", "harmony2", "harmony3", "harmony4"]
+            response = requests.get("https://api.ipify.org?format=json", timeout=timeout)
+            response.raise_for_status()
+            ip_data = response.json()
+            return ip_data["ip"]
+        except requests.exceptions.RequestException:
+            try:
+                response = requests.get("https://ident.me", timeout=timeout)
+                response.raise_for_status()
+                return response.text
+            except requests.exceptions.RequestException as x:
+                print(type(x), x)
+                return "0.0.0.0"
 
     @staticmethod
     def get_working_endpoint(endpoints):
@@ -55,9 +53,39 @@ class EnvironmentVariables:
                 if response.status_code == 200:
                     return endpoint
             except requests.exceptions.RequestException:
-                pass  # We'll just move on to the next endpoint
-        return None  # If we get here, none of the endpoints worked
+                pass
+        return None
 
     @property
     def working_rpc_endpoint(self):
         return self.get_working_endpoint(self.rpc_endpoints)
+    
+    def validate(self):
+        """Validate that essential configurations are set."""
+        essential_vars = [
+            "easy_version",
+            "server_host_name",
+            "user_home_dir",
+            "dotenv_file",
+            "active_user",
+            "harmony_dir",
+            "bls_key_file",
+            "hmy_app",
+            "harmony_conf",
+            "bls_key_dir",
+            "hmy_wallet_store",
+            "toolbox_location",
+            "validator_data",
+            "password_path",
+            "external_ip",
+            "rpc_endpoints",
+            "rpc_endpoints_max_connection_retries",
+            "shard",
+        ]
+        for var in essential_vars:
+            if not getattr(self, var):
+                raise Exception(f"Config variable {var} is not set!")
+
+# Usage
+config = Config()
+config.validate()  # Ensure essential configurations are set

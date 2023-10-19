@@ -2,7 +2,7 @@ import os, requests, time, json, subprocess, pytz
 from pytimedinput import timedInteger
 from subprocess import PIPE, run
 from ast import literal_eval
-from toolbox.config import EnvironmentVariables
+from toolbox.config import config
 from os import environ
 from datetime import datetime
 from colorama import Fore, Back, Style
@@ -49,7 +49,7 @@ from toolbox.library import (
 
 
 def parse_flags(parser):
-    config = EnvironmentVariables()
+    config = config()
     print_stars()
     # Add the arguments
     parser.add_argument(
@@ -116,7 +116,7 @@ def run_multistats():
     return
 
 
-def collect_rewards(pending_rewards_balance, validator_wallet, networkCall=EnvironmentVariables.hmy_app):
+def collect_rewards(pending_rewards_balance, validator_wallet, networkCall=config.hmy_app):
     print(f"*\n* Collecting {pending_rewards_balance} $ONE Rewards, awaiting confirmation...")
     command = f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 100 {environ.get('PASS_SWITCH')}"
     result = run_command(command, print_output=True)
@@ -142,7 +142,7 @@ def send_rewards(networkCall, sendAmount, rewards_wallet):
 
 def send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet, bypass=False):
     print(f"*\n*\n* Sending {suggested_send} $ONE Rewards to {rewards_wallet}, awaiting confirmation...")
-    send_rewards(EnvironmentVariables.hmy_app, suggested_send, rewards_wallet)
+    send_rewards(config.hmy_app, suggested_send, rewards_wallet)
     validator_wallet_balance = get_wallet_balance(validator_wallet)
     rewards_wallet_balance = get_wallet_balance(rewards_wallet)
     print(f"*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE")
@@ -211,7 +211,7 @@ def rewards_collector(
 
 
 def menu_topper_regular(software_versions) -> None:
-    config = EnvironmentVariables()
+    config = config()
     # Get stats & balances
     try:
         load_1, load_5, load_15 = os.getloadavg()
@@ -222,10 +222,10 @@ def menu_topper_regular(software_versions) -> None:
         print(f"* Error fetching data: {e}")
     # Print Menu
     print(
-        f'{Fore.GREEN}{string_stars()}\n* Validator Toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{environ.get("EASY_VERSION")}{Fore.WHITE}   https://easynode.pro {Fore.GREEN}\n{string_stars()}'
+        f'{Fore.GREEN}{string_stars()}\n* Validator Toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{config.easy_version}{Fore.WHITE}   https://easynode.pro {Fore.GREEN}\n{string_stars()}'
     )
     print(
-        f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {Fore.BLUE}{EnvironmentVariables.server_host_name}{Fore.GREEN} - {Fore.YELLOW}{EnvironmentVariables.external_ip}{Fore.GREEN}'
+        f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {Fore.BLUE}{config.server_host_name}{Fore.GREEN} - {Fore.YELLOW}{config.external_ip}{Fore.GREEN}'
     )
     harmony_service_status(environ.get("SERVICE_NAME", "harmony"))
     print(
@@ -255,7 +255,7 @@ def menu_topper_regular(software_versions) -> None:
 
 def menu_regular(software_versions) -> None:
     menu_topper_regular(software_versions)
-    for x in return_txt(EnvironmentVariables.main_menu_regular):
+    for x in return_txt(config.main_menu_regular):
         x = x.strip()
         try:
             x = eval(x)
@@ -276,7 +276,7 @@ def get_wallet_json(wallet: str) -> str:
     except HTTPError as http_err:
         print(f"HTTP error occurred: {http_err}")
         print(
-            f'* You have not created your validator yet, try again after you add one!\n* cd ~/harmony\n* ./hmy keys recover-from-mnemonic {EnvironmentVariables.active_user} {environ.get("PASS_SWITCH")}'
+            f'* You have not created your validator yet, try again after you add one!\n* cd ~/harmony\n* ./hmy keys recover-from-mnemonic {config.active_user} {environ.get("PASS_SWITCH")}'
         )
         input("Press ENTER to return to the main menu.")
         return
@@ -303,7 +303,7 @@ def set_rewards_wallet() -> None:
         if question:
             rewards_wallet = input("* Input your one1 address to send rewards into, please input your address now: ")
             if rewards_wallet.startswith("one1"):
-                set_var(EnvironmentVariables.dotenv_file, "REWARDS_WALLET", rewards_wallet)
+                set_var(config.dotenv_file, "REWARDS_WALLET", rewards_wallet)
             else:
                 print("* Wallet does not start with one1, please try again.")
                 return
@@ -315,7 +315,7 @@ def set_rewards_wallet() -> None:
         if question:
             rewards_wallet = input(f"* Input your one1 address to send rewards into, please input your address now: ")
             if rewards_wallet.startswith("one1"):
-                set_var(EnvironmentVariables.dotenv_file, "REWARDS_WALLET", rewards_wallet)
+                set_var(config.dotenv_file, "REWARDS_WALLET", rewards_wallet)
             else:
                 print("* Wallet does not start with one1, please try again.")
                 return
@@ -348,16 +348,16 @@ def ask_reserve_total() -> None:
 
 
 def set_reserve_total(reserve_total):
-    set_var(EnvironmentVariables.dotenv_file, "GAS_RESERVE", reserve_total)
+    set_var(config.dotenv_file, "GAS_RESERVE", reserve_total)
 
 
 def drive_check() -> None:
-    server_drive_check(EnvironmentVariables.dotenv_file, os.environ.get("HARMONY_DIR"))
+    server_drive_check(config.dotenv_file, os.environ.get("HARMONY_DIR"))
     return
 
 
 def run_check_balance() -> None:
-    config = EnvironmentVariables()
+    config = config()
     menu_check_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET"))
 
 
@@ -369,14 +369,14 @@ def bingo_checker():
 
 
 def run_rewards_collector() -> None:
-    config = EnvironmentVariables()
+    config = config()
     rewards_collector(config.working_rpc_endpoint)
     return
 
 
 def clear_temp_files() -> None:
     # check and clear previous versions in /tmp
-    tmp_files = [EnvironmentVariables.harmony_tmp_path, EnvironmentVariables.hmy_tmp_path]
+    tmp_files = [config.harmony_tmp_path, config.hmy_tmp_path]
     
     for tmp_file in tmp_files:
         try:
@@ -393,23 +393,23 @@ def safety_defaults() -> None:
     clear_temp_files()
     check_online_version()
     # default settings section
-    set_var(EnvironmentVariables.dotenv_file, "EASY_VERSION", EnvironmentVariables.easy_version)
+    set_var(config.dotenv_file, "EASY_VERSION", config.easy_version)
     if environ.get("GAS_RESERVE") is None:
-        set_var(EnvironmentVariables.dotenv_file, "GAS_RESERVE", "5")
+        set_var(config.dotenv_file, "GAS_RESERVE", "5")
     if environ.get("REFRESH_TIME") is None:
-        set_var(EnvironmentVariables.dotenv_file, "REFRESH_TIME", "30")
+        set_var(config.dotenv_file, "REFRESH_TIME", "30")
     if environ.get("REFRESH_OPTION") is None:
-        set_var(EnvironmentVariables.dotenv_file, "REFRESH_OPTION", "True")
+        set_var(config.dotenv_file, "REFRESH_OPTION", "True")
     if environ.get("HARMONY_DIR") is None:
-        if os.path.isdir(f"{EnvironmentVariables.user_home_dir}/harmony"):
-            set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{EnvironmentVariables.user_home_dir}/harmony")
-            set_var(EnvironmentVariables.dotenv_file, "SERVICE_NAME", "harmony")
+        if os.path.isdir(f"{config.user_home_dir}/harmony"):
+            set_var(config.dotenv_file, "HARMONY_DIR", f"{config.user_home_dir}/harmony")
+            set_var(config.dotenv_file, "SERVICE_NAME", "harmony")
             return
-        elif os.path.isfile(f"{EnvironmentVariables.user_home_dir}/harmony"):
+        elif os.path.isfile(f"{config.user_home_dir}/harmony"):
             try:
-                subprocess.run(f"{EnvironmentVariables.user_home_dir}/harmony -V", check=True)
-                set_var(EnvironmentVariables.dotenv_file, "HARMONY_DIR", f"{EnvironmentVariables.user_home_dir}")
-                set_var(EnvironmentVariables.dotenv_file, "SERVICE_NAME", "harmony")
+                subprocess.run(f"{config.user_home_dir}/harmony -V", check=True)
+                set_var(config.dotenv_file, "HARMONY_DIR", f"{config.user_home_dir}")
+                set_var(config.dotenv_file, "SERVICE_NAME", "harmony")
                 return
             except subprocess.CalledProcessError as e:
                 print(
@@ -419,12 +419,12 @@ def safety_defaults() -> None:
         else:
             first_setup()
     if environ.get("SERVICE_NAME") is None:
-        set_var(EnvironmentVariables.dotenv_file, "SERVICE_NAME", "harmony")
+        set_var(config.dotenv_file, "SERVICE_NAME", "harmony")
     # always set conf to 13 keys, shard max
-    if os.path.exists(EnvironmentVariables.harmony_conf):
-        update_text_file(EnvironmentVariables.harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
+    if os.path.exists(config.harmony_conf):
+        update_text_file(config.harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
     if os.path.isfile(f"{os.environ.get('HARMONY_DIR')}/blskey.pass"):
-        update_text_file(EnvironmentVariables.harmony_conf, 'PassFile = ""', 'PassFile = "blskey.pass"')
+        update_text_file(config.harmony_conf, 'PassFile = ""', 'PassFile = "blskey.pass"')
     passphrase_status()
     get_shard_menu()
     set_main_or_test()
@@ -437,7 +437,7 @@ def refresh_toggle() -> None:
     if environ.get("REFRESH_OPTION") == "True":
         answer = ask_yes_no(f"* Refresh is currently enabled. Would you like to disable it? (Y/N) ")
         if answer:
-            set_var(EnvironmentVariables.dotenv_file, "REFRESH_OPTION", "False")
+            set_var(config.dotenv_file, "REFRESH_OPTION", "False")
         else:
             answer = ask_yes_no(
                 f'* Your current refresh time is {str(environ.get("REFRESH_TIME"))} seconds. Would you like to change the delay? (Y/N) '
@@ -449,11 +449,11 @@ def refresh_toggle() -> None:
                     resetOnInput=True,
                     allowNegative=False,
                 )
-                set_var(EnvironmentVariables.dotenv_file, "REFRESH_TIME", str(delay_time[0]))
+                set_var(config.dotenv_file, "REFRESH_TIME", str(delay_time[0]))
     else:
         answer = ask_yes_no(f"* Refresh is currently disabled. Would you like to enable it? (Y/N) ")
         if answer:
-            set_var(EnvironmentVariables.dotenv_file, "REFRESH_OPTION", "True")
+            set_var(config.dotenv_file, "REFRESH_OPTION", "True")
         answer = ask_yes_no(
             f'* Your current refresh time is {str(environ.get("REFRESH_TIME"))} seconds. Would you like to change the delay? (Y/N) '
         )
@@ -464,8 +464,8 @@ def refresh_toggle() -> None:
                 resetOnInput=True,
                 allowNegative=False,
             )
-            set_var(EnvironmentVariables.dotenv_file, "REFRESH_TIME", str(delay_time[0]))
-    load_var_file(EnvironmentVariables.dotenv_file)
+            set_var(config.dotenv_file, "REFRESH_TIME", str(delay_time[0]))
+    load_var_file(config.dotenv_file)
     return
 
 
@@ -562,7 +562,7 @@ def run_regular_node() -> None:
         999: menu_reboot_server,
     }
     while True:
-        load_var_file(EnvironmentVariables.dotenv_file)
+        load_var_file(config.dotenv_file)
         software_versions = version_checks(environ.get("HARMONY_DIR"))
         menu_regular(software_versions)
         if software_versions["harmony_upgrade"] == "True":
@@ -693,7 +693,7 @@ def hmy_cli_upgrade():
         print_stars()
 
         # Update the environment variable
-        set_var(EnvironmentVariables.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
+        set_var(config.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
 
     except Exception as e:  # Catch generic errors, though you might want to catch more specific exceptions
         print(f"{string_stars()}\n* An error occurred during the update: {e}\n{string_stars()}")
@@ -738,12 +738,12 @@ def update_harmony_app():
                 print("Your database 0 is already trimmed, enjoy!")
     process_command(f"sudo service {environ.get('SERVICE_NAME')} restart")
     print(f"{string_stars()}\nHarmony Service is restarting, waiting 10 seconds for processing to resume...")
-    set_var(EnvironmentVariables.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
+    set_var(config.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
     time.sleep(10)
 
 
 def menu_validator_stats():
-    load_var_file(EnvironmentVariables.dotenv_file)
+    load_var_file(config.dotenv_file)
     remote_shard_0 = [
         f"{environ.get('HARMONY_DIR')}/hmy",
         "blockchain",
@@ -814,6 +814,7 @@ def shard_stats(our_shard) -> str:
 
 
 def harmony_binary_upgrade():
+    our_shard = os.environ.get("SHARD")
     question = ask_yes_no(
         Fore.RED
         + "* WARNING: YOU WILL MISS BLOCKS WHILE YOU UPGRADE THE HARMONY SERVICE.\n\n"
@@ -927,7 +928,7 @@ def balanceCheckAny():
 
 
 def get_current_epoch():
-    config = EnvironmentVariables()
+    config = config()
     current_epoch = 0
     try:
         current_epoch = blockchain.get_current_epoch(config.working_rpc_endpoint)
