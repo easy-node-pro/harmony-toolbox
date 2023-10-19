@@ -267,7 +267,6 @@ def process_folder(folder, port):
 
 def validator_stats_output() -> None:
     folders = get_folders()
-    config = config()
     # Get server stats & wallet balances
     load_1, load_5, load_15 = os.getloadavg()
     sign_percentage = get_sign_pct()
@@ -686,7 +685,6 @@ def get_wallet_address():
 
 
 def get_validator_info():
-    config = config()
     validator_data = -1
     try:
         validator_data = staking.get_validator_information(environ.get("VALIDATOR_WALLET"), config.working_rpc_endpoint)
@@ -708,7 +706,6 @@ def current_price():
 
 
 def get_wallet_balance(wallet_addr):
-    config = config()
     rpc_endpoint = config.working_rpc_endpoint
     wallet_balance = get_wallet_balance_by_endpoint(rpc_endpoint, wallet_addr)
     if wallet_balance is not None:
@@ -757,8 +754,7 @@ def return_json(fn: str, single_key: str = None) -> dict:
         return {}
 
 
-def get_sign_pct() -> str:
-    config = config()
+def get_sign_pct() -> str:    
     hmy_external_rpc = f"{environ.get('HARMONY_DIR')}/hmy --node='{config.working_rpc_endpoint}'"
     output = subprocess.getoutput(
         f"{hmy_external_rpc} blockchain validator information {environ.get('VALIDATOR_WALLET')} | grep signing-percentage"

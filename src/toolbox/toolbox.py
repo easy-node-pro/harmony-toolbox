@@ -209,8 +209,7 @@ def rewards_collector(
     return
 
 
-def menu_topper_regular(software_versions) -> None:
-    config = config()
+def menu_topper_regular(software_versions) -> None:    
     # Get stats & balances
     try:
         load_1, load_5, load_15 = os.getloadavg()
@@ -356,7 +355,6 @@ def drive_check() -> None:
 
 
 def run_check_balance() -> None:
-    config = config()
     menu_check_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET"))
 
 
@@ -368,7 +366,6 @@ def bingo_checker():
 
 
 def run_rewards_collector() -> None:
-    config = config()
     rewards_collector(config.working_rpc_endpoint)
     return
 
@@ -927,7 +924,6 @@ def balanceCheckAny():
 
 
 def get_current_epoch():
-    config = config()
     current_epoch = 0
     try:
         current_epoch = blockchain.get_current_epoch(config.working_rpc_endpoint)
