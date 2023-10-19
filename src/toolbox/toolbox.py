@@ -2,13 +2,13 @@ import os, requests, time, json, subprocess, pytz
 from pytimedinput import timedInteger
 from subprocess import PIPE, run
 from ast import literal_eval
-from toolbox.config import config
+from config import config
 from os import environ
 from datetime import datetime
 from colorama import Fore, Back, Style
 from pyhmy import blockchain, numbers
 from requests.exceptions import HTTPError
-from toolbox.library import (
+from library import (
     process_command,
     print_stars,
     ask_yes_no,
