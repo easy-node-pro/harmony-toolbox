@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 class Config:
     def __init__(self):       
         # Set constants
-        self.easy_version = "1.3.0"
+        self.easy_version = "1.3.1"
         self.server_host_name = socket.gethostname()
         self.user_home_dir = path.expanduser("~")
         self.dotenv_file = f"{self.user_home_dir}/.easynode.env"
