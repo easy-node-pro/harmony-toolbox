@@ -24,6 +24,7 @@ class Config:
         self.validator_data = path.join(self.toolbox_location, "metadata", "validator.json")
         self.password_path = path.join(self.harmony_dir, "passphrase.txt")
         self.external_ip = self.get_url()
+        self.main_menu_regular = path.join(self.toolbox_location, "src", "messages", "regularmenu.txt")
         self.rpc_endpoints = ["https://api.s0.t.hmny.io", "https://api.harmony.one", "https://rpc.ankr.com/harmony"]
         self.rpc_endpoints_max_connection_retries = 10
         self.hmy_tmp_path = "/tmp/hmy"
@@ -80,6 +81,7 @@ class Config:
             "validator_data",
             "password_path",
             "external_ip",
+            "main_menu_regular",
             "rpc_endpoints",
             "rpc_endpoints_max_connection_retries",
             "hmy_tmp_path",
