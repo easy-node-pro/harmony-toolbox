@@ -810,15 +810,18 @@ def shard_stats(our_shard) -> str:
 
 
 def harmony_binary_upgrade():
-    our_shard = os.environ.get("SHARD")
-    question = ask_yes_no(
-        Fore.RED
-        + "* WARNING: YOU WILL MISS BLOCKS WHILE YOU UPGRADE THE HARMONY SERVICE.\n\n"
-        + Fore.WHITE
-        + "* Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
-    )
-    if question:
-        update_harmony_app()
+    our_shard = config.shard
+    if our_shard == "0" or our_shard == "1":
+        question = ask_yes_no(
+            Fore.RED
+            + "* WARNING: YOU WILL MISS BLOCKS WHILE YOU UPGRADE THE HARMONY SERVICE.\n\n"
+            + Fore.WHITE
+            + "* Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
+        )
+        if question:
+            update_harmony_app()
+    else:
+        print("* We do not support upgrading shards 2/3 any longer, please upgrade manually if you'd like to update for now.\n* See the harmony discord here for more details on upgrading: https://discord.com/channels/532383335348043777/616699767594156045/1164484026413895742")
 
 
 def menu_service_stop_start():
