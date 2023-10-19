@@ -1083,6 +1083,7 @@ def clone_shards():
 
 def finish_node_install():
     load_var_file(config.dotenv_file)
+    our_shard = config.shard
     print(
         f"{string_stars()}\n* Installation is completed"
         + "\n* Create a new wallet or recover your existing wallet into ./hmy"
@@ -1096,7 +1097,7 @@ def finish_node_install():
             + "\n* python3 ~/harmony-toolbox/load_wallet.py"
             + "\n*"
             + "\n* To create BLS keys run:"
-            + f'\n* {environ.get("HARMONY_DIR")}/hmy keys generate-bls-keys --count 1 --shard {environ.get("SHARD")} --passphrase'
+            + f'\n* {environ.get("HARMONY_DIR")}/hmy keys generate-bls-keys --count 1 --shard {our_shard} --passphrase'
             + f"\n*\n{string_stars()}"
         )
     else:
@@ -1106,7 +1107,7 @@ def finish_node_install():
             + "\n* python3 ~/harmony-toolbox/load_wallet.py"
             + "\n*"
             + "\n* To create BLS keys run:"
-            + f'\n* {environ.get("HARMONY_DIR")}/hmy keys generate-bls-keys --count 1 --shard {environ.get("SHARD")} {environ.get("PASS_SWITCH")}'
+            + f'\n* {environ.get("HARMONY_DIR")}/hmy keys generate-bls-keys --count 1 --shard {our_shard} {environ.get("PASS_SWITCH")}'
             + f"\n*\n{string_stars()}"
         )
     print(f"* Thanks for using Easy Node - Validator Node Server Software Installer!\n{string_stars()}")
@@ -1346,7 +1347,7 @@ def set_network(network):
     set_var(config.dotenv_file, "NETWORK", "mainnet")
     set_var(config.dotenv_file, "NETWORK_SWITCH", network)
     set_var(config.dotenv_file, "RPC_NET", f"https://rpc.s0.{network}.hmny.io")
-    if environ.get("SHARD") != "0":
+    if config.shard != "0":
         set_var(config.dotenv_file, "RPC_NET_SHARD", f"https://rpc.s{environ.get('SHARD')}.t.hmny.io")
     return
 
