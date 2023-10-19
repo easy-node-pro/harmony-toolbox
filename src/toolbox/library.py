@@ -1084,7 +1084,7 @@ def clone_shards():
         # If we're on shard 0, grab the snap DB here.
         print(f"* Now cloning Shard 0, kick back and relax for awhile...\n{string_stars()}")
         run_command(
-            f"rclone -P -L --webdav-url 'http://snapdb.s{our_shard}.t.hmny.io/webdav' --checksum sync snap: harmony_db_snap --multi-thread-streams 4 --transfers=32"
+            f"rclone -P -L --webdav-url 'http://snapdb.s0.t.hmny.io/webdav' --checksum sync snap: harmony_db_0 --multi-thread-streams 4 --transfers=32"
         )
 
 
