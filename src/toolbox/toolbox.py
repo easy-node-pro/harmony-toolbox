@@ -417,9 +417,7 @@ def safety_defaults() -> None:
             first_setup()
     if environ.get("SERVICE_NAME") is None:
         set_var(config.dotenv_file, "SERVICE_NAME", "harmony")
-    # always set conf to 13 keys, shard max
-    if os.path.exists(config.harmony_conf):
-        update_text_file(config.harmony_conf, "MaxKeys = 10", "MaxKeys = 13")
+    # set blskey.pass file if it exists
     if os.path.isfile(f"{config.harmony_dir}/blskey.pass"):
         update_text_file(config.harmony_conf, 'PassFile = ""', 'PassFile = "blskey.pass"')
     passphrase_status()

@@ -188,13 +188,12 @@ def update_harmony_binary():
     else:
         process_command("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
     process_command("./harmony config dump harmony.conf")
-    update_text_file(f"{harmony_dir}/harmony.conf", "MaxKeys = 10", "MaxKeys = 13")
     update_text_file(f"{harmony_dir}/harmony.conf", " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
     if os.path.isfile(f"{harmony_dir}/blskey.pass"):
         update_text_file(f"{harmony_dir}/harmony.conf", 'PassFile = ""', 'PassFile = "blskey.pass"')
-        print(f"* Harmony binary installed, {harmony_dir}/harmony.conf created and modified: 13 max keys, blskey.pass file, disabled private ip scan. ")
+        print(f"* Harmony binary installed, {harmony_dir}/harmony.conf created and modified: blskey.pass file, disabled private ip scan. ")
     else:
-        print(f"* Harmony binary installed, {harmony_dir}/harmony.conf created and modified: 13 max keys, disabled private ip scan. ")
+        print(f"* Harmony binary installed, {harmony_dir}/harmony.conf created and modified: disabled private ip scan. ")
     return
 
 
