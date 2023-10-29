@@ -30,8 +30,8 @@ class Config:
         self.hmy_tmp_path = "/tmp/hmy"
         self.harmony_tmp_path = "/tmp/harmony"
         self.folder_checks = ["harmony", "harmony0", "harmony1", "harmony2", "harmony3", "harmony4"]
-        self.shard = environ.get("SHARD")
-        self.network_switch = environ.get("NETWORK_SWITCH")
+        self.shard = environ.get("SHARD") or "4"
+        self.network_switch = environ.get("NETWORK_SWITCH") or "mainnet"
 
     @staticmethod
     def get_url(timeout=5) -> str:

@@ -632,7 +632,7 @@ def check_space_requirements(shard: int, directory: str) -> bool:
 
 
 def get_shard_menu() -> None:
-    if not environ.get("SHARD"):
+    if not environ.get("SHARD") or environ.get("SHARD") == "4":
         print(f"{string_stars()}\n* Gathering more information about your server.\n{string_stars()}")
         print(f"* Which shard do you want this node to sign blocks on?\n{string_stars()}")
         menu_options = [
