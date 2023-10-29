@@ -1041,6 +1041,7 @@ def install_harmony() -> None:
         filedata = file.read()
 
     # Replace the paths with the value of HARMONY_DIR
+    filedata = filedata.replace("User=serviceharmony", f"User={config.active_user}")
     filedata = filedata.replace("WorkingDirectory=/home/serviceharmony/harmony", f"WorkingDirectory={install_path}")
     filedata = filedata.replace(
         "ExecStart=/home/serviceharmony/harmony/harmony -c harmony.conf",
