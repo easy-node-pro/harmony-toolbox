@@ -637,8 +637,6 @@ def get_shard_menu() -> None:
         menu_options = [
             "[0] - Shard 0",
             "[1] - Shard 1",
-            "[2] - Shard 2",
-            "[3] - Shard 3",
         ]
         terminal_menu = TerminalMenu(menu_options, title="* Which Shard will this node sign blocks on? ")
         our_shard = int(terminal_menu.show())
