@@ -115,15 +115,22 @@ def run_multistats():
     return
 
 
-def collect_rewards(pending_rewards_balance, validator_wallet, networkCall=config.hmy_app):
-    print(f"*\n* Collecting {pending_rewards_balance} $ONE Rewards, awaiting confirmation...")
+def collect_rewards(
+    pending_rewards_balance, validator_wallet, networkCall=config.hmy_app
+):
+    print(
+        f"*\n* Collecting {pending_rewards_balance} $ONE Rewards, awaiting confirmation..."
+    )
     command = f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 100 {environ.get('PASS_SWITCH')}"
     result = run_command(command, print_output=True)
     if result:
         print("*\n*\n* Rewards collection Finished.")
         print_stars()
         print(
-            Fore.GREEN + f"* mainnet rewards for {validator_wallet} have been collected." + Style.RESET_ALL + Fore.GREEN
+            Fore.GREEN
+            + f"* mainnet rewards for {validator_wallet} have been collected."
+            + Style.RESET_ALL
+            + Fore.GREEN
         )
         print_stars()
     else:
@@ -139,8 +146,16 @@ def send_rewards(networkCall, sendAmount, rewards_wallet):
         print("*\n* Rewards sending Failed.")
 
 
-def send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet, bypass=False):
-    print(f"*\n*\n* Sending {suggested_send} $ONE Rewards to {rewards_wallet}, awaiting confirmation...")
+def send_rewards_func(
+    suggested_send,
+    validator_wallet_balance,
+    rewards_wallet,
+    validator_wallet,
+    bypass=False,
+):
+    print(
+        f"*\n*\n* Sending {suggested_send} $ONE Rewards to {rewards_wallet}, awaiting confirmation..."
+    )
     send_rewards(config.hmy_app, suggested_send, rewards_wallet)
     validator_wallet_balance = get_wallet_balance(validator_wallet)
     rewards_wallet_balance = get_wallet_balance(rewards_wallet)
@@ -160,11 +175,18 @@ def rewards_sender(
             f"* You have {validator_wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
         )
         if question:
-            send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet)
+            send_rewards_func(
+                suggested_send,
+                validator_wallet_balance,
+                rewards_wallet,
+                validator_wallet,
+            )
         else:
             print("*\n* Skipping sending of rewards.")
     else:
-        print("*\n* Wallet balance is less than your gas reservation, please try again later.")
+        print(
+            "*\n* Wallet balance is less than your gas reservation, please try again later."
+        )
     validator_wallet_balance = get_wallet_balance(validator_wallet)
     rewards_wallet_balance = get_wallet_balance(rewards_wallet)
     print(
@@ -181,7 +203,9 @@ def rewards_collector(
 ) -> None:
     pending_rewards_balance = get_rewards_balance(rpc, validator_wallet)
 
-    print(f"{Fore.GREEN}{string_stars()}\n* Harmony ONE Rewards Collection\n{string_stars()}")
+    print(
+        f"{Fore.GREEN}{string_stars()}\n* Harmony ONE Rewards Collection\n{string_stars()}"
+    )
 
     if bypass or ask_yes_no(
         f"*\n* For your validator wallet {validator_wallet}\n* You have {pending_rewards_balance} $ONE pending.\n* Would you like to collect your rewards on the Harmony {environ.get('NETWORK')}? (YES/NO) "
@@ -197,13 +221,21 @@ def rewards_collector(
         if bypass or ask_yes_no(
             f"* You have {validator_wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
         ):
-            send_rewards_func(suggested_send, validator_wallet_balance, rewards_wallet, validator_wallet, bypass)
+            send_rewards_func(
+                suggested_send,
+                validator_wallet_balance,
+                rewards_wallet,
+                validator_wallet,
+                bypass,
+            )
         else:
             print("*\n* Skipping sending of rewards.")
     else:
         rewards_wallet_balance = get_wallet_balance(rewards_wallet)
         print("*\n* Balance too low to send to rewards wallet")
-        print(f"*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE*")
+        print(
+            f"*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE*"
+        )
         print(f"* Current Rewards Wallet Balance: {rewards_wallet_balance} $ONE\n*")
 
     return
@@ -216,12 +248,24 @@ def menu_topper_regular(software_versions) -> None:
         load_1, load_5, load_15 = os.getloadavg()
         sign_percentage = get_sign_pct()
         validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
-        remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
+        remote_data_shard_0, local_data_shard, remote_data_shard = (
+            menu_validator_stats()
+        )
+        remote_shard_block = literal_eval(
+            remote_data_shard["result"]["shard-chain-header"]["number"]
+        )
+        local_shard_block = literal_eval(
+            local_data_shard["result"]["shard-chain-header"]["number"]
+        )
+        shard_difference = remote_shard_block - local_shard_block
+        current_remote_epoch = remote_data_shard_0["result"]["shard-chain-header"][
+            "epoch"
+        ]
     except (ValueError, KeyError, TypeError) as e:
         print(f"* Error fetching data: {e}")
     # Print Menu
     print(
-        f'{Fore.GREEN}{string_stars()}\n* Validator Toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{config.easy_version}{Fore.WHITE}   https://easynode.pro {Fore.GREEN}\n{string_stars()}'
+        f"{Fore.GREEN}{string_stars()}\n* Validator Toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{config.easy_version}{Fore.WHITE}   https://easynode.pro {Fore.GREEN}\n{string_stars()}"
     )
     print(
         f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {Fore.BLUE}{config.server_host_name}{Fore.GREEN} - {Fore.YELLOW}{config.external_ip}{Fore.GREEN}'
@@ -230,26 +274,19 @@ def menu_topper_regular(software_versions) -> None:
     print(
         f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current disk space free: {Fore.CYAN}{free_space_check(config.harmony_dir): >6}{Fore.GREEN}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}\n{string_stars()}'
     )
-    if our_shard != "0":
 
-        remote_shard_block = literal_eval(remote_data_shard['result']['shard-chain-header']['number'])
-        local_shard_block = literal_eval(local_data_shard['result']['shard-chain-header']['number'])
-        shard_difference = remote_shard_block - local_shard_block
-
-        print(
-            f"* Shard {environ.get('SHARD')} Stats:\n{string_stars()}\n* Remote Shard 0 Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}, Local Shard 0 Size: {get_db_size(config.harmony_dir, '0')}"
-        )
-        print(
-            f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {remote_shard_block}"
-        )
-        print(
-            f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {local_shard_block} (Diff: {shard_difference}), Local Shard {environ.get('SHARD')} Size: {get_db_size(config.harmony_dir, environ.get('SHARD'))}")
+    shard_stats_title = f"* Shard {environ.get('SHARD')} Stats:\n{string_stars()}"
+    remote_shard_0_epoch = current_remote_epoch
+    remote_shard_info = f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_shard_0_epoch}, Current Block: {remote_shard_block}"
+    local_shard_info = f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {local_shard_block}"
+    local_shard_diff = f", (Diff: {shard_difference})" if shard_difference != 0 else ""
     if our_shard == "0":
         print(
-            f"* Shard {environ.get('SHARD')} Stats:\n{string_stars()}\n* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}"
+            f"{shard_stats_title}\n{remote_shard_info}{local_shard_diff}, Local Shard 0 Size: {get_db_size(config.harmony_dir, '0')}"
         )
+    else:
         print(
-            f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}, Local Shard 0 Size: {get_db_size(config.harmony_dir, '0')}"
+            f"{shard_stats_title}\n{remote_shard_info}{local_shard_diff}, Local Shard {environ.get('SHARD')} Size: {get_db_size(config.harmony_dir, environ.get('SHARD'))}"
         )
     print(
         f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min\n{string_stars()}"
@@ -270,7 +307,9 @@ def menu_regular(software_versions) -> None:
 
 def get_wallet_json(wallet: str) -> str:
     try:
-        response = requests.get(f"https://api.stake.hmny.io/networks/{environ.get('NETWORK')}/validators/{wallet}")
+        response = requests.get(
+            f"https://api.stake.hmny.io/networks/{environ.get('NETWORK')}/validators/{wallet}"
+        )
         response.raise_for_status()
         # access JSOn content
         json_response = response.json()
@@ -302,9 +341,13 @@ def set_rewards_wallet() -> None:
     rewards_wallet = environ.get("REWARDS_WALLET")
     gas_reserve = environ.get("GAS_RESERVE")
     if rewards_wallet is None:
-        question = ask_yes_no("* Would you like to add an address to send your rewards too? (YES/NO)")
+        question = ask_yes_no(
+            "* Would you like to add an address to send your rewards too? (YES/NO)"
+        )
         if question:
-            rewards_wallet = input("* Input your one1 address to send rewards into, please input your address now: ")
+            rewards_wallet = input(
+                "* Input your one1 address to send rewards into, please input your address now: "
+            )
             if rewards_wallet.startswith("one1"):
                 set_var(config.dotenv_file, "REWARDS_WALLET", rewards_wallet)
             else:
@@ -316,7 +359,9 @@ def set_rewards_wallet() -> None:
             f"* Your current saved rewards wallet address is {rewards_wallet}\n* Would you like to update the address you send your rewards too? (YES/NO)"
         )
         if question:
-            rewards_wallet = input(f"* Input your one1 address to send rewards into, please input your address now: ")
+            rewards_wallet = input(
+                f"* Input your one1 address to send rewards into, please input your address now: "
+            )
             if rewards_wallet.startswith("one1"):
                 set_var(config.dotenv_file, "REWARDS_WALLET", rewards_wallet)
             else:
@@ -366,7 +411,9 @@ def run_check_balance() -> None:
 def bingo_checker():
     command = f"grep BINGO {config.harmony_dir}/latest/zerolog-harmony.log | tail -10"
     process_command(command, shell=True, print_output=True)
-    print(f"{string_stars()}\n* Press enter to return to the main menu.\n{string_stars()}")
+    print(
+        f"{string_stars()}\n* Press enter to return to the main menu.\n{string_stars()}"
+    )
     input()
 
 
@@ -378,7 +425,7 @@ def run_rewards_collector() -> None:
 def clear_temp_files() -> None:
     # check and clear previous versions in /tmp
     tmp_files = [config.harmony_tmp_path, config.hmy_tmp_path]
-    
+
     for tmp_file in tmp_files:
         try:
             os.remove(tmp_file)
@@ -403,7 +450,9 @@ def safety_defaults() -> None:
         set_var(config.dotenv_file, "REFRESH_OPTION", "True")
     if environ.get("HARMONY_DIR") is None:
         if os.path.isdir(f"{config.user_home_dir}/harmony"):
-            set_var(config.dotenv_file, "HARMONY_DIR", f"{config.user_home_dir}/harmony")
+            set_var(
+                config.dotenv_file, "HARMONY_DIR", f"{config.user_home_dir}/harmony"
+            )
             set_var(config.dotenv_file, "SERVICE_NAME", "harmony")
             return
         elif os.path.isfile(f"{config.user_home_dir}/harmony"):
@@ -423,7 +472,9 @@ def safety_defaults() -> None:
         set_var(config.dotenv_file, "SERVICE_NAME", "harmony")
     # set blskey.pass file if it exists
     if os.path.isfile(f"{config.harmony_dir}/blskey.pass"):
-        update_text_file(config.harmony_conf, 'PassFile = ""', 'PassFile = "blskey.pass"')
+        update_text_file(
+            config.harmony_conf, 'PassFile = ""', 'PassFile = "blskey.pass"'
+        )
     passphrase_status()
     get_shard_menu()
     set_main_or_test()
@@ -434,7 +485,9 @@ def safety_defaults() -> None:
 
 def refresh_toggle() -> None:
     if environ.get("REFRESH_OPTION") == "True":
-        answer = ask_yes_no(f"* Refresh is currently enabled. Would you like to disable it? (Y/N) ")
+        answer = ask_yes_no(
+            f"* Refresh is currently enabled. Would you like to disable it? (Y/N) "
+        )
         if answer:
             set_var(config.dotenv_file, "REFRESH_OPTION", "False")
         else:
@@ -450,7 +503,9 @@ def refresh_toggle() -> None:
                 )
                 set_var(config.dotenv_file, "REFRESH_TIME", str(delay_time[0]))
     else:
-        answer = ask_yes_no(f"* Refresh is currently disabled. Would you like to enable it? (Y/N) ")
+        answer = ask_yes_no(
+            f"* Refresh is currently disabled. Would you like to enable it? (Y/N) "
+        )
         if answer:
             set_var(config.dotenv_file, "REFRESH_OPTION", "True")
         answer = ask_yes_no(
@@ -494,7 +549,9 @@ def harmony_voting() -> None:
         question, proposal = proposal_choices_option()
         if proposal == "Quit" or question == False:
             return
-        validator_wallet_name = get_validator_wallet_name(environ.get("VALIDATOR_WALLET"))
+        validator_wallet_name = get_validator_wallet_name(
+            environ.get("VALIDATOR_WALLET")
+        )
         if proposal == "HIP-30v2":
             vote_choice_option, vote_choice_text = get_vote_choice()
             if vote_choice_text == "Quit":
@@ -613,7 +670,9 @@ def run_regular_node() -> None:
 
 
 def service_menu_option() -> None:
-    status = process_command(f"systemctl is-active --quiet {environ.get('SERVICE_NAME')}", True, False)
+    status = process_command(
+        f"systemctl is-active --quiet {environ.get('SERVICE_NAME')}", True, False
+    )
     if status:
         print(
             f"*   8 - {Fore.RED}Stop Harmony Service      {Fore.GREEN}- {Fore.YELLOW}{Back.RED}WARNING: You will miss blocks while stopped!   {Style.RESET_ALL}{Fore.GREEN}"
@@ -632,7 +691,9 @@ def update_menu_option(software_versions) -> None:
             f"*  10 - Update Harmony App Binary - For New Harmony Releases ONLY, {Fore.YELLOW}{Back.RED}WARNING: You will miss blocks during upgrade.{Style.RESET_ALL}{Fore.GREEN}"
         )
     if software_versions["hmy_upgrade"] == "True":
-        print("*  11 - Update hmy CLI App        - Update harmony binary file, run anytime!")
+        print(
+            "*  11 - Update hmy CLI App        - Update harmony binary file, run anytime!"
+        )
 
 
 def hip_voting_option() -> None:
@@ -655,15 +716,23 @@ def hip_voting_option() -> None:
 
 def rewards_sender_option() -> None:
     if environ.get("REWARDS_WALLET"):
-        print("*   5 - Send Wallet Balance       - Send your wallet balance - saved gas to rewards wallet")
-        print("*   6 - Set Rewards Wallet        - Update your saved wallet or gas reserve")
+        print(
+            "*   5 - Send Wallet Balance       - Send your wallet balance - saved gas to rewards wallet"
+        )
+        print(
+            "*   6 - Set Rewards Wallet        - Update your saved wallet or gas reserve"
+        )
     else:
-        print("*   6 - Set Rewards Wallet        - Set up a one1 wallet address to send rewards when using option #4")
+        print(
+            "*   6 - Set Rewards Wallet        - Set up a one1 wallet address to send rewards when using option #4"
+        )
     return
 
 
 def make_backup_dir() -> str:
-    folder_name = f'{config.harmony_dir}/harmony_backup/{datetime.now().strftime("%Y%m%d%H%M")}'
+    folder_name = (
+        f'{config.harmony_dir}/harmony_backup/{datetime.now().strftime("%Y%m%d%H%M")}'
+    )
     process_command(f"mkdir -p {folder_name}")
     return folder_name
 
@@ -694,8 +763,12 @@ def hmy_cli_upgrade():
         # Update the environment variable
         set_var(config.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
 
-    except Exception as e:  # Catch generic errors, though you might want to catch more specific exceptions
-        print(f"{string_stars()}\n* An error occurred during the update: {e}\n{string_stars()}")
+    except (
+        Exception
+    ) as e:  # Catch generic errors, though you might want to catch more specific exceptions
+        print(
+            f"{string_stars()}\n* An error occurred during the update: {e}\n{string_stars()}"
+        )
         # Handle the error or possibly re-raise it depending on your requirements
         return
 
@@ -733,11 +806,15 @@ def update_harmony_app():
                     process_command(f"sudo service {environ.get('SERVICE_NAME')} start")
                     process_command(f"rm -r {config.harmony_dir}/harmony_db_0_old")
                 else:
-                    print("Skipping removal of 0, but it's no longer required, get your space back next time by running this prune, fyi!")
+                    print(
+                        "Skipping removal of 0, but it's no longer required, get your space back next time by running this prune, fyi!"
+                    )
             else:
                 print("Your database 0 is already trimmed, enjoy!")
     process_command(f"sudo service {environ.get('SERVICE_NAME')} restart")
-    print(f"{string_stars()}\nHarmony Service is restarting, waiting 10 seconds for processing to resume...")
+    print(
+        f"{string_stars()}\nHarmony Service is restarting, waiting 10 seconds for processing to resume..."
+    )
     set_var(config.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
     time.sleep(10)
 
@@ -749,10 +826,12 @@ def menu_validator_stats():
         f"{environ.get('HARMONY_DIR')}/hmy",
         "blockchain",
         "latest-headers",
-        f'--node=https://api.s0.{config.network_switch}.hmny.io',
+        f"--node=https://api.s0.{config.network_switch}.hmny.io",
     ]
     try:
-        result_remote_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+        result_remote_shard_0 = run(
+            remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True
+        )
         remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
     except (ValueError, KeyError, TypeError) as e:
         print(f"* Remote Shard 0 Offline, Error {e}")
@@ -765,7 +844,9 @@ def menu_validator_stats():
             "--node",
             f"http://localhost:{http_port}",
         ]
-        result_local_shard = run(local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+        result_local_shard = run(
+            local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True
+        )
         local_data_shard = json.loads(result_local_shard.stdout)
     except (ValueError, KeyError, TypeError) as e:
         print(
@@ -778,10 +859,12 @@ def menu_validator_stats():
             f"{config.hmy_app}",
             "blockchain",
             "latest-headers",
-            f'--node=https://api.s{our_shard}.{config.network_switch}.hmny.io',
+            f"--node=https://api.s{our_shard}.{config.network_switch}.hmny.io",
         ]
         try:
-            result_remote_shard = run(remote_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+            result_remote_shard = run(
+                remote_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True
+            )
             remote_data_shard = json.loads(result_remote_shard.stdout)
             return remote_data_shard_0, local_data_shard, remote_data_shard
         except (ValueError, KeyError, TypeError):
@@ -826,7 +909,9 @@ def harmony_binary_upgrade():
         if question:
             update_harmony_app()
     else:
-        print("* We do not support upgrading shards 2/3 any longer, please upgrade manually if you'd like to update for now.\n* See the harmony discord here for more details on upgrading: https://discord.com/channels/532383335348043777/616699767594156045/1164484026413895742")
+        print(
+            "* We do not support upgrading shards 2/3 any longer, please upgrade manually if you'd like to update for now.\n* See the harmony discord here for more details on upgrading: https://discord.com/channels/532383335348043777/616699767594156045/1164484026413895742"
+        )
 
 
 def menu_service_stop_start():
@@ -884,7 +969,9 @@ def menu_active_bls() -> str:
     print("* This is a list of your BLS Keys that are active for the next election.")
     for i, x in enumerate(json_response["bls-public-keys"]):
         print(f"BLS Key {i+1} {x}")
-    print(f"{string_stars()}\n* Press ENTER to return to the main menu.\n{string_stars()}")
+    print(
+        f"{string_stars()}\n* Press ENTER to return to the main menu.\n{string_stars()}"
+    )
     input()
 
 
@@ -901,11 +988,17 @@ def menu_check_balance(rpc, validator_wallet) -> None:
     if environ.get("NODE_TYPE") == "regular":
         print(f"* Calling mainnet for balances...{string_stars()}")
         validator_wallet_balance = get_wallet_balance(validator_wallet)
-        print(f"* Your Validator Wallet Balance on Mainnet is: {validator_wallet_balance} Harmony ONE Coins")
-        print(f"* Your Pending Validator Rewards are: {get_rewards_balance(rpc, validator_wallet)}\n{string_stars()}")
+        print(
+            f"* Your Validator Wallet Balance on Mainnet is: {validator_wallet_balance} Harmony ONE Coins"
+        )
+        print(
+            f"* Your Pending Validator Rewards are: {get_rewards_balance(rpc, validator_wallet)}\n{string_stars()}"
+        )
         i = 0
         while i < 1:
-            question = ask_yes_no("* Would you like to check another Harmony ONE Address? (YES/NO) ")
+            question = ask_yes_no(
+                "* Would you like to check another Harmony ONE Address? (YES/NO) "
+            )
             if question:
                 balanceCheckAny()
             else:
@@ -913,7 +1006,9 @@ def menu_check_balance(rpc, validator_wallet) -> None:
     else:
         i = 0
         while i < 1:
-            question = ask_yes_no("* Would you like to check a Harmony ONE Address? (YES/NO) ")
+            question = ask_yes_no(
+                "* Would you like to check a Harmony ONE Address? (YES/NO) "
+            )
             if question:
                 balanceCheckAny()
             else:
@@ -927,7 +1022,9 @@ def balanceCheckAny():
     )
     print(f"* Calling mainnet for balances...\n{string_stars()}")
     wallet_balance = get_wallet_balance(check_wallet)
-    print(f"* The Mainnet Wallet Balance is: {wallet_balance} Harmony ONE Coins\n{string_stars()}")
+    print(
+        f"* The Mainnet Wallet Balance is: {wallet_balance} Harmony ONE Coins\n{string_stars()}"
+    )
     input("* Press ENTER to continue.")
 
 
