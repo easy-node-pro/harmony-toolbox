@@ -231,16 +231,19 @@ def menu_topper_regular(software_versions) -> None:
         f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current disk space free: {Fore.CYAN}{free_space_check(config.harmony_dir): >6}{Fore.GREEN}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}\n{string_stars()}'
     )
     if our_shard != "0":
+
+        remote_shard_block = literal_eval(remote_data_shard['result']['shard-chain-header']['number'])
+        local_shard_block = literal_eval(local_data_shard['result']['shard-chain-header']['number'])
+        shard_difference = remote_shard_block - local_shard_block
+
         print(
             f"* Shard {environ.get('SHARD')} Stats:\n{string_stars()}\n* Remote Shard 0 Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}, Local Shard 0 Size: {get_db_size(config.harmony_dir, '0')}"
         )
         print(
-            f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard['result']['shard-chain-header']['number'])}"
+            f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {remote_shard_block}"
         )
         print(
-            f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(local_data_shard['result']['shard-chain-header']['number'])}, Local Shard {environ.get('SHARD')} Size: {get_db_size(config.harmony_dir, environ.get('SHARD'))}"
-        )
-    if our_shard == "0":
+            f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {local_shard_block} (Diff: {shard_difference}), Local Shard {environ.get('SHARD')} Size: {get_db_size(config.harmony_dir, environ.get('SHARD'))}"    if our_shard == "0":
         print(
             f"* Shard {environ.get('SHARD')} Stats:\n{string_stars()}\n* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}"
         )
