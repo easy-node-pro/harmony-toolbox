@@ -278,7 +278,6 @@ def menu_topper_regular(software_versions) -> None:
     shard_stats_title = f"* Shard {environ.get('SHARD')} Stats:\n{string_stars()}"
     remote_shard_0_epoch = current_remote_epoch
     remote_shard_info = f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_shard_0_epoch}, Current Block: {remote_shard_block}"
-    local_shard_info = f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {local_shard_block}"
     local_shard_diff = f", (Diff: {shard_difference})" if shard_difference != 0 else ""
     if our_shard == "0":
         print(
