@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
 from colorama import Fore, Style, Back
 from pyhmy import account, staking, numbers
+from ast import literal_eval
 from json import load, dump
 from collections import namedtuple
 from datetime import datetime
@@ -243,18 +244,29 @@ def process_folder(folder, port):
         ]
         result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         remote_data = json.loads(result_remote_server.stdout)
+        remote_shard_block = literal_eval(
+            remote_data["result"]["shard-chain-header"]["number"]
+        )
+        local_shard_block = literal_eval(
+            local_data["result"]["shard-chain-header"]["number"]
+        )
+        shard_difference = remote_shard_block - local_shard_block
+        current_remote_epoch = remote_data["result"]["shard-chain-header"][
+            "epoch"
+        ]
+        local_shard_diff = f", (Diff: {shard_difference})" if shard_difference != 0 else ""
         if local_data["result"]["shard-id"] == 0:
             result_string = (
                 f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
-                + f"\n* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
-                + f"\n*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
+                + f"\n* Remote Shard {local_data['result']['shard-id']} Epoch: {current_remote_epoch}, Current Block: {remote_data['result']['current-block-number']}"
+                + f"\n*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}{local_shard_diff}"
                 + f"\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
             )
         else:
             result_string = (
                 f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
-                + f"\n* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
-                + f"\n*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
+                + f"\n* Remote Shard {local_data['result']['shard-id']} Epoch: {current_remote_epoch}, Current Block: {remote_data['result']['current-block-number']}"
+                + f"\n*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}{local_shard_diff}"
                 + f"\n*   Local Shard 0 Size: {get_db_size(f'{current_full_path}', '0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
             )
         result_string += f"\n{string_stars()}"
