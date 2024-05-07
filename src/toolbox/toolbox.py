@@ -243,7 +243,8 @@ def menu_topper_regular(software_versions) -> None:
             f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {remote_shard_block}"
         )
         print(
-            f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {local_shard_block} (Diff: {shard_difference}), Local Shard {environ.get('SHARD')} Size: {get_db_size(config.harmony_dir, environ.get('SHARD'))}"    if our_shard == "0":
+            f"*  Local Shard {environ.get('SHARD')} Epoch: {local_data_shard['result']['shard-chain-header']['epoch']}, Current Block: {local_shard_block} (Diff: {shard_difference}), Local Shard {environ.get('SHARD')} Size: {get_db_size(config.harmony_dir, environ.get('SHARD'))}")
+    if our_shard == "0":
         print(
             f"* Shard {environ.get('SHARD')} Stats:\n{string_stars()}\n* Remote Shard {environ.get('SHARD')} Epoch: {remote_data_shard_0['result']['shard-chain-header']['epoch']}, Current Block: {literal_eval(remote_data_shard_0['result']['shard-chain-header']['number'])}"
         )
