@@ -7,7 +7,7 @@
 
 ## Application Repo
 
-![harmony toolbox loader intro photo](https://guides.easynode.pro/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fharmony_loader.0a0ba935.png&w=1080&q=75)
+![harmony toolbox loader intro photo](https://docs.easynode.pro/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ftwitter_card_800x418.e78cb26c.jpg&w=828&q=75)
 
 ## Documentation
 
