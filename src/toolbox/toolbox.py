@@ -832,8 +832,13 @@ def menu_validator_stats():
             remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True
         )
         remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
+
+        # Check if the remote data is empty or None
+        if not remote_data_shard_0:
+            raise ValueError("Empty or None data")
     except (ValueError, KeyError, TypeError) as e:
-        print(f"* Remote Shard 0 Offline, Error {e}")
+        print(f"* Remote Shard 0 Offline, Please try again later.\n* Error {e}")
+        finish_node()
     try:
         http_port = find_port(environ.get("HARMONY_DIR"))
         local_shard = [
@@ -847,6 +852,10 @@ def menu_validator_stats():
             local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True
         )
         local_data_shard = json.loads(result_local_shard.stdout)
+
+        # Check if the local data is empty or None
+        if not local_data_shard:
+            raise ValueError("Empty or None data")
     except (ValueError, KeyError, TypeError) as e:
         print(
             f"* Local Server Offline\n*\n* Run troubleshooting, See our documents site for info on how to manually troubleshoot:\n* https://docs.easynode.pro/harmony/post#validator-toolbox-troubleshooting\n{string_stars()}"
@@ -865,6 +874,11 @@ def menu_validator_stats():
                 remote_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True
             )
             remote_data_shard = json.loads(result_remote_shard.stdout)
+
+            # Check if the remote data is empty or None
+            if not remote_data_shard:
+                raise ValueError("Empty or None data")
+
             return remote_data_shard_0, local_data_shard, remote_data_shard
         except (ValueError, KeyError, TypeError):
             return
