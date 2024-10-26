@@ -11,4 +11,4 @@
 
 ## Documentation
 
-See our [guides site](https://guides.easynode.pro/harmony/toolbox) for more information.
+See our [guides site](https://docs.easynode.pro/harmony/toolbox) for more information.
