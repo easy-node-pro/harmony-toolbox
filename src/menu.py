@@ -13,12 +13,12 @@ def app():
     # Run parser if flags added
     parser = argparse.ArgumentParser(description="Harmony Validator Toolbox - Help Menu by EasyNode.pro")
     parse_flags(parser)
+    # Clear screen, show logo
+    loader_intro()
     # Run regular validator node
     start_regular_node()
 
 if __name__ == "__main__":
     # load environment variables
     load_var_file(config.dotenv_file)
-    # Clear screen, show logo
-    loader_intro()
     app()
