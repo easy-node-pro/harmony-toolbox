@@ -193,9 +193,9 @@ def update_harmony_binary():
     update_text_file(f"{harmony_dir}/harmony.conf", " MaxKeys = 10", " MaxKeys = 11")
     if os.path.isfile(f"{harmony_dir}/blskey.pass"):
         update_text_file(f"{harmony_dir}/harmony.conf", 'PassFile = ""', 'PassFile = "blskey.pass"')
-        print(f"* Harmony binary installed, {harmony_dir}/harmony.conf created and modified: blskey.pass file, disabled private ip scan. ")
+        print(f"* Harmony binary installed, 11 keys max, {harmony_dir}/harmony.conf created and modified: blskey.pass file, disabled private ip scan. ")
     else:
-        print(f"* Harmony binary installed, {harmony_dir}/harmony.conf created and modified: disabled private ip scan. ")
+        print(f"* Harmony binary installed, 11 keys max, {harmony_dir}/harmony.conf created and modified: disabled private ip scan. ")
     return
 
 
