@@ -189,6 +189,8 @@ def update_harmony_binary():
         process_command("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
     process_command("./harmony config dump harmony.conf")
     update_text_file(f"{harmony_dir}/harmony.conf", " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
+    # Update to 11 keys for HIP-32 expansion to 396 slots
+    update_text_file(f"{harmony_dir}/harmony.conf", " MaxKeys = 10", " MaxKeys = 11")
     if os.path.isfile(f"{harmony_dir}/blskey.pass"):
         update_text_file(f"{harmony_dir}/harmony.conf", 'PassFile = ""', 'PassFile = "blskey.pass"')
         print(f"* Harmony binary installed, {harmony_dir}/harmony.conf created and modified: blskey.pass file, disabled private ip scan. ")
