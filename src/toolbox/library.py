@@ -43,10 +43,10 @@ string_stars_reset = print_stuff(reset=1).stringStars
 
 
 # check if a var exists in your .env file, unset and reset if exists to avoid bad stuff
-def set_var(env_file, key_name, update_name):
+def set_var(env_file: str, key_name: str, update_name: str):
     if environ.get(key_name):
         dotenv.unset_key(env_file, key_name)
-    dotenv.set_key(env_file, key_name, str(update_name))
+    dotenv.set_key(env_file, key_name, update_name)
     load_var_file(env_file)
     return
 
@@ -841,9 +841,9 @@ def first_env_check(env_file) -> None:
     load_var_file(env_file)
     # Update run count for menus
     current_run_count = int(os.environ.get("RUN_COUNT", default=0)) + 1
-    if current_run_count >= 10:
+    if current_run_count >= 25:
         current_run_count = 0
-    set_var(config.dotenv_file, "RUN_COUNT", current_run_count)
+    set_var(config.dotenv_file, "RUN_COUNT", str(current_run_count))
     return
 
 
