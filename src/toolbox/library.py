@@ -837,7 +837,13 @@ def check_online_version():
 
 
 def first_env_check(env_file) -> None:
+    # Load our easynode.env file
     load_var_file(env_file)
+    # Update run count for menus
+    current_run_count = int(os.environ.get("RUN_COUNT", default=0)) + 1
+    if current_run_count >= 10:
+        current_run_count = 0
+    set_var(config.dotenv_file, "RUN_COUNT", current_run_count)
     return
 
 
@@ -1378,13 +1384,18 @@ def menu_reboot_server() -> str:
 
 
 def finish_node():
-    print(
-        "* Thanks for using Easy Node Toolbox - Making everything Easy Mode!"
-        + "\n*\n* We serve up free tools and guides for validators every day."
-        + "\n*\n* Check our guides out at https://docs.easynode.pro\n*\n"
-        + "* Please consider joining our discord & supporting us one time or monthly\n* for our"
-        + f" tools and guides at https://bit.ly/easynodediscord today!\n*\n* Goodbye!\n{string_stars()}"
-    )
+    if int(os.environ.get("RUN_COUNT", default=0)) == 0:
+        print(
+            "* Thanks for using Easy Node Toolbox - Making everything Easy Mode!"
+            + "\n*\n* We serve up free tools and guides for validators every day."
+            + "\n*\n* Check our guides out at https://docs.easynode.pro\n*\n"
+            + "* Please consider joining our discord & supporting us one time or monthly\n* for our"
+            + f" tools and guides at https://bit.ly/easynodediscord today!\n*\n* Goodbye!\n{string_stars()}"
+        )
+    else:
+        print(
+            f"* EasyNode.pro - https://easynode.pro\n{string_stars()}"
+        )
     raise SystemExit(0)
 
 
