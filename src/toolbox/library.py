@@ -46,7 +46,7 @@ string_stars_reset = print_stuff(reset=1).stringStars
 def set_var(env_file, key_name, update_name):
     if environ.get(key_name):
         dotenv.unset_key(env_file, key_name)
-    dotenv.set_key(env_file, key_name, update_name)
+    dotenv.set_key(env_file, key_name, str(update_name))
     load_var_file(env_file)
     return
 
