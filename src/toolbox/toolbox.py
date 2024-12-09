@@ -45,6 +45,7 @@ from toolbox.library import (
     recover_wallet,
     refreshing_stats_message,
     passphrase_status,
+    clear_temp_files,
 )
 
 
@@ -421,20 +422,6 @@ def run_rewards_collector() -> None:
     return
 
 
-def clear_temp_files() -> None:
-    # check and clear previous versions in /tmp
-    tmp_files = [config.harmony_tmp_path, config.hmy_tmp_path]
-
-    for tmp_file in tmp_files:
-        try:
-            os.remove(tmp_file)
-        except FileNotFoundError:
-            pass  # Silently ignore if file doesn't exist
-        except Exception as e:
-            # You can still log or handle other exceptions if desired
-            pass
-
-
 def safety_defaults() -> None:
     # clean files
     clear_temp_files()
@@ -480,6 +467,8 @@ def safety_defaults() -> None:
     if environ.get("VALIDATOR_WALLET") is None:
         # Recover wallet or have them add address
         recover_wallet()
+    # Any more pre-gather info here?
+    return
 
 
 def refresh_toggle() -> None:

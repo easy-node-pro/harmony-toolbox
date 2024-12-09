@@ -1,4 +1,4 @@
-import psutil, platform, dotenv, os, subprocess, requests, pyhmy, shutil, hashlib, re, json, subprocess, getpass, time
+import psutil, platform, dotenv, os, subprocess, requests, pyhmy, shutil, hashlib, re, json, subprocess, getpass, time, sys
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
@@ -92,9 +92,16 @@ def old_toolbox_check():
     if os.path.exists(f"{config.user_home_dir}/validatortoolbox"):
         print(
             Fore.GREEN
-            + f"{string_stars()}\n* Old folder found, Exiting toolbox.\n*\n* Please renmae your ~/validatortoolbox folder to ~/harmony-toolbox and update your command paths!\n*\n* Run: cd ~/ && mv ~/validatortoolbox ~/harmony-toolbox\n*\n* After you run the move command, relaunch with: python3 ~/harmony-toolbox/src/menu.py\n*{string_stars()}"
+            + f"{string_stars()}\n* Old folder found, renaming and restarting...\n*\n* Please wait..."
         )
-        raise SystemExit(0)
+        try:
+            subprocess.run(["mv", f"{config.user_home_dir}/validatortoolbox", f"{config.user_home_dir}/harmony-toolbox"], check=True)
+            print(Fore.GREEN + f"* Renamed successfully. Restarting...\n*")
+            subprocess.run(["python3", f"{config.user_home_dir}/harmony-toolbox/src/menu.py"])
+            sys.exit(0)
+        except subprocess.CalledProcessError as e:
+            print(Fore.RED + f"* Error renaming folder: {e}")
+            raise SystemExit(1)
 
 # Install Harmony ONE
 def update_hmy_binary():
@@ -630,7 +637,7 @@ def check_space_requirements(shard: int, directory: str) -> bool:
 
 
 def get_shard_menu() -> None:
-    if not environ.get("SHARD") or environ.get("SHARD") == "4":
+    if not environ.get("SHARD"):
         print(f"{string_stars()}\n* Gathering more information about your server.\n{string_stars()}")
         print(f"* Which shard do you want this node to sign blocks on?\n{string_stars()}")
         menu_options = [
@@ -788,12 +795,23 @@ def get_local_version(folder):
 
 def set_mod_x(file):
     subprocess.run(["chmod", "+x", file])
+    
+
+def clear_temp_files() -> None:
+    # check and clear previous versions in /tmp
+    tmp_files = [config.harmony_tmp_path, config.hmy_tmp_path]
+
+    for tmp_file in tmp_files:
+        try:
+            os.remove(tmp_file)
+        except FileNotFoundError:
+            pass  # Silently ignore if file doesn't exist
+        except Exception as e:
+            # You can still log or handle other exceptions if desired
+            pass
 
 
-def check_online_version():
-    print(f"{Fore.GREEN}{string_stars()}\n* Checking online version of harmony & hmy...")
-    harmony_version_str = "Offline"
-    hmy_ver = "Offline"
+def check_online_version(harmony_version_str = "Offline", hmy_ver = "Offline") -> None:
     try:
         # Check if the harmony binary exists before downloading
         if not os.path.exists(config.harmony_tmp_path):
@@ -830,7 +848,6 @@ def check_online_version():
     except (AttributeError, subprocess.CalledProcessError):
         # print("* Error - Website for hmy upgrade is offline, setting to offline.")
         return
-
 
 
 def first_env_check(env_file) -> None:
