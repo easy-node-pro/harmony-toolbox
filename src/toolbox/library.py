@@ -319,7 +319,7 @@ def harmony_service_status(service="harmony") -> None:
     status = subprocess.call(["systemctl", "is-active", "--quiet", service])
     if status == 0:
         print(
-            f"* {service} Service is:               "
+            f"* {service} Service is:{' ' (20 - len(service))}"
             + Fore.BLACK
             + Back.GREEN
             + "   Online  "
@@ -328,7 +328,7 @@ def harmony_service_status(service="harmony") -> None:
         )
     else:
         print(
-            f"* {service} Service is:               "
+            f"* {service} Service is:{' ' (20 - len(service))}"
             + Fore.WHITE
             + Back.RED
             + "  *** Offline *** "
