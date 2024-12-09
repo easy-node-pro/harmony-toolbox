@@ -50,7 +50,6 @@ from toolbox.library import (
 
 
 def parse_flags(parser):
-    print_stars()
     # Add the arguments
     parser.add_argument(
         "-s",

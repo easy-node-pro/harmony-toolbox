@@ -1,6 +1,6 @@
 import argparse
 from toolbox.config import config
-from toolbox.library import loader_intro, first_env_check, load_var_file, old_toolbox_check, update_rclone_conf
+from toolbox.library import loader_intro, first_env_check, load_var_file, old_toolbox_check
 from toolbox.toolbox import safety_defaults, start_regular_node, parse_flags
 
 def app():
