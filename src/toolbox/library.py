@@ -1,4 +1,4 @@
-import psutil, platform, dotenv, os, subprocess, requests, pyhmy, shutil, hashlib, re, json, subprocess, getpass
+import psutil, platform, dotenv, os, subprocess, requests, pyhmy, shutil, hashlib, re, json, subprocess, getpass, time
 from os import environ
 from dotenv import load_dotenv
 from simple_term_menu import TerminalMenu
@@ -223,47 +223,53 @@ def get_folders():
     return folders
 
 
-def process_folder(folder, port):
+def process_folder(folder, port, max_retries=3, retry_delay=3):
     if folder == "None":
         return
     current_full_path = f"{config.user_home_dir}/{folder}"
     software_versions = version_checks(current_full_path)
-    try:
-        local_server = [
-            f"{current_full_path}/hmy",
-            "utility",
-            "metadata",
-            f"--node=http://localhost:{port}",
-        ]
-        result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-        local_data = json.loads(result_local_server.stdout)
-        remote_server = [
-            f"{current_full_path}/hmy",
-            "utility",
-            "metadata",
-            f"--node=https://api.s{local_data['result']['shard-id']}.t.hmny.io",
-        ]
-        result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-        remote_data = json.loads(result_remote_server.stdout)
-        if local_data["result"]["shard-id"] == 0:
-            result_string = (
-                f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
-                + f"\n* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
-                + f"\n*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
-                + f"\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
-            )
-        else:
-            result_string = (
-                f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
-                + f"\n* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
-                + f"\n*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
-                + f"\n*   Local Shard 0 Size: {get_db_size(f'{current_full_path}', '0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
-            )
-        result_string += f"\n{string_stars()}"
-        return result_string
-    except Exception as e:
-        error_message = f"* Error, Service Offline or Unresponsive on port {port}: {e}"
-        return error_message
+    retry_count = 0
+    while retry_count <= max_retries:
+        try:
+            local_server = [
+                f"{current_full_path}/hmy",
+                "utility",
+                "metadata",
+                f"--node=http://localhost:{port}",
+            ]
+            result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+            local_data = json.loads(result_local_server.stdout)
+            remote_server = [
+                f"{current_full_path}/hmy",
+                "utility",
+                "metadata",
+                f"--node=https://api.s{local_data['result']['shard-id']}.t.hmny.io",
+            ]
+            result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+            remote_data = json.loads(result_remote_server.stdout)
+            if local_data["result"]["shard-id"] == 0:
+                result_string = (
+                    f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
+                    + f"\n* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
+                    + f"\n*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
+                    + f"\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
+                )
+            else:
+                result_string = (
+                    f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
+                    + f"\n* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
+                    + f"\n*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
+                    + f"\n*   Local Shard 0 Size: {get_db_size(f'{current_full_path}', '0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
+                )
+            result_string += f"\n{string_stars()}"
+            return result_string
+        except Exception as e:
+            retry_count += 1
+            if retry_count <= max_retries:
+                time.sleep(retry_delay)
+            else:
+                error_message = f"* Error, Service Offline or Unresponsive on port {port} with error: {e}"
+                return error_message
 
 
 def validator_stats_output() -> None:
