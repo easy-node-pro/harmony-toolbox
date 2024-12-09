@@ -323,7 +323,7 @@ def harmony_service_status(service="harmony") -> None:
             f"* {service} Service is:{' ' * spaces}"
             + Fore.BLACK
             + Back.GREEN
-            + "   Online  "
+            + "  Online  "
             + Style.RESET_ALL
             + Fore.GREEN
         )
@@ -332,7 +332,7 @@ def harmony_service_status(service="harmony") -> None:
             f"* {service} Service is:{' ' * spaces}"
             + Fore.WHITE
             + Back.RED
-            + "  *** Offline *** "
+            + "  ** Offline **  "
             + Style.RESET_ALL
             + Fore.GREEN
         )
