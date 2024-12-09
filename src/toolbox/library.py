@@ -283,7 +283,7 @@ def validator_stats_output() -> None:
         f"{Fore.GREEN}{string_stars()}\n* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{config.easy_version}{Style.RESET_ALL}{Fore.WHITE}   https://easynode.pro {Fore.GREEN}*"
     )
     print(
-        f'{string_stars()}\n* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:{" " * 13}{Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:{" " * 4}{Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:{" " * 13}{config.server_host_name} - {Fore.YELLOW}{config.external_ip}{Fore.GREEN}'
+        f"{string_stars()}\n* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:{' ' * 13}{Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:{' ' * 4}{Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get('VALIDATOR_WALLET')), 2))}{Fore.GREEN}\n* Server Hostname & IP:{' ' * 13}{config.server_host_name} - {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
     )
     for folder in folders:
         harmony_service_status(folder)
