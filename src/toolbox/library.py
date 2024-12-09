@@ -1220,7 +1220,7 @@ def get_harmony_dir_from_path(pathname):
 
 def refreshing_stats_message() -> str:
     print(
-        f"{Fore.GREEN}{string_stars()}\n* Getting the latest local & blockchain information now, one moment while we load...\n{string_stars()}"
+        f"{Fore.GREEN}* Getting the latest local & blockchain information now, one moment while we load...\n"
     )
     return
 
