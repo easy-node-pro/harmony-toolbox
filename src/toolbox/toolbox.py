@@ -88,8 +88,6 @@ def parse_flags(parser):
 
     args = parser.parse_args()
 
-    print(Fore.RESET)
-
     if args.install:
         first_setup()
 
