@@ -317,9 +317,10 @@ def validator_stats_output() -> None:
 
 def harmony_service_status(service="harmony") -> None:
     status = subprocess.call(["systemctl", "is-active", "--quiet", service])
+    spaces = 22 - len(service)
     if status == 0:
         print(
-            f"* {service} Service is:{' ' (20 - len(service))}"
+            f"* {service} Service is:{'' * spaces}"
             + Fore.BLACK
             + Back.GREEN
             + "   Online  "
@@ -328,7 +329,7 @@ def harmony_service_status(service="harmony") -> None:
         )
     else:
         print(
-            f"* {service} Service is:{' ' (20 - len(service))}"
+            f"* {service} Service is:{'' * spaces}"
             + Fore.WHITE
             + Back.RED
             + "  *** Offline *** "
