@@ -320,21 +320,11 @@ def harmony_service_status(service="harmony") -> None:
     spaces = 22 - len(service)
     if status == 0:
         print(
-            f"* {service} Service is:{' ' * spaces}"
-            + Fore.BLACK
-            + Back.GREEN
-            + "  Online  "
-            + Style.RESET_ALL
-            + Fore.GREEN
+            f"* {service} Service is:{' ' * spaces}{Fore.BLACK}{Back.GREEN}  Online  {Style.RESET_ALL}{Fore.GREEN}"
         )
     else:
         print(
-            f"* {service} Service is:{' ' * spaces}"
-            + Fore.WHITE
-            + Back.RED
-            + "  ** Offline **  "
-            + Style.RESET_ALL
-            + Fore.GREEN
+            f"* {service} Service is:{' ' * spaces}{Fore.White}{Back.RED}  ** Offline **  {Style.RESET_ALL}{Fore.GREEN}"
         )
 
 
