@@ -812,7 +812,7 @@ def clear_temp_files() -> None:
 
 
 def check_online_version(harmony_version_str = "Offline", hmy_ver = "Offline") -> None:
-    print_stars()
+    print(Fore.GREEN + string_stars())
     print("* Checking online version of harmony & hmy...")
     try:
         # Check if the harmony binary exists before downloading
