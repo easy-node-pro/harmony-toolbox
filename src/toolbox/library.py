@@ -226,7 +226,6 @@ def get_folders():
         if os.path.isfile(f"{config.user_home_dir}/{f}/harmony.conf"):
             port = find_port(f"{config.user_home_dir}/{f}")
             folders[f"{f}"] = port
-            print(f"* Found ~/{f} folder, on port {port}")
     return folders
 
 
