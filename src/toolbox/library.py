@@ -53,8 +53,7 @@ def set_var(env_file: str, key_name: str, update_name: str):
 
 # loader intro splash screen
 def loader_intro():
-    print(Fore.GREEN)
-    print_stars()
+    print(Fore.GREEN + string_stars())
     p = """
                     ____ ____ ____ ____ _________ ____ ____ ____ ____           
                     ||E |||a |||s |||y |||       |||N |||o |||d |||e ||          
@@ -517,7 +516,6 @@ def get_validator_wallet_name(wallet_id):
 
 
 def governance_member_voting():
-    print(Fore.GREEN)
     options = [
         "AffinityShard",
         "BoxedCloud",
@@ -546,6 +544,7 @@ def governance_member_voting():
 
     for _ in range(7):
         print(
+            Fore.GREEN +
             "* Highlight an option and hit enter to add it to your list.\n* (pick up to 7, 'Quit' to finish if less than 7 selections):"
         )
         terminal_menu = TerminalMenu(options, title="Choose a governance member:")
@@ -593,8 +592,8 @@ def proposal_choices_option() -> None:
 
 
 def get_vote_choice() -> (int, str):
-    print(Fore.GREEN)
     print(
+        Fore.GREEN +
         f"* How would you like to vote on this proposal?                                                 *\n{string_stars()}"
     )
     menu_options = [
