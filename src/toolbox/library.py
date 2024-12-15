@@ -278,7 +278,6 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
 
 
 def validator_stats_output() -> None:
-    print("* Test injection...")
     # Get all folders for multi-stats run
     folders = get_folders()
     # Get server stats & wallet balances
@@ -1220,7 +1219,7 @@ def get_harmony_dir_from_path(pathname):
 
 def refreshing_stats_message() -> str:
     print(
-        f"{Fore.GREEN}* Getting the latest local & blockchain information now, one moment while we load...\n"
+        f"{Fore.GREEN}* Getting the latest local & blockchain information now, one moment while we load..."
     )
     return
 
