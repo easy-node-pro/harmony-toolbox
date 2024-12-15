@@ -281,6 +281,7 @@ def validator_stats_output() -> None:
     folders = get_folders()
     # Get server stats & wallet balances
     load_1, load_5, load_15 = os.getloadavg()
+    print("* Test injection...")
     sign_percentage = get_sign_pct()
     validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
     # Print Menu
