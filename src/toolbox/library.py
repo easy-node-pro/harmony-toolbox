@@ -278,9 +278,10 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
 
 
 def validator_stats_output() -> None:
+    print("* Test injection...")
+    # Get all folders for multi-stats run
     folders = get_folders()
     # Get server stats & wallet balances
-    print("* Test injection...")
     load_1, load_5, load_15 = os.getloadavg()
     sign_percentage = get_sign_pct()
     validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
