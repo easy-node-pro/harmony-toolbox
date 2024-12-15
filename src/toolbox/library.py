@@ -856,7 +856,7 @@ def first_env_check(env_file) -> None:
     load_var_file(env_file)
     # Update run count for menus
     current_run_count = int(os.environ.get("RUN_COUNT", default=0)) + 1
-    if current_run_count >= 50:
+    if current_run_count >= config.print_menu_count:
         current_run_count = 0
     set_var(config.dotenv_file, "RUN_COUNT", str(current_run_count))
     return
