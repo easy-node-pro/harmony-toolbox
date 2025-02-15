@@ -652,29 +652,6 @@ def get_shard_menu() -> None:
         return our_shard
 
 
-def set_main_or_test() -> None:
-    if environ.get("NETWORK") != "mainnet":
-        set_network("t")
-    # if not environ.get("NETWORK"):
-    #    print_stars()
-    #    print("* Setup config not found, which blockchain does this node run on?                           *")
-    #    print_stars()
-    #    print("* [0] - Mainnet                                                                             *")
-    #    print("* [1] - Testnet                                                                             *")
-    #    print_stars()
-    #    menu_options = [
-    #        "[0] Mainnet",
-    #        "[1] Testnet",
-    #    ]
-    #    terminal_menu = TerminalMenu(menu_options, title="Mainnet or Testnet")
-    #    results = terminal_menu.show()
-    #    if results == 0:
-    #        set_network("t")
-    #    if results == 1:
-    #        set_network("b")
-    return
-
-
 def get_wallet_address():
     print("* Signing Node, No Wallet!                                                                  *")
     print("* You are attempting to launch the menu but no wallet has been loaded, as you chose         *")
@@ -901,8 +878,8 @@ def version_checks(harmony_folder):
 def first_setup():
     # Find Shard #
     get_shard_menu()
-    # Get Mainnet or Testnet
-    set_main_or_test()
+    # Set mainnet
+    set_network("t")
     # Look for a harmony install or install.
     check_for_install()
     return

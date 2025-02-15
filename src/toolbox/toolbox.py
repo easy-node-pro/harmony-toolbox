@@ -41,11 +41,11 @@ from toolbox.library import (
     first_setup,
     update_text_file,
     get_shard_menu,
-    set_main_or_test,
     recover_wallet,
     refreshing_stats_message,
     passphrase_status,
     clear_temp_files,
+    set_network,
 )
 
 
@@ -471,7 +471,8 @@ def safety_defaults() -> None:
         )
     passphrase_status()
     get_shard_menu()
-    set_main_or_test()
+    # Set mainnet
+    set_network("t")
     if environ.get("VALIDATOR_WALLET") is None:
         # Recover wallet or have them add address
         recover_wallet()
