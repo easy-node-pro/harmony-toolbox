@@ -586,12 +586,6 @@ def harmony_voting() -> None:
     return
 
 
-def start_regular_node() -> None:
-    # Check online versions of harmony & hmy and compare to our local copy.
-    refreshing_stats_message()
-    run_regular_node()
-
-
 def run_regular_node() -> None:
     menu_options = {
         0: finish_node,
