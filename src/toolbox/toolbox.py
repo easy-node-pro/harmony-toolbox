@@ -241,26 +241,27 @@ def rewards_collector(
 
 def menu_topper_regular(software_versions) -> None:
     our_shard = config.shard
-    # Get stats & balances
+
     try:
         load_1, load_5, load_15 = os.getloadavg()
         sign_percentage = get_sign_pct()
         validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
-        remote_data_shard_0, local_data_shard, remote_data_shard = (
-            menu_validator_stats()
-        )
+        remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
+
+        # Get epoch and handle missing keys with default values
+        current_remote_epoch = remote_data_shard_0.get("result", {}).get("shard-chain-header", {}).get("epoch", 0)
+
         remote_shard_block = literal_eval(
-            remote_data_shard["result"]["shard-chain-header"]["number"]
+            remote_data_shard.get("result", {}).get("shard-chain-header", {}).get("number", 0)
         )
         local_shard_block = literal_eval(
-            local_data_shard["result"]["shard-chain-header"]["number"]
+            local_data_shard.get("result", {}).get("shard-chain-header", {}).get("number", 0)
         )
         shard_difference = remote_shard_block - local_shard_block
-        current_remote_epoch = remote_data_shard_0["result"]["shard-chain-header"][
-            "epoch"
-        ]
     except (ValueError, KeyError, TypeError) as e:
         print(f"* Error fetching data: {e}")
+        current_remote_epoch = 0
+
     # Print Menu
     print(
         f"{Fore.GREEN}{string_stars()}\n* Validator Toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{config.easy_version}{Fore.WHITE}   https://easynode.pro {Fore.GREEN}\n{string_stars()}"
@@ -268,15 +269,15 @@ def menu_topper_regular(software_versions) -> None:
     print(
         f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {Fore.BLUE}{config.server_host_name}{Fore.GREEN} - {Fore.YELLOW}{config.external_ip}{Fore.GREEN}'
     )
-    harmony_service_status(environ.get("SERVICE_NAME", "harmony"))
+    harmony_status(environ.get("SERVICE_NAME", "harmony"))
     print(
-        f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current disk space free: {Fore.CYAN}{free_space_check(config.harmony_dir): >6}{Fore.GREEN}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}\n{string_stars()}'
+        f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current disk space: {Fore.CYAN}{free_space_check(config.harmony_dir): >6}{Fore.GREEN}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}\n{string_stars()}'
     )
 
     shard_stats_title = f"* Shard {environ.get('SHARD')} Stats:\n{string_stars()}"
-    remote_shard_0_epoch = 0 if current_remote_epoch is None else current_remote_epoch
+    remote_shard_0_epoch = current_remote_epoch  # Use the already defined current_remote_epoch
     remote_shard_info = f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_shard_0_epoch}, Current Block: {remote_shard_block}"
-    local_shard_diff = f", (Diff: {shard_difference})" if shard_difference != 0 else ""
+    local_shard_diff = f"(Diff: {shard_difference})" if shard_difference != 0 else ""
     if our_shard == "0":
         print(
             f"{shard_stats_title}\n{remote_shard_info}{local_shard_diff}, Local Shard 0 Size: {get_db_size(config.harmony_dir, '0')}"
