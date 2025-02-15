@@ -259,6 +259,7 @@ def menu_topper_regular(software_versions) -> None:
         current_remote_epoch = remote_data_shard_0["result"]["shard-chain-header"][
             "epoch"
         ]
+        current_remote_epoch = 0 if current_remote_epoch is None else current_remote_epoch
     except (ValueError, KeyError, TypeError) as e:
         print(f"* Error fetching data: {e}")
     # Print Menu
@@ -847,7 +848,7 @@ def menu_validator_stats():
             f"{config.hmy_app}",
             "blockchain",
             "latest-headers",
-            f"--node=https://api.s{our_shard}.{config.network_switch}.hmny.io",
+            f"--node=https://api.s1.t.hmny.io",
         ]
         try:
             result_remote_shard = run(
