@@ -259,7 +259,6 @@ def menu_topper_regular(software_versions) -> None:
         current_remote_epoch = remote_data_shard_0["result"]["shard-chain-header"][
             "epoch"
         ]
-        current_remote_epoch = 0 if current_remote_epoch is None else current_remote_epoch
     except (ValueError, KeyError, TypeError) as e:
         print(f"* Error fetching data: {e}")
     # Print Menu
@@ -275,7 +274,7 @@ def menu_topper_regular(software_versions) -> None:
     )
 
     shard_stats_title = f"* Shard {environ.get('SHARD')} Stats:\n{string_stars()}"
-    remote_shard_0_epoch = current_remote_epoch
+    remote_shard_0_epoch = 0 if current_remote_epoch is None else current_remote_epoch
     remote_shard_info = f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_shard_0_epoch}, Current Block: {remote_shard_block}"
     local_shard_diff = f", (Diff: {shard_difference})" if shard_difference != 0 else ""
     if our_shard == "0":
