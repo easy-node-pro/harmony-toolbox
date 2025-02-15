@@ -650,6 +650,9 @@ def get_shard_menu() -> None:
 
         set_var(config.dotenv_file, "SHARD", str(our_shard))
         return our_shard
+    else:
+        print(f"* Shard already set to {environ.get('SHARD')}")
+        return int(environ.get("SHARD"))
 
 
 def get_wallet_address():
@@ -877,16 +880,16 @@ def version_checks(harmony_folder):
 
 def first_setup():
     # Find Shard #
-    get_shard_menu()
+    shard = get_shard_menu()
     # Set mainnet
     set_network("t")
     # Look for a harmony install or install.
-    check_for_install()
+    check_for_install(shard)
     return
 
 
 # looks for ~/harmony or installs it if it's not there. Asks to overwrite if it finds it, run at your own risk.
-def check_for_install() -> str:
+def check_for_install(shard) -> str:
     if os.path.exists(f"{config.user_home_dir}/harmony"):
         question = ask_yes_no(
             "* You already have a harmony folder on this system, would you like to re-run installation and rclone on this server? (YES/NO)"
@@ -997,7 +1000,12 @@ def install_harmony() -> None:
     
     # Check space requirements for the selected shard
     shard_value = int(environ.get('SHARD'))
-    check_space_requirements(shard_value, install_path)
+    answer = question(f"* Last chance to verify, you want to install shard {shard_value} into {install_path}? (Y/N): ")
+    if answer:
+        check_space_requirements(shard_value, install_path)
+    else:
+        print("* We will exit out of the installation process.")
+        finish_node()
     
     print(f"{string_stars()}\n* Creating all Harmony Files & Folders")
     process_command(f"mkdir -p {install_path}/.hmy/blskeys")
