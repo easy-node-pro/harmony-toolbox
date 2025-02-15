@@ -621,17 +621,17 @@ def run_regular_node() -> None:
                     allowNegative=False,
                 )
                 if timedOut:
-                    start_regular_node()
+                    run_regular_node()
                 else:
                     print_stars()
                     menu_options[option]()
                     if option != 1:
-                        start_regular_node()
+                        run_regular_node()
             except KeyError:
                 print("* Bad option, try again. Press enter to continue.")
                 print_stars()
                 input()
-                start_regular_node()
+                run_regular_node()
         else:
             try:
                 option, timedOut = timedInteger(
@@ -643,12 +643,12 @@ def run_regular_node() -> None:
                 print_stars()
                 menu_options[option]()
                 if option != 1:
-                    start_regular_node()
+                    run_regular_node()
             except KeyError:
                 print(f"* Bad option, try again. Press enter to continue.")
                 print_stars()
                 input()
-                start_regular_node()
+                run_regular_node()
 
 
 def service_menu_option() -> None:
