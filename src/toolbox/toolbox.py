@@ -248,22 +248,34 @@ def menu_topper_regular(software_versions) -> None:
         validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
         remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
 
-        # Safely access nested dictionary values with default values
+        # Ensure dictionaries are initialized correctly
+        remote_data_shard_0 = remote_data_shard_0 if remote_data_shard_0 is not None else {}
+        local_data_shard = local_data_shard if local_data_shard is not None else {}
+        remote_data_shard = remote_data_shard if remote_data_shard is not None else {}
+
+        # Safely access epoch information from remote_data_shard_0
         result_0 = remote_data_shard_0.get("result", {})
         current_remote_epoch = result_0.get("shard-chain-header", {}).get("epoch", 0)
 
-        result = remote_data_shard.get("result", {})
-        shard_header = result.get("shard-chain-header", {})
-        remote_shard_block = literal_eval(shard_header.get("number", 0))
+        # Safely access block number from remote_data_shard
+        result_remote = remote_data_shard.get("result", {})
+        shard_header_remote = result_remote.get("shard-chain-header", {})
+        remote_shard_block = literal_eval(shard_header_remote.get("number", 0))
 
-        local_result = local_data_shard.get("result", {})
-        local_header = local_result.get("shard-chain-header", {})
-        local_shard_block = literal_eval(local_header.get("number", 0))
+        # Safely access block number from local_data_shard
+        result_local = local_data_shard.get("result", {})
+        shard_header_local = result_local.get("shard-chain-header", {})
+        local_shard_block = literal_eval(shard_header_local.get("number", 0))
 
+        # Calculate shard difference
         shard_difference = remote_shard_block - local_shard_block
+
     except (ValueError, KeyError, TypeError) as e:
         print(f"* Error fetching data: {e}")
         current_remote_epoch = 0
+        remote_shard_block = 0
+        local_shard_block = 0
+        shard_difference = 0
 
     # Print Menu
     print(
@@ -272,7 +284,7 @@ def menu_topper_regular(software_versions) -> None:
     print(
         f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {Fore.BLUE}{config.server_host_name}{Fore.GREEN} - {Fore.YELLOW}{config.external_ip}{Fore.GREEN}'
     )
-    harmony_status(environ.get("SERVICE_NAME", "harmony"))
+    harmony_service_status(environ.get("SERVICE_NAME", "harmony"))
     print(
         f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current disk space: {Fore.CYAN}{free_space_check(config.harmony_dir): >6}{Fore.GREEN}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}\n{string_stars()}'
     )
