@@ -299,11 +299,13 @@ def validator_stats_output() -> None:
     print(
         f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min\n{string_stars()}"
     )
+    # get api here
+    api_endpoint = config.working_rpc_endpoint
     remote_shard_0 = [
         f"{config.user_home_dir}/{list(folders.items())[0][0]}/hmy",
         "utility",
         "metadata",
-        "--node=https://api.s0.t.hmny.io",
+        f"--node={api_endpoint}",
     ]
     result_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     remote_0_data = json.loads(result_shard_0.stdout)

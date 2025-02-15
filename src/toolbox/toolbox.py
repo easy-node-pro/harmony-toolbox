@@ -246,6 +246,8 @@ def menu_topper_regular(software_versions) -> None:
         load_1, load_5, load_15 = os.getloadavg()
         sign_percentage = get_sign_pct()
         validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
+
+        # Not getting remote shard 0 epoch here, investigate.
         remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
 
         # Ensure dictionaries are initialized correctly
@@ -816,16 +818,15 @@ def update_harmony_app():
 def menu_validator_stats():
     load_var_file(config.dotenv_file)
     our_shard = config.shard
+    api_endpoint = config.working_rpc_endpoint
     remote_shard_0 = [
-        f"{environ.get('HARMONY_DIR')}/hmy",
+        f"{config.hmy_app}",
         "blockchain",
         "latest-headers",
-        f"--node=https://api.s0.t.hmny.io",
+        f"--node={api_endpoint}",
     ]
     try:
-        result_remote_shard_0 = run(
-            remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True
-        )
+        result_remote_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
 
         # Check if the remote data is empty or None
