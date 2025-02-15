@@ -307,10 +307,6 @@ def menu_topper_regular(software_versions) -> None:
     )
 
 
-def menu_regular(software_versions) -> None:
-    
-
-
 def get_wallet_json(wallet: str) -> str:
     try:
         response = requests.get(
