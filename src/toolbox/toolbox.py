@@ -307,6 +307,18 @@ def menu_topper_regular(software_versions) -> None:
     )
 
 
+def menu_regular() -> None:
+    run_multistats()
+    for x in return_txt(config.main_menu_regular):
+        x = x.strip()
+        try:
+            x = eval(x)
+        except SyntaxError:
+            pass
+        if x:
+            print(x)
+
+
 def get_wallet_json(wallet: str) -> str:
     try:
         response = requests.get(
@@ -603,7 +615,7 @@ def run_regular_node() -> None:
     }
     while True:
         load_var_file(config.dotenv_file)
-        run_multistats()
+        menu_regular()
         if environ.get("REFRESH_OPTION") == "True":
             try:
                 # run timed input
