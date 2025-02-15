@@ -1000,7 +1000,7 @@ def install_harmony() -> None:
     
     # Check space requirements for the selected shard
     shard_value = int(environ.get('SHARD'))
-    answer = question(f"* Last chance to verify, you want to install shard {shard_value} into {install_path}? (Y/N): ")
+    answer = ask_yes_no(f"* Last chance to verify, you want to install shard {shard_value} into {install_path}? (Y/N): ")
     if answer:
         check_space_requirements(shard_value, install_path)
     else:
