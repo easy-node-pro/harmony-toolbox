@@ -960,7 +960,7 @@ def get_folder_choice() -> (str):
     ]
     terminal_menu = TerminalMenu(menu_options, title="* Please choose your installation folder option. ")
     vote_choice_index = terminal_menu.show()
-    if vote_choice_index == 3:  # The index of the "Quit" option
+    if vote_choice_index == 6:  # The index of the "Quit" option
         return None, "Quit"
     vote_choice_text = menu_options[vote_choice_index].split(" - ")[1]
     return vote_choice_text
