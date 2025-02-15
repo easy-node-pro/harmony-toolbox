@@ -41,11 +41,11 @@ from toolbox.library import (
     first_setup,
     update_text_file,
     get_shard_menu,
-    set_main_or_test,
     recover_wallet,
     refreshing_stats_message,
     passphrase_status,
     clear_temp_files,
+    set_network,
 )
 
 
@@ -241,26 +241,44 @@ def rewards_collector(
 
 def menu_topper_regular(software_versions) -> None:
     our_shard = config.shard
-    # Get stats & balances
+
     try:
         load_1, load_5, load_15 = os.getloadavg()
         sign_percentage = get_sign_pct()
         validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
-        remote_data_shard_0, local_data_shard, remote_data_shard = (
-            menu_validator_stats()
-        )
-        remote_shard_block = literal_eval(
-            remote_data_shard["result"]["shard-chain-header"]["number"]
-        )
-        local_shard_block = literal_eval(
-            local_data_shard["result"]["shard-chain-header"]["number"]
-        )
+
+        # Not getting remote shard 0 epoch here, investigate.
+        remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
+
+        # Ensure dictionaries are initialized correctly
+        remote_data_shard_0 = remote_data_shard_0 if remote_data_shard_0 is not None else {}
+        local_data_shard = local_data_shard if local_data_shard is not None else {}
+        remote_data_shard = remote_data_shard if remote_data_shard is not None else {}
+
+        # Safely access epoch information from remote_data_shard_0
+        result_0 = remote_data_shard_0.get("result", {})
+        current_remote_epoch = result_0.get("shard-chain-header", {}).get("epoch", 0)
+
+        # Safely access block number from remote_data_shard
+        result_remote = remote_data_shard.get("result", {})
+        shard_header_remote = result_remote.get("shard-chain-header", {})
+        remote_shard_block = literal_eval(shard_header_remote.get("number", 0))
+
+        # Safely access block number from local_data_shard
+        result_local = local_data_shard.get("result", {})
+        shard_header_local = result_local.get("shard-chain-header", {})
+        local_shard_block = literal_eval(shard_header_local.get("number", 0))
+
+        # Calculate shard difference
         shard_difference = remote_shard_block - local_shard_block
-        current_remote_epoch = remote_data_shard_0["result"]["shard-chain-header"][
-            "epoch"
-        ]
+
     except (ValueError, KeyError, TypeError) as e:
         print(f"* Error fetching data: {e}")
+        current_remote_epoch = 0
+        remote_shard_block = 0
+        local_shard_block = 0
+        shard_difference = 0
+
     # Print Menu
     print(
         f"{Fore.GREEN}{string_stars()}\n* Validator Toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{config.easy_version}{Fore.WHITE}   https://easynode.pro {Fore.GREEN}\n{string_stars()}"
@@ -270,13 +288,12 @@ def menu_topper_regular(software_versions) -> None:
     )
     harmony_service_status(environ.get("SERVICE_NAME", "harmony"))
     print(
-        f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current disk space free: {Fore.CYAN}{free_space_check(config.harmony_dir): >6}{Fore.GREEN}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}\n{string_stars()}'
+        f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current disk space: {Fore.CYAN}{free_space_check(config.harmony_dir): >6}{Fore.GREEN}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}\n{string_stars()}'
     )
 
     shard_stats_title = f"* Shard {environ.get('SHARD')} Stats:\n{string_stars()}"
-    remote_shard_0_epoch = current_remote_epoch
-    remote_shard_info = f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_shard_0_epoch}, Current Block: {remote_shard_block}"
-    local_shard_diff = f", (Diff: {shard_difference})" if shard_difference != 0 else ""
+    remote_shard_info = f"* Remote Shard {environ.get('SHARD')} Epoch: {current_remote_epoch}, Current Block: {remote_shard_block}"
+    local_shard_diff = f"(Diff: {shard_difference})" if shard_difference != 0 else ""
     if our_shard == "0":
         print(
             f"{shard_stats_title}\n{remote_shard_info}{local_shard_diff}, Local Shard 0 Size: {get_db_size(config.harmony_dir, '0')}"
@@ -291,7 +308,7 @@ def menu_topper_regular(software_versions) -> None:
 
 
 def menu_regular(software_versions) -> None:
-    menu_topper_regular(software_versions)
+    run_multistats()
     for x in return_txt(config.main_menu_regular):
         x = x.strip()
         try:
@@ -423,7 +440,7 @@ def safety_defaults() -> None:
     # clean files
     clear_temp_files()
     check_online_version()
-    # default settings section
+    # Set default ENV settings if they don't exist
     set_var(config.dotenv_file, "EASY_VERSION", config.easy_version)
     if environ.get("GAS_RESERVE") is None:
         set_var(config.dotenv_file, "GAS_RESERVE", "5")
@@ -439,16 +456,10 @@ def safety_defaults() -> None:
             set_var(config.dotenv_file, "SERVICE_NAME", "harmony")
             return
         elif os.path.isfile(f"{config.user_home_dir}/harmony"):
-            try:
-                subprocess.run(f"{config.user_home_dir}/harmony -V", check=True)
-                set_var(config.dotenv_file, "HARMONY_DIR", f"{config.user_home_dir}")
-                set_var(config.dotenv_file, "SERVICE_NAME", "harmony")
-                return
-            except subprocess.CalledProcessError as e:
-                print(
-                    f"* Well this is odd, somehow harmony was not found.\n*\n* You can add the HARMONY_DIR variable to your ~/.easynode.env file\n* Example default location: HARMONY_DIR = /home/serviceharmony/harmony\n*\n* Or contact Easy Node for custom configuration help.\* Error: {e}"
+            print(
+                    f"* It appears your don't have harmony binary in a folder. We're exiting as we're not compatible. Install harmony on a fresh server with toolbox to become compatible or read our docs.\n* Error: {e}"
                 )
-                raise SystemExit(0)
+            raise SystemExit(0)
         else:
             first_setup()
     if environ.get("SERVICE_NAME") is None:
@@ -460,7 +471,8 @@ def safety_defaults() -> None:
         )
     passphrase_status()
     get_shard_menu()
-    set_main_or_test()
+    # Set mainnet
+    set_network("t")
     if environ.get("VALIDATOR_WALLET") is None:
         # Recover wallet or have them add address
         recover_wallet()
@@ -575,12 +587,6 @@ def harmony_voting() -> None:
     return
 
 
-def start_regular_node() -> None:
-    # Check online versions of harmony & hmy and compare to our local copy.
-    refreshing_stats_message()
-    run_regular_node()
-
-
 def run_regular_node() -> None:
     menu_options = {
         0: finish_node,
@@ -606,14 +612,6 @@ def run_regular_node() -> None:
         load_var_file(config.dotenv_file)
         software_versions = version_checks(environ.get("HARMONY_DIR"))
         menu_regular(software_versions)
-        if software_versions["harmony_upgrade"] == "True":
-            print(
-                f'* The harmony binary has an update available to version {software_versions["online_harmony_version"]}\n* Option #10 will upgrade you, but you may miss a block while it upgrades & restarts.\n* Currently installed version {software_versions["harmony_version"]}\n{string_stars()}'
-            )
-        if software_versions["hmy_upgrade"] == "True":
-            print(
-                f'* The hmy binary has an update available to version {software_versions["online_hmy_version"]}\n* Option #11 will upgrade you.\n* Currently installed version {software_versions["hmy_version"]}\n{string_stars()}'
-            )
         if environ.get("REFRESH_OPTION") == "True":
             try:
                 # run timed input
@@ -624,17 +622,17 @@ def run_regular_node() -> None:
                     allowNegative=False,
                 )
                 if timedOut:
-                    start_regular_node()
+                    run_regular_node()
                 else:
                     print_stars()
                     menu_options[option]()
                     if option != 1:
-                        start_regular_node()
+                        run_regular_node()
             except KeyError:
                 print("* Bad option, try again. Press enter to continue.")
                 print_stars()
                 input()
-                start_regular_node()
+                run_regular_node()
         else:
             try:
                 option, timedOut = timedInteger(
@@ -646,12 +644,12 @@ def run_regular_node() -> None:
                 print_stars()
                 menu_options[option]()
                 if option != 1:
-                    start_regular_node()
+                    run_regular_node()
             except KeyError:
                 print(f"* Bad option, try again. Press enter to continue.")
                 print_stars()
                 input()
-                start_regular_node()
+                run_regular_node()
 
 
 def service_menu_option() -> None:
@@ -807,16 +805,15 @@ def update_harmony_app():
 def menu_validator_stats():
     load_var_file(config.dotenv_file)
     our_shard = config.shard
+    api_endpoint = config.working_rpc_endpoint
     remote_shard_0 = [
-        f"{environ.get('HARMONY_DIR')}/hmy",
+        f"{config.hmy_app}",
         "blockchain",
         "latest-headers",
-        f"--node=https://api.s0.{config.network_switch}.hmny.io",
+        f"--node={api_endpoint}",
     ]
     try:
-        result_remote_shard_0 = run(
-            remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True
-        )
+        result_remote_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
 
         # Check if the remote data is empty or None
@@ -853,7 +850,7 @@ def menu_validator_stats():
             f"{config.hmy_app}",
             "blockchain",
             "latest-headers",
-            f"--node=https://api.s{our_shard}.{config.network_switch}.hmny.io",
+            f"--node=https://api.s1.t.hmny.io",
         ]
         try:
             result_remote_shard = run(

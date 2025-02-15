@@ -1,7 +1,7 @@
 import argparse
 from toolbox.config import config
 from toolbox.library import loader_intro, first_env_check, load_var_file, old_toolbox_check
-from toolbox.toolbox import safety_defaults, start_regular_node, parse_flags
+from toolbox.toolbox import safety_defaults, run_regular_node, parse_flags
 
 def app():
     # Check for old toolbox first
@@ -16,7 +16,7 @@ def app():
     # Clear screen, show logo
     loader_intro()
     # Run regular validator node
-    start_regular_node()
+    run_regular_node()
 
 if __name__ == "__main__":
     # load environment variables

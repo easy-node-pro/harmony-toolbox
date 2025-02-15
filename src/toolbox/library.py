@@ -299,11 +299,13 @@ def validator_stats_output() -> None:
     print(
         f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min\n{string_stars()}"
     )
+    # get api here
+    api_endpoint = config.working_rpc_endpoint
     remote_shard_0 = [
         f"{config.user_home_dir}/{list(folders.items())[0][0]}/hmy",
         "utility",
         "metadata",
-        "--node=https://api.s0.t.hmny.io",
+        f"--node={api_endpoint}",
     ]
     result_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     remote_0_data = json.loads(result_shard_0.stdout)
@@ -648,29 +650,9 @@ def get_shard_menu() -> None:
 
         set_var(config.dotenv_file, "SHARD", str(our_shard))
         return our_shard
-
-
-def set_main_or_test() -> None:
-    if environ.get("NETWORK") != "mainnet":
-        set_network("t")
-    # if not environ.get("NETWORK"):
-    #    print_stars()
-    #    print("* Setup config not found, which blockchain does this node run on?                           *")
-    #    print_stars()
-    #    print("* [0] - Mainnet                                                                             *")
-    #    print("* [1] - Testnet                                                                             *")
-    #    print_stars()
-    #    menu_options = [
-    #        "[0] Mainnet",
-    #        "[1] Testnet",
-    #    ]
-    #    terminal_menu = TerminalMenu(menu_options, title="Mainnet or Testnet")
-    #    results = terminal_menu.show()
-    #    if results == 0:
-    #        set_network("t")
-    #    if results == 1:
-    #        set_network("b")
-    return
+    else:
+        print(f"* Shard already set to {environ.get('SHARD')}")
+        return int(environ.get("SHARD"))
 
 
 def get_wallet_address():
@@ -898,16 +880,16 @@ def version_checks(harmony_folder):
 
 def first_setup():
     # Find Shard #
-    get_shard_menu()
-    # Get Mainnet or Testnet
-    set_main_or_test()
+    shard = get_shard_menu()
+    # Set mainnet
+    set_network("t")
     # Look for a harmony install or install.
-    check_for_install()
+    check_for_install(shard)
     return
 
 
 # looks for ~/harmony or installs it if it's not there. Asks to overwrite if it finds it, run at your own risk.
-def check_for_install() -> str:
+def check_for_install(shard) -> str:
     if os.path.exists(f"{config.user_home_dir}/harmony"):
         question = ask_yes_no(
             "* You already have a harmony folder on this system, would you like to re-run installation and rclone on this server? (YES/NO)"
@@ -923,14 +905,8 @@ def check_for_install() -> str:
             finish_node_install()
         else:
             if os.path.isdir(f"{config.user_home_dir}/harmony"):
-                print(
-                    "* Exiting Harmony Validator Toolbox\n* You already have a folder at ~/harmony.\n* Contact Easy Node for help setting up if this is an existing Harmony server."
-                )
-            if os.path.isfile(f"{config.user_home_dir}/harmony"):
-                print(
-                    "* Exiting Harmony Validator Toolbox\n* You already have a file at ~/harmony.\n* Contact Easy Node for help setting up if this is an existing Harmony server with a custom configuration."
-                )
-            raise SystemExit(0)
+                print("* You have a harmony folder already, skipping install. Returning to menu...")
+                return
     else:
         print(f"{Fore.GREEN}* You selected Shard: {environ.get('SHARD')}. ")
         install_harmony()
@@ -970,41 +946,49 @@ def install_rclone():
         return False
 
 
+def get_folder_choice() -> (str):
+    print(
+        Fore.GREEN +
+        f"* Which folder would you like to install harmony in?                              *\n{string_stars()}"
+    )
+    menu_options = [
+        "[1] - harmony",
+        "[2] - harmony0",
+        "[3] - harmony1",
+        "[4] - harmony2",
+        "[5] - harmony3",
+    ]
+    terminal_menu = TerminalMenu(menu_options, title="* Please choose your installation folder option. ")
+    vote_choice_index = terminal_menu.show()
+    if vote_choice_index == 6:  # The index of the "Quit" option
+        return None, "Quit"
+    vote_choice_text = menu_options[vote_choice_index].split(" - ")[1]
+    return vote_choice_text
+
+
 # Installer Module
 def install_harmony() -> None:
     while True:
         print(f"{string_stars()}\n* Install Location\n{string_stars()}")
-        default_path = f"{config.user_home_dir}/harmony"
-        question = ask_yes_no(
-            f"* Do you want to setup harmony in the default location?\n* {default_path}\n* "
-            "Or select 'No' to choose a custom folder (for a volume or 2nd disk setup): (YES/NO) "
-        )
-        if question:
-            # Has the space, install away
-            install_path = default_path
-            service_name = os.path.basename(default_path)
-            break
-        else:
-            custom_path = input(
-                "\n* Please enter the full path to a location you'd like to install harmony into.\n* "
-                "We suggest using your shard number at the end of harmony for compatability with toolbox, ie: /home/serviceharmony/harmony1 : "
+        folder_path = get_folder_choice()
+        harmony_dir = f'{config.user_home_dir}/{folder_path}'
+        set_var(config.dotenv_file, "HARMONY_DIR", f"{harmony_dir}")
+        if os.path.exists(harmony_dir):
+            question = ask_yes_no(
+                f"* The folder {harmony_dir} already exists.\n* Are you sure you want to re-install into this existing folder? (YES/NO) "
             )
-            if os.path.exists(custom_path):
-                question = ask_yes_no(
-                    f"* The folder {custom_path} already exists.\n* Are you sure you want to install into this existing folder? (YES/NO) "
-                )
-                if question:
-                    install_path = custom_path
-                    service_name = os.path.basename(custom_path)
-                    break
-            else:
-                question = ask_yes_no(
-                    f"* The path {custom_path} doesn't exist yet.\n* Do you want to create it and install the harmony files here? (YES/NO) "
-                )
-                if question:
-                    install_path = custom_path
-                    service_name = os.path.basename(custom_path)
-                    break
+            if question:
+                install_path = harmony_dir
+                service_name = os.path.basename(harmony_dir)
+                break
+        else:
+            question = ask_yes_no(
+                f"* The path {harmony_dir} doesn't exist yet.\n* Do you want to create it and install the harmony files here? (YES/NO) "
+            )
+            if question:
+                install_path = harmony_dir
+                service_name = os.path.basename(harmony_dir)
+                break
 
     # Save envs
     set_var(config.dotenv_file, "HARMONY_DIR", install_path)
@@ -1016,7 +1000,12 @@ def install_harmony() -> None:
     
     # Check space requirements for the selected shard
     shard_value = int(environ.get('SHARD'))
-    check_space_requirements(shard_value, install_path)
+    answer = ask_yes_no(f"* Last chance to verify, you want to install shard {shard_value} into {install_path}? (Y/N): ")
+    if answer:
+        check_space_requirements(shard_value, install_path)
+    else:
+        print("* We will exit out of the installation process.")
+        finish_node()
     
     print(f"{string_stars()}\n* Creating all Harmony Files & Folders")
     process_command(f"mkdir -p {install_path}/.hmy/blskeys")

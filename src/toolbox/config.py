@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 class Config:
     def __init__(self):       
         # Set constants
-        self.easy_version = "1.3.4"
+        self.easy_version = "1.3.5"
         self.server_host_name = socket.gethostname()
         self.user_home_dir = path.expanduser("~")
         self.dotenv_file = f"{self.user_home_dir}/.easynode.env"
@@ -25,7 +25,7 @@ class Config:
         self.password_path = path.join(self.harmony_dir, "passphrase.txt")
         self.external_ip = self.get_url()
         self.main_menu_regular = path.join(self.toolbox_location, "src", "messages", "regularmenu.txt")
-        self.rpc_endpoints = ["https://api.s0.t.hmny.io", "https://api.harmony.one", "https://rpc.ankr.com/harmony"]
+        self.rpc_endpoints = ["https://1rpc.io/one", "https://api.s0.t.hmny.io", "https://api.harmony.one", "https://rpc.ankr.com/harmony", "https://hmyone-pokt.nodies.app"]
         self.rpc_endpoints_max_connection_retries = 10
         self.hmy_tmp_path = "/tmp/hmy"
         self.harmony_tmp_path = "/tmp/harmony"
