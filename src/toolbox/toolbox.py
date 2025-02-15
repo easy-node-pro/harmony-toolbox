@@ -248,15 +248,18 @@ def menu_topper_regular(software_versions) -> None:
         validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
         remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
 
-        # Get epoch and handle missing keys with default values
-        current_remote_epoch = remote_data_shard_0.get("result", {}).get("shard-chain-header", {}).get("epoch", 0)
+        # Safely access nested dictionary values with default values
+        result_0 = remote_data_shard_0.get("result", {})
+        current_remote_epoch = result_0.get("shard-chain-header", {}).get("epoch", 0)
 
-        remote_shard_block = literal_eval(
-            remote_data_shard.get("result", {}).get("shard-chain-header", {}).get("number", 0)
-        )
-        local_shard_block = literal_eval(
-            local_data_shard.get("result", {}).get("shard-chain-header", {}).get("number", 0)
-        )
+        result = remote_data_shard.get("result", {})
+        shard_header = result.get("shard-chain-header", {})
+        remote_shard_block = literal_eval(shard_header.get("number", 0))
+
+        local_result = local_data_shard.get("result", {})
+        local_header = local_result.get("shard-chain-header", {})
+        local_shard_block = literal_eval(local_header.get("number", 0))
+
         shard_difference = remote_shard_block - local_shard_block
     except (ValueError, KeyError, TypeError) as e:
         print(f"* Error fetching data: {e}")
@@ -275,9 +278,12 @@ def menu_topper_regular(software_versions) -> None:
     )
 
     shard_stats_title = f"* Shard {environ.get('SHARD')} Stats:\n{string_stars()}"
-    remote_shard_0_epoch = current_remote_epoch  # Use the already defined current_remote_epoch
-    remote_shard_info = f"* Remote Shard {environ.get('SHARD')} Epoch: {remote_shard_0_epoch}, Current Block: {remote_shard_block}"
+    remote_shard_info = f"* Remote Shard {environ.get('SHARD')} Epoch: {current_remote_epoch}, Current Block: {remote_shard_block}"
     local_shard_diff = f"(Diff: {shard_difference})" if shard_difference != 0 else ""
+    print(shard_stats_title)
+    print(remote_shard_info)
+    if local_shard_diff:
+        print(local_shard_diff)
     if our_shard == "0":
         print(
             f"{shard_stats_title}\n{remote_shard_info}{local_shard_diff}, Local Shard 0 Size: {get_db_size(config.harmony_dir, '0')}"
