@@ -805,7 +805,7 @@ def menu_validator_stats():
         f"{environ.get('HARMONY_DIR')}/hmy",
         "blockchain",
         "latest-headers",
-        f"--node=https://api.s0.{config.network_switch}.hmny.io",
+        f"--node=https://api.s0.t.hmny.io",
     ]
     try:
         result_remote_shard_0 = run(
