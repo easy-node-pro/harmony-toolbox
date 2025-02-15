@@ -308,15 +308,7 @@ def menu_topper_regular(software_versions) -> None:
 
 
 def menu_regular(software_versions) -> None:
-    menu_topper_regular(software_versions)
-    for x in return_txt(config.main_menu_regular):
-        x = x.strip()
-        try:
-            x = eval(x)
-        except SyntaxError:
-            pass
-        if x:
-            print(x)
+    
 
 
 def get_wallet_json(wallet: str) -> str:
@@ -615,16 +607,7 @@ def run_regular_node() -> None:
     }
     while True:
         load_var_file(config.dotenv_file)
-        software_versions = version_checks(environ.get("HARMONY_DIR"))
-        menu_regular(software_versions)
-        if software_versions["harmony_upgrade"] == "True":
-            print(
-                f'* The harmony binary has an update available to version {software_versions["online_harmony_version"]}\n* Option #10 will upgrade you, but you may miss a block while it upgrades & restarts.\n* Currently installed version {software_versions["harmony_version"]}\n{string_stars()}'
-            )
-        if software_versions["hmy_upgrade"] == "True":
-            print(
-                f'* The hmy binary has an update available to version {software_versions["online_hmy_version"]}\n* Option #11 will upgrade you.\n* Currently installed version {software_versions["hmy_version"]}\n{string_stars()}'
-            )
+        run_multistats()
         if environ.get("REFRESH_OPTION") == "True":
             try:
                 # run timed input
