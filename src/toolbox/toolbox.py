@@ -292,10 +292,6 @@ def menu_topper_regular(software_versions) -> None:
     shard_stats_title = f"* Shard {environ.get('SHARD')} Stats:\n{string_stars()}"
     remote_shard_info = f"* Remote Shard {environ.get('SHARD')} Epoch: {current_remote_epoch}, Current Block: {remote_shard_block}"
     local_shard_diff = f"(Diff: {shard_difference})" if shard_difference != 0 else ""
-    print(shard_stats_title)
-    print(remote_shard_info)
-    if local_shard_diff:
-        print(local_shard_diff)
     if our_shard == "0":
         print(
             f"{shard_stats_title}\n{remote_shard_info}{local_shard_diff}, Local Shard 0 Size: {get_db_size(config.harmony_dir, '0')}"
