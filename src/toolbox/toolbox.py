@@ -307,7 +307,7 @@ def menu_topper_regular(software_versions) -> None:
     )
 
 
-def menu_regular() -> None:
+def menu_regular(software_versions) -> None:
     run_multistats()
     for x in return_txt(config.main_menu_regular):
         x = x.strip()
@@ -615,7 +615,8 @@ def run_regular_node() -> None:
     }
     while True:
         load_var_file(config.dotenv_file)
-        menu_regular()
+        software_versions = version_checks(environ.get("HARMONY_DIR"))
+        menu_regular(software_versions)
         if environ.get("REFRESH_OPTION") == "True":
             try:
                 # run timed input
