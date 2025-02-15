@@ -923,14 +923,8 @@ def check_for_install() -> str:
             finish_node_install()
         else:
             if os.path.isdir(f"{config.user_home_dir}/harmony"):
-                print(
-                    "* Exiting Harmony Validator Toolbox\n* You already have a folder at ~/harmony.\n* Contact Easy Node for help setting up if this is an existing Harmony server."
-                )
-            if os.path.isfile(f"{config.user_home_dir}/harmony"):
-                print(
-                    "* Exiting Harmony Validator Toolbox\n* You already have a file at ~/harmony.\n* Contact Easy Node for help setting up if this is an existing Harmony server with a custom configuration."
-                )
-            raise SystemExit(0)
+                print("* You have a harmony folder already, skipping install. Returning to menu...")
+                return
     else:
         print(f"{Fore.GREEN}* You selected Shard: {environ.get('SHARD')}. ")
         install_harmony()
@@ -970,41 +964,49 @@ def install_rclone():
         return False
 
 
+def get_folder_choice() -> (str):
+    print(
+        Fore.GREEN +
+        f"* Which folder would you like to install harmony in?                              *\n{string_stars()}"
+    )
+    menu_options = [
+        "[1] - harmony",
+        "[2] - harmony0",
+        "[3] - harmony1",
+        "[4] - harmony2",
+        "[5] - harmony3",
+    ]
+    terminal_menu = TerminalMenu(menu_options, title="* Please choose your installation folder option. ")
+    vote_choice_index = terminal_menu.show()
+    if vote_choice_index == 3:  # The index of the "Quit" option
+        return None, "Quit"
+    vote_choice_text = menu_options[vote_choice_index].split(" - ")[1]
+    return vote_choice_text
+
+
 # Installer Module
 def install_harmony() -> None:
     while True:
         print(f"{string_stars()}\n* Install Location\n{string_stars()}")
-        default_path = f"{config.user_home_dir}/harmony"
-        question = ask_yes_no(
-            f"* Do you want to setup harmony in the default location?\n* {default_path}\n* "
-            "Or select 'No' to choose a custom folder (for a volume or 2nd disk setup): (YES/NO) "
-        )
-        if question:
-            # Has the space, install away
-            install_path = default_path
-            service_name = os.path.basename(default_path)
-            break
-        else:
-            custom_path = input(
-                "\n* Please enter the full path to a location you'd like to install harmony into.\n* "
-                "We suggest using your shard number at the end of harmony for compatability with toolbox, ie: /home/serviceharmony/harmony1 : "
+        folder_path = get_folder_choice()
+        harmony_dir = f'{config.user_home_dir}/{folder_path}'
+        set_var(config.dotenv_file, "HARMONY_DIR", f"{harmony_dir}")
+        if os.path.exists(harmony_dir):
+            question = ask_yes_no(
+                f"* The folder {harmony_dir} already exists.\n* Are you sure you want to re-install into this existing folder? (YES/NO) "
             )
-            if os.path.exists(custom_path):
-                question = ask_yes_no(
-                    f"* The folder {custom_path} already exists.\n* Are you sure you want to install into this existing folder? (YES/NO) "
-                )
-                if question:
-                    install_path = custom_path
-                    service_name = os.path.basename(custom_path)
-                    break
-            else:
-                question = ask_yes_no(
-                    f"* The path {custom_path} doesn't exist yet.\n* Do you want to create it and install the harmony files here? (YES/NO) "
-                )
-                if question:
-                    install_path = custom_path
-                    service_name = os.path.basename(custom_path)
-                    break
+            if question:
+                install_path = harmony_dir
+                service_name = os.path.basename(harmony_dir)
+                break
+        else:
+            question = ask_yes_no(
+                f"* The path {harmony_dir} doesn't exist yet.\n* Do you want to create it and install the harmony files here? (YES/NO) "
+            )
+            if question:
+                install_path = harmony_dir
+                service_name = os.path.basename(harmony_dir)
+                break
 
     # Save envs
     set_var(config.dotenv_file, "HARMONY_DIR", install_path)

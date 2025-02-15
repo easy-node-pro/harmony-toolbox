@@ -423,7 +423,7 @@ def safety_defaults() -> None:
     # clean files
     clear_temp_files()
     check_online_version()
-    # default settings section
+    # Set default ENV settings if they don't exist
     set_var(config.dotenv_file, "EASY_VERSION", config.easy_version)
     if environ.get("GAS_RESERVE") is None:
         set_var(config.dotenv_file, "GAS_RESERVE", "5")
@@ -439,16 +439,10 @@ def safety_defaults() -> None:
             set_var(config.dotenv_file, "SERVICE_NAME", "harmony")
             return
         elif os.path.isfile(f"{config.user_home_dir}/harmony"):
-            try:
-                subprocess.run(f"{config.user_home_dir}/harmony -V", check=True)
-                set_var(config.dotenv_file, "HARMONY_DIR", f"{config.user_home_dir}")
-                set_var(config.dotenv_file, "SERVICE_NAME", "harmony")
-                return
-            except subprocess.CalledProcessError as e:
-                print(
-                    f"* Well this is odd, somehow harmony was not found.\n*\n* You can add the HARMONY_DIR variable to your ~/.easynode.env file\n* Example default location: HARMONY_DIR = /home/serviceharmony/harmony\n*\n* Or contact Easy Node for custom configuration help.\* Error: {e}"
+            print(
+                    f"* It appears your don't have harmony binary in a folder. We're exiting as we're not compatible. Install harmony on a fresh server with toolbox to become compatible or read our docs.\n* Error: {e}"
                 )
-                raise SystemExit(0)
+            raise SystemExit(0)
         else:
             first_setup()
     if environ.get("SERVICE_NAME") is None:
