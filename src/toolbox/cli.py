@@ -5,15 +5,15 @@ from toolbox.utils import (
     load_var_file,
 )
 from toolbox.toolbox import (
+
     update_harmony_app,
     run_multistats,
     rewards_collector,
 )
 from toolbox.config import config
-from toolbox.library import {
+from toolbox.library import (
     first_setup,
-}
-
+)
 
 def parse_flags(parser):
     # Add the arguments
