@@ -417,11 +417,6 @@ def drive_check() -> None:
     server_drive_check(config.dotenv_file, config.harmony_dir)
     return
 
-
-def run_check_balance() -> None:
-    menu_check_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET"))
-
-
 def bingo_checker():
     command = f"grep BINGO {config.harmony_dir}/latest/zerolog-harmony.log | tail -10"
     process_command(command, shell=True, print_output=True)
@@ -969,66 +964,3 @@ def menu_active_bls() -> str:
         f"{string_stars()}\n* Press ENTER to return to the main menu.\n{string_stars()}"
     )
     input()
-
-
-# is this used?
-def is_float(value):
-    try:
-        float(value)
-        return True
-    except ValueError:
-        return False
-
-
-def menu_check_balance(rpc, validator_wallet) -> None:
-    if environ.get("NODE_TYPE") == "regular":
-        print(f"* Calling mainnet for balances...{string_stars()}")
-        validator_wallet_balance = get_wallet_balance(validator_wallet)
-        print(
-            f"* Your Validator Wallet Balance on Mainnet is: {validator_wallet_balance} Harmony ONE Coins"
-        )
-        print(
-            f"* Your Pending Validator Rewards are: {get_rewards_balance(rpc, validator_wallet)}\n{string_stars()}"
-        )
-        i = 0
-        while i < 1:
-            question = ask_yes_no(
-                "* Would you like to check another Harmony ONE Address? (YES/NO) "
-            )
-            if question:
-                balanceCheckAny()
-            else:
-                i = 1
-    else:
-        i = 0
-        while i < 1:
-            question = ask_yes_no(
-                "* Would you like to check a Harmony ONE Address? (YES/NO) "
-            )
-            if question:
-                balanceCheckAny()
-            else:
-                i = 1
-
-
-def balanceCheckAny():
-    check_wallet = input(
-        "* Type the address of the Harmony ONE Wallet you would like to check.\n"
-        + "* Only one wallets will work, no 0x addresses : "
-    )
-    print(f"* Calling mainnet for balances...\n{string_stars()}")
-    wallet_balance = get_wallet_balance(check_wallet)
-    print(
-        f"* The Mainnet Wallet Balance is: {wallet_balance} Harmony ONE Coins\n{string_stars()}"
-    )
-    input("* Press ENTER to continue.")
-
-
-def get_current_epoch():
-    current_epoch = 0
-    try:
-        current_epoch = blockchain.get_current_epoch(config.working_rpc_endpoint)
-        return current_epoch
-    except Exception as e:
-        print(f"* Error getting current epoch: {e}")
-        return current_epoch
