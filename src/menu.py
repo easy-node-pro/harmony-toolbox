@@ -39,7 +39,7 @@ def app():
     # Check harmony.sh
     check_harmony_sh()
     # Run parser if flags added
-    parser = argparse.ArgumentParser(description="Harmony Validator Toolbox - Help Menu by EasyNode.pro")
+    parser = argparse.ArgumentParser(description="Harmony Validator Toolbox - Help Menu by EasyNodePro.com")
     parse_flags(parser)
     # Clear screen, show logo
     loader_intro()

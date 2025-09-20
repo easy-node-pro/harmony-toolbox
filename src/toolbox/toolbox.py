@@ -227,7 +227,7 @@ def menu_topper_regular(software_versions) -> None:
 
     # Print Menu
     print(
-        f"{Fore.GREEN}{string_stars()}\n* Validator Toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{config.easy_version}{Fore.WHITE}   https://easynode.pro {Fore.GREEN}\n{string_stars()}"
+        f"{Fore.GREEN}{string_stars()}\n* Validator Toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{config.easy_version}{Fore.WHITE}   https://EasyNodePro.com {Fore.GREEN}\n{string_stars()}"
     )
     print(
         f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {Fore.BLUE}{config.server_host_name}{Fore.GREEN} - {Fore.YELLOW}{config.external_ip}{Fore.GREEN}'
@@ -785,7 +785,7 @@ def menu_validator_stats():
             raise ValueError("Empty or None data")
     except (ValueError, KeyError, TypeError) as e:
         print(
-            f"* Local Server Offline\n*\n* Run troubleshooting, See our documents site for info on how to manually troubleshoot:\n* https://docs.easynode.pro/harmony/post#validator-toolbox-troubleshooting\n{string_stars()}"
+            f"* Local Server Offline\n*\n* Run troubleshooting, See our documents site for info on how to manually troubleshoot:\n* https://docs.EasyNodePro.com/harmony/post#validator-toolbox-troubleshooting\n{string_stars()}"
         )
         finish_node()
 

@@ -291,7 +291,7 @@ def validator_stats_output() -> None:
     validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
     # Print Menu
     print(
-        f"{Fore.GREEN}{string_stars()}\n* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{config.easy_version}{Style.RESET_ALL}{Fore.WHITE}   https://easynode.pro {Fore.GREEN}*"
+        f"{Fore.GREEN}{string_stars()}\n* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{config.easy_version}{Style.RESET_ALL}{Fore.WHITE}   https://EasyNodePro.com {Fore.GREEN}*"
     )
     print(
         f"{string_stars()}\n* Your validator wallet address is: {Fore.RED}{str(environ.get('VALIDATOR_WALLET'))}{Fore.GREEN}\n* Your $ONE balance is:{' ' * 13}{Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:{' ' * 4}{Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get('VALIDATOR_WALLET')), 2))}{Fore.GREEN}\n* Server Hostname & IP:{' ' * 13}{config.server_host_name} - {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
@@ -335,8 +335,8 @@ def validator_stats_output() -> None:
 
     print(f"{string_stars()}")
     print(f"* Service Status & Sync:")
-    print(f"* {'Folder':<12} {'Shard':<5} {'Sync':<8} {'DB Size 0':<10} {'Free 0':<8} {'DB Size Shard':<12} {'Free Shard':<10}")
-    print(f"* {'-'*12} {'-'*5} {'-'*8} {'-'*10} {'-'*8} {'-'*12} {'-'*10}")
+    print(f"* {'Folder':<12} {'Shard':<6} {'Sync':<6} {'DB Size 0':<10} {'Free 0':<10} {'DB Size Shard':<14} {'Free Shard':<12}")
+    print(f"* {'-'*12} {'-'*6} {'-'*6} {'-'*10} {'-'*10} {'-'*14} {'-'*12}")
 
     # Now print results for each folder
     for result in folder_results:
@@ -347,7 +347,7 @@ def validator_stats_output() -> None:
                 sync_status = "OK" if result['local_epoch'] == result['remote_epoch'] and result['local_block'] == result['remote_block'] else "SYNC"
                 db_size_shard = result['db_size_shard'] if result['shard_id'] != 0 else "N/A"
                 free_space_shard = result['free_space_shard'] if result['shard_id'] != 0 else "N/A"
-                print(f"* {result['folder']:<12} {result['shard_id']:<5} {sync_status:<8} {colorize_size(result['db_size_0']):<10} {colorize_size(result['free_space_0']):<8} {colorize_size(db_size_shard):<12} {colorize_size(free_space_shard):<10}")
+                print(f"* {result['folder']:<12} {result['shard_id']:<6} {sync_status:<6} {colorize_size(result['db_size_0']):<10} {colorize_size(result['free_space_0']):<10} {colorize_size(db_size_shard):<14} {colorize_size(free_space_shard):<12}")
     
     print(f"{string_stars()}")
     print(f"* EasyNode.pro - https://easynode.pro")
@@ -1152,6 +1152,18 @@ def finish_node_install():
             + f"\n*\n{string_stars()}"
         )
     print(f"* Thanks for using Easy Node - Validator Node Server Software Installer!\n{string_stars()}")
+    if int(os.environ.get("RUN_COUNT", default=0)) == 0:
+        print(
+            "* Thanks for using Easy Node Toolbox - Making everything Easy Mode!"
+            + "\n*\n* We serve up free tools and guides for validators every day."
+            + "\n*\n* Check our guides out at https://docs.EasyNodePro.com\n*\n"
+            + "* Please consider joining our discord & supporting us one time or monthly\n* for our"
+            + f" tools and guides at https://bit.ly/easynodediscord today!\n*\n* Goodbye!\n{string_stars()}"
+        )
+    else:
+        print(
+            f"* EasyNodePro.com - https://EasyNodePro.com\n{string_stars()}"
+        )
     raise SystemExit(0)
 
 
@@ -1423,13 +1435,13 @@ def finish_node():
         print(
             "* Thanks for using Easy Node Toolbox - Making everything Easy Mode!"
             + "\n*\n* We serve up free tools and guides for validators every day."
-            + "\n*\n* Check our guides out at https://docs.easynode.pro\n*\n"
+            + "\n*\n* Check our guides out at https://docs.EasyNodePro.com\n*\n"
             + "* Please consider joining our discord & supporting us one time or monthly\n* for our"
             + f" tools and guides at https://bit.ly/easynodediscord today!\n*\n* Goodbye!\n{string_stars()}"
         )
     else:
         print(
-            f"* EasyNode.pro - https://easynode.pro\n{string_stars()}"
+            f"* EasyNodePro.com - https://EasyNodePro.com\n{string_stars()}"
         )
     raise SystemExit(0)
 
