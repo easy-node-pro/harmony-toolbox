@@ -335,8 +335,8 @@ def validator_stats_output() -> None:
 
     print(f"{string_stars()}")
     print(f"* Service Status & Sync:")
-    print(f"* {'Folder':<12} {'Shard':<5} {'Sync':<8} {'DB Size 0':<10} {'DB Size Shard':<12}")
-    print(f"* {'-'*12} {'-'*5} {'-'*8} {'-'*10} {'-'*12}")
+    print(f"* {'Folder':<12} {'Shard':<5} {'Sync':<8} {'DB Size 0':<10} {'Free 0':<8} {'DB Size Shard':<12} {'Free Shard':<10}")
+    print(f"* {'-'*12} {'-'*5} {'-'*8} {'-'*10} {'-'*8} {'-'*12} {'-'*10}")
 
     # Now print results for each folder
     for result in folder_results:
@@ -346,7 +346,8 @@ def validator_stats_output() -> None:
             else:
                 sync_status = "OK" if result['local_epoch'] == result['remote_epoch'] and result['local_block'] == result['remote_block'] else "SYNC"
                 db_size_shard = result['db_size_shard'] if result['shard_id'] != 0 else "N/A"
-                print(f"* {result['folder']:<12} {result['shard_id']:<5} {sync_status:<8} {colorize_size(result['db_size_0']):<10} {colorize_size(db_size_shard) if db_size_shard != 'N/A' else db_size_shard:<12}")
+                free_space_shard = result['free_space_shard'] if result['shard_id'] != 0 else "N/A"
+                print(f"* {result['folder']:<12} {result['shard_id']:<5} {sync_status:<8} {colorize_size(result['db_size_0']):<10} {colorize_size(result['free_space_0']):<8} {colorize_size(db_size_shard):<12} {colorize_size(free_space_shard):<10}")
     
     print(f"{string_stars()}")
     print(f"* EasyNode.pro - https://easynode.pro")
