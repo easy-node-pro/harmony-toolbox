@@ -666,24 +666,6 @@ def check_space_requirements(shard: int, directory: str) -> bool:
     return True
 
 
-def get_shard_menu() -> None:
-    if not environ.get("SHARD"):
-        print(f"{string_stars()}\n* Gathering more information about your server.\n{string_stars()}")
-        print(f"* Which shard do you want this node to sign blocks on?\n{string_stars()}")
-        menu_options = [
-            "[0] - Shard 0",
-            "[1] - Shard 1",
-        ]
-        terminal_menu = TerminalMenu(menu_options, title="* Which Shard will this node sign blocks on? ")
-        our_shard = int(terminal_menu.show())
-
-        set_var(config.dotenv_file, "SHARD", str(our_shard))
-        return our_shard
-    else:
-        print(f"* Shard already set to {environ.get('SHARD')}")
-        return int(environ.get("SHARD"))
-
-
 def get_wallet_address():
     print("* Signing Node, No Wallet!                                                                  *")
     print("* You are attempting to launch the menu but no wallet has been loaded, as you chose         *")
@@ -905,16 +887,6 @@ def version_checks(harmony_folder):
         software_versions["hmy_upgrade"] = "True"
 
     return software_versions
-
-
-def first_setup():
-    # Find Shard #
-    shard = get_shard_menu()
-    # Set mainnet
-    set_network("t")
-    # Look for a harmony install or install.
-    check_for_install(shard)
-    return
 
 
 # looks for ~/harmony or installs it if it's not there. Asks to overwrite if it finds it, run at your own risk.

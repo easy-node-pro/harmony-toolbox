@@ -40,14 +40,15 @@ from toolbox.utils import (
     get_db_size,
     first_setup,
     update_text_file,
-    get_shard_menu,
     recover_wallet,
     refreshing_stats_message,
     passphrase_status,
     clear_temp_files,
     set_network,
 )
-
+from toolbox.utils import (
+    get_shard_menu,
+)
 
 def run_multistats():
     refreshing_stats_message()
