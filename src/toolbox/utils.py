@@ -255,6 +255,8 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
             remote_data = json.loads(result_remote_server.stdout)
             db_size_0 = get_db_size(f'{current_full_path}', '0')
             db_size_shard = get_db_size(f'{current_full_path}', str(shard_id))
+            free_space_0 = free_space_check(f'{current_full_path}/harmony_db_0') if os.path.exists(f'{current_full_path}/harmony_db_0') else 'N/A'
+            free_space_shard = free_space_check(f'{current_full_path}/harmony_db_{shard_id}') if os.path.exists(f'{current_full_path}/harmony_db_{shard_id}') else 'N/A'
             return {
                 'folder': folder,
                 'path': current_full_path,
@@ -265,6 +267,8 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
                 'remote_block': remote_data['result']['current-block-number'],
                 'db_size_0': db_size_0,
                 'db_size_shard': db_size_shard,
+                'free_space_0': free_space_0,
+                'free_space_shard': free_space_shard,
                 'versions': software_versions
             }
         except Exception as e:
