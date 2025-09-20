@@ -295,7 +295,7 @@ def validator_stats_output() -> None:
     for folder in folders:
         harmony_service_status(folder)
     print(
-        f"* Epoch Signing Percentage:{' ' * 9}{Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current user home dir free space: {Fore.CYAN}{free_space_check(config.user_home_dir): >6}{Fore.GREEN}"
+        f"* Epoch Signing Percentage:{' ' * 9}{Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current user home dir free space: {colorize_size(free_space_check(config.user_home_dir)): >6}"
     )
     print(
         f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min\n{string_stars()}"
@@ -342,7 +342,7 @@ def validator_stats_output() -> None:
             else:
                 sync_status = "OK" if result['local_epoch'] == result['remote_epoch'] and result['local_block'] == result['remote_block'] else "SYNC"
                 db_size_shard = result['db_size_shard'] if result['shard_id'] != 0 else "N/A"
-                print(f"* {result['folder']:<12} {result['shard_id']:<5} {sync_status:<8} {result['db_size_0']:<10} {db_size_shard:<12}")
+                print(f"* {result['folder']:<12} {result['shard_id']:<5} {sync_status:<8} {colorize_size(result['db_size_0']):<10} {colorize_size(db_size_shard) if db_size_shard != 'N/A' else db_size_shard:<12}")
     
     print(f"{string_stars()}")
     print(f"* EasyNode.pro - https://easynode.pro")
@@ -1443,3 +1443,13 @@ def compare_two_files(input1, input2) -> None:
         return True
     else:
         return False
+
+def colorize_size(size_str, threshold_gb=50.0):
+    if size_str.endswith('G'):
+        try:
+            gb = float(size_str[:-1])
+            if gb < threshold_gb:
+                return f"{Fore.RED}{Back.YELLOW}{size_str}{Style.RESET_ALL}{Fore.GREEN}"
+        except ValueError:
+            pass
+    return size_str
