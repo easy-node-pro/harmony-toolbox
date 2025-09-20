@@ -3,7 +3,7 @@ import os
 import hashlib
 import shutil
 from toolbox.config import config
-from toolbox.utils import loader_intro, first_env_check, load_var_file, old_toolbox_check
+from toolbox.utils import loader_intro, first_env_check, load_var_file, old_toolbox_check, finish_node
 from toolbox.toolbox import safety_defaults, run_regular_node
 from toolbox.cli import parse_flags
 
@@ -25,6 +25,7 @@ def check_harmony_sh():
             shutil.copy2(config.harmony_sh_toolbox_path, config.harmony_sh_home_path)
             os.chmod(config.harmony_sh_home_path, 0o755)
             print("* Updated ~/harmony.sh. Please re-run the script for the latest version.")
+            finish_node()
     else:
         print("* ~/harmony.sh not found. If you want to use the launcher script, copy it from the toolbox.")
 
