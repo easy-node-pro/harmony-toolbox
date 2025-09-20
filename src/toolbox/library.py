@@ -230,7 +230,7 @@ def get_folders():
 
 def process_folder(folder, port, max_retries=3, retry_delay=3):
     if folder == "None":
-        return None
+        return
     current_full_path = f"{config.user_home_dir}/{folder}"
     software_versions = version_checks(current_full_path)
     retry_count = 0
@@ -244,42 +244,37 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
             ]
             result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
             local_data = json.loads(result_local_server.stdout)
-            shard_id = local_data['result']['shard-id']
             remote_server = [
                 f"{current_full_path}/hmy",
                 "utility",
                 "metadata",
-                f"--node=https://api.s{shard_id}.t.hmny.io",
+                f"--node=https://api.s{local_data['result']['shard-id']}.t.hmny.io",
             ]
             result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
             remote_data = json.loads(result_remote_server.stdout)
-            db_size_0 = get_db_size(f'{current_full_path}', '0')
-            db_size_shard = get_db_size(f'{current_full_path}', str(shard_id))
-            free_space_0 = free_space_check(f'{current_full_path}/harmony_db_0') if os.path.exists(f'{current_full_path}/harmony_db_0') else 'N/A'
-            free_space_shard = free_space_check(f'{current_full_path}/harmony_db_{shard_id}') if os.path.exists(f'{current_full_path}/harmony_db_{shard_id}') else 'N/A'
-            return {
-                'folder': folder,
-                'path': current_full_path,
-                'shard_id': shard_id,
-                'local_epoch': local_data['result']['current-epoch'],
-                'remote_epoch': remote_data['result']['current-epoch'],
-                'local_block': local_data['result']['current-block-number'],
-                'remote_block': remote_data['result']['current-block-number'],
-                'db_size_0': db_size_0,
-                'db_size_shard': db_size_shard,
-                'free_space_0': free_space_0,
-                'free_space_shard': free_space_shard,
-                'versions': software_versions
-            }
+            if local_data["result"]["shard-id"] == 0:
+                result_string = (
+                    f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
+                    + f"\n* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
+                    + f"\n*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
+                    + f"\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
+                )
+            else:
+                result_string = (
+                    f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
+                    + f"\n* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
+                    + f"\n*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
+                    + f"\n*   Local Shard 0 Size: {get_db_size(f'{current_full_path}', '0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
+                )
+            result_string += f"\n{string_stars()}"
+            return result_string
         except Exception as e:
             retry_count += 1
             if retry_count <= max_retries:
                 time.sleep(retry_delay)
             else:
-                return {
-                    'folder': folder,
-                    'error': f"Offline or error: {e}"
-                }
+                error_message = f"* Error, Service Offline or Unresponsive on port {port} with error: {e}"
+                return error_message
 
 
 def validator_stats_output() -> None:
@@ -291,7 +286,7 @@ def validator_stats_output() -> None:
     validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
     # Print Menu
     print(
-        f"{Fore.GREEN}{string_stars()}\n* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{config.easy_version}{Style.RESET_ALL}{Fore.WHITE}   https://EasyNodePro.com {Fore.GREEN}*"
+        f"{Fore.GREEN}{string_stars()}\n* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{config.easy_version}{Style.RESET_ALL}{Fore.WHITE}   https://easynodepro.com {Fore.GREEN}*"
     )
     print(
         f"{string_stars()}\n* Your validator wallet address is: {Fore.RED}{str(environ.get('VALIDATOR_WALLET'))}{Fore.GREEN}\n* Your $ONE balance is:{' ' * 13}{Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:{' ' * 4}{Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get('VALIDATOR_WALLET')), 2))}{Fore.GREEN}\n* Server Hostname & IP:{' ' * 13}{config.server_host_name} - {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
@@ -299,7 +294,7 @@ def validator_stats_output() -> None:
     for folder in folders:
         harmony_service_status(folder)
     print(
-        f"* Epoch Signing Percentage:{' ' * 9}{Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current user home dir free space: {colorize_size(free_space_check(config.user_home_dir)): >6}"
+        f"* Epoch Signing Percentage:{' ' * 9}{Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current user home dir free space: {Fore.CYAN}{free_space_check(config.user_home_dir): >6}{Fore.GREEN}"
     )
     print(
         f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min\n{string_stars()}"
@@ -322,34 +317,10 @@ def validator_stats_output() -> None:
     with ThreadPoolExecutor(max_workers=10) as executor:
         folder_results = list(executor.map(process_folder, folders.keys(), folders.values()))
 
-    # Collect version info (assume same for all)
-    versions = None
-    for result in folder_results:
-        if result and 'versions' in result:
-            versions = result['versions']
-            break
-
-    if versions:
-        print(f"* Harmony Version: {Fore.YELLOW}{versions['harmony_version']}{Fore.GREEN} (Upgrade: {versions['harmony_upgrade']})")
-        print(f"* HMY Version: {Fore.YELLOW}{versions['hmy_version']}{Fore.GREEN} (Upgrade: {versions['hmy_upgrade']})")
-
-    print(f"{string_stars()}")
-    print(f"* Service Status & Sync:")
-    print(f"* {'Folder':<12} {'Shard':<6} {'Sync':<6} {'DB Size 0':<10} {'Free 0':<10} {'DB Size Shard':<14} {'Free Shard':<12}")
-    print(f"* {'-'*12} {'-'*6} {'-'*6} {'-'*10} {'-'*10} {'-'*14} {'-'*12}")
-
     # Now print results for each folder
     for result in folder_results:
         if result:
-            if 'error' in result:
-                print(f"* {result['folder']:<12} ERROR: {result['error']}")
-            else:
-                sync_status = "OK" if result['local_epoch'] == result['remote_epoch'] and result['local_block'] == result['remote_block'] else "SYNC"
-                db_size_shard = result['db_size_shard'] if result['shard_id'] != 0 else "N/A"
-                free_space_shard = result['free_space_shard'] if result['shard_id'] != 0 else "N/A"
-                print(f"* {result['folder']:<12} {result['shard_id']:<6} {sync_status:<6} {colorize_size(result['db_size_0']):<10} {colorize_size(result['free_space_0']):<10} {colorize_size(db_size_shard):<14} {colorize_size(free_space_shard):<12}")
-    
-    print(f"{string_stars()}")
+            print(result)
 
 
 def harmony_service_status(service="harmony") -> None:
@@ -1150,18 +1121,6 @@ def finish_node_install():
             + f"\n*\n{string_stars()}"
         )
     print(f"* Thanks for using Easy Node - Validator Node Server Software Installer!\n{string_stars()}")
-    if int(os.environ.get("RUN_COUNT", default=0)) == 0:
-        print(
-            "* Thanks for using Easy Node Toolbox - Making everything Easy Mode!"
-            + "\n*\n* We serve up free tools and guides for validators every day."
-            + "\n*\n* Check our guides out at https://docs.EasyNodePro.com\n*\n"
-            + "* Please consider joining our discord & supporting us one time or monthly\n* for our"
-            + f" tools and guides at https://bit.ly/easynodediscord today!\n*\n* Goodbye!\n{string_stars()}"
-        )
-    else:
-        print(
-            f"* EasyNodePro.com - https://EasyNodePro.com\n{string_stars()}"
-        )
     raise SystemExit(0)
 
 
@@ -1433,13 +1392,13 @@ def finish_node():
         print(
             "* Thanks for using Easy Node Toolbox - Making everything Easy Mode!"
             + "\n*\n* We serve up free tools and guides for validators every day."
-            + "\n*\n* Check our guides out at https://docs.EasyNodePro.com\n*\n"
+            + "\n*\n* Check our guides out at https://docs.easynodepro.com\n*\n"
             + "* Please consider joining our discord & supporting us one time or monthly\n* for our"
             + f" tools and guides at https://bit.ly/easynodediscord today!\n*\n* Goodbye!\n{string_stars()}"
         )
     else:
         print(
-            f"* EasyNodePro.com - https://EasyNodePro.com\n{string_stars()}"
+            f"* EasyNodePro.com - https://easynodepro.com\n{string_stars()}"
         )
     raise SystemExit(0)
 
@@ -1458,13 +1417,3 @@ def compare_two_files(input1, input2) -> None:
         return True
     else:
         return False
-
-def colorize_size(size_str, threshold_gb=50.0):
-    if size_str.endswith('G'):
-        try:
-            gb = float(size_str[:-1])
-            if gb < threshold_gb:
-                return f"{Fore.RED}{Back.YELLOW}{size_str}{Style.RESET_ALL}{Fore.GREEN}"
-        except ValueError:
-            pass
-    return size_str

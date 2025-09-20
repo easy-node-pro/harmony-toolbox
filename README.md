@@ -3,12 +3,12 @@
 [![Discord Badge](https://img.shields.io/badge/chat-discord-purple?logo=discord)](https://discord.gg/Rcz5T6D9CV)
 [![Stake Now Badge](https://img.shields.io/badge/stake-harmony-brightgreen)](https://bit.ly/easynode)
 
-# Harmony Toolbox by [EasyNode.PRO](http://EasyNode.PRO "EasyNode.PRO")
+# Harmony Toolbox by [EasyNodePro.com](http://EasyNodePro.com "EasyNodePro.com")
 
 ## Application Repo
 
-![harmony toolbox loader intro photo](https://docs.easynode.pro/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ftwitter_card_800x418.e78cb26c.jpg&w=828&q=75)
+![harmony toolbox loader intro photo](https://docs.easynodepro.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ftwitter_card_800x418.e78cb26c.jpg&w=828&q=75)
 
 ## Documentation
 
-See our [guides site](https://docs.easynode.pro/harmony/toolbox) for more information.
+See our [guides site](https://docs.easynodepro.com/harmony/toolbox) for more information.
