@@ -344,7 +344,7 @@ def validator_stats_output() -> None:
             if 'error' in result:
                 print(f"* {result['folder']:<10} ERROR: {result['error']}")
             else:
-                sync_status = "OK" if result['local_epoch'] == result['remote_epoch'] and result['local_block'] == result['remote_block'] else "SYNC"
+                sync_status = "OK" if result['local_epoch'] == result['remote_epoch'] and abs(result['local_block'] - result['remote_block']) <= 2 else "SYNC"
                 db_size_shard = result['db_size_shard'] if result['shard_id'] != 0 else "N/A"
                 free_space_shard = result['free_space_shard'] if result['shard_id'] != 0 else "N/A"
                 print(f"* {result['folder']:<10} {result['shard_id']:<2} {sync_status:<5} {colorize_size(result['db_size_0']):<6} {colorize_size(result['free_space_0']):<6} {colorize_size(db_size_shard):<6} {colorize_size(free_space_shard):<6} {result['local_block']:<12}")
@@ -384,7 +384,7 @@ def get_db_size(harmony_dir, our_shard) -> str:
     harmony_db_size = subprocess.getoutput(f"du -h {harmony_dir}/harmony_db_{our_shard}")
     harmony_db_size = harmony_db_size.rstrip("\t")
     countTrim = len(environ.get("HARMONY_DIR")) + 13
-    return harmony_db_size[:-countTrim]
+    return harmony_db_size[:-countTrim].strip()
 
 
 def recovery_type():
@@ -1168,7 +1168,7 @@ def finish_node_install():
 def free_space_check(mount) -> str:
     ourDiskMount = get_harmony_dir_from_path(mount)
     _, _, free = shutil.disk_usage(ourDiskMount)
-    freeConverted = str(converted_unit(free))
+    freeConverted = str(converted_unit(free)).strip()
     return freeConverted
 
 
