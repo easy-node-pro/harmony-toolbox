@@ -335,8 +335,8 @@ def validator_stats_output() -> None:
 
     print(f"{string_stars()}")
     print(f"* Service Status & Sync:")
-    print(f"* {'Folder':<12} {'Shard':<6} {'Sync':<6} {'DB Size 0':<10} {'Free 0':<10} {'DB Size Shard':<14} {'Free Shard':<12}")
-    print(f"* {'-'*12} {'-'*6} {'-'*6} {'-'*10} {'-'*10} {'-'*14} {'-'*12}")
+    print(f"* {'Folder':<12} {'Shard':<6} {'Sync':<6} {'DB 0':<12} {'Free 0':<12} {'DB 1':<16} {'Free 1':<14} {'Block Num':<12}")
+    print(f"* {'-'*12} {'-'*6} {'-'*6} {'-'*12} {'-'*12} {'-'*16} {'-'*14} {'-'*12}")
 
     # Now print results for each folder
     for result in folder_results:
@@ -347,7 +347,7 @@ def validator_stats_output() -> None:
                 sync_status = "OK" if result['local_epoch'] == result['remote_epoch'] and result['local_block'] == result['remote_block'] else "SYNC"
                 db_size_shard = result['db_size_shard'] if result['shard_id'] != 0 else "N/A"
                 free_space_shard = result['free_space_shard'] if result['shard_id'] != 0 else "N/A"
-                print(f"* {result['folder']:<12} {result['shard_id']:<6} {sync_status:<6} {colorize_size(result['db_size_0']):<10} {colorize_size(result['free_space_0']):<10} {colorize_size(db_size_shard):<14} {colorize_size(free_space_shard):<12}")
+                print(f"* {result['folder']:<12} {result['shard_id']:<6} {sync_status:<6} {colorize_size(result['db_size_0']):<12} {colorize_size(result['free_space_0']):<12} {colorize_size(db_size_shard):<16} {colorize_size(free_space_shard):<14} {result['local_block']:<12}")
     
     print(f"{string_stars()}")
 
