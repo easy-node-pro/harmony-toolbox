@@ -8,7 +8,7 @@ from datetime import datetime
 from colorama import Fore, Back, Style
 from pyhmy import blockchain, numbers
 from requests.exceptions import HTTPError
-from toolbox.library import (
+from toolbox.utils import (
     process_command,
     print_stars,
     ask_yes_no,
@@ -47,64 +47,6 @@ from toolbox.library import (
     clear_temp_files,
     set_network,
 )
-
-
-def parse_flags(parser):
-    # Add the arguments
-    parser.add_argument(
-        "-s",
-        "--stats",
-        action="store_true",
-        help="Run your stats if Harmony is installed and running.",
-    )
-
-    parser.add_argument(
-        "-u",
-        "--upgrade",
-        action="store_true",
-        help="Upgrade your Harmony binary if an upgrade is available.",
-    )
-
-    parser.add_argument(
-        "-c",
-        "--collect",
-        action="store_true",
-        help="Collect your rewards to your validator wallet",
-    )
-
-    parser.add_argument(
-        "-cs",
-        "--collect-send",
-        action="store_true",
-        help="Collect your rewards to your validator wallet and send them to your rewards wallet",
-    )
-
-    parser.add_argument(
-        "-i",
-        "--install",
-        action="store_true",
-        help="Install Harmony ONE and hmy CLI if not installed.",
-    )
-
-    args = parser.parse_args()
-
-    if args.install:
-        first_setup()
-
-    if args.upgrade:
-        update_harmony_app()
-
-    if args.stats:
-        run_multistats()
-        finish_node()
-
-    if args.collect:
-        rewards_collector(config.working_rpc_endpoint)
-        finish_node()
-
-    if args.collect_send:
-        rewards_collector(config.working_rpc_endpoint, True)
-        finish_node()
 
 
 def run_multistats():
@@ -248,10 +190,14 @@ def menu_topper_regular(software_versions) -> None:
         validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
 
         # Not getting remote shard 0 epoch here, investigate.
-        remote_data_shard_0, local_data_shard, remote_data_shard = menu_validator_stats()
+        remote_data_shard_0, local_data_shard, remote_data_shard = (
+            menu_validator_stats()
+        )
 
         # Ensure dictionaries are initialized correctly
-        remote_data_shard_0 = remote_data_shard_0 if remote_data_shard_0 is not None else {}
+        remote_data_shard_0 = (
+            remote_data_shard_0 if remote_data_shard_0 is not None else {}
+        )
         local_data_shard = local_data_shard if local_data_shard is not None else {}
         remote_data_shard = remote_data_shard if remote_data_shard is not None else {}
 
@@ -417,6 +363,7 @@ def drive_check() -> None:
     server_drive_check(config.dotenv_file, config.harmony_dir)
     return
 
+
 def bingo_checker():
     command = f"grep BINGO {config.harmony_dir}/latest/zerolog-harmony.log | tail -10"
     process_command(command, shell=True, print_output=True)
@@ -452,8 +399,8 @@ def safety_defaults() -> None:
             return
         elif os.path.isfile(f"{config.user_home_dir}/harmony"):
             print(
-                    f"* It appears your don't have harmony binary in a folder. We're exiting as we're not compatible. Install harmony on a fresh server with toolbox to become compatible or read our docs.\n* Error: {e}"
-                )
+                f"* It appears your don't have harmony binary in a folder. We're exiting as we're not compatible. Install harmony on a fresh server with toolbox to become compatible or read our docs.\n* Error: {e}"
+            )
             raise SystemExit(0)
         else:
             first_setup()
@@ -808,7 +755,9 @@ def menu_validator_stats():
         f"--node={api_endpoint}",
     ]
     try:
-        result_remote_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+        result_remote_shard_0 = run(
+            remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True
+        )
         remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
 
         # Check if the remote data is empty or None

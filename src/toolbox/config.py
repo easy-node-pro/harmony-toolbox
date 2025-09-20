@@ -48,7 +48,7 @@ class Config:
                 return response.text
             except requests.exceptions.RequestException as x:
                 print(type(x), x)
-                return "0.0.0.0"
+        return None
 
     @staticmethod
     def get_working_endpoint(endpoints):
@@ -65,6 +65,14 @@ class Config:
     def working_rpc_endpoint(self):
         return self.get_working_endpoint(self.rpc_endpoints)
     
+    @property
+    def harmony_sh_home_path(self):
+        return path.join(self.user_home_dir, "harmony.sh")
+
+    @property
+    def harmony_sh_toolbox_path(self):
+        return path.join(self.toolbox_location, "src", "bin", "harmony.sh")
+
     def validate(self):
         """Validate that essential configurations are set."""
         essential_vars = [

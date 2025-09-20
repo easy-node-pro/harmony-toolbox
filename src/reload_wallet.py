@@ -1,6 +1,6 @@
 import dotenv
 from toolbox.config import config
-from toolbox.library import loader_intro, set_wallet_env, ask_yes_no, print_stars, recover_wallet
+from toolbox.utils import loader_intro, set_wallet_env, ask_yes_no, print_stars, recover_wallet
 
 if __name__ == "__main__":
     loader_intro()
