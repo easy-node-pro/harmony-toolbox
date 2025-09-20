@@ -38,7 +38,6 @@ from toolbox.utils import (
     run_command,
     validator_stats_output,
     get_db_size,
-    first_setup,
     update_text_file,
     recover_wallet,
     refreshing_stats_message,
