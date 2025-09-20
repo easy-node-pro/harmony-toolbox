@@ -230,7 +230,7 @@ def get_folders():
 
 def process_folder(folder, port, max_retries=3, retry_delay=3):
     if folder == "None":
-        return
+        return None
     current_full_path = f"{config.user_home_dir}/{folder}"
     software_versions = version_checks(current_full_path)
     retry_count = 0
@@ -244,37 +244,38 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
             ]
             result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
             local_data = json.loads(result_local_server.stdout)
+            shard_id = local_data['result']['shard-id']
             remote_server = [
                 f"{current_full_path}/hmy",
                 "utility",
                 "metadata",
-                f"--node=https://api.s{local_data['result']['shard-id']}.t.hmny.io",
+                f"--node=https://api.s{shard_id}.t.hmny.io",
             ]
             result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
             remote_data = json.loads(result_remote_server.stdout)
-            if local_data["result"]["shard-id"] == 0:
-                result_string = (
-                    f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
-                    + f"\n* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
-                    + f"\n*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
-                    + f"\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
-                )
-            else:
-                result_string = (
-                    f'* Results for the current folder: {current_full_path}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}'
-                    + f"\n* Remote Shard {local_data['result']['shard-id']} Epoch: {remote_data['result']['current-epoch']}, Current Block: {remote_data['result']['current-block-number']}"
-                    + f"\n*  Local Shard {local_data['result']['shard-id']} Epoch: {local_data['result']['current-epoch']}, Current Block: {(local_data['result']['current-block-number'])}"
-                    + f"\n*   Local Shard 0 Size: {get_db_size(f'{current_full_path}', '0')}\n*   Local Shard {local_data['result']['shard-id']} Size: {get_db_size(f'{current_full_path}', local_data['result']['shard-id'])}"
-                )
-            result_string += f"\n{string_stars()}"
-            return result_string
+            db_size_0 = get_db_size(f'{current_full_path}', '0')
+            db_size_shard = get_db_size(f'{current_full_path}', str(shard_id))
+            return {
+                'folder': folder,
+                'path': current_full_path,
+                'shard_id': shard_id,
+                'local_epoch': local_data['result']['current-epoch'],
+                'remote_epoch': remote_data['result']['current-epoch'],
+                'local_block': local_data['result']['current-block-number'],
+                'remote_block': remote_data['result']['current-block-number'],
+                'db_size_0': db_size_0,
+                'db_size_shard': db_size_shard,
+                'versions': software_versions
+            }
         except Exception as e:
             retry_count += 1
             if retry_count <= max_retries:
                 time.sleep(retry_delay)
             else:
-                error_message = f"* Error, Service Offline or Unresponsive on port {port} with error: {e}"
-                return error_message
+                return {
+                    'folder': folder,
+                    'error': f"Offline or error: {e}"
+                }
 
 
 def validator_stats_output() -> None:
@@ -317,10 +318,35 @@ def validator_stats_output() -> None:
     with ThreadPoolExecutor(max_workers=10) as executor:
         folder_results = list(executor.map(process_folder, folders.keys(), folders.values()))
 
+    # Collect version info (assume same for all)
+    versions = None
+    for result in folder_results:
+        if result and 'versions' in result:
+            versions = result['versions']
+            break
+
+    if versions:
+        print(f"* Harmony Version: {Fore.YELLOW}{versions['harmony_version']}{Fore.GREEN} (Upgrade: {versions['harmony_upgrade']})")
+        print(f"* HMY Version: {Fore.YELLOW}{versions['hmy_version']}{Fore.GREEN} (Upgrade: {versions['hmy_upgrade']})")
+
+    print(f"{string_stars()}")
+    print(f"* Service Status & Sync:")
+    print(f"* {'Folder':<12} {'Shard':<5} {'Sync':<8} {'DB Size 0':<10} {'DB Size Shard':<12}")
+    print(f"* {'-'*12} {'-'*5} {'-'*8} {'-'*10} {'-'*12}")
+
     # Now print results for each folder
     for result in folder_results:
         if result:
-            print(result)
+            if 'error' in result:
+                print(f"* {result['folder']:<12} ERROR: {result['error']}")
+            else:
+                sync_status = "OK" if result['local_epoch'] == result['remote_epoch'] and result['local_block'] == result['remote_block'] else "SYNC"
+                db_size_shard = result['db_size_shard'] if result['shard_id'] != 0 else "N/A"
+                print(f"* {result['folder']:<12} {result['shard_id']:<5} {sync_status:<8} {result['db_size_0']:<10} {db_size_shard:<12}")
+    
+    print(f"{string_stars()}")
+    print(f"* EasyNode.pro - https://easynode.pro")
+    print(f"{string_stars()}")
 
 
 def harmony_service_status(service="harmony") -> None:
