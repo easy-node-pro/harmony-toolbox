@@ -2,12 +2,18 @@ import socket
 import requests
 from os import environ, path
 from dotenv import load_dotenv
+import configparser
 
 
 class Config:
     def __init__(self):       
+        # Read version from setup.cfg
+        config_parser = configparser.ConfigParser()
+        setup_cfg_path = path.join(path.dirname(__file__), '..', '..', 'setup.cfg')
+        config_parser.read(setup_cfg_path)
+        self.easy_version = config_parser.get('metadata', 'version')
+        
         # Set constants
-        self.easy_version = "1.4.0"
         self.server_host_name = socket.gethostname()
         self.user_home_dir = path.expanduser("~")
         self.dotenv_file = f"{self.user_home_dir}/.easynode.env"
