@@ -296,10 +296,6 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
             result_local_server = run(
                 local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True
             )
-            if result_local_server.returncode != 0:
-                return {"folder": folder, "error": f"Command failed: {result_local_server.stderr.strip()}"}
-            if not result_local_server.stdout.strip():
-                return {"folder": folder, "error": "No output from local node"}
             local_data = json.loads(result_local_server.stdout)
             shard_id = local_data["result"]["shard-id"]
             remote_server = [
@@ -311,10 +307,6 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
             result_remote_server = run(
                 remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True
             )
-            if result_remote_server.returncode != 0:
-                return {"folder": folder, "error": f"Remote command failed: {result_remote_server.stderr.strip()}"}
-            if not result_remote_server.stdout.strip():
-                return {"folder": folder, "error": "No output from remote node"}
             remote_data = json.loads(result_remote_server.stdout)
             db_size_0 = get_db_size(f"{current_full_path}", "0")
             db_size_shard = get_db_size(f"{current_full_path}", str(shard_id))
@@ -1470,9 +1462,9 @@ def clone_shards():
 
     if our_shard != "0":
         # If we're not on shard 0, download the numbered shard DB here.
-        print(f"* Now cloning shard {our_shard}\n{string_stars()}")
+        print(f"* Now cloning shard {our_shard}\n* Sync progress will be shown every 30 seconds. This may take several minutes to hours depending on your connection.\n{string_stars()}")
         run_command(
-            f"rclone -P -L --webdav-url 'http://fulldb.s{our_shard}.t.hmny.io/webdav' --checksum sync snap: harmony_db_{our_shard} --multi-thread-streams 4 --transfers=32"
+            f"rclone -P -L --webdav-url 'http://fulldb.s{our_shard}.t.hmny.io/webdav' --checksum sync snap: harmony_db_{our_shard} --multi-thread-streams 4 --transfers=32 --stats=30s --stats-one-line"
         )
         print(
             f"{string_stars()}\n* Shard {our_shard} completed.\n* Shard 0 will be created when you start your service.\n{string_stars()}"
@@ -1480,10 +1472,10 @@ def clone_shards():
     if our_shard == "0":
         # If we're on shard 0, grab the snap DB here.
         print(
-            f"* Now cloning Shard 0, kick back and relax for awhile...\n{string_stars()}"
+            f"* Now cloning Shard 0, kick back and relax for awhile...\n* Sync progress will be shown every 30 seconds. This may take several hours depending on your connection.\n{string_stars()}"
         )
         run_command(
-            f"rclone -P -L --webdav-url 'http://snapdb.s0.t.hmny.io/webdav' --checksum sync snap: harmony_db_0 --multi-thread-streams 4 --transfers=32"
+            f"rclone -P -L --webdav-url 'http://snapdb.s0.t.hmny.io/webdav' --checksum sync snap: harmony_db_0 --multi-thread-streams 4 --transfers=32 --stats=30s --stats-one-line"
         )
 
 
