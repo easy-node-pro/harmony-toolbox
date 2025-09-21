@@ -296,6 +296,10 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
             result_local_server = run(
                 local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True
             )
+            if result_local_server.returncode != 0:
+                return {"folder": folder, "error": f"Command failed: {result_local_server.stderr.strip()}"}
+            if not result_local_server.stdout.strip():
+                return {"folder": folder, "error": "No output from local node"}
             local_data = json.loads(result_local_server.stdout)
             shard_id = local_data["result"]["shard-id"]
             remote_server = [
@@ -307,6 +311,10 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
             result_remote_server = run(
                 remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True
             )
+            if result_remote_server.returncode != 0:
+                return {"folder": folder, "error": f"Remote command failed: {result_remote_server.stderr.strip()}"}
+            if not result_remote_server.stdout.strip():
+                return {"folder": folder, "error": "No output from remote node"}
             remote_data = json.loads(result_remote_server.stdout)
             db_size_0 = get_db_size(f"{current_full_path}", "0")
             db_size_shard = get_db_size(f"{current_full_path}", str(shard_id))
