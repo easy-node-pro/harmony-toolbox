@@ -343,7 +343,7 @@ def validator_stats_output() -> None:
     service_statuses = [harmony_service_status(folder) for folder in folders]
     print(f"* Service Status: {' '.join(service_statuses)}")
     print(
-        f"* Current Signing %:{' ' * 9}{Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}"
+        f"* Current Signing %: {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}"
     )
     print(
         f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min\n{string_stars()}"
