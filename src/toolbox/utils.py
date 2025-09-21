@@ -339,10 +339,10 @@ def validator_stats_output() -> None:
     print(
         f"{string_stars()}\n* Your validator wallet address is: {Fore.RED}{str(environ.get('VALIDATOR_WALLET'))}{Fore.GREEN}\n* Your $ONE balance is:{' ' * 13}{Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:{' ' * 4}{Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get('VALIDATOR_WALLET')), 2))}{Fore.GREEN}\n* Server Hostname & IP:{' ' * 13}{config.server_host_name} - {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
     )
-    for folder in folders:
-        harmony_service_status(folder)
+    service_statuses = [harmony_service_status(folder) for folder in folders]
+    print(f"* Service Status: {', '.join(service_statuses)}")
     print(
-        f"* Epoch Signing Percentage:{' ' * 9}{Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current user home dir free space: {colorize_size(free_space_check(config.user_home_dir)): >6}"
+        f"* Current Signing %:{' ' * 9}{Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n"
     )
     print(
         f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min\n{string_stars()}"
@@ -355,12 +355,23 @@ def validator_stats_output() -> None:
         "metadata",
         f"--node={api_endpoint}",
     ]
+    remote_shard_1 = [
+        f"{config.user_home_dir}/{list(folders.items())[0][0]}/hmy",
+        "utility",
+        "metadata",
+        f"--node=https://api.s1.t.hmny.io",
+    ]
     result_shard_0 = run(
         remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True
     )
+    result_shard_1 = run(
+        remote_shard_1, stdout=PIPE, stderr=PIPE, universal_newlines=True
+    )
     remote_0_data = json.loads(result_shard_0.stdout)
+    remote_1_data = json.loads(result_shard_1.stdout)
     print(
-        f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}\n{string_stars()}"
+        f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}\n{string_stars()}\n" +
+        f"* Remote Shard 1 Epoch: {remote_1_data['result']['current-epoch']}, Current Block: {remote_1_data['result']['current-block-number']}\n{string_stars()}"
     )
 
     # Concurrently process each folder
@@ -387,7 +398,7 @@ def validator_stats_output() -> None:
     print(f"{string_stars()}")
     print(f"* Service Status & Sync:")
     print(
-        f"* {'Folder':<10} {'S':<2} {'Sync':<5} {'DB 0':<6} {'Free 0':<6} {'DB 1':<6} {'Free 1':<6} {'Block Num':<12}"
+        f"* {'Folder':<10} {'S':<2} {'Sync':<5} {'DB 0':<6} {'Free 0':<6} {'DB 1':<6} {'Free 1':<6} {'Local Block':<12}"
     )
     print(f"* {'-'*10} {'-'*2} {'-'*5} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*12}")
 
@@ -416,17 +427,12 @@ def validator_stats_output() -> None:
     print(f"{string_stars()}")
 
 
-def harmony_service_status(service="harmony") -> None:
+def harmony_service_status(service="harmony") -> str:
     status = subprocess.call(["systemctl", "is-active", "--quiet", service])
-    spaces = 22 - len(service)
     if status == 0:
-        print(
-            f"* {service} Service is:{' ' * spaces}{Fore.BLACK}{Back.GREEN}  Online  {Style.RESET_ALL}{Fore.GREEN}"
-        )
+        return f"{service}: Online"
     else:
-        print(
-            f"* {service} Service is:{' ' * spaces}{Fore.White}{Back.RED}  ** Offline **  {Style.RESET_ALL}{Fore.GREEN}"
-        )
+        return f"{service}: Offline"
 
 
 def set_wallet_env():
@@ -709,7 +715,7 @@ def proposal_choices_option() -> None:
         return question, None
 
 
-def get_vote_choice() -> (int, str):
+def get_vote_choice() -> tuple[int, str]:
     print(
         Fore.GREEN
         + f"* How would you like to vote on this proposal?                                                 *\n{string_stars()}"
