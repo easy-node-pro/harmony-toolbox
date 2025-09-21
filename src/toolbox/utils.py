@@ -11,7 +11,7 @@ from subprocess import PIPE, run
 from concurrent.futures import ThreadPoolExecutor
 from typing import Tuple
 from toolbox.config import config
-
+from toolbox.toolbox import finish_node_install, clone_shards
 
 class print_stuff:
     def __init__(self, reset: int = 0):
@@ -618,130 +618,6 @@ def load_var_file(var_file):
         return False
 
 
-def get_validator_wallet_name(wallet_id):
-    command = f"{environ.get('HARMONY_DIR')}/hmy keys list"
-    result = subprocess.run(
-        command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
-    )
-
-    if result.returncode != 0:
-        print(f"Error executing command: {result.stderr}")
-        return None
-
-    lines = result.stdout.strip().split("\n")
-    for line in lines[2:]:  # Skip the header line & blank
-        name, address = line.strip().split(None, 1)  # Split by whitespace, max 1 split
-        if address == wallet_id:
-            return name
-
-    print(f"Wallet ID {wallet_id} not found in the output.")
-    return None
-
-
-def governance_member_voting():
-    options = [
-        "AffinityShard",
-        "BoxedCloud",
-        "Buttheadus",
-        "Crypt0Tech",
-        "ENTER Group",
-        "GGA",
-        "Hank The Crank",
-        "Kratos",
-        "Legion",
-        "MetaONE",
-        "Nick Vasilich",
-        "Octeka.One",
-        "One1000Lakes",
-        "ONECelestial",
-        "PeaceLoveHarmony",
-        "PiStake",
-        "Quick.One",
-        "TEC Viva",
-        "Tr4ck3r",
-        "Quit",
-    ]
-
-    selected_indexes = []
-    selected_names = []
-
-    for _ in range(7):
-        print(
-            Fore.GREEN
-            + "* Highlight an option and hit enter to add it to your list.\n* (pick up to 7, 'Quit' to finish if less than 7 selections):"
-        )
-        terminal_menu = TerminalMenu(options, title="Choose a governance member:")
-        choice_index = terminal_menu.show()
-
-        # Check if the "Quit" option was selected
-        if choice_index == len(options) - 1:
-            print("Quitting the selection process.")
-            break
-
-        # Check if the same option was not selected previously
-        if choice_index not in selected_indexes:
-            selected_indexes.append(choice_index)
-            selected_names.append(options[choice_index])
-            print(f"You have selected: {options[choice_index]}")
-        else:
-            print(
-                f"You have already selected {options[choice_index]}. Please choose another option."
-            )
-
-    # Return selected indexes and names as a string
-    selected_indexes_str = (
-        "[" + ", ".join(map(str, [index + 1 for index in selected_indexes])) + "]"
-    )
-    selected_names_str = "[" + ", ".join(selected_names) + "]"
-    return selected_indexes_str, selected_names_str
-
-
-def proposal_choices_option() -> None:
-    options = ["HIP-30v2", "Governance for Harmony Recovery Wallet", "Quit"]
-
-    print("* Current proposals:\n*\n*")
-
-    terminal_menu = TerminalMenu(options, title="Choose a proposal to vote on:")
-    choice_index = terminal_menu.show()
-
-    # Check if the "Quit" option was selected
-    if choice_index == len(options) - 1:
-        print("Quitting the voting process.")
-        return False, None
-
-    # Ask for a vote on the selected proposal
-    selected_proposal = options[choice_index]
-    question = ask_yes_no(
-        f"* Would you like to vote on {selected_proposal}? (YES/NO): "
-    )
-    if question:
-        return question, selected_proposal
-    else:
-        return question, None
-
-
-def get_vote_choice() -> tuple[int, str]:
-    print(
-        Fore.GREEN
-        + f"* How would you like to vote on this proposal?                                                 *\n{string_stars()}"
-    )
-    menu_options = [
-        "[1] - Yes",
-        "[2] - No",
-        "[3] - Abstain",
-        "[4] - Quit",
-    ]
-    terminal_menu = TerminalMenu(
-        menu_options, title="* Please choose your voting option. "
-    )
-    vote_choice_index = terminal_menu.show()
-    if vote_choice_index == 3:  # The index of the "Quit" option
-        return None, "Quit"
-    vote_choice_num = vote_choice_index + 1
-    vote_choice_text = menu_options[vote_choice_index].split(" - ")[1]
-    return vote_choice_num, vote_choice_text
-
-
 def get_available_space(directory: str) -> int:
     """Returns available space in given directory in GB."""
     statvfs = os.statvfs(directory)
@@ -1268,77 +1144,6 @@ def install_harmony() -> None:
     subprocess.run(
         ["sudo", "systemctl", "enable", f"{service_name}.service"], check=True
     )
-
-
-# Database Downloader
-def clone_shards():
-    our_shard = environ.get("SHARD")
-    load_dotenv(config.dotenv_file)
-    # Move to ~/harmony
-    os.chdir(f"{environ.get('HARMONY_DIR')}")
-
-    if our_shard != "0":
-        # If we're not on shard 0, download the numbered shard DB here.
-        print(f"* Now cloning shard {our_shard}\n{string_stars()}")
-        run_command(
-            f"rclone -P -L --webdav-url 'http://fulldb.s{our_shard}.t.hmny.io/webdav' --checksum sync snap: harmony_db_{our_shard} --multi-thread-streams 4 --transfers=32"
-        )
-        print(
-            f"{string_stars()}\n* Shard {our_shard} completed.\n* Shard 0 will be created when you start your service.\n{string_stars()}"
-        )
-    if our_shard == "0":
-        # If we're on shard 0, grab the snap DB here.
-        print(
-            f"* Now cloning Shard 0, kick back and relax for awhile...\n{string_stars()}"
-        )
-        run_command(
-            f"rclone -P -L --webdav-url 'http://snapdb.s0.t.hmny.io/webdav' --checksum sync snap: harmony_db_0 --multi-thread-streams 4 --transfers=32"
-        )
-
-
-def finish_node_install():
-    load_var_file(config.dotenv_file)
-    our_shard = config.shard
-    print(
-        f"{string_stars()}\n* Installation is completed"
-        + "\n* Create a new wallet or recover your existing wallet into ./hmy"
-        + "\n* Create or upload your bls key & pass files into ~/harmony/.hmy/blskeys"
-        + f"\n* Finally, reboot to start synchronization.\n{string_stars()}"
-    )
-    if environ.get("NODE_WALLET") == "false":
-        print(
-            "* Post installation quick tips:"
-            + "\n* To recover your wallet on this server run:"
-            + "\n* python3 ~/harmony-toolbox/load_wallet.py"
-            + "\n*"
-            + "\n* To create BLS keys run:"
-            + f'\n* {environ.get("HARMONY_DIR")}/hmy keys generate-bls-keys --count 1 --shard {our_shard} --passphrase'
-            + f"\n*\n{string_stars()}"
-        )
-    else:
-        print(
-            "* Post installation quick tips:"
-            + "\n* To recover your wallet again, run:"
-            + "\n* python3 ~/harmony-toolbox/load_wallet.py"
-            + "\n*"
-            + "\n* To create BLS keys run:"
-            + f'\n* {environ.get("HARMONY_DIR")}/hmy keys generate-bls-keys --count 1 --shard {our_shard} {environ.get("PASS_SWITCH")}'
-            + f"\n*\n{string_stars()}"
-        )
-    print(
-        f"* Thanks for using Easy Node - Validator Node Server Software Installer!\n{string_stars()}"
-    )
-    if int(os.environ.get("RUN_COUNT", default=0)) == 0:
-        print(
-            "* Thanks for using Easy Node Toolbox - Making everything Easy Mode!"
-            + "\n*\n* We serve up free tools and guides for validators every day."
-            + "\n*\n* Check our guides out at https://docs.EasyNodePro.com\n*\n"
-            + "* Please consider joining our discord & supporting us one time or monthly\n* for our"
-            + f" tools and guides at https://bit.ly/easynodediscord today!\n*\n* Goodbye!\n{string_stars()}"
-        )
-    else:
-        print(f"* EasyNodePro.com - https://EasyNodePro.com\n{string_stars()}")
-    raise SystemExit(0)
 
 
 def free_space_check(mount) -> str:

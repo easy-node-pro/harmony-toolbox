@@ -54,7 +54,7 @@ from toolbox.utils import (
 
 def first_setup():
     # Find Shard #
-    shard = get_shard_menu()
+    shard = int(environ.get("SHARD"))
     # Set mainnet
     set_network("t")
     # Look for a harmony install or install.
