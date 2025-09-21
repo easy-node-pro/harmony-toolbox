@@ -27,8 +27,6 @@ from toolbox.utils import (
     free_space_check,
     server_drive_check,
     all_sys_info,
-    governance_member_voting,
-    proposal_choices_option,
     menu_ubuntu_updates,
     menu_reboot_server,
     finish_node,
