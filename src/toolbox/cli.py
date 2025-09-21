@@ -71,16 +71,16 @@ def parse_flags(parser):
 
     if args.install:
         if get_folders():
-            question = ask_yes_no("* It appears you already have Harmony installed. Would you like to install a 2nd service? (YES/NO)")
+            question = ask_yes_no("* It appears you already have Harmony installed. Would you like to install another service? (YES/NO)")
             if question:
-                print("* To install a 2nd service, please contact us via our Discord on https://EasyNodePro.com/links by sending in a help ticket for assistance.")
+                print("* To install another service, please contact us via our Discord on https://EasyNodePro.com/links by sending in a help ticket for assistance.")
             finish_node()
         else:
             first_setup()
 
     if args.install_second:
         if get_folders():
-            question = ask_yes_no("* It appears you already have Harmony installed. Would you like to install a 2nd service? (YES/NO)")
+            question = ask_yes_no("* It appears you already have Harmony installed. Would you like to install another service? (YES/NO)")
             if question:
                 multi_setup()
             finish_node()
