@@ -13,6 +13,7 @@ from typing import Tuple
 from toolbox.config import config
 from toolbox.toolbox import finish_node_install, clone_shards
 
+
 class print_stuff:
     def __init__(self, reset: int = 0):
         self.reset = reset
@@ -50,6 +51,23 @@ def set_var(env_file: str, key_name: str, update_name: str):
     dotenv.set_key(env_file, key_name, update_name)
     load_var_file(env_file)
     return
+
+
+def process_command(command: str, shell=True, print_output=True) -> Tuple[bool, str]:
+    result = subprocess.run(
+        command, shell=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+    )
+
+    # Command was successful
+    if result.returncode == 0:
+        if print_output and result.stdout:
+            print(result.stdout)
+        return True, result.stdout
+
+    # Command failed
+    if print_output:
+        print(f"Error executing command: {result.stderr}")
+    return False, result.stderr
 
 
 # loader intro splash screen
@@ -242,7 +260,7 @@ def update_harmony_binary():
 # Search harmony.conf for the proper port to hit
 def find_port(folder):
     with open(f"{folder}/harmony.conf") as f:
-      data_file = f.readlines()
+        data_file = f.readlines()
     count = 0
     for line in data_file:
         line = line.rstrip()
@@ -371,8 +389,8 @@ def validator_stats_output() -> None:
     remote_0_data = json.loads(result_shard_0.stdout)
     remote_1_data = json.loads(result_shard_1.stdout)
     print(
-        f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}\n" +
-        f"* Remote Shard 1 Epoch: {remote_1_data['result']['current-epoch']}, Current Block: {remote_1_data['result']['current-block-number']}\n{string_stars()}"
+        f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}\n"
+        + f"* Remote Shard 1 Epoch: {remote_1_data['result']['current-epoch']}, Current Block: {remote_1_data['result']['current-block-number']}\n{string_stars()}"
     )
 
     # Concurrently process each folder
@@ -456,7 +474,7 @@ def get_db_size(harmony_dir, our_shard) -> str:
         f"du -h {harmony_dir}/harmony_db_{our_shard}",
         shell=True,
         capture_output=True,
-        text=True
+        text=True,
     )
     harmony_db_size = result.stdout.strip()
     harmony_db_size = harmony_db_size.rstrip("\t")
@@ -544,23 +562,6 @@ def passphrase_set():
     save_text(f"{environ.get('HARMONY_DIR')}/passphrase.txt", password_1)
     load_var_file(config.dotenv_file)
     passphrase_status()
-
-
-def process_command(command: str, shell=True, print_output=True) -> Tuple[bool, str]:
-    result = subprocess.run(
-        command, shell=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
-    )
-
-    # Command was successful
-    if result.returncode == 0:
-        if print_output and result.stdout:
-            print(result.stdout)
-        return True, result.stdout
-
-    # Command failed
-    if print_output:
-        print(f"Error executing command: {result.stderr}")
-    return False, result.stderr
 
 
 def run_command(command: str, shell=True, print_output=True) -> bool:
@@ -1030,10 +1031,16 @@ def install_harmony() -> None:
         # Show storage info before asking about the path
         available_space = get_available_space(os.path.dirname(harmony_dir))
         required_space = 400 if int(environ.get("SHARD")) == 0 else 50
-        print(f"{Fore.GREEN}* Checking available storage on {os.path.dirname(harmony_dir)}...")
+        print(
+            f"{Fore.GREEN}* Checking available storage on {os.path.dirname(harmony_dir)}..."
+        )
         print(f"* Current free space: {int(available_space)} GB")
-        print(f"* Estimated space required for shard {environ.get('SHARD')}: {required_space} GB")
-        print(f"* Estimated space remaining after installation: {int(available_space - required_space)} GB")
+        print(
+            f"* Estimated space required for shard {environ.get('SHARD')}: {required_space} GB"
+        )
+        print(
+            f"* Estimated space remaining after installation: {int(available_space - required_space)} GB"
+        )
         if os.path.exists(harmony_dir):
             question = ask_yes_no(
                 f"{Fore.GREEN}* The folder {harmony_dir} already exists.\n* Are you sure you want to re-install into this existing folder? (YES/NO) "
@@ -1057,7 +1064,9 @@ def install_harmony() -> None:
 
     # Create the directory if not exists, and set ownership
     process_command(f"sudo mkdir -p {install_path}")
-    process_command(f"sudo chown {config.active_user}:{config.active_user} {install_path}")
+    process_command(
+        f"sudo chown {config.active_user}:{config.active_user} {install_path}"
+    )
 
     # Check space requirements for the selected shard
     shard_value = int(environ.get("SHARD"))
