@@ -390,10 +390,10 @@ def validator_stats_output() -> None:
 
     if versions:
         print(
-            f"* Toolbox Version: {Fore.CYAN}v{config.easy_version}{Fore.GREEN}\n* Harmony Version: {Fore.YELLOW}{versions['harmony_version']}{Fore.GREEN} (Upgrade: {versions['harmony_upgrade']})"
+            f"* Toolbox Version: {Fore.CYAN}v{config.easy_version}{Fore.GREEN}\n* Harmony Version: {Fore.YELLOW}{versions['harmony_version']}{Fore.GREEN} Upgrade Available: {versions['harmony_upgrade']}"
         )
         print(
-            f"* HMY Version: {' '*4}{Fore.YELLOW}{versions['hmy_version']}{Fore.GREEN}{' '*8} Upgrade Available: {versions['hmy_upgrade']}"
+            f"* HMY Version: {' '*4}{Fore.YELLOW}{versions['hmy_version']}{Fore.GREEN}{' '*17} Upgrade Available: {versions['hmy_upgrade']}"
         )
 
     print(f"{string_stars()}")
