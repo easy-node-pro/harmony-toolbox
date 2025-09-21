@@ -880,7 +880,23 @@ def first_env_check(env_file) -> None:
         print("* No harmony folders found. Please run installation first.")
         finish_node()
     
-    folder_name = list(folders.keys())[0]
+    if len(folders) == 1:
+        folder_name = list(folders.keys())[0]
+    else:
+        print("* Multiple harmony folders found:")
+        for i, f in enumerate(folders.keys()):
+            print(f"  {i+1}. {f}")
+        while True:
+            try:
+                choice = int(input("* Select folder number: ")) - 1
+                if 0 <= choice < len(folders):
+                    folder_name = list(folders.keys())[choice]
+                    break
+                else:
+                    print("* Invalid choice.")
+            except ValueError:
+                print("* Please enter a number.")
+    
     harmony_dir = f"{config.user_home_dir}/{folder_name}"
     os.environ["HARMONY_DIR"] = harmony_dir
     
@@ -907,9 +923,9 @@ def first_env_check(env_file) -> None:
                 os.environ["VALIDATOR_WALLET"] = wallet
             else:
                 os.remove(wallet_file)  # remove empty file
-                _prompt_wallet(harmony_dir, wallet_file)
+                _prompt_wallet(wallet_file)
     else:
-        _detect_or_prompt_wallet(harmony_dir, wallet_file)
+        _prompt_wallet(wallet_file)
     
     # Detect passphrase
     if os.path.exists(f"{harmony_dir}/passphrase.txt"):
@@ -925,27 +941,7 @@ def first_env_check(env_file) -> None:
     return
 
 
-def _detect_or_prompt_wallet(harmony_dir, wallet_file):
-    # Try to detect wallet from hmy keys list
-    try:
-        output = subprocess.getoutput(f"{harmony_dir}/hmy keys list | grep {config.active_user}")
-        if output.strip():
-            wallet = output.lstrip(config.active_user).strip()
-            print(f"* Detected wallet from hmy keys: {wallet}")
-            save = ask_yes_no("* Save this wallet for this folder? (Y/N)")
-            if save:
-                with open(wallet_file, "w") as f:
-                    f.write(wallet)
-                os.environ["VALIDATOR_WALLET"] = wallet
-            else:
-                _prompt_wallet(harmony_dir, wallet_file)
-        else:
-            _prompt_wallet(harmony_dir, wallet_file)
-    except Exception:
-        _prompt_wallet(harmony_dir, wallet_file)
-
-
-def _prompt_wallet(harmony_dir, wallet_file):
+def _prompt_wallet(wallet_file):
     while True:
         wallet = input("* Enter your validator wallet address (one1... or 0x...): ").strip()
         if wallet.startswith(("one1", "0x")) and len(wallet) > 10:
