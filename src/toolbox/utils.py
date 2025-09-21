@@ -371,7 +371,7 @@ def validator_stats_output() -> None:
     remote_0_data = json.loads(result_shard_0.stdout)
     remote_1_data = json.loads(result_shard_1.stdout)
     print(
-        f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}\n{string_stars()}\n" +
+        f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}\n" +
         f"* Remote Shard 1 Epoch: {remote_1_data['result']['current-epoch']}, Current Block: {remote_1_data['result']['current-block-number']}\n{string_stars()}"
     )
 
