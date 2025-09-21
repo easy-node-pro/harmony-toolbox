@@ -1180,7 +1180,7 @@ def install_harmony() -> None:
 
     # Create the directory if not exists, and set ownership
     process_command(f"sudo mkdir -p {install_path}")
-    process_command(f"sudo chown {config.active_user} {install_path}")
+    process_command(f"sudo chown {config.active_user}:{config.active_user} {install_path}")
 
     # Check space requirements for the selected shard
     shard_value = int(environ.get("SHARD"))
