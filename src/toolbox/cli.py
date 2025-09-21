@@ -28,6 +28,13 @@ def parse_flags(parser):
     )
 
     parser.add_argument(
+        "-r",
+        "--refresh",
+        action="store_true",
+        help="Refresh stats continuously every 10 seconds.",
+    )
+
+    parser.add_argument(
         "-u",
         "--upgrade",
         action="store_true",

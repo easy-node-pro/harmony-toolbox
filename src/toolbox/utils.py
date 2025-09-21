@@ -901,7 +901,7 @@ def first_env_check(env_file) -> None:
         
         if last_folder:
             print(f"* Using last selected folder: {last_folder}")
-            use_last = ask_yes_no("* Use this folder? (Y/N)")
+            use_last = ask_yes_no("* Use this as default folder? (Y/N)")
             if use_last:
                 folder_name = last_folder
             else:
