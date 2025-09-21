@@ -1151,6 +1151,13 @@ def install_harmony() -> None:
         folder_path = get_folder_choice()
         harmony_dir = f"{config.user_home_dir}/{folder_path}"
         set_var(config.dotenv_file, "HARMONY_DIR", f"{harmony_dir}")
+        # Show storage info before asking about the path
+        available_space = get_available_space(os.path.dirname(harmony_dir))
+        required_space = 400 if int(environ.get("SHARD")) == 0 else 50
+        print(f"* Checking available storage on {os.path.dirname(harmony_dir)}...")
+        print(f"* Current free space: {int(available_space)} GB")
+        print(f"* Estimated space required for shard {environ.get('SHARD')}: {required_space} GB")
+        print(f"* Estimated space remaining after installation: {int(available_space - required_space)} GB")
         if os.path.exists(harmony_dir):
             question = ask_yes_no(
                 f"{Fore.GREEN}* The folder {harmony_dir} already exists.\n* Are you sure you want to re-install into this existing folder? (YES/NO) "
@@ -1178,12 +1185,6 @@ def install_harmony() -> None:
 
     # Check space requirements for the selected shard
     shard_value = int(environ.get("SHARD"))
-    available_space = get_available_space(install_path)
-    required_space = 400 if shard_value == 0 else 50
-    print(f"* Checking available storage on {install_path}...")
-    print(f"* Current free space: {int(available_space)} GB")
-    print(f"* Estimated space required for shard {shard_value}: {required_space} GB")
-    print(f"* Estimated space remaining after installation: {int(available_space - required_space)} GB")
     answer = ask_yes_no(
         f"* Last chance to verify, you want to install shard {shard_value} into {install_path}? (Y/N): "
     )
