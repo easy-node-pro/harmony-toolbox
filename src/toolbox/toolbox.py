@@ -223,7 +223,6 @@ def get_shard_menu() -> None:
         config.shard = our_shard
         return our_shard
     else:
-        print(f"* Shard already set to {environ.get('SHARD')}")
         return int(environ.get("SHARD"))
 
 
