@@ -430,9 +430,9 @@ def validator_stats_output() -> None:
 def harmony_service_status(service="harmony") -> str:
     status = subprocess.call(["systemctl", "is-active", "--quiet", service])
     if status == 0:
-        return f"{service}: Online"
+        return f"{service}: {Fore.GREEN}Online{Style.RESET_ALL}"
     else:
-        return f"{service}: Offline"
+        return f"{service}: {Fore.RED}Offline{Style.RESET_ALL}"
 
 
 def set_wallet_env():
