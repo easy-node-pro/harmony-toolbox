@@ -874,13 +874,49 @@ def check_online_version(harmony_version_str="Offline", hmy_ver="Offline") -> No
 
 
 def first_env_check(env_file) -> None:
-    # Load our easynode.env file
-    load_var_file(env_file)
-    # Update run count for menus
-    current_run_count = int(os.environ.get("RUN_COUNT", default=0)) + 1
-    if current_run_count >= config.print_menu_count:
-        current_run_count = 0
-    set_var(config.dotenv_file, "RUN_COUNT", str(current_run_count))
+    # Detect environment variables instead of loading from .env
+    folders = get_folders()
+    if not folders:
+        print("* No harmony folders found. Please run installation first.")
+        finish_node()
+    
+    folder_name = list(folders.keys())[0]
+    harmony_dir = f"{config.user_home_dir}/{folder_name}"
+    os.environ["HARMONY_DIR"] = harmony_dir
+    
+    # Read shard from conf
+    try:
+        with open(f"{harmony_dir}/harmony.conf", "r") as f:
+            for line in f:
+                if line.strip().startswith("ShardID ="):
+                    shard = line.split("=")[1].strip()
+                    os.environ["SHARD"] = shard
+                    break
+    except FileNotFoundError:
+        print("* harmony.conf not found.")
+        finish_node()
+    
+    os.environ["SERVICE_NAME"] = folder_name
+    
+    # Prompt for wallet if not set
+    if not os.environ.get("VALIDATOR_WALLET"):
+        wallet = input("* Enter your validator wallet address (one1... or 0x...): ").strip()
+        if not wallet:
+            print("* Wallet address required.")
+            finish_node()
+        os.environ["VALIDATOR_WALLET"] = wallet
+    
+    # Detect passphrase
+    if os.path.exists(f"{harmony_dir}/passphrase.txt"):
+        os.environ["PASS_SWITCH"] = f"--passphrase-file {harmony_dir}/passphrase.txt"
+    else:
+        os.environ["PASS_SWITCH"] = "--passphrase"
+    
+    os.environ["NODE_WALLET"] = "true"
+    
+    # Fetch online versions
+    check_online_version()
+    
     return
 
 
@@ -1480,8 +1516,7 @@ def clone_shards():
 
 
 def finish_node_install():
-    load_var_file(config.dotenv_file)
-    our_shard = config.shard
+    our_shard = os.environ.get("SHARD", "0")
     print(
         f"{string_stars()}\n* Installation is completed"
         + "\n* Create a new wallet or recover your existing wallet into ./hmy"

@@ -3,7 +3,6 @@ from toolbox.config import config
 from toolbox.utils import (
     loader_intro,
     first_env_check,
-    load_var_file,
     old_toolbox_check,
     check_harmony_sh,
 )
@@ -36,6 +35,4 @@ def app():
 
 
 if __name__ == "__main__":
-    # load environment variables
-    load_var_file(config.dotenv_file)
     app()

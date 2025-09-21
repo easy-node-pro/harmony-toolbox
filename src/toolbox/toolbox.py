@@ -69,7 +69,6 @@ def multi_setup():
     )
     our_shard = int(terminal_menu.show())
 
-    print(f"* Selected Shard: {our_shard}")
     set_var(config.dotenv_file, "SHARD", str(our_shard))
     config.shard = our_shard
     check_for_install(our_shard)
