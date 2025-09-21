@@ -339,7 +339,8 @@ def validator_stats_output() -> None:
     print(
         f"{string_stars()}\n* Your validator wallet address is: {Fore.RED}{str(environ.get('VALIDATOR_WALLET'))}{Fore.GREEN}\n* Your $ONE balance is:{' ' * 13}{Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:{' ' * 4}{Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get('VALIDATOR_WALLET')), 2))}{Fore.GREEN}\n* Server Hostname & IP:{' ' * 13}{config.server_host_name} - {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
     )
-    service_statuses = [harmony_service_status(folder) for folder in folders]
+    service_statuses = f"* "
+    service_statuses += [harmony_service_status(folder) for folder in folders]
     print(f"* Service Status: {', '.join(service_statuses)}")
     print(
         f"* Current Signing %:{' ' * 9}{Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n"
@@ -430,9 +431,9 @@ def validator_stats_output() -> None:
 def harmony_service_status(service="harmony") -> str:
     status = subprocess.call(["systemctl", "is-active", "--quiet", service])
     if status == 0:
-        return f"{service}: Online"
+        return "{service}: Online"
     else:
-        return f"{service}: Offline"
+        return "{service}: Offline"
 
 
 def set_wallet_env():
