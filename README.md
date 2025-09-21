@@ -12,3 +12,6 @@
 ## Documentation
 
 See our [guides site](https://docs.easynodepro.com/harmony/toolbox) for more information.
+
+## Advanced Multi Service Setup
+This configuration requires you to be able to modify the ports in your conf, create your own bls key and pass files and manage those and much more. Not for non advanced linux admins. Stop by the [Discord server](https://easynodepro.com/links) and start a help ticket if you need help with installing extra services.
