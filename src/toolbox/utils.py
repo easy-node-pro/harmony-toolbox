@@ -367,6 +367,9 @@ def validator_stats_output() -> None:
     )
     # get api here
     api_endpoint = config.working_rpc_endpoint
+    shard_0_info = ""
+    shard_1_info = ""
+    
     if api_endpoint:
         remote_shard_0 = [
             f"{config.user_home_dir}/{list(folders.items())[0][0]}/hmy",
@@ -379,13 +382,11 @@ def validator_stats_output() -> None:
         )
         if result_shard_0.returncode == 0 and result_shard_0.stdout.strip():
             remote_0_data = json.loads(result_shard_0.stdout)
-            print(
-                f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}\n"
-            )
+            shard_0_info = f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}\n"
         else:
-            print("* Unable to fetch remote Shard 0 data\n")
+            shard_0_info = "* Unable to fetch remote Shard 0 data\n"
     else:
-        print("* No working RPC endpoint for Shard 0\n")
+        shard_0_info = "* No working RPC endpoint for Shard 0\n"
     
     remote_shard_1 = [
         f"{config.user_home_dir}/{list(folders.items())[0][0]}/hmy",
@@ -398,11 +399,11 @@ def validator_stats_output() -> None:
     )
     if result_shard_1.returncode == 0 and result_shard_1.stdout.strip():
         remote_1_data = json.loads(result_shard_1.stdout)
-        print(
-            f"* Remote Shard 1 Epoch: {remote_1_data['result']['current-epoch']}, Current Block: {remote_1_data['result']['current-block-number']}\n{string_stars()}"
-        )
+        shard_1_info = f"* Remote Shard 1 Epoch: {remote_1_data['result']['current-epoch']}, Current Block: {remote_1_data['result']['current-block-number']}\n{string_stars()}"
     else:
-        print("* Unable to fetch remote Shard 1 data\n{string_stars()}")
+        shard_1_info = f"* Unable to fetch remote Shard 1 data\n{string_stars()}"
+    
+    print(shard_0_info + shard_1_info)
 
     # Concurrently process each folder
     with ThreadPoolExecutor(max_workers=10) as executor:
