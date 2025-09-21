@@ -743,7 +743,7 @@ def harmony_voting() -> None:
             print(
                 f"* Voting for {vote_choice_option} - {vote_choice_text} on proposal {proposal}\n* Please enter your validator wallet password now: \n"
             )
-            command = f"{environ.get('HARMONY_DIR')}/hmy governance vote-proposal --space harmony-mainnet.eth --proposal 0xce5f516c683170e4164a06e42dcd487681f46f42606b639955eb7c0fa3b13b96 --proposal-type single-choice --choice {vote_choice_option} --key {validator_wallet_name} --passphrase"
+            command = f"{config.harmony_dir}/hmy governance vote-proposal --space harmony-mainnet.eth --proposal 0xce5f516c683170e4164a06e42dcd487681f46f42606b639955eb7c0fa3b13b96 --proposal-type single-choice --choice {vote_choice_option} --key {validator_wallet_name} --passphrase"
             process_command(
                 command,
                 True,
@@ -761,7 +761,7 @@ def harmony_voting() -> None:
                 print(
                     f"* Voting for {vote_choice_option} - {vote_choice_names_list} on proposal {proposal}\n* Please enter your validator wallet password now: \n"
                 )
-                command = f"{environ.get('HARMONY_DIR')}/hmy governance vote-proposal --space harmony-mainnet.eth --proposal 0x80b87627254aa71870407a3c95742aa30c0e5ccdc81da23a1a54dcf0108778ae --proposal-type approval --choice \"{vote_choice_option}\" --key {validator_wallet_name} --passphrase"
+                command = f"{config.harmony_dir}/hmy governance vote-proposal --space harmony-mainnet.eth --proposal 0x80b87627254aa71870407a3c95742aa30c0e5ccdc81da23a1a54dcf0108778ae --proposal-type approval --choice \"{vote_choice_option}\" --key {validator_wallet_name} --passphrase"
                 process_command(
                     command,
                     True,
@@ -919,7 +919,7 @@ def hmy_cli_upgrade():
     try:
         # Backup the current version of hmy CLI
         folder_name = make_backup_dir()
-        process_command(f"cp {environ.get('HARMONY_DIR')}/hmy {folder_name}")
+        process_command(f"cp {config.harmony_dir}/hmy {folder_name}")
         print_stars()
 
         # Install the new version
@@ -1014,7 +1014,7 @@ def menu_validator_stats():
     try:
         http_port = find_port(environ.get("HARMONY_DIR"))
         local_shard = [
-            f"{environ.get('HARMONY_DIR')}/hmy",
+            f"{config.harmony_dir}/hmy",
             "blockchain",
             "latest-headers",
             "--node",

@@ -470,7 +470,7 @@ def set_wallet_env():
     load_var_file(config.dotenv_file)
     if os.path.exists(config.hmy_wallet_store):
         output = subprocess.getoutput(
-            f"{environ.get('HARMONY_DIR')}/hmy keys list | grep {config.active_user}"
+            f"{config.harmony_dir}/hmy keys list | grep {config.active_user}"
         )
         output_stripped = output.lstrip(config.active_user)
         output_stripped = output_stripped.strip()
@@ -519,7 +519,7 @@ def recovery_type():
         # Mnemonic Recovery Here
         # --passphrase-file passphrase.txt not working atm on ./hmy keys
         run_command(
-            f"{environ.get('HARMONY_DIR')}/hmy keys recover-from-mnemonic {config.active_user} --passphrase"
+            f"{config.harmony_dir}/hmy keys recover-from-mnemonic {config.active_user} --passphrase"
         )
         set_wallet_env()
     elif results == 1:
@@ -532,7 +532,7 @@ def recovery_type():
         )
         # --passphrase-file passphrase.txt not working atm on ./hmy keys
         run_command(
-            f"{environ.get('HARMONY_DIR')}/hmy keys import-private-key {private} {config.active_user} --passphrase"
+            f"{config.harmony_dir}/hmy keys import-private-key {private} {config.active_user} --passphrase"
         )
         set_wallet_env()
 
@@ -543,7 +543,7 @@ def passphrase_status():
         set_var(
             config.dotenv_file,
             "PASS_SWITCH",
-            f"--passphrase-file {environ.get('HARMONY_DIR')}/passphrase.txt",
+            f"--passphrase-file {config.harmony_dir}/passphrase.txt",
         )
     else:
         set_var(config.dotenv_file, "PASS_SWITCH", "--passphrase")
@@ -551,11 +551,11 @@ def passphrase_status():
 
 
 def passphrase_set():
-    if os.path.exists(f"{environ.get('HARMONY_DIR')}/passphrase.txt"):
+    if os.path.exists(f"{config.harmony_dir}/passphrase.txt"):
         return
 
     print(
-        f"{Fore.GREEN}* Setup {environ.get('HARMONY_DIR')}/passphrase.txt file for use with autobidder & harmony-toolbox.\n{string_stars()}"
+        f"{Fore.GREEN}* Setup {config.harmony_dir}/passphrase.txt file for use with autobidder & harmony-toolbox.\n{string_stars()}"
     )
     # take input
     while True:
@@ -571,7 +571,7 @@ def passphrase_set():
             print("* Passwords Match!")
             break
     # Save file, we won't encrypt because if someone has access to the file, they will also have the salt and decrypt code at their disposal.
-    save_text(f"{environ.get('HARMONY_DIR')}/passphrase.txt", password_1)
+    save_text(f"{config.harmony_dir}/passphrase.txt", password_1)
     load_var_file(config.dotenv_file)
     passphrase_status()
 
@@ -780,7 +780,7 @@ def return_json(fn: str, single_key: str = None) -> dict:
 
 def get_sign_pct() -> str:
     hmy_external_rpc = (
-        f"{environ.get('HARMONY_DIR')}/hmy --node='{config.working_rpc_endpoint}'"
+        f"{config.harmony_dir}/hmy --node='{config.working_rpc_endpoint}'"
     )
     output = subprocess.getoutput(
         f"{hmy_external_rpc} blockchain validator information {environ.get('VALIDATOR_WALLET')} | grep signing-percentage"
@@ -1209,10 +1209,10 @@ def install_harmony() -> None:
     # Setup folders now that symlink exists or we know we're using ~/harmony
     if not os.path.isdir(f"{config.user_home_dir}/.hmy_cli/account-keys/"):
         process_command(f"mkdir -p {config.user_home_dir}/.hmy_cli/account-keys/")
-    if not os.path.isdir(f"{environ.get('HARMONY_DIR')}/.hmy/blskeys"):
-        process_command(f"mkdir -p {environ.get('HARMONY_DIR')}/.hmy/blskeys")
+    if not os.path.isdir(f"{config.harmony_dir}/.hmy/blskeys"):
+        process_command(f"mkdir -p {config.harmony_dir}/.hmy/blskeys")
     # Change to ~/harmony folder
-    os.chdir(f"{environ.get('HARMONY_DIR')}")
+    os.chdir(f"{config.harmony_dir}")
     # Install hmy
     update_hmy_binary()
     # Install harmony
@@ -1583,7 +1583,7 @@ def clone_shards():
     our_shard = environ.get("SHARD")
     load_dotenv(config.dotenv_file)
     # Move to ~/harmony
-    os.chdir(f"{environ.get('HARMONY_DIR')}")
+    os.chdir(f"{config.harmony_dir}")
 
     if our_shard != "0":
         # If we're not on shard 0, download the numbered shard DB here.
