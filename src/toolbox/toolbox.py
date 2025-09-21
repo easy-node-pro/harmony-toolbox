@@ -27,7 +27,6 @@ from toolbox.utils import (
     free_space_check,
     server_drive_check,
     all_sys_info,
-    get_validator_wallet_name,
     governance_member_voting,
     proposal_choices_option,
     menu_ubuntu_updates,
@@ -387,6 +386,10 @@ def proposal_choices_option() -> None:
         return question, selected_proposal
     else:
         return question, None
+
+
+def get_validator_wallet_name(wallet_addr):
+    return wallet_addr
 
 
 def get_vote_choice() -> (int, str):
