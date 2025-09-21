@@ -49,9 +49,6 @@ from toolbox.utils import (
     clone_shards,
     finish_node_install,
 )
-from toolbox.library import (
-    first_setup,
-)
 
 
 def first_setup():

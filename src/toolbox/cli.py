@@ -5,15 +5,13 @@ from toolbox.utils import (
     load_var_file,
 )
 from toolbox.toolbox import (
-
     update_harmony_app,
     run_multistats,
     rewards_collector,
-)
-from toolbox.config import config
-from toolbox.library import (
     first_setup,
 )
+from toolbox.config import config
+
 
 def parse_flags(parser):
     # Add the arguments
@@ -70,6 +68,7 @@ def parse_flags(parser):
     if args.stats:
         if args.refresh:
             import time
+
             try:
                 while True:
                     run_multistats()
