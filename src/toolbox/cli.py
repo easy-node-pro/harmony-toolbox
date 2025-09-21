@@ -100,9 +100,7 @@ def parse_flags(parser):
                 choice = int(input("* Select folder number: ")) - 1
                 if 0 <= choice < len(folders):
                     folder_name = list(folders.keys())[choice]
-                    default_folder_file = os.path.join(config.toolbox_location, "default_folder.txt")
-                    with open(default_folder_file, "w") as f:
-                        f.write(folder_name)
+                    set_var(config.dotenv_file, "DEFAULT_FOLDER", folder_name)
                     print(f"* Default folder set to: {folder_name}")
                     finish_node()
                 else:

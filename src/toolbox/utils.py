@@ -890,16 +890,9 @@ def first_env_check(env_file) -> None:
         folder_name = selected_folder
         print(f"* Using specified folder: {folder_name}")
     else:
-        # Check for default folder
-        default_folder = None
-        if os.path.exists(default_folder_file):
-            with open(default_folder_file, "r") as f:
-                default_folder = f.read().strip()
-            if default_folder not in folders:
-                default_folder = None
-                os.remove(default_folder_file)  # remove invalid
-        
-        if default_folder:
+        # Check for default folder from env
+        default_folder = os.environ.get("DEFAULT_FOLDER")
+        if default_folder and default_folder in folders:
             folder_name = default_folder
             print(f"* Using default folder: {folder_name}")
         elif len(folders) == 1:
@@ -937,11 +930,10 @@ def first_env_check(env_file) -> None:
                         print("* Please enter a number.")
             
             # After selection, ask to set as default if not already set
-            if not os.path.exists(default_folder_file):
+            if not os.environ.get("DEFAULT_FOLDER"):
                 set_default = ask_yes_no("* Set this as default folder? (Y/N)")
                 if set_default:
-                    with open(default_folder_file, "w") as f:
-                        f.write(folder_name)
+                    set_var(config.dotenv_file, "DEFAULT_FOLDER", folder_name)
     
     # Always save as last
     with open(last_folder_file, "w") as f:
@@ -964,18 +956,16 @@ def first_env_check(env_file) -> None:
     
     os.environ["SERVICE_NAME"] = folder_name
     
-    # Check for saved wallet in folder
-    wallet_file = os.path.join(harmony_dir, "wallet.txt")
-    if os.path.exists(wallet_file):
-        with open(wallet_file, "r") as f:
-            wallet = f.read().strip()
-            if wallet:
+    # Check for validator wallet
+    if not os.environ.get("VALIDATOR_WALLET"):
+        while True:
+            wallet = input("* Enter your validator wallet address (one1... or 0x...): ").strip()
+            if wallet.startswith(("one1", "0x")) and len(wallet) > 10:
+                set_var(config.dotenv_file, "VALIDATOR_WALLET", wallet)
                 os.environ["VALIDATOR_WALLET"] = wallet
+                break
             else:
-                os.remove(wallet_file)  # remove empty file
-                _prompt_wallet(wallet_file)
-    else:
-        _prompt_wallet(wallet_file)
+                print("* Invalid wallet address. Please try again.")
     
     # Detect passphrase
     if os.path.exists(f"{harmony_dir}/passphrase.txt"):
@@ -998,18 +988,6 @@ def first_env_check(env_file) -> None:
                     os.environ[key] = value
     
     return
-
-
-def _prompt_wallet(wallet_file):
-    while True:
-        wallet = input("* Enter your validator wallet address (one1... or 0x...): ").strip()
-        if wallet.startswith(("one1", "0x")) and len(wallet) > 10:
-            with open(wallet_file, "w") as f:
-                f.write(wallet)
-            os.environ["VALIDATOR_WALLET"] = wallet
-            break
-        else:
-            print("* Invalid wallet address. Please try again.")
 
 
 def version_checks(harmony_folder):
