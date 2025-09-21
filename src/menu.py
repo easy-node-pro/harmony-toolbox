@@ -3,6 +3,7 @@ from toolbox.config import config
 from toolbox.utils import (
     loader_intro,
     first_env_check,
+    load_var_file,
     old_toolbox_check,
     check_harmony_sh,
 )
@@ -33,16 +34,8 @@ def app():
     # Run regular validator node
     run_regular_node()
 
-    # This section is for hard coding new settings for current users.
-    safety_defaults()
-    
-    # Check harmony.sh
-    check_harmony_sh()
-    # Clear screen, show logo
-    loader_intro()
-    # Run regular validator node
-    run_regular_node()
-
 
 if __name__ == "__main__":
+    # load environment variables
+    load_var_file(config.dotenv_file)
     app()

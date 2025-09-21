@@ -874,7 +874,10 @@ def check_online_version(harmony_version_str="Offline", hmy_ver="Offline") -> No
 
 
 def first_env_check(env_file) -> None:
-    # Detect environment variables instead of loading from .env
+    # Load our easynode.env file
+    load_var_file(env_file)
+    
+    # Detect folders
     folders = get_folders()
     if not folders:
         print("* No harmony folders found. Please run installation first.")
@@ -962,6 +965,15 @@ def first_env_check(env_file) -> None:
     
     # Fetch online versions
     check_online_version()
+    
+    # Load settings
+    settings_file = os.path.join(config.toolbox_location, "settings.txt")
+    if os.path.exists(settings_file):
+        with open(settings_file, "r") as f:
+            for line in f:
+                if "=" in line:
+                    key, value = line.strip().split("=", 1)
+                    os.environ[key] = value
     
     return
 

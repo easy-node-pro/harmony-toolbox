@@ -1,6 +1,7 @@
 import socket
 import requests
 from os import environ, path
+from dotenv import load_dotenv
 import configparser
 
 
@@ -16,6 +17,8 @@ class Config:
         self.server_host_name = socket.gethostname()
         self.user_home_dir = path.expanduser("~")
         self.dotenv_file = f"{self.user_home_dir}/.easynode.env"
+        # Load env file
+        load_dotenv(self.dotenv_file)
         self.active_user = path.split(self.user_home_dir)[-1]
         self.harmony_dir = environ.get("HARMONY_DIR") or f"{self.user_home_dir}/harmony"
         self.bls_key_file = path.join(self.harmony_dir, "blskey.pass")

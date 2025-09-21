@@ -122,6 +122,6 @@ def parse_flags(parser):
         finish_node()
 
     if args.refresh:
-        set_var(config.dotenv_file, "REFRESH_OPTION", "True")
-        set_var(config.dotenv_file, "REFRESH_TIME", "10")
-        load_var_file(config.dotenv_file)
+        settings_file = os.path.join(config.toolbox_location, "settings.txt")
+        with open(settings_file, "w") as f:
+            f.write("REFRESH_OPTION=True\nREFRESH_TIME=10\n")
