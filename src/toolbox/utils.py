@@ -230,11 +230,11 @@ def update_harmony_binary():
             f"{harmony_dir}/harmony.conf", 'PassFile = ""', 'PassFile = "blskey.pass"'
         )
         print(
-            f"* Harmony binary installed, 11 keys max, {harmony_dir}/harmony.conf created and modified: blskey.pass file, disabled private ip scan. "
+            f"* Harmony binary installed\n* {harmony_dir}/harmony.conf created\n* Set config to 11 keys max for shard {environ.get('SHARD')} & disabled private ip scan.\n* Modified: blskey.pass file."
         )
     else:
         print(
-            f"* Harmony binary installed, 11 keys max, {harmony_dir}/harmony.conf created and modified: disabled private ip scan. "
+            f"* Harmony binary installed\n* {harmony_dir}/harmony.conf created\n* Set config to 11 keys max for shard {environ.get('SHARD')} & disabled private ip scan.
         )
     return
 
@@ -242,7 +242,7 @@ def update_harmony_binary():
 # Search harmony.conf for the proper port to hit
 def find_port(folder):
     with open(f"{folder}/harmony.conf") as f:
-        data_file = f.readlines()
+      data_file = f.readlines()
     count = 0
     for line in data_file:
         line = line.rstrip()
@@ -1186,7 +1186,7 @@ def install_harmony() -> None:
     # Check space requirements for the selected shard
     shard_value = int(environ.get("SHARD"))
     answer = ask_yes_no(
-        f"* Last chance to verify, you want to install shard {shard_value} into {install_path}? (Y/N): "
+        f"* Last chance to verify, you want to install shard {shard_value} into {install_path}? (Yes/No): "
     )
     if answer:
         check_space_requirements(shard_value, install_path)
