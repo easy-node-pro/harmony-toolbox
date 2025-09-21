@@ -1135,7 +1135,7 @@ def get_folder_choice() -> str:
         "[5] - harmony3",
     ]
     terminal_menu = TerminalMenu(
-        menu_options, title=f"{Fore.GREEN}* Please choose your installation folder option. "
+        menu_options, title="* Please choose your installation folder option. "
     )
     vote_choice_index = terminal_menu.show()
     if vote_choice_index == 6:  # The index of the "Quit" option
