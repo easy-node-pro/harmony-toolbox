@@ -452,9 +452,13 @@ def set_wallet_env():
 
 
 def get_db_size(harmony_dir, our_shard) -> str:
-    harmony_db_size = subprocess.getoutput(
-        f"du -h {harmony_dir}/harmony_db_{our_shard}"
+    result = subprocess.run(
+        f"du -h {harmony_dir}/harmony_db_{our_shard}",
+        shell=True,
+        capture_output=True,
+        text=True
     )
+    harmony_db_size = result.stdout.strip()
     harmony_db_size = harmony_db_size.rstrip("\t")
     countTrim = len(environ.get("HARMONY_DIR")) + 13
     return harmony_db_size[:-countTrim].strip()
