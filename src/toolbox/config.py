@@ -54,7 +54,7 @@ class Config:
                 return response.text
             except requests.exceptions.RequestException as x:
                 print(type(x), x)
-        return None
+                return "Unable to retrieve external IP"
 
     @staticmethod
     def get_working_endpoint(endpoints):
