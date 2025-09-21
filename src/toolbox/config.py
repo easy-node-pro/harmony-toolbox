@@ -3,6 +3,7 @@ import requests
 from os import environ, path
 from dotenv import load_dotenv
 import configparser
+import random
 
 
 class Config:
@@ -31,7 +32,8 @@ class Config:
         self.password_path = path.join(self.harmony_dir, "passphrase.txt")
         self.external_ip = self.get_url()
         self.main_menu_regular = path.join(self.toolbox_location, "src", "messages", "regularmenu.txt")
-        self.rpc_endpoints = ["https://1rpc.io/one", "https://api.s0.t.hmny.io", "https://api.harmony.one", "https://rpc.ankr.com/harmony", "https://hmyone-pokt.nodies.app"]
+        self.shard_0_rpc_endpoints = ["https://1rpc.io/one", "https://api.s0.t.hmny.io", "https://api.harmony.one", "https://rpc.ankr.com/harmony", "https://hmyone-pokt.nodies.app"]
+        self.shard_1_rpc_endpoints = ["https://api.s1.t.hmny.io"] 
         self.rpc_endpoints_max_connection_retries = 10
         self.hmy_tmp_path = "/tmp/hmy"
         self.harmony_tmp_path = "/tmp/harmony"
@@ -55,18 +57,27 @@ class Config:
 
     @staticmethod
     def get_working_endpoint(endpoints):
+        working = []
         for endpoint in endpoints:
             try:
                 response = requests.get(endpoint, timeout=5)
                 if response.status_code == 200:
-                    return endpoint
+                    working.append(endpoint)
             except requests.exceptions.RequestException:
                 pass
+        if working:
+            return random.choice(working)
         return None
 
     @property
     def working_rpc_endpoint(self):
-        return self.get_working_endpoint(self.rpc_endpoints)
+        if self.shard == "0":
+            return self.get_working_endpoint(self.shard_0_rpc_endpoints)
+        elif self.shard == "1":
+            return self.get_working_endpoint(self.shard_1_rpc_endpoints)
+        else:
+            # For other shards, default to shard 0 endpoints
+            return self.get_working_endpoint(self.shard_0_rpc_endpoints)
     
     @property
     def harmony_sh_home_path(self):
@@ -95,7 +106,8 @@ class Config:
             "password_path",
             "external_ip",
             "main_menu_regular",
-            "rpc_endpoints",
+            "shard_0_rpc_endpoints",
+            "shard_1_rpc_endpoints",
             "rpc_endpoints_max_connection_retries",
             "hmy_tmp_path",
             "harmony_tmp_path",
