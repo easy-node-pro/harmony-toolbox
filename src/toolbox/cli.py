@@ -53,6 +53,13 @@ def parse_flags(parser):
     )
 
     parser.add_argument(
+        "-is",
+        "--install-second",
+        action="store_true",
+        # help="Install a second Harmony ONE service if you already have one installed.",
+    )
+
+    parser.add_argument(
         "-r",
         "--refresh",
         action="store_true",
@@ -69,6 +76,13 @@ def parse_flags(parser):
             finish_node()
         else:
             first_setup()
+
+    if args.install_second:
+        if get_folders():
+            print("* To install a 2nd service, please contact us via our Discord on https://EasyNodePro.com/links by sending in a help ticket for assistance.")
+        else:
+            print("* It appears you do not have Harmony installed. Please run the install command without the -is flag to install your first Harmony service.")
+        finish_node()
 
     if args.upgrade:
         update_harmony_app()
