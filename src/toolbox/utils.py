@@ -750,12 +750,6 @@ def get_available_space(directory: str) -> int:
 
 def check_space_requirements(shard: int, directory: str) -> bool:
     available_space = get_available_space(directory)
-    required_space = 400 if shard == 0 else 50
-    print(f"* Checking available storage on {directory}...")
-    print(f"* Current free space: {int(available_space)} GB")
-    print(f"* Estimated space required for shard {shard}: {required_space} GB")
-    print(f"* Estimated space remaining after installation: {int(available_space - required_space)} GB")
-    print(string_stars())
     if shard == 0 and available_space < 400:
         if not os.listdir(directory):
             shutil.rmtree(f"{directory}")
@@ -1184,6 +1178,12 @@ def install_harmony() -> None:
 
     # Check space requirements for the selected shard
     shard_value = int(environ.get("SHARD"))
+    available_space = get_available_space(install_path)
+    required_space = 400 if shard_value == 0 else 50
+    print(f"* Checking available storage on {install_path}...")
+    print(f"* Current free space: {int(available_space)} GB")
+    print(f"* Estimated space required for shard {shard_value}: {required_space} GB")
+    print(f"* Estimated space remaining after installation: {int(available_space - required_space)} GB")
     answer = ask_yes_no(
         f"* Last chance to verify, you want to install shard {shard_value} into {install_path}? (Y/N): "
     )
