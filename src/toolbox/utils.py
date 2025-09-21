@@ -11,7 +11,6 @@ from subprocess import PIPE, run
 from concurrent.futures import ThreadPoolExecutor
 from typing import Tuple
 from toolbox.config import config
-from toolbox.toolbox import finish_node_install, clone_shards
 
 
 class print_stuff:
@@ -1465,3 +1464,64 @@ def colorize_size(size_str, threshold_gb=50.0):
         except ValueError:
             pass
     return size_str
+
+
+# Database Downloader
+def clone_shards():
+    our_shard = environ.get("SHARD")
+    load_dotenv(config.dotenv_file)
+    # Move to ~/harmony
+    os.chdir(f"{environ.get('HARMONY_DIR')}")
+
+    if our_shard != "0":
+        # If we're not on shard 0, download the numbered shard DB here.
+        print(f"* Now cloning shard {our_shard}\n{string_stars()}")
+        run_command(
+            f"rclone -P -L --webdav-url 'http://fulldb.s{our_shard}.t.hmny.io/webdav' --checksum sync snap: harmony_db_{our_shard} --multi-thread-streams 4 --transfers=32"
+        )
+        print(
+            f"{string_stars()}\n* Shard {our_shard} completed.\n* Shard 0 will be created when you start your service.\n{string_stars()}"
+        )
+    if our_shard == "0":
+        # If we're on shard 0, grab the snap DB here.
+        print(
+            f"* Now cloning Shard 0, kick back and relax for awhile...\n{string_stars()}"
+        )
+        run_command(
+            f"rclone -P -L --webdav-url 'http://snapdb.s0.t.hmny.io/webdav' --checksum sync snap: harmony_db_0 --multi-thread-streams 4 --transfers=32"
+        )
+
+
+def finish_node_install():
+    load_var_file(config.dotenv_file)
+    our_shard = config.shard
+    print(
+        f"{string_stars()}\n* Installation is completed"
+        + "\n* Create a new wallet or recover your existing wallet into ./hmy"
+        + "\n* Create or upload your bls key & pass files into ~/harmony/.hmy/blskeys"
+        + f"\n* Finally, reboot to start synchronization.\n{string_stars()}"
+    )
+    if environ.get("NODE_WALLET") == "false":
+        print(
+            "* Post installation quick tips:"
+            + "\n* To recover your wallet on this server run:"
+            + "\n* python3 ~/harmony-toolbox/load_wallet.py"
+            + "\n*"
+            + "\n* To create BLS keys run:"
+            + f'\n* {environ.get("HARMONY_DIR")}/hmy keys generate-bls-keys --count 1 --shard {our_shard} --passphrase'
+            + f"\n*\n{string_stars()}"
+        )
+    else:
+        print(
+            "* Post installation quick tips:"
+            + "\n* To recover your wallet again, run:"
+            + "\n* python3 ~/harmony-toolbox/load_wallet.py"
+            + "\n*"
+            + "\n* To create BLS keys run:"
+            + f'\n* {environ.get("HARMONY_DIR")}/hmy keys generate-bls-keys --count 1 --shard {our_shard} {environ.get("PASS_SWITCH")}'
+            + f"\n*\n{string_stars()}"
+        )
+    print(
+        f"* Thanks for using Easy Node - Validator Node Server Software Installer!\n{string_stars()}"
+    )
+    raise SystemExit(0)
