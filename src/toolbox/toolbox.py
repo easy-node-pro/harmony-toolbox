@@ -287,7 +287,7 @@ def rewards_collector(
     )
 
     if bypass or ask_yes_no(
-        f"*\n* For your validator wallet {validator_wallet}\n* You have {pending_rewards_balance} $ONE pending.\n* Would you like to collect your rewards on the Harmony {environ.get('NETWORK')}? (YES/NO) "
+        f"*\n* For your validator wallet {validator_wallet}\n* You have {pending_rewards_balance} $ONE pending.\n* Would you like to collect your rewards on the Harmony mainnet? (YES/NO) "
     ):
         collect_rewards(pending_rewards_balance, validator_wallet)
     else:
@@ -515,7 +515,7 @@ def menu_regular(software_versions) -> None:
 def get_wallet_json(wallet: str) -> str:
     try:
         response = requests.get(
-            f"https://api.stake.hmny.io/networks/{environ.get('NETWORK')}/validators/{wallet}"
+            f"https://api.stake.hmny.io/networks/mainnet/validators/{wallet}"
         )
         response.raise_for_status()
         # access JSOn content

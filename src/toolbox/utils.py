@@ -890,11 +890,17 @@ def first_env_check(env_file) -> None:
         folder_name = selected_folder
         print(f"* Using specified folder: {folder_name}")
     else:
-        # Check for default folder from env
-        default_folder = os.environ.get("DEFAULT_FOLDER")
-        if default_folder and default_folder in folders:
+        # Check for default folder from HARMONY_DIR
+        default_folder = None
+        harmony_dir_env = os.environ.get("HARMONY_DIR")
+        if harmony_dir_env:
+            potential_folder = os.path.basename(harmony_dir_env)
+            if potential_folder in folders:
+                default_folder = potential_folder
+        
+        if default_folder:
             folder_name = default_folder
-            print(f"* Using default folder: {folder_name}")
+            print(f"* Using default folder from HARMONY_DIR: {folder_name}")
         elif len(folders) == 1:
             folder_name = list(folders.keys())[0]
         else:
@@ -929,11 +935,11 @@ def first_env_check(env_file) -> None:
                     except ValueError:
                         print("* Please enter a number.")
             
-            # After selection, ask to set as default if not already set
-            if not os.environ.get("DEFAULT_FOLDER"):
+            # After selection, ask to set as default if not already set from HARMONY_DIR
+            if not os.environ.get("HARMONY_DIR"):
                 set_default = ask_yes_no("* Set this as default folder? (Y/N)")
                 if set_default:
-                    set_var(config.dotenv_file, "DEFAULT_FOLDER", folder_name)
+                    set_var(config.dotenv_file, "HARMONY_DIR", f"{config.user_home_dir}/{folder_name}")
     
     # Always save as last
     with open(last_folder_file, "w") as f:
