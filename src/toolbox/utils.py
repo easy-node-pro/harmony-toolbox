@@ -750,6 +750,12 @@ def get_available_space(directory: str) -> int:
 
 def check_space_requirements(shard: int, directory: str) -> bool:
     available_space = get_available_space(directory)
+    required_space = 400 if shard == 0 else 50
+    print(f"* Checking available storage on {directory}...")
+    print(f"* Current free space: {int(available_space)} GB")
+    print(f"* Estimated space required for shard {shard}: {required_space} GB")
+    print(f"* Estimated space remaining after installation: {int(available_space - required_space)} GB")
+    print(string_stars())
     if shard == 0 and available_space < 400:
         if not os.listdir(directory):
             shutil.rmtree(f"{directory}")
