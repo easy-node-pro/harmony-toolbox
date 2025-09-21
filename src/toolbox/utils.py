@@ -335,7 +335,7 @@ def validator_stats_output() -> None:
     short_address = f"{environ.get('VALIDATOR_WALLET')[:4]}...{environ.get('VALIDATOR_WALLET')[-4:]}"
     # Print Menu
     print(
-        f"{Fore.GREEN}{string_stars()}\n* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node{' '*9}{Style.RESET_ALL}{Fore.WHITE}   https://EasyNodePro.com {Fore.GREEN}*"
+        f"{Fore.GREEN}{string_stars()}\n* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node{' '*8}{Style.RESET_ALL}{Fore.WHITE}   https://EasyNodePro.com {Fore.GREEN}*"
     )
     print(
         f"{string_stars()}\n* Address: {Fore.RED}{short_address}{Fore.GREEN} Balance: {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN} Pending Rewards: {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get('VALIDATOR_WALLET')), 2))}{Fore.GREEN}\n* Hostname: {Fore.CYAN}{config.server_host_name}{Fore.GREEN} IP: {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
@@ -390,10 +390,10 @@ def validator_stats_output() -> None:
 
     if versions:
         print(
-            f"* Harmony Version: {Fore.YELLOW}{versions['harmony_version']}{Fore.GREEN} (Upgrade: {versions['harmony_upgrade']})"
+            f"* Toolbox Version: {Fore.CYAN}v{config.easy_version}{Fore.GREEN}\n* Harmony Version: {Fore.YELLOW}{versions['harmony_version']}{Fore.GREEN} (Upgrade: {versions['harmony_upgrade']})"
         )
         print(
-            f"* HMY Version: {Fore.YELLOW}{versions['hmy_version']}{Fore.GREEN} (Upgrade: {versions['hmy_upgrade']})"
+            f"* HMY Version: {' '*5}{Fore.YELLOW}{versions['hmy_version']}{Fore.GREEN} (Upgrade: {versions['hmy_upgrade']})"
         )
 
     print(f"{string_stars()}")
