@@ -1154,7 +1154,7 @@ def install_harmony() -> None:
         # Show storage info before asking about the path
         available_space = get_available_space(os.path.dirname(harmony_dir))
         required_space = 400 if int(environ.get("SHARD")) == 0 else 50
-        print(f"* Checking available storage on {os.path.dirname(harmony_dir)}...")
+        print(f"{Fore.GREEN}* Checking available storage on {os.path.dirname(harmony_dir)}...")
         print(f"* Current free space: {int(available_space)} GB")
         print(f"* Estimated space required for shard {environ.get('SHARD')}: {required_space} GB")
         print(f"* Estimated space remaining after installation: {int(available_space - required_space)} GB")
