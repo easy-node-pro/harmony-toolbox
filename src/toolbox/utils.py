@@ -367,30 +367,42 @@ def validator_stats_output() -> None:
     )
     # get api here
     api_endpoint = config.working_rpc_endpoint
-    remote_shard_0 = [
-        f"{config.user_home_dir}/{list(folders.items())[0][0]}/hmy",
-        "utility",
-        "metadata",
-        f"--node={api_endpoint}",
-    ]
+    if api_endpoint:
+        remote_shard_0 = [
+            f"{config.user_home_dir}/{list(folders.items())[0][0]}/hmy",
+            "utility",
+            "metadata",
+            f"--node={api_endpoint}",
+        ]
+        result_shard_0 = run(
+            remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True
+        )
+        if result_shard_0.returncode == 0 and result_shard_0.stdout.strip():
+            remote_0_data = json.loads(result_shard_0.stdout)
+            print(
+                f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}\n"
+            )
+        else:
+            print("* Unable to fetch remote Shard 0 data\n")
+    else:
+        print("* No working RPC endpoint for Shard 0\n")
+    
     remote_shard_1 = [
         f"{config.user_home_dir}/{list(folders.items())[0][0]}/hmy",
         "utility",
         "metadata",
         f"--node=https://api.s1.t.hmny.io",
     ]
-    result_shard_0 = run(
-        remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True
-    )
     result_shard_1 = run(
         remote_shard_1, stdout=PIPE, stderr=PIPE, universal_newlines=True
     )
-    remote_0_data = json.loads(result_shard_0.stdout)
-    remote_1_data = json.loads(result_shard_1.stdout)
-    print(
-        f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}\n"
-        + f"* Remote Shard 1 Epoch: {remote_1_data['result']['current-epoch']}, Current Block: {remote_1_data['result']['current-block-number']}\n{string_stars()}"
-    )
+    if result_shard_1.returncode == 0 and result_shard_1.stdout.strip():
+        remote_1_data = json.loads(result_shard_1.stdout)
+        print(
+            f"* Remote Shard 1 Epoch: {remote_1_data['result']['current-epoch']}, Current Block: {remote_1_data['result']['current-block-number']}\n{string_stars()}"
+        )
+    else:
+        print("* Unable to fetch remote Shard 1 data\n{string_stars()}")
 
     # Concurrently process each folder
     with ThreadPoolExecutor(max_workers=10) as executor:
