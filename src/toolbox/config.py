@@ -37,7 +37,6 @@ class Config:
         self.harmony_tmp_path = "/tmp/harmony"
         self.folder_checks = ["harmony", "harmony0", "harmony1", "harmony2", "harmony3", "harmony4"]
         self.shard = environ.get("SHARD") or "4"
-        self.network_switch = environ.get("NETWORK_SWITCH") or "mainnet"
         self.print_menu_count = 50
 
     @staticmethod
@@ -103,7 +102,6 @@ class Config:
             "harmony_tmp_path",
             "folder_checks",
             "shard",
-            "network_switch",
             "print_menu_count",
         ]
         for var in essential_vars:

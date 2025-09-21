@@ -1385,19 +1385,6 @@ def os_upgrades() -> None:
         print_stars()
 
 
-def set_network(network):
-    set_var(config.dotenv_file, "NETWORK", "mainnet")
-    set_var(config.dotenv_file, "NETWORK_SWITCH", network)
-    set_var(config.dotenv_file, "RPC_NET", f"https://rpc.s0.{network}.hmny.io")
-    if config.shard != "0":
-        set_var(
-            config.dotenv_file,
-            "RPC_NET_SHARD",
-            f"https://rpc.s{environ.get('SHARD')}.t.hmny.io",
-        )
-    return
-
-
 def menu_ubuntu_updates() -> str:
     question = ask_yes_no(
         "* Are you sure you would like to proceed with Linux apt Upgrades? (Y/N) "
