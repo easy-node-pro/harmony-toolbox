@@ -11,6 +11,7 @@ from toolbox.toolbox import (
     run_multistats,
     rewards_collector,
     first_setup,
+    second_setup,
 )
 from toolbox.config import config
 
@@ -79,10 +80,12 @@ def parse_flags(parser):
 
     if args.install_second:
         if get_folders():
-            print("* To install a 2nd service, please contact us via our Discord on https://EasyNodePro.com/links by sending in a help ticket for assistance.")
+            question = ask_yes_no("* It appears you already have Harmony installed. Would you like to install a 2nd service? (YES/NO)")
+            if question:
+                second_setup()
+            finish_node()
         else:
-            print("* It appears you do not have Harmony installed. Please run the install command without the -is flag to install your first Harmony service.")
-        finish_node()
+            first_setup()
 
     if args.upgrade:
         update_harmony_app()

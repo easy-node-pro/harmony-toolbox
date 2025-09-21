@@ -3,13 +3,13 @@ from pytimedinput import timedInteger
 from dotenv import load_dotenv
 from subprocess import PIPE, run
 from ast import literal_eval
-from toolbox.config import config
 from os import environ
 from datetime import datetime
 from simple_term_menu import TerminalMenu
 from colorama import Fore, Back, Style
 from pyhmy import blockchain, numbers
 from requests.exceptions import HTTPError
+from toolbox.config import config
 from toolbox.utils import (
     process_command,
     print_stars,
@@ -41,7 +41,6 @@ from toolbox.utils import (
     refreshing_stats_message,
     passphrase_status,
     clear_temp_files,
-    set_network,
     install_harmony,
     clone_shards,
     finish_node_install,
@@ -49,20 +48,13 @@ from toolbox.utils import (
 
 
 def first_setup():
-    # Find Shard #
-    shard = config.shard
-    # Set mainnet
-    set_network("t")
-    # Look for a harmony install or install.
-    check_for_install(shard)
+    check_for_install(config.shard)
     return
 
 
 def second_setup():
     # Find Shard #
-    shard = config.shard
-    # Set mainnet
-    set_network("t")
+    check_for_install(config.shard)
     return
 
 
@@ -651,8 +643,6 @@ def safety_defaults() -> None:
         )
     passphrase_status()
     get_shard_menu()
-    # Set mainnet
-    set_network("t")
     if environ.get("VALIDATOR_WALLET") is None:
         # Recover wallet or have them add address
         recover_wallet()
