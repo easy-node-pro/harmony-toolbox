@@ -27,7 +27,6 @@ from toolbox.utils import (
     free_space_check,
     server_drive_check,
     all_sys_info,
-    get_vote_choice,
     get_validator_wallet_name,
     governance_member_voting,
     proposal_choices_option,
