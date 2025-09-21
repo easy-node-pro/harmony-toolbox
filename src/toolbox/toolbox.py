@@ -47,7 +47,9 @@ from toolbox.utils import (
 )
 from toolbox.library import (
     get_shard_menu,
+    first_setup,
 )
+
 
 def run_multistats():
     refreshing_stats_message()

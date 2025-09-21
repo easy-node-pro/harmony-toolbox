@@ -12,6 +12,7 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Tuple
 from toolbox.config import config
 
+
 class print_stuff:
     def __init__(self, reset: int = 0):
         self.reset = reset
@@ -79,13 +80,18 @@ def initialization_process():
     update_rclone_conf()
     old_toolbox_check()
 
+
 def update_rclone_conf():
     if os.path.exists(f"{config.toolbox_location}/src/bin/rclone.conf"):
-        comparison = compare_two_files(f"{config.toolbox_location}/src/bin/rclone.conf", f"{config.user_home_dir}/.config/rclone/rclone.conf")
+        comparison = compare_two_files(
+            f"{config.toolbox_location}/src/bin/rclone.conf",
+            f"{config.user_home_dir}/.config/rclone/rclone.conf",
+        )
         if comparison == False:
             process_command(
                 f"cp {config.toolbox_location}/src/bin/rclone.conf {config.user_home_dir}/.config/rclone/"
             )
+
 
 def old_toolbox_check():
     if os.path.exists(f"{config.user_home_dir}/validatortoolbox"):
@@ -94,13 +100,23 @@ def old_toolbox_check():
             + f"{string_stars()}\n* Old folder found, renaming and restarting...\n*\n* Please wait..."
         )
         try:
-            subprocess.run(["mv", f"{config.user_home_dir}/validatortoolbox", f"{config.user_home_dir}/harmony-toolbox"], check=True)
+            subprocess.run(
+                [
+                    "mv",
+                    f"{config.user_home_dir}/validatortoolbox",
+                    f"{config.user_home_dir}/harmony-toolbox",
+                ],
+                check=True,
+            )
             print(Fore.GREEN + f"* Renamed successfully. Restarting...\n*")
-            subprocess.run(["python3", f"{config.user_home_dir}/harmony-toolbox/src/menu.py"])
+            subprocess.run(
+                ["python3", f"{config.user_home_dir}/harmony-toolbox/src/menu.py"]
+            )
             sys.exit(0)
         except subprocess.CalledProcessError as e:
             print(Fore.RED + f"* Error renaming folder: {e}")
             raise SystemExit(1)
+
 
 # Install Harmony ONE
 def update_hmy_binary():
@@ -167,7 +183,9 @@ def recover_wallet():
         print(
             f'\n* Verify the address above matches the address below:\n* Detected Wallet: {Fore.YELLOW}{environ.get("VALIDATOR_WALLET")}{Fore.GREEN}\n* If a different wallet is showing you can remove it and retry it after installation.\n*\n* .{environ.get("HARMONY_DIR")}/hmy keys remove {config.active_user}\n*\n* To restore a wallet once again, run the following:\n*\n* .{environ.get("HARMONY_DIR")}/hmy keys recover-from-mnemonic {config.active_user} {environ.get("PASS_SWITCH")}\n{string_stars()}'
         )
-        input("* Verify your wallet information above.\n* Press ENTER to continue Installation.")
+        input(
+            "* Verify your wallet information above.\n* Press ENTER to continue Installation."
+        )
     else:
         while True:
             wallet = input(
@@ -175,14 +193,18 @@ def recover_wallet():
             )
             if wallet.startswith("one1") or wallet.startswith("0x"):
                 # Re-enter the wallet to verify
-                verify_wallet = input("* Please re-enter your wallet address for verification: ")
+                verify_wallet = input(
+                    "* Please re-enter your wallet address for verification: "
+                )
                 if wallet == verify_wallet:
                     set_var(config.dotenv_file, "VALIDATOR_WALLET", wallet)
                     break
                 else:
                     print("The entered wallets do not match. Please try again.")
             else:
-                print("Invalid wallet address. It should start with one1 or 0x. Please try again.")
+                print(
+                    "Invalid wallet address. It should start with one1 or 0x. Please try again."
+                )
     return
 
 
@@ -192,16 +214,28 @@ def update_harmony_binary():
     if os.path.isfile(f"{config.harmony_tmp_path}/harmony"):
         process_command(f"cp /tmp/harmony {harmony_dir}")
     else:
-        process_command("curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony")
+        process_command(
+            "curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony"
+        )
     process_command("./harmony config dump harmony.conf")
-    update_text_file(f"{harmony_dir}/harmony.conf", " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
+    update_text_file(
+        f"{harmony_dir}/harmony.conf",
+        " DisablePrivateIPScan = false",
+        " DisablePrivateIPScan = true",
+    )
     # Update to 11 keys for HIP-32 expansion to 396 slots
     update_text_file(f"{harmony_dir}/harmony.conf", " MaxKeys = 10", " MaxKeys = 11")
     if os.path.isfile(f"{harmony_dir}/blskey.pass"):
-        update_text_file(f"{harmony_dir}/harmony.conf", 'PassFile = ""', 'PassFile = "blskey.pass"')
-        print(f"* Harmony binary installed, 11 keys max, {harmony_dir}/harmony.conf created and modified: blskey.pass file, disabled private ip scan. ")
+        update_text_file(
+            f"{harmony_dir}/harmony.conf", 'PassFile = ""', 'PassFile = "blskey.pass"'
+        )
+        print(
+            f"* Harmony binary installed, 11 keys max, {harmony_dir}/harmony.conf created and modified: blskey.pass file, disabled private ip scan. "
+        )
     else:
-        print(f"* Harmony binary installed, 11 keys max, {harmony_dir}/harmony.conf created and modified: disabled private ip scan. ")
+        print(
+            f"* Harmony binary installed, 11 keys max, {harmony_dir}/harmony.conf created and modified: disabled private ip scan. "
+        )
     return
 
 
@@ -242,44 +276,53 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
                 "metadata",
                 f"--node=http://localhost:{port}",
             ]
-            result_local_server = run(local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+            result_local_server = run(
+                local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True
+            )
             local_data = json.loads(result_local_server.stdout)
-            shard_id = local_data['result']['shard-id']
+            shard_id = local_data["result"]["shard-id"]
             remote_server = [
                 f"{current_full_path}/hmy",
                 "utility",
                 "metadata",
                 f"--node=https://api.s{shard_id}.t.hmny.io",
             ]
-            result_remote_server = run(remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+            result_remote_server = run(
+                remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True
+            )
             remote_data = json.loads(result_remote_server.stdout)
-            db_size_0 = get_db_size(f'{current_full_path}', '0')
-            db_size_shard = get_db_size(f'{current_full_path}', str(shard_id))
-            free_space_0 = free_space_check(f'{current_full_path}/harmony_db_0') if os.path.exists(f'{current_full_path}/harmony_db_0') else 'N/A'
-            free_space_shard = free_space_check(f'{current_full_path}/harmony_db_{shard_id}') if os.path.exists(f'{current_full_path}/harmony_db_{shard_id}') else 'N/A'
+            db_size_0 = get_db_size(f"{current_full_path}", "0")
+            db_size_shard = get_db_size(f"{current_full_path}", str(shard_id))
+            free_space_0 = (
+                free_space_check(f"{current_full_path}/harmony_db_0")
+                if os.path.exists(f"{current_full_path}/harmony_db_0")
+                else "N/A"
+            )
+            free_space_shard = (
+                free_space_check(f"{current_full_path}/harmony_db_{shard_id}")
+                if os.path.exists(f"{current_full_path}/harmony_db_{shard_id}")
+                else "N/A"
+            )
             return {
-                'folder': folder,
-                'path': current_full_path,
-                'shard_id': shard_id,
-                'local_epoch': local_data['result']['current-epoch'],
-                'remote_epoch': remote_data['result']['current-epoch'],
-                'local_block': local_data['result']['current-block-number'],
-                'remote_block': remote_data['result']['current-block-number'],
-                'db_size_0': db_size_0,
-                'db_size_shard': db_size_shard,
-                'free_space_0': free_space_0,
-                'free_space_shard': free_space_shard,
-                'versions': software_versions
+                "folder": folder,
+                "path": current_full_path,
+                "shard_id": shard_id,
+                "local_epoch": local_data["result"]["current-epoch"],
+                "remote_epoch": remote_data["result"]["current-epoch"],
+                "local_block": local_data["result"]["current-block-number"],
+                "remote_block": remote_data["result"]["current-block-number"],
+                "db_size_0": db_size_0,
+                "db_size_shard": db_size_shard,
+                "free_space_0": free_space_0,
+                "free_space_shard": free_space_shard,
+                "versions": software_versions,
             }
         except Exception as e:
             retry_count += 1
             if retry_count <= max_retries:
                 time.sleep(retry_delay)
             else:
-                return {
-                    'folder': folder,
-                    'error': f"Offline or error: {e}"
-                }
+                return {"folder": folder, "error": f"Offline or error: {e}"}
 
 
 def validator_stats_output() -> None:
@@ -312,7 +355,9 @@ def validator_stats_output() -> None:
         "metadata",
         f"--node={api_endpoint}",
     ]
-    result_shard_0 = run(remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    result_shard_0 = run(
+        remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True
+    )
     remote_0_data = json.loads(result_shard_0.stdout)
     print(
         f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}\n{string_stars()}"
@@ -320,35 +365,54 @@ def validator_stats_output() -> None:
 
     # Concurrently process each folder
     with ThreadPoolExecutor(max_workers=10) as executor:
-        folder_results = list(executor.map(process_folder, folders.keys(), folders.values()))
+        folder_results = list(
+            executor.map(process_folder, folders.keys(), folders.values())
+        )
 
     # Collect version info (assume same for all)
     versions = None
     for result in folder_results:
-        if result and 'versions' in result:
-            versions = result['versions']
+        if result and "versions" in result:
+            versions = result["versions"]
             break
 
     if versions:
-        print(f"* Harmony Version: {Fore.YELLOW}{versions['harmony_version']}{Fore.GREEN} (Upgrade: {versions['harmony_upgrade']})")
-        print(f"* HMY Version: {Fore.YELLOW}{versions['hmy_version']}{Fore.GREEN} (Upgrade: {versions['hmy_upgrade']})")
+        print(
+            f"* Harmony Version: {Fore.YELLOW}{versions['harmony_version']}{Fore.GREEN} (Upgrade: {versions['harmony_upgrade']})"
+        )
+        print(
+            f"* HMY Version: {Fore.YELLOW}{versions['hmy_version']}{Fore.GREEN} (Upgrade: {versions['hmy_upgrade']})"
+        )
 
     print(f"{string_stars()}")
     print(f"* Service Status & Sync:")
-    print(f"* {'Folder':<10} {'S':<2} {'Sync':<5} {'DB 0':<6} {'Free 0':<6} {'DB 1':<6} {'Free 1':<6} {'Block Num':<12}")
+    print(
+        f"* {'Folder':<10} {'S':<2} {'Sync':<5} {'DB 0':<6} {'Free 0':<6} {'DB 1':<6} {'Free 1':<6} {'Block Num':<12}"
+    )
     print(f"* {'-'*10} {'-'*2} {'-'*5} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*12}")
 
     # Now print results for each folder
     for result in folder_results:
         if result:
-            if 'error' in result:
+            if "error" in result:
                 print(f"* {result['folder']:<10} ERROR: {result['error']}")
             else:
-                sync_status = "OK" if result['local_epoch'] == result['remote_epoch'] and abs(result['local_block'] - result['remote_block']) <= 2 else "SYNC"
-                db_size_shard = result['db_size_shard'] if result['shard_id'] != 0 else "N/A"
-                free_space_shard = result['free_space_shard'] if result['shard_id'] != 0 else "N/A"
-                print(f"* {result['folder']:<10} {result['shard_id']:<2} {sync_status:<5} {colorize_size(result['db_size_0']):<6} {colorize_size(result['free_space_0']):<6} {colorize_size(db_size_shard):<6} {colorize_size(free_space_shard):<6} {result['local_block']:<12}")
-    
+                sync_status = (
+                    "OK"
+                    if result["local_epoch"] == result["remote_epoch"]
+                    and abs(result["local_block"] - result["remote_block"]) <= 2
+                    else "SYNC"
+                )
+                db_size_shard = (
+                    result["db_size_shard"] if result["shard_id"] != 0 else "N/A"
+                )
+                free_space_shard = (
+                    result["free_space_shard"] if result["shard_id"] != 0 else "N/A"
+                )
+                print(
+                    f"* {result['folder']:<10} {result['shard_id']:<2} {sync_status:<5} {colorize_size(result['db_size_0']):<6} {colorize_size(result['free_space_0']):<6} {colorize_size(db_size_shard):<6} {colorize_size(free_space_shard):<6} {result['local_block']:<12}"
+                )
+
     print(f"{string_stars()}")
 
 
@@ -381,7 +445,9 @@ def set_wallet_env():
 
 
 def get_db_size(harmony_dir, our_shard) -> str:
-    harmony_db_size = subprocess.getoutput(f"du -h {harmony_dir}/harmony_db_{our_shard}")
+    harmony_db_size = subprocess.getoutput(
+        f"du -h {harmony_dir}/harmony_db_{our_shard}"
+    )
     harmony_db_size = harmony_db_size.rstrip("\t")
     countTrim = len(environ.get("HARMONY_DIR")) + 13
     return harmony_db_size[:-countTrim].strip()
@@ -392,7 +458,9 @@ def recovery_type():
     print(
         f"{string_stars()}\n* Wallet Recovery Type!                                                                     *\n{string_stars()}"
     )
-    print("* [0] = Mnemonic phrase recovery (aka seed phrase)                                          *")
+    print(
+        "* [0] = Mnemonic phrase recovery (aka seed phrase)                                          *"
+    )
     print(
         f"* [1] = Private Key recovery                                                                *\n{string_stars()}"
     )
@@ -401,7 +469,8 @@ def recovery_type():
         "[1] - Private Key Recovery",
     ]
     terminal_menu = TerminalMenu(
-        menu_options, title="* Which type of restore method would you like to use for your validator wallet?"
+        menu_options,
+        title="* Which type of restore method would you like to use for your validator wallet?",
     )
     results = terminal_menu.show()
     passphrase_set()
@@ -414,8 +483,12 @@ def recovery_type():
         set_wallet_env()
     elif results == 1:
         # Private Key Recovery Here
-        print("* Private key recovery requires your private information in the command itself.")
-        private = getpass.getpass("* Please enter your private key to restore your wallet: ")
+        print(
+            "* Private key recovery requires your private information in the command itself."
+        )
+        private = getpass.getpass(
+            "* Please enter your private key to restore your wallet: "
+        )
         # --passphrase-file passphrase.txt not working atm on ./hmy keys
         run_command(
             f"{environ.get('HARMONY_DIR')}/hmy keys import-private-key {private} {config.active_user} --passphrase"
@@ -447,7 +520,8 @@ def passphrase_set():
     while True:
         print("* ")
         password_1 = getpass.getpass(
-            prompt="* Please set a wallet password for this node\n* Enter your password now: ", stream=None
+            prompt="* Please set a wallet password for this node\n* Enter your password now: ",
+            stream=None,
         )
         password_2 = getpass.getpass(prompt="* Re-enter your password: ", stream=None)
         if not password_1 == password_2:
@@ -462,7 +536,9 @@ def passphrase_set():
 
 
 def process_command(command: str, shell=True, print_output=True) -> Tuple[bool, str]:
-    result = subprocess.run(command, shell=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    result = subprocess.run(
+        command, shell=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+    )
 
     # Command was successful
     if result.returncode == 0:
@@ -483,7 +559,9 @@ def run_command(command: str, shell=True, print_output=True) -> bool:
         else:
             # Suppress the output if print_output is set to False
             with open(os.devnull, "w") as fnull:
-                subprocess.run(command, shell=shell, check=True, stdout=fnull, stderr=fnull)
+                subprocess.run(
+                    command, shell=shell, check=True, stdout=fnull, stderr=fnull
+                )
         return True
     except subprocess.CalledProcessError as e:
         if print_output:
@@ -531,7 +609,9 @@ def load_var_file(var_file):
 
 def get_validator_wallet_name(wallet_id):
     command = f"{environ.get('HARMONY_DIR')}/hmy keys list"
-    result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    result = subprocess.run(
+        command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+    )
 
     if result.returncode != 0:
         print(f"Error executing command: {result.stderr}")
@@ -576,8 +656,8 @@ def governance_member_voting():
 
     for _ in range(7):
         print(
-            Fore.GREEN +
-            "* Highlight an option and hit enter to add it to your list.\n* (pick up to 7, 'Quit' to finish if less than 7 selections):"
+            Fore.GREEN
+            + "* Highlight an option and hit enter to add it to your list.\n* (pick up to 7, 'Quit' to finish if less than 7 selections):"
         )
         terminal_menu = TerminalMenu(options, title="Choose a governance member:")
         choice_index = terminal_menu.show()
@@ -593,10 +673,14 @@ def governance_member_voting():
             selected_names.append(options[choice_index])
             print(f"You have selected: {options[choice_index]}")
         else:
-            print(f"You have already selected {options[choice_index]}. Please choose another option.")
+            print(
+                f"You have already selected {options[choice_index]}. Please choose another option."
+            )
 
     # Return selected indexes and names as a string
-    selected_indexes_str = "[" + ", ".join(map(str, [index + 1 for index in selected_indexes])) + "]"
+    selected_indexes_str = (
+        "[" + ", ".join(map(str, [index + 1 for index in selected_indexes])) + "]"
+    )
     selected_names_str = "[" + ", ".join(selected_names) + "]"
     return selected_indexes_str, selected_names_str
 
@@ -616,7 +700,9 @@ def proposal_choices_option() -> None:
 
     # Ask for a vote on the selected proposal
     selected_proposal = options[choice_index]
-    question = ask_yes_no(f"* Would you like to vote on {selected_proposal}? (YES/NO): ")
+    question = ask_yes_no(
+        f"* Would you like to vote on {selected_proposal}? (YES/NO): "
+    )
     if question:
         return question, selected_proposal
     else:
@@ -625,8 +711,8 @@ def proposal_choices_option() -> None:
 
 def get_vote_choice() -> (int, str):
     print(
-        Fore.GREEN +
-        f"* How would you like to vote on this proposal?                                                 *\n{string_stars()}"
+        Fore.GREEN
+        + f"* How would you like to vote on this proposal?                                                 *\n{string_stars()}"
     )
     menu_options = [
         "[1] - Yes",
@@ -634,7 +720,9 @@ def get_vote_choice() -> (int, str):
         "[3] - Abstain",
         "[4] - Quit",
     ]
-    terminal_menu = TerminalMenu(menu_options, title="* Please choose your voting option. ")
+    terminal_menu = TerminalMenu(
+        menu_options, title="* Please choose your voting option. "
+    )
     vote_choice_index = terminal_menu.show()
     if vote_choice_index == 3:  # The index of the "Quit" option
         return None, "Quit"
@@ -655,24 +743,61 @@ def check_space_requirements(shard: int, directory: str) -> bool:
         if not os.listdir(directory):
             shutil.rmtree(f"{directory}")
         os.remove(f"{config.user_home_dir}/.easynode.env")
-        input(f"* Warning: There is not enough space to load shard 0 into {directory}.\n* Restart the toolbox and select a volume with more free space when prompted on the install location.\n* Press ENTER to quit.")
+        input(
+            f"* Warning: There is not enough space to load shard 0 into {directory}.\n* Restart the toolbox and select a volume with more free space when prompted on the install location.\n* Press ENTER to quit."
+        )
         raise SystemExit(0)
     elif shard in [1, 2, 3] and available_space < 50:
         if not os.listdir(directory):
             shutil.rmtree(f"{directory}")
         os.remove(f"{config.user_home_dir}/.easynode.env")
-        input(f"* Warning: There is not enough space to load shard {shard} into {directory}.\n* Restart the toolbox and select a volume with more free space when prompted on the install location.\n* Press ENTER to quit.")
+        input(
+            f"* Warning: There is not enough space to load shard {shard} into {directory}.\n* Restart the toolbox and select a volume with more free space when prompted on the install location.\n* Press ENTER to quit."
+        )
         raise SystemExit(0)
     return True
 
 
+def check_harmony_sh():
+    if os.path.exists(config.harmony_sh_home_path):
+        # Check if executable
+        if not os.access(config.harmony_sh_home_path, os.X_OK):
+            print("* ~/harmony.sh is not executable, fixing permissions...")
+            os.chmod(config.harmony_sh_home_path, 0o755)
+
+        # Check MD5
+        with open(config.harmony_sh_home_path, "rb") as f:
+            home_md5 = hashlib.md5(f.read()).hexdigest()
+        with open(config.harmony_sh_toolbox_path, "rb") as f:
+            toolbox_md5 = hashlib.md5(f.read()).hexdigest()
+
+        if home_md5 != toolbox_md5:
+            print("* ~/harmony.sh is outdated, updating...")
+            shutil.copy2(config.harmony_sh_toolbox_path, config.harmony_sh_home_path)
+            os.chmod(config.harmony_sh_home_path, 0o755)
+            print(
+                "* Updated ~/harmony.sh. Please re-run the script for the latest version."
+            )
+            finish_node()
+    else:
+        print(
+            "* ~/harmony.sh not found. If you want to use the launcher script, copy it from the toolbox."
+        )
+
+
 def get_wallet_address():
-    print("* Signing Node, No Wallet!                                                                  *")
-    print("* You are attempting to launch the menu but no wallet has been loaded, as you chose         *")
+    print(
+        "* Signing Node, No Wallet!                                                                  *"
+    )
+    print(
+        "* You are attempting to launch the menu but no wallet has been loaded, as you chose         *"
+    )
     print(
         f"* If you would like to use the menu on the server, complete the following:                  *\n{string_stars()}"
     )
-    print("* Edit ~/.easynode.env and add your wallet address on a new line like this example:         *")
+    print(
+        "* Edit ~/.easynode.env and add your wallet address on a new line like this example:         *"
+    )
     print(
         f"* VALIDATOR_WALLET='one1thisisjustanexamplewalletreplaceme'                                 *\n{string_stars()}"
     )
@@ -682,7 +807,9 @@ def get_wallet_address():
 def get_validator_info():
     validator_data = -1
     try:
-        validator_data = staking.get_validator_information(environ.get("VALIDATOR_WALLET"), config.working_rpc_endpoint)
+        validator_data = staking.get_validator_information(
+            environ.get("VALIDATOR_WALLET"), config.working_rpc_endpoint
+        )
         return validator_data
     except Exception:
         return validator_data
@@ -711,7 +838,9 @@ def get_wallet_balance_by_endpoint(endpoint, wallet_addr):
     get_balance = 0
 
     try:
-        get_balance = pyhmy.numbers.convert_atto_to_one(account.get_balance(wallet_addr, endpoint))
+        get_balance = pyhmy.numbers.convert_atto_to_one(
+            account.get_balance(wallet_addr, endpoint)
+        )
         return get_balance
     except Exception:
         return get_balance
@@ -749,12 +878,16 @@ def return_json(fn: str, single_key: str = None) -> dict:
         return {}
 
 
-def get_sign_pct() -> str:    
-    hmy_external_rpc = f"{environ.get('HARMONY_DIR')}/hmy --node='{config.working_rpc_endpoint}'"
+def get_sign_pct() -> str:
+    hmy_external_rpc = (
+        f"{environ.get('HARMONY_DIR')}/hmy --node='{config.working_rpc_endpoint}'"
+    )
     output = subprocess.getoutput(
         f"{hmy_external_rpc} blockchain validator information {environ.get('VALIDATOR_WALLET')} | grep signing-percentage"
     )
-    output_stripped = output.lstrip('        "current-epoch-signing-percentage": "').rstrip('",')
+    output_stripped = output.lstrip(
+        '        "current-epoch-signing-percentage": "'
+    ).rstrip('",')
     try:
         math = float(output_stripped)
         signPerc = math * 100
@@ -771,7 +904,9 @@ def get_local_version(folder):
 
     if os.path.isfile(f"{folder}/harmony"):
         harmony_version = subprocess.getoutput(f"{folder}/harmony -V")
-        match = re.search(r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_version)
+        match = re.search(
+            r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_version
+        )
         if match:
             harmony_version = match.group(1)[:-2]
 
@@ -787,7 +922,7 @@ def get_local_version(folder):
 
 def set_mod_x(file):
     subprocess.run(["chmod", "+x", file])
-    
+
 
 def clear_temp_files() -> None:
     # check and clear previous versions in /tmp
@@ -803,7 +938,7 @@ def clear_temp_files() -> None:
             pass
 
 
-def check_online_version(harmony_version_str = "Offline", hmy_ver = "Offline") -> None:
+def check_online_version(harmony_version_str="Offline", hmy_ver="Offline") -> None:
     print(Fore.GREEN + string_stars())
     print("* Checking online version of harmony & hmy...")
     try:
@@ -811,7 +946,12 @@ def check_online_version(harmony_version_str = "Offline", hmy_ver = "Offline") -
         if not os.path.exists(config.harmony_tmp_path):
             with open(os.devnull, "wb") as devnull:
                 subprocess.call(
-                    ["wget", "https://harmony.one/binary", "-O", config.harmony_tmp_path],
+                    [
+                        "wget",
+                        "https://harmony.one/binary",
+                        "-O",
+                        config.harmony_tmp_path,
+                    ],
                     stdout=devnull,
                     stderr=devnull,
                 )
@@ -819,7 +959,9 @@ def check_online_version(harmony_version_str = "Offline", hmy_ver = "Offline") -
 
         # Get harmony version
         harmony_ver = subprocess.getoutput(f"{config.harmony_tmp_path} -V")
-        output_harmony_version = re.search(r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_ver)
+        output_harmony_version = re.search(
+            r"version (v\d+-v\d+\.\d+\.\d+-\d+-g[0-9a-f]+ )\(", harmony_ver
+        )
         harmony_version_str = output_harmony_version.group(1)[:-2]
         set_var(config.dotenv_file, "ONLINE_HARMONY_VERSION", harmony_version_str)
 
@@ -860,16 +1002,29 @@ def version_checks(harmony_folder):
     local_versions = get_local_version(f"{harmony_folder}")
 
     # Check if the local versions exist. If not, set to a default value.
-    software_versions["harmony_version"] = local_versions[0] if local_versions else "Offline"
-    software_versions["hmy_version"] = local_versions[1] if local_versions else "Offline"
+    software_versions["harmony_version"] = (
+        local_versions[0] if local_versions else "Offline"
+    )
+    software_versions["hmy_version"] = (
+        local_versions[1] if local_versions else "Offline"
+    )
 
     # Check if the online versions exist. If not, set to a default value.
-    software_versions["online_harmony_version"] = environ.get("ONLINE_HARMONY_VERSION") if environ.get("ONLINE_HARMONY_VERSION") else "Offline"
-    software_versions["online_hmy_version"] = environ.get("ONLINE_HMY_VERSION") if environ.get("ONLINE_HMY_VERSION") else "Offline"
+    software_versions["online_harmony_version"] = (
+        environ.get("ONLINE_HARMONY_VERSION")
+        if environ.get("ONLINE_HARMONY_VERSION")
+        else "Offline"
+    )
+    software_versions["online_hmy_version"] = (
+        environ.get("ONLINE_HMY_VERSION")
+        if environ.get("ONLINE_HMY_VERSION")
+        else "Offline"
+    )
 
     # Check versions, if matching False (No Upgrade Required), non-match True (Upgrade Required)
     if (
-        software_versions["harmony_version"] == software_versions["online_harmony_version"]
+        software_versions["harmony_version"]
+        == software_versions["online_harmony_version"]
         or software_versions["online_harmony_version"] == "Offline"
         or software_versions["harmony_version"] == "Offline"
     ):
@@ -901,12 +1056,16 @@ def check_for_install(shard) -> str:
             recover_wallet()
             # Check passphrase if wallet is added
             passphrase_status()
-            print(f"* All harmony files now installed. Database download starting now...\n{string_stars()}")
+            print(
+                f"* All harmony files now installed. Database download starting now...\n{string_stars()}"
+            )
             clone_shards()
             finish_node_install()
         else:
             if os.path.isdir(f"{config.user_home_dir}/harmony"):
-                print("* You have a harmony folder already, skipping install. Returning to menu...")
+                print(
+                    "* You have a harmony folder already, skipping install. Returning to menu..."
+                )
                 return
     else:
         print(f"{Fore.GREEN}* You selected Shard: {environ.get('SHARD')}. ")
@@ -915,7 +1074,9 @@ def check_for_install(shard) -> str:
         recover_wallet()
         # Check passphrase if wallet is added
         passphrase_status()
-        print(f"* All harmony files now installed. Database download starting now...\n{string_stars()}")
+        print(
+            f"* All harmony files now installed. Database download starting now...\n{string_stars()}"
+        )
         clone_shards()
         finish_node_install()
     return
@@ -936,7 +1097,10 @@ def install_rclone():
     # Execute the fetched content
     try:
         process = subprocess.Popen(
-            ["sudo", "bash"], stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            ["sudo", "bash"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
         )
         process.communicate(input=script_content.encode())
         if process.returncode != 0:
@@ -947,10 +1111,10 @@ def install_rclone():
         return False
 
 
-def get_folder_choice() -> (str):
+def get_folder_choice() -> str:
     print(
-        Fore.GREEN +
-        f"* Which folder would you like to install harmony in?                              *\n{string_stars()}"
+        Fore.GREEN
+        + f"* Which folder would you like to install harmony in?                              *\n{string_stars()}"
     )
     menu_options = [
         "[1] - harmony",
@@ -959,7 +1123,9 @@ def get_folder_choice() -> (str):
         "[4] - harmony2",
         "[5] - harmony3",
     ]
-    terminal_menu = TerminalMenu(menu_options, title="* Please choose your installation folder option. ")
+    terminal_menu = TerminalMenu(
+        menu_options, title="* Please choose your installation folder option. "
+    )
     vote_choice_index = terminal_menu.show()
     if vote_choice_index == 6:  # The index of the "Quit" option
         return None, "Quit"
@@ -972,7 +1138,7 @@ def install_harmony() -> None:
     while True:
         print(f"{string_stars()}\n* Install Location\n{string_stars()}")
         folder_path = get_folder_choice()
-        harmony_dir = f'{config.user_home_dir}/{folder_path}'
+        harmony_dir = f"{config.user_home_dir}/{folder_path}"
         set_var(config.dotenv_file, "HARMONY_DIR", f"{harmony_dir}")
         if os.path.exists(harmony_dir):
             question = ask_yes_no(
@@ -998,16 +1164,18 @@ def install_harmony() -> None:
     # Create the directory if not exists, and set ownership
     process_command(f"sudo mkdir -p {install_path}")
     process_command(f"sudo chown {config.active_user} {install_path}")
-    
+
     # Check space requirements for the selected shard
-    shard_value = int(environ.get('SHARD'))
-    answer = ask_yes_no(f"* Last chance to verify, you want to install shard {shard_value} into {install_path}? (Y/N): ")
+    shard_value = int(environ.get("SHARD"))
+    answer = ask_yes_no(
+        f"* Last chance to verify, you want to install shard {shard_value} into {install_path}? (Y/N): "
+    )
     if answer:
         check_space_requirements(shard_value, install_path)
     else:
         print("* We will exit out of the installation process.")
         finish_node()
-    
+
     print(f"{string_stars()}\n* Creating all Harmony Files & Folders")
     process_command(f"mkdir -p {install_path}/.hmy/blskeys")
 
@@ -1052,7 +1220,10 @@ def install_harmony() -> None:
 
     # Replace the paths with the value of HARMONY_DIR
     filedata = filedata.replace("User=serviceharmony", f"User={config.active_user}")
-    filedata = filedata.replace("WorkingDirectory=/home/serviceharmony/harmony", f"WorkingDirectory={install_path}")
+    filedata = filedata.replace(
+        "WorkingDirectory=/home/serviceharmony/harmony",
+        f"WorkingDirectory={install_path}",
+    )
     filedata = filedata.replace(
         "ExecStart=/home/serviceharmony/harmony/harmony -c harmony.conf",
         f"ExecStart={install_path}/harmony -c harmony.conf",
@@ -1063,14 +1234,27 @@ def install_harmony() -> None:
         file.write(filedata)
 
     # Move the modified service file into place, change the permissions and enable the service
-    subprocess.run(["sudo", "mv", f"{service_name}.service", f"/etc/systemd/system/{service_name}.service"], check=True)
-    subprocess.run(["sudo", "chmod", "a-x", f"/etc/systemd/system/{service_name}.service"], check=True)
-    subprocess.run(["sudo", "systemctl", "enable", f"{service_name}.service"], check=True)
+    subprocess.run(
+        [
+            "sudo",
+            "mv",
+            f"{service_name}.service",
+            f"/etc/systemd/system/{service_name}.service",
+        ],
+        check=True,
+    )
+    subprocess.run(
+        ["sudo", "chmod", "a-x", f"/etc/systemd/system/{service_name}.service"],
+        check=True,
+    )
+    subprocess.run(
+        ["sudo", "systemctl", "enable", f"{service_name}.service"], check=True
+    )
 
 
 # Database Downloader
 def clone_shards():
-    our_shard = environ.get('SHARD')
+    our_shard = environ.get("SHARD")
     load_dotenv(config.dotenv_file)
     # Move to ~/harmony
     os.chdir(f"{environ.get('HARMONY_DIR')}")
@@ -1086,7 +1270,9 @@ def clone_shards():
         )
     if our_shard == "0":
         # If we're on shard 0, grab the snap DB here.
-        print(f"* Now cloning Shard 0, kick back and relax for awhile...\n{string_stars()}")
+        print(
+            f"* Now cloning Shard 0, kick back and relax for awhile...\n{string_stars()}"
+        )
         run_command(
             f"rclone -P -L --webdav-url 'http://snapdb.s0.t.hmny.io/webdav' --checksum sync snap: harmony_db_0 --multi-thread-streams 4 --transfers=32"
         )
@@ -1121,7 +1307,9 @@ def finish_node_install():
             + f'\n* {environ.get("HARMONY_DIR")}/hmy keys generate-bls-keys --count 1 --shard {our_shard} {environ.get("PASS_SWITCH")}'
             + f"\n*\n{string_stars()}"
         )
-    print(f"* Thanks for using Easy Node - Validator Node Server Software Installer!\n{string_stars()}")
+    print(
+        f"* Thanks for using Easy Node - Validator Node Server Software Installer!\n{string_stars()}"
+    )
     if int(os.environ.get("RUN_COUNT", default=0)) == 0:
         print(
             "* Thanks for using Easy Node Toolbox - Making everything Easy Mode!"
@@ -1131,9 +1319,7 @@ def finish_node_install():
             + f" tools and guides at https://bit.ly/easynodediscord today!\n*\n* Goodbye!\n{string_stars()}"
         )
     else:
-        print(
-            f"* EasyNodePro.com - https://EasyNodePro.com\n{string_stars()}"
-        )
+        print(f"* EasyNodePro.com - https://EasyNodePro.com\n{string_stars()}")
     raise SystemExit(0)
 
 
@@ -1176,7 +1362,9 @@ def server_drive_check(dot_env, directory) -> None:
         + total
         + " Total"
     )
-    input(f"{string_stars()}\nDisk check complete, press ENTER to return to the main menu. ")
+    input(
+        f"{string_stars()}\nDisk check complete, press ENTER to return to the main menu. "
+    )
 
 
 def disk_partitions(all=False):
@@ -1371,12 +1559,18 @@ def set_network(network):
     set_var(config.dotenv_file, "NETWORK_SWITCH", network)
     set_var(config.dotenv_file, "RPC_NET", f"https://rpc.s0.{network}.hmny.io")
     if config.shard != "0":
-        set_var(config.dotenv_file, "RPC_NET_SHARD", f"https://rpc.s{environ.get('SHARD')}.t.hmny.io")
+        set_var(
+            config.dotenv_file,
+            "RPC_NET_SHARD",
+            f"https://rpc.s{environ.get('SHARD')}.t.hmny.io",
+        )
     return
 
 
 def menu_ubuntu_updates() -> str:
-    question = ask_yes_no("* Are you sure you would like to proceed with Linux apt Upgrades? (Y/N) ")
+    question = ask_yes_no(
+        "* Are you sure you would like to proceed with Linux apt Upgrades? (Y/N) "
+    )
     if question:
         run_ubuntu_updater()
         input("* OS Updates completed, press ENTER to return to the main menu. ")
@@ -1410,9 +1604,7 @@ def finish_node():
             + f" tools and guides at https://bit.ly/easynodediscord today!\n*\n* Goodbye!\n{string_stars()}"
         )
     else:
-        print(
-            f"* EasyNodePro.com - https://EasyNodePro.com\n{string_stars()}"
-        )
+        print(f"* EasyNodePro.com - https://EasyNodePro.com\n{string_stars()}")
     raise SystemExit(0)
 
 
@@ -1431,8 +1623,9 @@ def compare_two_files(input1, input2) -> None:
     else:
         return False
 
+
 def colorize_size(size_str, threshold_gb=50.0):
-    if size_str.endswith('G'):
+    if size_str.endswith("G"):
         try:
             gb = float(size_str[:-1])
             if gb < threshold_gb:
