@@ -5,6 +5,7 @@ from ast import literal_eval
 from toolbox.config import config
 from os import environ
 from datetime import datetime
+from simple_term_menu import TerminalMenu
 from colorama import Fore, Back, Style
 from pyhmy import blockchain, numbers
 from requests.exceptions import HTTPError
@@ -44,11 +45,112 @@ from toolbox.utils import (
     passphrase_status,
     clear_temp_files,
     set_network,
+    install_harmony,
+    clone_shards,
+    finish_node_install,
 )
 from toolbox.library import (
-    get_shard_menu,
     first_setup,
 )
+
+
+def first_setup():
+    # Find Shard #
+    shard = get_shard_menu()
+    # Set mainnet
+    set_network("t")
+    # Look for a harmony install or install.
+    check_for_install(shard)
+    return
+
+
+# looks for ~/harmony or installs it if it's not there. Asks to overwrite if it finds it, run at your own risk.
+def check_for_install(shard) -> str:
+    if os.path.exists(f"{config.user_home_dir}/harmony"):
+        question = ask_yes_no(
+            "* You already have a harmony folder on this system, would you like to re-run installation and rclone on this server? (YES/NO)"
+        )
+        if question:
+            install_harmony()
+            # Wallet Setup
+            recover_wallet()
+            # Check passphrase if wallet is added
+            passphrase_status()
+            print(
+                f"* All harmony files now installed. Database download starting now...\n{string_stars()}"
+            )
+            clone_shards()
+            finish_node_install()
+        else:
+            if os.path.isdir(f"{config.user_home_dir}/harmony"):
+                print(
+                    "* You have a harmony folder already, skipping install. Returning to menu..."
+                )
+                return
+    else:
+        print(f"{Fore.GREEN}* You selected Shard: {environ.get('SHARD')}. ")
+        install_harmony()
+        # Wallet Setup
+        recover_wallet()
+        # Check passphrase if wallet is added
+        passphrase_status()
+        print(
+            f"* All harmony files now installed. Database download starting now...\n{string_stars()}"
+        )
+        clone_shards()
+        finish_node_install()
+    return
+
+
+def install_rclone():
+    # Fetch the content of the script
+    url = "https://rclone.org/install.sh"
+    response = requests.get(url)
+
+    # Check if the request was successful
+    if response.status_code != 200:
+        print("* Failed to download the script.")
+        return False
+
+    script_content = response.text
+
+    # Execute the fetched content
+    try:
+        process = subprocess.Popen(
+            ["sudo", "bash"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        process.communicate(input=script_content.encode())
+        if process.returncode != 0:
+            return False
+        return True
+    except Exception as e:
+        print(f"Error: {e}")
+        return False
+
+
+def get_folder_choice() -> str:
+    print(
+        Fore.GREEN
+        + f"* Which folder would you like to install harmony in?                              *\n{string_stars()}"
+    )
+    menu_options = [
+        "[1] - harmony",
+        "[2] - harmony0",
+        "[3] - harmony1",
+        "[4] - harmony2",
+        "[5] - harmony3",
+    ]
+    terminal_menu = TerminalMenu(
+        menu_options, title="* Please choose your installation folder option. "
+    )
+    vote_choice_index = terminal_menu.show()
+    if vote_choice_index == 6:  # The index of the "Quit" option
+        return None, "Quit"
+    vote_choice_text = menu_options[vote_choice_index].split(" - ")[1]
+    return vote_choice_text
 
 
 def run_multistats():
@@ -104,6 +206,30 @@ def send_rewards_func(
     print(f"*\n* Current Validator Wallet Balance: {validator_wallet_balance} $ONE")
     print(f"* Current Rewards Wallet Balance: {rewards_wallet_balance} $ONE\n*")
     return
+
+
+def get_shard_menu() -> None:
+    if not environ.get("SHARD"):
+        print(
+            f"{string_stars()}\n* Gathering more information about your server.\n{string_stars()}"
+        )
+        print(
+            f"* Which shard do you want this node to sign blocks on?\n{string_stars()}"
+        )
+        menu_options = [
+            "[0] - Shard 0",
+            "[1] - Shard 1",
+        ]
+        terminal_menu = TerminalMenu(
+            menu_options, title="* Which Shard will this node sign blocks on? "
+        )
+        our_shard = int(terminal_menu.show())
+
+        set_var(config.dotenv_file, "SHARD", str(our_shard))
+        return our_shard
+    else:
+        print(f"* Shard already set to {environ.get('SHARD')}")
+        return int(environ.get("SHARD"))
 
 
 def rewards_sender(
@@ -181,6 +307,195 @@ def rewards_collector(
         print(f"* Current Rewards Wallet Balance: {rewards_wallet_balance} $ONE\n*")
 
     return
+
+
+def get_shard_menu() -> None:
+    if not environ.get("SHARD"):
+        print(
+            f"{string_stars()}\n* Gathering more information about your server.\n{string_stars()}"
+        )
+        print(
+            f"* Which shard do you want this node to sign blocks on?\n{string_stars()}"
+        )
+        menu_options = [
+            "[0] - Shard 0",
+            "[1] - Shard 1",
+        ]
+        terminal_menu = TerminalMenu(
+            menu_options, title="* Which Shard will this node sign blocks on? "
+        )
+        our_shard = int(terminal_menu.show())
+
+        set_var(config.dotenv_file, "SHARD", str(our_shard))
+        return our_shard
+    else:
+        print(f"* Shard already set to {environ.get('SHARD')}")
+        return int(environ.get("SHARD"))
+
+
+def governance_member_voting():
+    options = [
+        "AffinityShard",
+        "BoxedCloud",
+        "Buttheadus",
+        "Crypt0Tech",
+        "ENTER Group",
+        "GGA",
+        "Hank The Crank",
+        "Kratos",
+        "Legion",
+        "MetaONE",
+        "Nick Vasilich",
+        "Octeka.One",
+        "One1000Lakes",
+        "ONECelestial",
+        "PeaceLoveHarmony",
+        "PiStake",
+        "Quick.One",
+        "TEC Viva",
+        "Tr4ck3r",
+        "Quit",
+    ]
+
+    selected_indexes = []
+    selected_names = []
+
+    for _ in range(7):
+        print(
+            Fore.GREEN
+            + "* Highlight an option and hit enter to add it to your list.\n* (pick up to 7, 'Quit' to finish if less than 7 selections):"
+        )
+        terminal_menu = TerminalMenu(options, title="Choose a governance member:")
+        choice_index = terminal_menu.show()
+
+        # Check if the "Quit" option was selected
+        if choice_index == len(options) - 1:
+            print("Quitting the selection process.")
+            break
+
+        # Check if the same option was not selected previously
+        if choice_index not in selected_indexes:
+            selected_indexes.append(choice_index)
+            selected_names.append(options[choice_index])
+            print(f"You have selected: {options[choice_index]}")
+        else:
+            print(
+                f"You have already selected {options[choice_index]}. Please choose another option."
+            )
+
+    # Return selected indexes and names as a string
+    selected_indexes_str = (
+        "[" + ", ".join(map(str, [index + 1 for index in selected_indexes])) + "]"
+    )
+    selected_names_str = "[" + ", ".join(selected_names) + "]"
+    return selected_indexes_str, selected_names_str
+
+
+def proposal_choices_option() -> None:
+    options = ["HIP-30v2", "Governance for Harmony Recovery Wallet", "Quit"]
+
+    print("* Current proposals:\n*\n*")
+
+    terminal_menu = TerminalMenu(options, title="Choose a proposal to vote on:")
+    choice_index = terminal_menu.show()
+
+    # Check if the "Quit" option was selected
+    if choice_index == len(options) - 1:
+        print("Quitting the voting process.")
+        return False, None
+
+    # Ask for a vote on the selected proposal
+    selected_proposal = options[choice_index]
+    question = ask_yes_no(
+        f"* Would you like to vote on {selected_proposal}? (YES/NO): "
+    )
+    if question:
+        return question, selected_proposal
+    else:
+        return question, None
+
+
+def get_vote_choice() -> (int, str):
+    print(
+        Fore.GREEN
+        + f"* How would you like to vote on this proposal?                                                 *\n{string_stars()}"
+    )
+    menu_options = [
+        "[1] - Yes",
+        "[2] - No",
+        "[3] - Abstain",
+        "[4] - Quit",
+    ]
+    terminal_menu = TerminalMenu(
+        menu_options, title="* Please choose your voting option. "
+    )
+    vote_choice_index = terminal_menu.show()
+    if vote_choice_index == 3:  # The index of the "Quit" option
+        return None, "Quit"
+    vote_choice_num = vote_choice_index + 1
+    vote_choice_text = menu_options[vote_choice_index].split(" - ")[1]
+    return vote_choice_num, vote_choice_text
+
+
+# Database Downloader
+def clone_shards():
+    our_shard = environ.get("SHARD")
+    load_dotenv(config.dotenv_file)
+    # Move to ~/harmony
+    os.chdir(f"{environ.get('HARMONY_DIR')}")
+
+    if our_shard != "0":
+        # If we're not on shard 0, download the numbered shard DB here.
+        print(f"* Now cloning shard {our_shard}\n{string_stars()}")
+        run_command(
+            f"rclone -P -L --webdav-url 'http://fulldb.s{our_shard}.t.hmny.io/webdav' --checksum sync snap: harmony_db_{our_shard} --multi-thread-streams 4 --transfers=32"
+        )
+        print(
+            f"{string_stars()}\n* Shard {our_shard} completed.\n* Shard 0 will be created when you start your service.\n{string_stars()}"
+        )
+    if our_shard == "0":
+        # If we're on shard 0, grab the snap DB here.
+        print(
+            f"* Now cloning Shard 0, kick back and relax for awhile...\n{string_stars()}"
+        )
+        run_command(
+            f"rclone -P -L --webdav-url 'http://snapdb.s0.t.hmny.io/webdav' --checksum sync snap: harmony_db_0 --multi-thread-streams 4 --transfers=32"
+        )
+
+
+def finish_node_install():
+    load_var_file(config.dotenv_file)
+    our_shard = config.shard
+    print(
+        f"{string_stars()}\n* Installation is completed"
+        + "\n* Create a new wallet or recover your existing wallet into ./hmy"
+        + "\n* Create or upload your bls key & pass files into ~/harmony/.hmy/blskeys"
+        + f"\n* Finally, reboot to start synchronization.\n{string_stars()}"
+    )
+    if environ.get("NODE_WALLET") == "false":
+        print(
+            "* Post installation quick tips:"
+            + "\n* To recover your wallet on this server run:"
+            + "\n* python3 ~/harmony-toolbox/load_wallet.py"
+            + "\n*"
+            + "\n* To create BLS keys run:"
+            + f'\n* {environ.get("HARMONY_DIR")}/hmy keys generate-bls-keys --count 1 --shard {our_shard} --passphrase'
+            + f"\n*\n{string_stars()}"
+        )
+    else:
+        print(
+            "* Post installation quick tips:"
+            + "\n* To recover your wallet again, run:"
+            + "\n* python3 ~/harmony-toolbox/load_wallet.py"
+            + "\n*"
+            + "\n* To create BLS keys run:"
+            + f'\n* {environ.get("HARMONY_DIR")}/hmy keys generate-bls-keys --count 1 --shard {our_shard} {environ.get("PASS_SWITCH")}'
+            + f"\n*\n{string_stars()}"
+        )
+    print(
+        f"* Thanks for using Easy Node - Validator Node Server Software Installer!\n{string_stars()}"
+    )
+    raise SystemExit(0)
 
 
 def menu_topper_regular(software_versions) -> None:
