@@ -3,6 +3,8 @@ from toolbox.utils import (
     finish_node,
     set_var,
     load_var_file,
+    get_folders,
+    ask_yes_no,
 )
 from toolbox.toolbox import (
     update_harmony_app,
@@ -60,7 +62,13 @@ def parse_flags(parser):
     args = parser.parse_args()
 
     if args.install:
-        first_setup()
+        if get_folders():
+            question = ask_yes_no("* It appears you already have Harmony installed. Would you like to install a 2nd service? (YES/NO)")
+            if question:
+                print("* To install a 2nd service, please contact us via our Discord on https://EasyNodePro.com/links by sending in a help ticket for assistance.")
+            finish_node()
+        else:
+            first_setup()
 
     if args.upgrade:
         update_harmony_app()
