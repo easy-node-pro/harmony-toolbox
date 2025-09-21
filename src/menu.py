@@ -16,6 +16,11 @@ from toolbox.cli import parse_flags
 
 
 def app():
+    # Run parser first to handle help and flags
+    parser = argparse.ArgumentParser(
+        description="Harmony Validator Toolbox - Help Menu by EasyNodePro.com"
+    )
+    parse_flags(parser)
     # Check for old toolbox first
     old_toolbox_check()
     # passed .env check, let's load it!
@@ -24,11 +29,6 @@ def app():
     safety_defaults()
     # Check harmony.sh
     check_harmony_sh()
-    # Run parser if flags added
-    parser = argparse.ArgumentParser(
-        description="Harmony Validator Toolbox - Help Menu by EasyNodePro.com"
-    )
-    parse_flags(parser)
     # Clear screen, show logo
     loader_intro()
     # Run regular validator node
