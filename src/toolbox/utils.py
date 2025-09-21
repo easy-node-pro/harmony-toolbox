@@ -988,10 +988,10 @@ def first_env_check(env_file) -> None:
     
     # Detect passphrase
     if os.path.exists(f"{harmony_dir}/passphrase.txt"):
-        os.environ["PASS_SWITCH"] = f"--passphrase-file {harmony_dir}/passphrase.txt"
+        config.pass_switch = f"--passphrase-file {harmony_dir}/passphrase.txt"
     else:
-        os.environ["PASS_SWITCH"] = "--passphrase"
-    
+        config.pass_switch = "--passphrase"
+
     os.environ["NODE_WALLET"] = "true"
     
     # Fetch online versions
