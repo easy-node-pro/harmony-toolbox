@@ -898,13 +898,18 @@ def first_env_check(env_file) -> None:
     
     os.environ["SERVICE_NAME"] = folder_name
     
-    # Prompt for wallet if not set
-    if not os.environ.get("VALIDATOR_WALLET"):
-        wallet = input("* Enter your validator wallet address (one1... or 0x...): ").strip()
-        if not wallet:
-            print("* Wallet address required.")
-            finish_node()
-        os.environ["VALIDATOR_WALLET"] = wallet
+    # Check for saved wallet in folder
+    wallet_file = os.path.join(harmony_dir, "wallet.txt")
+    if os.path.exists(wallet_file):
+        with open(wallet_file, "r") as f:
+            wallet = f.read().strip()
+            if wallet:
+                os.environ["VALIDATOR_WALLET"] = wallet
+            else:
+                os.remove(wallet_file)  # remove empty file
+                _prompt_wallet(harmony_dir, wallet_file)
+    else:
+        _detect_or_prompt_wallet(harmony_dir, wallet_file)
     
     # Detect passphrase
     if os.path.exists(f"{harmony_dir}/passphrase.txt"):
@@ -918,6 +923,38 @@ def first_env_check(env_file) -> None:
     check_online_version()
     
     return
+
+
+def _detect_or_prompt_wallet(harmony_dir, wallet_file):
+    # Try to detect wallet from hmy keys list
+    try:
+        output = subprocess.getoutput(f"{harmony_dir}/hmy keys list | grep {config.active_user}")
+        if output.strip():
+            wallet = output.lstrip(config.active_user).strip()
+            print(f"* Detected wallet from hmy keys: {wallet}")
+            save = ask_yes_no("* Save this wallet for this folder? (Y/N)")
+            if save:
+                with open(wallet_file, "w") as f:
+                    f.write(wallet)
+                os.environ["VALIDATOR_WALLET"] = wallet
+            else:
+                _prompt_wallet(harmony_dir, wallet_file)
+        else:
+            _prompt_wallet(harmony_dir, wallet_file)
+    except Exception:
+        _prompt_wallet(harmony_dir, wallet_file)
+
+
+def _prompt_wallet(harmony_dir, wallet_file):
+    while True:
+        wallet = input("* Enter your validator wallet address (one1... or 0x...): ").strip()
+        if wallet.startswith(("one1", "0x")) and len(wallet) > 10:
+            with open(wallet_file, "w") as f:
+                f.write(wallet)
+            os.environ["VALIDATOR_WALLET"] = wallet
+            break
+        else:
+            print("* Invalid wallet address. Please try again.")
 
 
 def version_checks(harmony_folder):
