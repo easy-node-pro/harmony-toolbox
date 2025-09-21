@@ -1,10 +1,12 @@
 import argparse
+import os
 from toolbox.utils import (
     finish_node,
     set_var,
     load_var_file,
     get_folders,
     ask_yes_no,
+    first_env_check,
 )
 from toolbox.toolbox import (
     update_harmony_app,
@@ -61,13 +63,15 @@ def parse_flags(parser):
     )
 
     parser.add_argument(
-        "-r",
-        "--refresh",
-        action="store_true",
-        help="Enable auto-refresh mode with 10s interval",
+        "-f",
+        "--folder",
+        help="Specify the harmony folder to use (e.g., harmony0).",
     )
 
     args = parser.parse_args()
+
+    if args.folder:
+        os.environ["SELECTED_FOLDER"] = args.folder
 
     if args.install:
         if get_folders():
@@ -88,9 +92,11 @@ def parse_flags(parser):
             first_setup()
 
     if args.upgrade:
+        first_env_check(config.dotenv_file)
         update_harmony_app()
 
     if args.stats:
+        first_env_check(config.dotenv_file)
         if args.refresh:
             import time
 
@@ -106,10 +112,12 @@ def parse_flags(parser):
             finish_node()
 
     if args.collect:
+        first_env_check(config.dotenv_file)
         rewards_collector(config.working_rpc_endpoint)
         finish_node()
 
     if args.collect_send:
+        first_env_check(config.dotenv_file)
         rewards_collector(config.working_rpc_endpoint, True)
         finish_node()
 

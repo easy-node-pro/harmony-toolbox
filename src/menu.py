@@ -14,14 +14,24 @@ def app():
     # Check for old toolbox first
     old_toolbox_check()
 
-    # first_env_check!
-    first_env_check(config.dotenv_file)
-
     # Run parser first to handle help and flags
     parser = argparse.ArgumentParser(
         description="Harmony Validator Toolbox - Help Menu by EasyNodePro.com"
     )
     parse_flags(parser)
+    
+    # If we reach here, it's the menu path
+    first_env_check(config.dotenv_file)
+
+    # This section is for hard coding new settings for current users.
+    safety_defaults()
+    
+    # Check harmony.sh
+    check_harmony_sh()
+    # Clear screen, show logo
+    loader_intro()
+    # Run regular validator node
+    run_regular_node()
 
     # This section is for hard coding new settings for current users.
     safety_defaults()
