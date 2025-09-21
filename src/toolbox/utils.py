@@ -531,7 +531,7 @@ def passphrase_set():
     while True:
         print("* ")
         password_1 = getpass.getpass(
-            prompt="* Please set a wallet password for this node\n* Enter your password now: ",
+            prompt="* Please set a wallet password for this node (can be empty but recommend one for security to use when doing transactions)\n* Enter your password now: ",
             stream=None,
         )
         password_2 = getpass.getpass(prompt="* Re-enter your password: ", stream=None)
