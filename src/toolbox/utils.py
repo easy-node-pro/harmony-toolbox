@@ -234,7 +234,7 @@ def update_harmony_binary():
         )
     else:
         print(
-            f"* Harmony binary installed\n* {harmony_dir}/harmony.conf created\n* Set config to 11 keys max for shard {environ.get('SHARD')} & disabled private ip scan.
+            f"* Harmony binary installed\n* {harmony_dir}/harmony.conf created\n* Set config to 11 keys max for shard {environ.get('SHARD')} & disabled private ip scan."
         )
     return
 
