@@ -1,8 +1,4 @@
-import sys
 import argparse
-import os
-import hashlib
-import shutil
 from toolbox.config import config
 from toolbox.utils import (
     loader_intro,
@@ -16,17 +12,21 @@ from toolbox.cli import parse_flags
 
 
 def app():
+    # Check for old toolbox first
+    old_toolbox_check()
+
     # Run parser first to handle help and flags
     parser = argparse.ArgumentParser(
         description="Harmony Validator Toolbox - Help Menu by EasyNodePro.com"
     )
     parse_flags(parser)
-    # Check for old toolbox first
-    old_toolbox_check()
-    # passed .env check, let's load it!
+    
+    # first_env_check!
     first_env_check(config.dotenv_file)
+
     # This section is for hard coding new settings for current users.
     safety_defaults()
+    
     # Check harmony.sh
     check_harmony_sh()
     # Clear screen, show logo
