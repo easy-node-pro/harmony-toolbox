@@ -198,7 +198,7 @@ def recover_wallet():
         recovery_type()
         load_var_file(config.dotenv_file)
         print(
-            f'\n* Verify the address above matches the address below:\n* Detected Wallet: {Fore.YELLOW}{environ.get("VALIDATOR_WALLET")}{Fore.GREEN}\n* If a different wallet is showing you can remove it and retry it after installation.\n*\n* .{environ.get("HARMONY_DIR")}/hmy keys remove {config.active_user}\n*\n* To restore a wallet once again, run the following:\n*\n* .{environ.get("HARMONY_DIR")}/hmy keys recover-from-mnemonic {config.active_user} {environ.get("PASS_SWITCH")}\n{string_stars()}'
+            f'\n* Verify the address above matches the address below:\n* Detected Wallet: {Fore.YELLOW}{environ.get("VALIDATOR_WALLET")}{Fore.GREEN}\n* If a different wallet is showing you can remove it and retry it after installation.\n*\n* .{environ.get("HARMONY_DIR")}/hmy keys remove {config.active_user}\n*\n* To restore a wallet once again, run the following:\n*\n* .{environ.get("HARMONY_DIR")}/hmy keys recover-from-mnemonic {config.active_user} {config.pass_switch}\n{string_stars()}'
         )
         input(
             "* Verify your wallet information above.\n* Press ENTER to continue Installation."
@@ -973,7 +973,7 @@ def first_env_check(env_file) -> None:
         print("* harmony.conf not found.")
         finish_node()
     
-    os.environ["SERVICE_NAME"] = folder_name
+    config.service_name = folder_name
     
     # Check for validator wallet
     if not os.environ.get("VALIDATOR_WALLET"):
@@ -1629,7 +1629,7 @@ def finish_node_install():
             + "\n* python3 ~/harmony-toolbox/load_wallet.py"
             + "\n*"
             + "\n* To create BLS keys run:"
-            + f'\n* {environ.get("HARMONY_DIR")}/hmy keys generate-bls-keys --count 1 --shard {our_shard} {environ.get("PASS_SWITCH")}'
+            + f'\n* {environ.get("HARMONY_DIR")}/hmy keys generate-bls-keys --count 1 --shard {our_shard} {config.pass_switch}'
             + f"\n*\n{string_stars()}"
         )
     print(

@@ -39,6 +39,8 @@ class Config:
         self.harmony_tmp_path = "/tmp/harmony"
         self.folder_checks = ["harmony", "harmony0", "harmony1", "harmony2", "harmony3", "harmony4"]
         self.shard = environ.get("SHARD") or "4"
+        self.service_name = environ.get("SERVICE_NAME") or "harmony"
+        self.pass_switch = environ.get("PASS_SWITCH") or "--passphrase"
 
     @staticmethod
     def get_url(timeout=5) -> str:
@@ -113,6 +115,8 @@ class Config:
             "harmony_tmp_path",
             "folder_checks",
             "shard",
+            "service_name",
+            "pass_switch",
         ]
         for var in essential_vars:
             if not getattr(self, var):

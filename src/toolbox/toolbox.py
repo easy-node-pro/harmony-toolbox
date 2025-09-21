@@ -479,7 +479,7 @@ def menu_topper_regular(software_versions) -> None:
     print(
         f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {Fore.BLUE}{config.server_host_name}{Fore.GREEN} - {Fore.YELLOW}{config.external_ip}{Fore.GREEN}'
     )
-    harmony_service_status(environ.get("SERVICE_NAME", "harmony"))
+    harmony_service_status(config.service_name)
     print(
         f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current disk space: {Fore.CYAN}{free_space_check(config.harmony_dir): >6}{Fore.GREEN}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}\n{string_stars()}'
     )
@@ -525,7 +525,7 @@ def get_wallet_json(wallet: str) -> str:
     except HTTPError as http_err:
         print(f"HTTP error occurred: {http_err}")
         print(
-            f'* You have not created your validator yet, try again after you add one!\n* cd ~/harmony\n* ./hmy keys recover-from-mnemonic {config.active_user} {environ.get("PASS_SWITCH")}'
+            f'* You have not created your validator yet, try again after you add one!\n* cd ~/harmony\n* ./hmy keys recover-from-mnemonic {config.active_user} {config.pass_switch}'
         )
         input("Press ENTER to return to the main menu.")
         return
@@ -841,7 +841,7 @@ def run_regular_node() -> None:
 
 def service_menu_option() -> None:
     status = process_command(
-        f"systemctl is-active --quiet {environ.get('SERVICE_NAME')}", True, False
+        f"systemctl is-active --quiet {config.service_name}", True, False
     )
     if status:
         print(
@@ -969,11 +969,11 @@ def update_harmony_app():
                     + "* Are you sure you would like to proceed with upgrading and trimming database 0?\n\nType 'Yes' or 'No' to continue"
                 )
                 if question:
-                    process_command(f"sudo service {environ.get('SERVICE_NAME')} stop")
+                    process_command(f"sudo service {config.service_name} stop")
                     process_command(
                         f"mv {config.harmony_dir}/harmony_db_0 {config.harmony_dir}/harmony_db_0_old"
                     )
-                    process_command(f"sudo service {environ.get('SERVICE_NAME')} start")
+                    process_command(f"sudo service {config.service_name} start")
                     process_command(f"rm -r {config.harmony_dir}/harmony_db_0_old")
                 else:
                     print(
@@ -981,7 +981,7 @@ def update_harmony_app():
                     )
             else:
                 print("Your database 0 is already trimmed, enjoy!")
-    process_command(f"sudo service {environ.get('SERVICE_NAME')} restart")
+    process_command(f"sudo service {config.service_name} restart")
     print(
         f"{string_stars()}\nHarmony Service is restarting, waiting 10 seconds for processing to resume..."
     )
@@ -1106,7 +1106,7 @@ def menu_service_stop_start():
 def menu_service_stop_start_trigger(service) -> str:
     status = process_command(f"systemctl is-active --quiet {service}")
     if status != 0:
-        process_command(f"sudo service {environ.get('SERVICE_NAME')} start")
+        process_command(f"sudo service {config.service_name} start")
         print()
         print("* Harmony Service Has Been Started.")
         print()
@@ -1120,7 +1120,7 @@ def menu_service_stop_start_trigger(service) -> str:
             + "* Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
         )
         if question:
-            process_command(f"sudo service {environ.get('SERVICE_NAME')} stop")
+            process_command(f"sudo service {config.service_name} stop")
             print()
             print(
                 "* Harmony Service Has Been Stopped. "
@@ -1142,7 +1142,7 @@ def menu_service_restart() -> str:
         + "Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
     )
     if question:
-        process_command(f"sudo service {environ.get('SERVICE_NAME')} restart")
+        process_command(f"sudo service {config.service_name} restart")
         print()
         print("* The Harmony Service Has Been Restarted")
         input("* Press ENTER to return to the main menu.")
