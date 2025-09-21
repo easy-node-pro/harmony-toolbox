@@ -338,7 +338,7 @@ def validator_stats_output() -> None:
         f"{Fore.GREEN}{string_stars()}\n* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{config.easy_version}{Style.RESET_ALL}{Fore.WHITE}   https://EasyNodePro.com {Fore.GREEN}*"
     )
     print(
-        f"{string_stars()}\n* Address: {Fore.RED}{short_address}{Fore.GREEN} Balance: {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN} Pending Rewards: {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get('VALIDATOR_WALLET')), 2))}{Fore.GREEN} Hostname: {Fore.CYAN}{config.server_host_name}{Fore.GREEN} IP: {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
+        f"{string_stars()}\n* Address: {Fore.RED}{short_address}{Fore.GREEN} Balance: {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN} Pending Rewards: {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get('VALIDATOR_WALLET')), 2))}{Fore.GREEN}\n* Hostname: {Fore.CYAN}{config.server_host_name}{Fore.GREEN} IP: {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
     )
     service_statuses = [harmony_service_status(folder) for folder in folders]
     print(f"* Service Status: {' '.join(service_statuses)}")
