@@ -52,9 +52,26 @@ def first_setup():
     return
 
 
-def second_setup():
+def multi_setup():
     # Find Shard #
-    check_for_install(config.shard)
+    print(
+        f"{string_stars()}\n* Gathering more information about your server.\n{string_stars()}"
+    )
+    print(
+        f"* Which shard do you want this node to sign blocks on?\n{string_stars()}"
+    )
+    menu_options = [
+        "[0] - Shard 0",
+        "[1] - Shard 1",
+    ]
+    terminal_menu = TerminalMenu(
+        menu_options, title="* Which Shard will this node sign blocks on? "
+    )
+    our_shard = int(terminal_menu.show())
+
+    set_var(config.dotenv_file, "SHARD", str(our_shard))
+    config.shard = our_shard
+    check_for_install(our_shard)
     return
 
 

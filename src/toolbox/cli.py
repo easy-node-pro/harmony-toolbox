@@ -11,7 +11,7 @@ from toolbox.toolbox import (
     run_multistats,
     rewards_collector,
     first_setup,
-    second_setup,
+    multi_setup,
 )
 from toolbox.config import config
 
@@ -82,7 +82,7 @@ def parse_flags(parser):
         if get_folders():
             question = ask_yes_no("* It appears you already have Harmony installed. Would you like to install a 2nd service? (YES/NO)")
             if question:
-                second_setup()
+                multi_setup()
             finish_node()
         else:
             first_setup()
