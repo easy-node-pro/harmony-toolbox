@@ -53,8 +53,7 @@ class Config:
                 response.raise_for_status()
                 return response.text
             except requests.exceptions.RequestException as x:
-                print(type(x), x)
-                return "Unable to retrieve external IP"
+                return "0.0.0.0"
 
     @staticmethod
     def get_working_endpoint(endpoints):
