@@ -332,12 +332,13 @@ def validator_stats_output() -> None:
     load_1, load_5, load_15 = os.getloadavg()
     sign_percentage = get_sign_pct()
     validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
+    short_address = f"{environ.get('VALIDATOR_WALLET')[:4]}...{environ.get('VALIDATOR_WALLET')[-4:]}"
     # Print Menu
     print(
         f"{Fore.GREEN}{string_stars()}\n* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{config.easy_version}{Style.RESET_ALL}{Fore.WHITE}   https://EasyNodePro.com {Fore.GREEN}*"
     )
     print(
-        f"{string_stars()}\n* Address: {Fore.RED}{str(environ.get('VALIDATOR_WALLET'))}{Fore.GREEN}* Balance: {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}* Pending Rewards: {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get('VALIDATOR_WALLET')), 2))}{Fore.GREEN}\n* Hostname: {config.server_host_name} IP:{Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
+        f"{string_stars()}\n* Address: {Fore.RED}{short_address}{Fore.GREEN} Balance: {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN} Pending Rewards: {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get('VALIDATOR_WALLET')), 2))}{Fore.GREEN} Hostname: {Fore.CYAN}{config.server_host_name}{Fore.GREEN} IP: {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
     )
     service_statuses = [harmony_service_status(folder) for folder in folders]
     print(f"* Service Status: {' '.join(service_statuses)}")
