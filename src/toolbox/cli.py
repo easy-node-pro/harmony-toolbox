@@ -75,10 +75,40 @@ def parse_flags(parser):
         help="Specify the harmony folder to use (e.g., harmony0).",
     )
 
+    parser.add_argument(
+        "--default-folder",
+        action="store_true",
+        help="Set a new default folder.",
+    )
+
     args = parser.parse_args()
 
     if args.folder:
         os.environ["SELECTED_FOLDER"] = args.folder
+
+    if args.default_folder:
+        load_var_file(config.dotenv_file)
+        folders = get_folders()
+        if not folders:
+            print("* No harmony folders found.")
+            finish_node()
+        print("* Select a folder to set as default:")
+        for i, f in enumerate(folders.keys()):
+            print(f"  {i+1}. {f}")
+        while True:
+            try:
+                choice = int(input("* Select folder number: ")) - 1
+                if 0 <= choice < len(folders):
+                    folder_name = list(folders.keys())[choice]
+                    default_folder_file = os.path.join(config.toolbox_location, "default_folder.txt")
+                    with open(default_folder_file, "w") as f:
+                        f.write(folder_name)
+                    print(f"* Default folder set to: {folder_name}")
+                    finish_node()
+                else:
+                    print("* Invalid choice.")
+            except ValueError:
+                print("* Please enter a number.")
 
     if args.install:
         if get_folders():

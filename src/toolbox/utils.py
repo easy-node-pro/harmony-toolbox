@@ -883,47 +883,69 @@ def first_env_check(env_file) -> None:
         print("* No harmony folders found. Please run installation first.")
         finish_node()
     
+    default_folder_file = os.path.join(config.toolbox_location, "default_folder.txt")
     last_folder_file = os.path.join(config.toolbox_location, "last_folder.txt")
     selected_folder = os.environ.get("SELECTED_FOLDER")
     if selected_folder and selected_folder in folders:
         folder_name = selected_folder
         print(f"* Using specified folder: {folder_name}")
-    elif len(folders) == 1:
-        folder_name = list(folders.keys())[0]
     else:
-        # Check for last selected folder
-        last_folder = None
-        if os.path.exists(last_folder_file):
-            with open(last_folder_file, "r") as f:
-                last_folder = f.read().strip()
-            if last_folder not in folders:
-                last_folder = None
+        # Check for default folder
+        default_folder = None
+        if os.path.exists(default_folder_file):
+            with open(default_folder_file, "r") as f:
+                default_folder = f.read().strip()
+            if default_folder not in folders:
+                default_folder = None
+                os.remove(default_folder_file)  # remove invalid
         
-        if last_folder:
-            print(f"* Using last selected folder: {last_folder}")
-            use_last = ask_yes_no("* Use this as default folder? (Y/N)")
-            if use_last:
-                folder_name = last_folder
-            else:
-                last_folder = None
-        
-        if not last_folder:
-            print("* Multiple harmony folders found:")
-            for i, f in enumerate(folders.keys()):
-                print(f"  {i+1}. {f}")
-            while True:
-                try:
-                    choice = int(input("* Select folder number: ")) - 1
-                    if 0 <= choice < len(folders):
-                        folder_name = list(folders.keys())[choice]
-                        # Save as last
-                        with open(last_folder_file, "w") as f:
-                            f.write(folder_name)
-                        break
-                    else:
-                        print("* Invalid choice.")
-                except ValueError:
-                    print("* Please enter a number.")
+        if default_folder:
+            folder_name = default_folder
+            print(f"* Using default folder: {folder_name}")
+        elif len(folders) == 1:
+            folder_name = list(folders.keys())[0]
+        else:
+            # Check for last selected folder
+            last_folder = None
+            if os.path.exists(last_folder_file):
+                with open(last_folder_file, "r") as f:
+                    last_folder = f.read().strip()
+                if last_folder not in folders:
+                    last_folder = None
+            
+            if last_folder:
+                print(f"* Using last selected folder: {last_folder}")
+                use_last = ask_yes_no("* Use this folder? (Y/N)")
+                if use_last:
+                    folder_name = last_folder
+                else:
+                    last_folder = None
+            
+            if not last_folder:
+                print("* Multiple harmony folders found:")
+                for i, f in enumerate(folders.keys()):
+                    print(f"  {i+1}. {f}")
+                while True:
+                    try:
+                        choice = int(input("* Select folder number: ")) - 1
+                        if 0 <= choice < len(folders):
+                            folder_name = list(folders.keys())[choice]
+                            break
+                        else:
+                            print("* Invalid choice.")
+                    except ValueError:
+                        print("* Please enter a number.")
+            
+            # After selection, ask to set as default if not already set
+            if not os.path.exists(default_folder_file):
+                set_default = ask_yes_no("* Set this as default folder? (Y/N)")
+                if set_default:
+                    with open(default_folder_file, "w") as f:
+                        f.write(folder_name)
+    
+    # Always save as last
+    with open(last_folder_file, "w") as f:
+        f.write(folder_name)
     
     harmony_dir = f"{config.user_home_dir}/{folder_name}"
     os.environ["HARMONY_DIR"] = harmony_dir
