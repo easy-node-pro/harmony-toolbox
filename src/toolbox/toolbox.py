@@ -224,6 +224,7 @@ def get_shard_menu() -> None:
         our_shard = int(terminal_menu.show())
 
         set_var(config.dotenv_file, "SHARD", str(our_shard))
+        config.shard = our_shard
         return our_shard
     else:
         print(f"* Shard already set to {environ.get('SHARD')}")
@@ -305,30 +306,6 @@ def rewards_collector(
         print(f"* Current Rewards Wallet Balance: {rewards_wallet_balance} $ONE\n*")
 
     return
-
-
-def get_shard_menu() -> None:
-    if not environ.get("SHARD"):
-        print(
-            f"{string_stars()}\n* Gathering more information about your server.\n{string_stars()}"
-        )
-        print(
-            f"* Which shard do you want this node to sign blocks on?\n{string_stars()}"
-        )
-        menu_options = [
-            "[0] - Shard 0",
-            "[1] - Shard 1",
-        ]
-        terminal_menu = TerminalMenu(
-            menu_options, title="* Which Shard will this node sign blocks on? "
-        )
-        our_shard = int(terminal_menu.show())
-
-        set_var(config.dotenv_file, "SHARD", str(our_shard))
-        return our_shard
-    else:
-        print(f"* Shard already set to {environ.get('SHARD')}")
-        return int(environ.get("SHARD"))
 
 
 def governance_member_voting():
