@@ -1135,7 +1135,7 @@ def get_folder_choice() -> str:
         "[5] - harmony3",
     ]
     terminal_menu = TerminalMenu(
-        menu_options, title="* Please choose your installation folder option. "
+        menu_options, title=f"{Fore.GREEN}* Please choose your installation folder option. "
     )
     vote_choice_index = terminal_menu.show()
     if vote_choice_index == 6:  # The index of the "Quit" option
@@ -1147,13 +1147,13 @@ def get_folder_choice() -> str:
 # Installer Module
 def install_harmony() -> None:
     while True:
-        print(f"{string_stars()}\n* Install Location\n{string_stars()}")
+        print(f"{string_stars()}\n* Install Location")
         folder_path = get_folder_choice()
         harmony_dir = f"{config.user_home_dir}/{folder_path}"
         set_var(config.dotenv_file, "HARMONY_DIR", f"{harmony_dir}")
         if os.path.exists(harmony_dir):
             question = ask_yes_no(
-                f"* The folder {harmony_dir} already exists.\n* Are you sure you want to re-install into this existing folder? (YES/NO) "
+                f"{Fore.GREEN}* The folder {harmony_dir} already exists.\n* Are you sure you want to re-install into this existing folder? (YES/NO) "
             )
             if question:
                 install_path = harmony_dir
@@ -1161,7 +1161,7 @@ def install_harmony() -> None:
                 break
         else:
             question = ask_yes_no(
-                f"* The path {harmony_dir} doesn't exist yet.\n* Do you want to create it and install the harmony files here? (YES/NO) "
+                f"{Fore.GREEN}* The path {harmony_dir} doesn't exist yet.\n* Do you want to create it and install the harmony files here? (YES/NO) "
             )
             if question:
                 install_path = harmony_dir
