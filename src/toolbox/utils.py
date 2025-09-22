@@ -458,9 +458,9 @@ def validator_stats_output() -> None:
     for result in folder_results:
         if result and "versions" in result:
             v = result["versions"]
-            harmony_status = f"{Fore.YELLOW}SYNC{Fore.GREEN}" if v["harmony_upgrade"] == "False" else f"{Fore.RED}UPDATE{Fore.GREEN}"
+            harmony_status = f"{Fore.YELLOW}SYNC{Fore.GREEN}{' '*4}" if v["harmony_upgrade"] == "False" else f"{Fore.RED}UPDATE{Fore.GREEN}{' '*2}"
             hmy_status = f"{Fore.YELLOW}SYNC{Fore.GREEN}" if v["hmy_upgrade"] == "False" else f"{Fore.RED}UPDATE{Fore.GREEN}"
-            print(f"* {result['folder']:<12} {harmony_status:<8} {hmy_status}")
+            print(f"* {result['folder']:<12} {harmony_status} {hmy_status}")
     print(f"{string_stars()}")
 
 
