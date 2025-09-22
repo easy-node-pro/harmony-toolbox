@@ -419,10 +419,7 @@ def validator_stats_output() -> None:
 
     if versions:
         print(
-            f"* Toolbox Version: {Fore.CYAN}v{config.easy_version}{Fore.GREEN}\n* Harmony Version: {Fore.YELLOW}{versions['harmony_version']}{Fore.GREEN} Upgrade Available: {versions['harmony_upgrade']}"
-        )
-        print(
-            f"* HMY Version: {' '*4}{Fore.YELLOW}{versions['hmy_version']}{Fore.GREEN}{' '*17} Upgrade Available: {versions['hmy_upgrade']}"
+            f"* Toolbox Version: {Fore.CYAN}v{config.easy_version}{Fore.GREEN}\n* Online Harmony Version: {Fore.YELLOW}{environ.get('ONLINE_HARMONY_VERSION', 'Unknown')}{Fore.GREEN}\n* Online HMY Version: {Fore.YELLOW}{environ.get('ONLINE_HMY_VERSION', 'Unknown')}{Fore.GREEN}"
         )
 
     print(f"{string_stars()}")
@@ -455,6 +452,15 @@ def validator_stats_output() -> None:
                 )
 
     print(f"{string_stars()}")
+    print("* Software Versions:")
+    print("* Folder       Harmony   HMY")
+    print("* ------------ -------- -----")
+    for result in folder_results:
+        if result and "versions" in result:
+            v = result["versions"]
+            harmony_status = "SYNC" if v["harmony_upgrade"] == "False" else "UPDATE"
+            hmy_status = "SYNC" if v["hmy_upgrade"] == "False" else "UPDATE"
+            print(f"* {result['folder']:<12} {harmony_status:<8} {hmy_status}")
 
 
 def harmony_service_status(service="harmony") -> str:
