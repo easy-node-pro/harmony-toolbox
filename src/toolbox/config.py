@@ -69,7 +69,7 @@ class Config:
         self.gas_reserve = environ.get("GAS_RESERVE") or "5"
         self.refresh_time = environ.get("REFRESH_TIME") or "30"
         self.refresh_option = environ.get("REFRESH_OPTION") or "False"
-        self.run_count = int(environ.get("RUN_COUNT")) or 0
+        self.run_count = environ.get("RUN_COUNT") or 0
         self.print_menu_count = 50  # Number of runs before printing the menu again
         
         

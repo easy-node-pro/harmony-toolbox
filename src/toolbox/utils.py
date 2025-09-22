@@ -880,7 +880,7 @@ def first_env_check(env_file) -> None:
     load_var_file(env_file)
 
     # Update run count for menus
-    current_run_count = config.run_count + 1
+    current_run_count = int(config.run_count) + 1
     if current_run_count > config.print_menu_count:
         current_run_count = 0
     set_var(config.dotenv_file, "RUN_COUNT", str(current_run_count))
@@ -1467,7 +1467,7 @@ def menu_reboot_server() -> str:
 
 
 def finish_node():
-    if config.run_count == 0:
+    if int(config.run_count) == 0:
         print(
             "* Thanks for using Easy Node Toolbox - Making everything Easy Mode!"
             + "\n*\n* We serve up free tools and guides for validators every day."
