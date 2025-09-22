@@ -412,9 +412,9 @@ def validator_stats_output() -> None:
 
     print(f"* Service Status & Sync:")
     print(
-        f"* {'Folder':<10} {'S':<2} {'Sync':<5} {'DB 0':<6} {'Free 0':<6} {'DB 1':<6} {'Free 1':<6} {'Local Block':<12}"
+        f"* {'Folder':<10} {'S':<2} {'Sync':<5} {'Epoch':<6} {'DB 0':<6} {'Free 0':<6} {'DB 1':<6} {'Free 1':<6} {'Local Block':<12}"
     )
-    print(f"* {'-'*10} {'-'*2} {'-'*5} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*12}")
+    print(f"* {'-'*10} {'-'*2} {'-'*5} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*12}")
 
     # Now print results for each folder
     for result in folder_results:
@@ -435,7 +435,7 @@ def validator_stats_output() -> None:
                     result["free_space_shard"] if result["shard_id"] != 0 else "N/A"
                 )
                 print(
-                    f"* {result['folder']:<10} {result['shard_id']:<2} {sync_status:<5} {colorize_size(result['db_size_0']):<6} {colorize_size(result['free_space_0']):<6} {colorize_size(db_size_shard):<6} {colorize_size(free_space_shard):<6} {result['local_block']:<12}"
+                    f"* {result['folder']:<10} {result['shard_id']:<2} {sync_status:<5} {result['local_epoch']:<6} {colorize_size(result['db_size_0']):<6} {colorize_size(result['free_space_0']):<6} {colorize_size(db_size_shard):<6} {colorize_size(free_space_shard):<6} {result['local_block']:<12}"
                 )
 
     # Collect version info (assume same for all)
