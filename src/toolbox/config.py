@@ -17,8 +17,8 @@ class Config:
         self.easy_version = config_parser.get('metadata', 'version')
 
         # Load any pre-existing .env file or create a new one
-        self.dotenv_file = f"{self.user_home_dir}/.easynode.env"
         self.user_home_dir = path.expanduser("~")
+        self.dotenv_file = f"{self.user_home_dir}/.easynode.env"
         # load .env file or create it if it doesn't exist
         if os.path.exists(self.dotenv_file):
             load_dotenv(self.dotenv_file, override=True)
