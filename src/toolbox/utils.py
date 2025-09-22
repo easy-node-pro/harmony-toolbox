@@ -461,7 +461,8 @@ def validator_stats_output() -> None:
             harmony_status = f"{Fore.YELLOW}SYNC{Fore.GREEN}" if v["harmony_upgrade"] == "False" else f"{Fore.RED}UPDATE{Fore.GREEN}"
             hmy_status = f"{Fore.YELLOW}SYNC{Fore.GREEN}" if v["hmy_upgrade"] == "False" else f"{Fore.RED}UPDATE{Fore.GREEN}"
             print(f"* {result['folder']:<12} {harmony_status:<8} {hmy_status}")
-
+    print(f"{string_stars()}")
+    
 
 def harmony_service_status(service="harmony") -> str:
     status = subprocess.call(["systemctl", "is-active", "--quiet", service])
