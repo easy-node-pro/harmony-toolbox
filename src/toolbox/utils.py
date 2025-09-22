@@ -137,8 +137,7 @@ def old_toolbox_check():
 
 # Install Harmony ONE
 def update_hmy_binary():
-    load_dotenv(config.dotenv_file)
-    hmy_dir = environ.get("HARMONY_DIR")
+    hmy_dir = config.harmony_dir
     download_url = "https://harmony.one/hmycli"
     destination_path = f"{hmy_dir}/hmy"
 
@@ -1581,7 +1580,6 @@ def colorize_size(size_str, threshold_gb=50.0):
 # Database Downloader
 def clone_shards():
     our_shard = environ.get("SHARD")
-    load_dotenv(config.dotenv_file)
     # Move to ~/harmony
     os.chdir(f"{config.harmony_dir}")
 

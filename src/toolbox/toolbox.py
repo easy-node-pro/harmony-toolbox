@@ -1,6 +1,5 @@
 import os, requests, time, json, subprocess, pytz
 from pytimedinput import timedInteger
-from dotenv import load_dotenv
 from subprocess import PIPE, run
 from ast import literal_eval
 from os import environ
@@ -426,78 +425,6 @@ def get_vote_choice() -> (int, str):
     vote_choice_num = vote_choice_index + 1
     vote_choice_text = menu_options[vote_choice_index].split(" - ")[1]
     return vote_choice_num, vote_choice_text
-
-
-def menu_topper_regular(software_versions) -> None:
-    our_shard = config.shard
-
-    try:
-        load_1, load_5, load_15 = os.getloadavg()
-        sign_percentage = get_sign_pct()
-        validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
-
-        # Not getting remote shard 0 epoch here, investigate.
-        remote_data_shard_0, local_data_shard, remote_data_shard = (
-            menu_validator_stats()
-        )
-
-        # Ensure dictionaries are initialized correctly
-        remote_data_shard_0 = (
-            remote_data_shard_0 if remote_data_shard_0 is not None else {}
-        )
-        local_data_shard = local_data_shard if local_data_shard is not None else {}
-        remote_data_shard = remote_data_shard if remote_data_shard is not None else {}
-
-        # Safely access epoch information from remote_data_shard_0
-        result_0 = remote_data_shard_0.get("result", {})
-        current_remote_epoch = result_0.get("shard-chain-header", {}).get("epoch", 0)
-
-        # Safely access block number from remote_data_shard
-        result_remote = remote_data_shard.get("result", {})
-        shard_header_remote = result_remote.get("shard-chain-header", {})
-        remote_shard_block = literal_eval(shard_header_remote.get("number", 0))
-
-        # Safely access block number from local_data_shard
-        result_local = local_data_shard.get("result", {})
-        shard_header_local = result_local.get("shard-chain-header", {})
-        local_shard_block = literal_eval(shard_header_local.get("number", 0))
-
-        # Calculate shard difference
-        shard_difference = remote_shard_block - local_shard_block
-
-    except (ValueError, KeyError, TypeError) as e:
-        print(f"* Error fetching data: {e}")
-        current_remote_epoch = 0
-        remote_shard_block = 0
-        local_shard_block = 0
-        shard_difference = 0
-
-    # Print Menu
-    print(
-        f"{Fore.GREEN}{string_stars()}\n* Validator Toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node   v{config.easy_version}{Fore.WHITE}   https://EasyNodePro.com {Fore.GREEN}\n{string_stars()}"
-    )
-    print(
-        f'* Your validator wallet address is: {Fore.RED}{str(environ.get("VALIDATOR_WALLET"))}{Fore.GREEN}\n* Your $ONE balance is:             {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN}\n* Your pending $ONE rewards are:    {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET")), 2))}{Fore.GREEN}\n* Server Hostname & IP:             {Fore.BLUE}{config.server_host_name}{Fore.GREEN} - {Fore.YELLOW}{config.external_ip}{Fore.GREEN}'
-    )
-    harmony_service_status(config.service_name)
-    print(
-        f'* Epoch Signing Percentage:         {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}\n* Current disk space: {Fore.CYAN}{free_space_check(config.harmony_dir): >6}{Fore.GREEN}\n* Current harmony version: {Fore.YELLOW}{software_versions["harmony_version"]}{Fore.GREEN}, has upgrade available: {software_versions["harmony_upgrade"]}\n* Current hmy version: {Fore.YELLOW}{software_versions["hmy_version"]}{Fore.GREEN}, has upgrade available: {software_versions["hmy_upgrade"]}\n{string_stars()}'
-    )
-
-    shard_stats_title = f"* Shard {environ.get('SHARD')} Stats:\n{string_stars()}"
-    remote_shard_info = f"* Remote Shard {environ.get('SHARD')} Epoch: {current_remote_epoch}, Current Block: {remote_shard_block}"
-    local_shard_diff = f"(Diff: {shard_difference})" if shard_difference != 0 else ""
-    if our_shard == "0":
-        print(
-            f"{shard_stats_title}\n{remote_shard_info}{local_shard_diff}, Local Shard 0 Size: {get_db_size(config.harmony_dir, '0')}"
-        )
-    else:
-        print(
-            f"{shard_stats_title}\n{remote_shard_info}{local_shard_diff}, Local Shard {environ.get('SHARD')} Size: {get_db_size(config.harmony_dir, environ.get('SHARD'))}"
-        )
-    print(
-        f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min\n{string_stars()}"
-    )
 
 
 def menu_regular(software_versions) -> None:
@@ -987,99 +914,6 @@ def update_harmony_app():
     )
     set_var(config.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
     time.sleep(10)
-
-
-def menu_validator_stats():
-    load_var_file(config.dotenv_file)
-    our_shard = config.shard
-    api_endpoint = config.working_rpc_endpoint
-    remote_shard_0 = [
-        f"{config.hmy_app}",
-        "blockchain",
-        "latest-headers",
-        f"--node={api_endpoint}",
-    ]
-    try:
-        result_remote_shard_0 = run(
-            remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True
-        )
-        remote_data_shard_0 = json.loads(result_remote_shard_0.stdout)
-
-        # Check if the remote data is empty or None
-        if not remote_data_shard_0:
-            raise ValueError("Empty or None data")
-    except (ValueError, KeyError, TypeError) as e:
-        print(f"* Remote Shard 0 Offline, Please try again later.\n* Error {e}")
-        finish_node()
-    try:
-        http_port = find_port(environ.get("HARMONY_DIR"))
-        local_shard = [
-            f"{config.harmony_dir}/hmy",
-            "blockchain",
-            "latest-headers",
-            "--node",
-            f"http://localhost:{http_port}",
-        ]
-        result_local_shard = run(
-            local_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True
-        )
-        local_data_shard = json.loads(result_local_shard.stdout)
-
-        # Check if the local data is empty or None
-        if not local_data_shard:
-            raise ValueError("Empty or None data")
-    except (ValueError, KeyError, TypeError) as e:
-        print(
-            f"* Local Server Offline\n*\n* Run troubleshooting, See our documents site for info on how to manually troubleshoot:\n* https://docs.EasyNodePro.com/harmony/post#validator-toolbox-troubleshooting\n{string_stars()}"
-        )
-        finish_node()
-
-    if our_shard != "0":
-        remote_shard = [
-            f"{config.hmy_app}",
-            "blockchain",
-            "latest-headers",
-            f"--node=https://api.s1.t.hmny.io",
-        ]
-        try:
-            result_remote_shard = run(
-                remote_shard, stdout=PIPE, stderr=PIPE, universal_newlines=True
-            )
-            remote_data_shard = json.loads(result_remote_shard.stdout)
-
-            # Check if the remote data is empty or None
-            if not remote_data_shard:
-                raise ValueError("Empty or None data")
-
-            return remote_data_shard_0, local_data_shard, remote_data_shard
-        except (ValueError, KeyError, TypeError):
-            return
-
-    return remote_data_shard_0, local_data_shard, None
-
-
-def shard_stats(our_shard) -> str:
-    our_uptime = subprocess.getoutput("uptime")
-    db_0_size = get_db_size(config.harmony_dir, "0")
-    if our_shard == "0":
-        print(
-            f"""
-    * Uptime :: {our_uptime}\n\n Harmony DB 0 Size  ::  {db_0_size}
-    {string_stars()}
-        """
-        )
-    else:
-        print(
-            f"""
-    * Uptime :: {our_uptime}
-    *
-    * Harmony DB 0 Size  ::  {db_0_size}
-    * Harmony DB {our_shard} Size  ::   {get_db_size(config.harmony_dir, str(our_shard))}
-    *
-    *
-    {string_stars()}
-        """
-        )
 
 
 def harmony_binary_upgrade():

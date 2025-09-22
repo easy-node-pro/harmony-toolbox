@@ -1,9 +1,11 @@
 import socket
 import requests
-from os import environ, path
-from dotenv import load_dotenv
+import os
 import configparser
 import random
+import subprocess
+from os import environ, path
+from dotenv import load_dotenv
 
 
 class Config:
@@ -13,19 +15,32 @@ class Config:
         setup_cfg_path = path.join(path.dirname(__file__), '..', '..', 'setup.cfg')
         config_parser.read(setup_cfg_path)
         self.easy_version = config_parser.get('metadata', 'version')
-        
-        # Set constants
-        self.server_host_name = socket.gethostname()
-        self.user_home_dir = path.expanduser("~")
+
+        # Load any pre-existing .env file or create a new one
         self.dotenv_file = f"{self.user_home_dir}/.easynode.env"
-        # Load env file
-        load_dotenv(self.dotenv_file)
+        self.user_home_dir = path.expanduser("~")
+        # load .env file or create it if it doesn't exist
+        if os.path.exists(self.dotenv_file):
+            load_dotenv(self.dotenv_file, override=True)
+            
+        else:
+            subprocess.run(["touch", self.dotenv_file])
+
+        # Set constants
+        self.folder_checks = ["harmony", "harmony0", "harmony1", "harmony2", "harmony3", "harmony4"] # Set any folders you want to use here
+        self.shard = environ.get("SHARD") or "4"
+        self.service_name = environ.get("SERVICE_NAME") or "harmony"
+        self.pass_switch = environ.get("PASS_SWITCH") or "--passphrase"
+        self.gas_reserve = environ.get("GAS_RESERVE") or "5"
+        self.refresh_time = environ.get("REFRESH_TIME") or "30"
+        self.server_host_name = socket.gethostname()
         self.active_user = path.split(self.user_home_dir)[-1]
         self.harmony_dir = environ.get("HARMONY_DIR") or f"{self.user_home_dir}/harmony"
         self.bls_key_file = path.join(self.harmony_dir, "blskey.pass")
         self.hmy_app = path.join(self.harmony_dir, "hmy")
         self.harmony_conf = path.join(self.harmony_dir, "harmony.conf")
         self.bls_key_dir = path.join(self.harmony_dir, ".hmy", "blskeys")
+        self.validator_wallet= environ.get("VALIDATOR_WALLET") or "0xInvalidAddress"
         self.hmy_wallet_store = path.join(self.user_home_dir, ".hmy_cli", "account-keys", self.active_user)
         self.toolbox_location = path.join(self.user_home_dir, "harmony-toolbox")
         self.validator_data = path.join(self.toolbox_location, "metadata", "validator.json")
@@ -33,14 +48,11 @@ class Config:
         self.external_ip = self.get_url()
         self.main_menu_regular = path.join(self.toolbox_location, "src", "messages", "regularmenu.txt")
         self.shard_0_rpc_endpoints = ["https://1rpc.io/one", "https://api.s0.t.hmny.io", "https://api.harmony.one", "https://rpc.ankr.com/harmony", "https://hmyone-pokt.nodies.app"]
-        self.shard_1_rpc_endpoints = ["https://api.s1.t.hmny.io"] 
         self.rpc_endpoints_max_connection_retries = 10
         self.hmy_tmp_path = "/tmp/hmy"
         self.harmony_tmp_path = "/tmp/harmony"
-        self.folder_checks = ["harmony", "harmony0", "harmony1", "harmony2", "harmony3", "harmony4"]
-        self.shard = environ.get("SHARD") or "4"
-        self.service_name = environ.get("SERVICE_NAME") or "harmony"
-        self.pass_switch = environ.get("PASS_SWITCH") or "--passphrase"
+        
+        
 
     @staticmethod
     def get_url(timeout=5) -> str:
@@ -59,28 +71,19 @@ class Config:
 
     @staticmethod
     def get_working_endpoint(endpoints):
-        working = []
         for endpoint in endpoints:
             try:
                 response = requests.get(endpoint, timeout=5)
                 if response.status_code == 200:
-                    working.append(endpoint)
+                    return endpoint
             except requests.exceptions.RequestException:
                 pass
-        if working:
-            return random.choice(working)
         return None
 
     @property
     def working_rpc_endpoint(self):
-        if self.shard == "0":
-            return self.get_working_endpoint(self.shard_0_rpc_endpoints)
-        elif self.shard == "1":
-            return self.get_working_endpoint(self.shard_1_rpc_endpoints)
-        else:
-            # For other shards, default to shard 0 endpoints
-            return self.get_working_endpoint(self.shard_0_rpc_endpoints)
-    
+        return self.get_working_endpoint(self.shard_0_rpc_endpoints)
+        
     @property
     def harmony_sh_home_path(self):
         return path.join(self.user_home_dir, "harmony.sh")
@@ -109,7 +112,6 @@ class Config:
             "external_ip",
             "main_menu_regular",
             "shard_0_rpc_endpoints",
-            "shard_1_rpc_endpoints",
             "rpc_endpoints_max_connection_retries",
             "hmy_tmp_path",
             "harmony_tmp_path",
