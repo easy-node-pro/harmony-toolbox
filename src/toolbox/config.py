@@ -139,7 +139,6 @@ class Config:
             "harmony_tmp_path",
             "folder_checks",
             "shard",
-            "service_name",
             "pass_switch",
             "gas_reserve",
             "refresh_time",
