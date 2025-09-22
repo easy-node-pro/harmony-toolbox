@@ -447,6 +447,7 @@ def validator_stats_output() -> None:
             break
 
     if versions:
+        print(f"{string_stars()}")
         print(
             f"* Toolbox Version: {Fore.CYAN}v{config.easy_version}{Fore.GREEN}\n* Online Harmony Version: {Fore.YELLOW}{environ.get('ONLINE_HARMONY_VERSION', 'Unknown')}{Fore.GREEN}\n* Online HMY Version: {Fore.YELLOW}{environ.get('ONLINE_HMY_VERSION', 'Unknown')}{Fore.GREEN}"
         )
