@@ -452,7 +452,7 @@ def validator_stats_output() -> None:
         )
 
     print(f"{string_stars()}")
-    print("* Software Updates:")
+    print("* Software Updates (SYNC = Current Version):")
     print("* Folder       Harmony   HMY")
     print("* ------------ -------- -----")
     for result in folder_results:
