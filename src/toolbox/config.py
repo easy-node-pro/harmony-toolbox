@@ -41,6 +41,7 @@ class Config:
 
         # Wallets and addresses
         self.validator_wallet = environ.get("VALIDATOR_WALLET") or "0xInvalidAddress"
+        self.rewards_wallet = environ.get("REWARDS_WALLET") or "0xInvalidAddress"
 
         # Network and external info
         self.external_ip = self.get_url()
@@ -63,11 +64,13 @@ class Config:
         # Folder checks and service defaults
         self.folder_checks = ["harmony", "harmony0", "harmony1", "harmony2", "harmony3", "harmony4"]
         self.shard = environ.get("SHARD") or "4"
-        self.service_name = environ.get("SERVICE_NAME") or "harmony"
+        self.harmony_service = environ.get("HARMONY_SERVICE") or "harmony"
         self.pass_switch = environ.get("PASS_SWITCH") or "--passphrase"
         self.gas_reserve = environ.get("GAS_RESERVE") or "5"
         self.refresh_time = environ.get("REFRESH_TIME") or "30"
-        self.run_count = environ.get("RUN_COUNT") or "0"
+        self.refresh_option = environ.get("REFRESH_OPTION") or "False"
+        self.run_count = int(environ.get("RUN_COUNT")) or 0
+        self.print_menu_count = 50  # Number of runs before printing the menu again
         
         
 
@@ -127,6 +130,7 @@ class Config:
             "validator_data",
             "password_path",
             "validator_wallet",
+            "rewards_wallet",
             "external_ip",
             "main_menu_regular",
             "shard_0_rpc_endpoints",
@@ -139,6 +143,7 @@ class Config:
             "pass_switch",
             "gas_reserve",
             "refresh_time",
+            "refresh_option",
             "run_count",
         ]
         for var in essential_vars:

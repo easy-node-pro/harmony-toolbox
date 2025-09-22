@@ -13,17 +13,13 @@ from toolbox.utils import (
     process_command,
     print_stars,
     ask_yes_no,
-    check_online_version,
     return_txt,
-    find_port,
     update_hmy_binary,
-    get_sign_pct,
     load_var_file,
     get_wallet_balance,
     get_rewards_balance,
     string_stars,
     set_var,
-    free_space_check,
     server_drive_check,
     all_sys_info,
     menu_ubuntu_updates,
@@ -31,10 +27,8 @@ from toolbox.utils import (
     finish_node,
     update_harmony_binary,
     version_checks,
-    harmony_service_status,
     run_command,
     validator_stats_output,
-    get_db_size,
     update_text_file,
     recover_wallet,
     refreshing_stats_message,
@@ -175,7 +169,7 @@ def collect_rewards(
     print(
         f"*\n* Collecting {pending_rewards_balance} $ONE Rewards, awaiting confirmation..."
     )
-    command = f"{networkCall} staking collect-rewards --delegator-addr {environ.get('VALIDATOR_WALLET')} --gas-price 100 {config.pass_switch}"
+    command = f"{networkCall} staking collect-rewards --delegator-addr {config.validator_wallet} --gas-price 100 {config.pass_switch}"
     result = run_command(command, print_output=True)
     if result:
         print("*\n*\n* Rewards collection Finished.")
@@ -192,7 +186,7 @@ def collect_rewards(
 
 
 def send_rewards(networkCall, sendAmount, rewards_wallet):
-    command = f"{networkCall} transfer --amount {sendAmount} --from {environ.get('VALIDATOR_WALLET')} --from-shard 0 --to {rewards_wallet} --to-shard 0 --gas-price 100 {config.pass_switch}"
+    command = f"{networkCall} transfer --amount {sendAmount} --from {config.validator_wallet} --from-shard 0 --to {rewards_wallet} --to-shard 0 --gas-price 100 {config.pass_switch}"
     result = run_command(command, print_output=True)
     if result:
         print("*\n* Rewards sending Finished.")
@@ -219,35 +213,33 @@ def send_rewards_func(
 
 
 def get_shard_menu() -> None:
-    if not environ.get("SHARD"):
-        print(
-            f"{string_stars()}\n* Gathering more information about your server.\n{string_stars()}"
-        )
-        print(
-            f"* Which shard do you want this node to sign blocks on?\n{string_stars()}"
-        )
-        menu_options = [
-            "[0] - Shard 0",
-            "[1] - Shard 1",
-        ]
-        terminal_menu = TerminalMenu(
-            menu_options, title="* Which Shard will this node sign blocks on? "
-        )
-        our_shard = int(terminal_menu.show())
+    print(
+        f"{string_stars()}\n* Gathering more information about your server.\n{string_stars()}"
+    )
+    print(
+        f"* Which shard do you want this node installation to sign blocks on?\n{string_stars()}"
+    )
+    menu_options = [
+        "[0] - Shard 0",
+        "[1] - Shard 1",
+    ]
+    terminal_menu = TerminalMenu(
+        menu_options, title="* Which shard will this node installation sign blocks on? "
+    )
+    our_shard = int(terminal_menu.show())
 
+    if environ.get("SHARD") is None:
         set_var(config.dotenv_file, "SHARD", str(our_shard))
-        config.shard = our_shard
-        return our_shard
-    else:
-        return int(environ.get("SHARD"))
+    config.shard = our_shard
+    return 
 
 
 def rewards_sender(
-    rewards_wallet=environ.get("REWARDS_WALLET"),
-    validator_wallet=environ.get("VALIDATOR_WALLET"),
+    rewards_wallet=config.rewards_wallet,
+    validator_wallet=config.validator_wallet,
 ) -> None:
     validator_wallet_balance = get_wallet_balance(validator_wallet)
-    suggested_send = validator_wallet_balance - int(environ.get("GAS_RESERVE"))
+    suggested_send = validator_wallet_balance - int(config.gas_reserve)
     if suggested_send >= 1:
         question = ask_yes_no(
             f"* You have {validator_wallet_balance} $ONE available to send. We suggest sending {suggested_send} $ONE using your reservation settings.\n* Would you like to send {suggested_send} $ONE to {rewards_wallet} now? (YES/NO)"
@@ -276,8 +268,8 @@ def rewards_sender(
 def rewards_collector(
     rpc,
     bypass=False,
-    rewards_wallet=environ.get("REWARDS_WALLET"),
-    validator_wallet=environ.get("VALIDATOR_WALLET"),
+    rewards_wallet=config.rewards_wallet,
+    validator_wallet=config.validator_wallet,
 ) -> None:
     pending_rewards_balance = get_rewards_balance(rpc, validator_wallet)
 
@@ -293,7 +285,7 @@ def rewards_collector(
         print("*\n* Skipping collection of rewards.")
 
     validator_wallet_balance = get_wallet_balance(validator_wallet)
-    suggested_send = validator_wallet_balance - int(environ.get("GAS_RESERVE"))
+    suggested_send = validator_wallet_balance - int(config.gas_reserve)
 
     if suggested_send >= 1:
         if bypass or ask_yes_no(
@@ -464,7 +456,7 @@ def get_wallet_json(wallet: str) -> str:
 
 
 def tmi_server_info() -> None:
-    validator_wallet = environ.get("VALIDATOR_WALLET")
+    validator_wallet = config.validator_wallet
     json_response = get_wallet_json(validator_wallet)
     for key, value in json_response.items():
         print(key, ":", value)
@@ -472,8 +464,8 @@ def tmi_server_info() -> None:
 
 
 def set_rewards_wallet() -> None:
-    rewards_wallet = environ.get("REWARDS_WALLET")
-    gas_reserve = environ.get("GAS_RESERVE")
+    rewards_wallet = config.rewards_wallet
+    gas_reserve = config.gas_reserve
     if rewards_wallet is None:
         question = ask_yes_no(
             "* Would you like to add an address to send your rewards too? (YES/NO)"
@@ -484,6 +476,7 @@ def set_rewards_wallet() -> None:
             )
             if rewards_wallet.startswith("one1"):
                 set_var(config.dotenv_file, "REWARDS_WALLET", rewards_wallet)
+                config.rewards_wallet = rewards_wallet
             else:
                 print("* Wallet does not start with one1, please try again.")
                 return
@@ -498,6 +491,7 @@ def set_rewards_wallet() -> None:
             )
             if rewards_wallet.startswith("one1"):
                 set_var(config.dotenv_file, "REWARDS_WALLET", rewards_wallet)
+                config.rewards_wallet = rewards_wallet
             else:
                 print("* Wallet does not start with one1, please try again.")
                 return
@@ -514,7 +508,7 @@ def set_rewards_wallet() -> None:
 
 
 def set_gas_reserve() -> None:
-    gas_reserve = environ.get("GAS_RESERVE")
+    gas_reserve = config.gas_reserve
     question = ask_yes_no(
         f"* Your current total of $ONE to reserve for fees is {gas_reserve}\n* Would you like to update the reserve total? (YES/NO)"
     )
@@ -531,6 +525,7 @@ def ask_reserve_total() -> None:
 
 def set_reserve_total(reserve_total):
     set_var(config.dotenv_file, "GAS_RESERVE", reserve_total)
+    config.gas_reserve = reserve_total
 
 
 def drive_check() -> None:
@@ -555,21 +550,23 @@ def run_rewards_collector() -> None:
 def safety_defaults() -> None:
     # clean files
     clear_temp_files()
-    check_online_version()
-    # Set default ENV settings if they don't exist
-    set_var(config.dotenv_file, "EASY_VERSION", config.easy_version)
-    if environ.get("GAS_RESERVE") is None:
+    if config.gas_reserve is None:
         set_var(config.dotenv_file, "GAS_RESERVE", "5")
-    if environ.get("REFRESH_TIME") is None:
+        config.gas_reserve = "5"
+    if config.refresh_time is None:
         set_var(config.dotenv_file, "REFRESH_TIME", "30")
-    if environ.get("REFRESH_OPTION") is None:
+        config.refresh_time = "30"
+    if config.refresh_option is None:
         set_var(config.dotenv_file, "REFRESH_OPTION", "True")
-    if environ.get("HARMONY_DIR") is None:
+        config.refresh_option = "True"
+    if config.harmony_dir is None:
         if os.path.isdir(f"{config.user_home_dir}/harmony"):
             set_var(
                 config.dotenv_file, "HARMONY_DIR", f"{config.user_home_dir}/harmony"
             )
-            set_var(config.dotenv_file, "SERVICE_NAME", "harmony")
+            config.harmony_dir = f"{config.user_home_dir}/harmony"
+            set_var(config.dotenv_file, "HARMONY_SERVICE", "harmony")
+            config.service_name = "harmony"
             return
         elif os.path.isfile(f"{config.user_home_dir}/harmony"):
             print(
@@ -578,8 +575,9 @@ def safety_defaults() -> None:
             raise SystemExit(0)
         else:
             first_setup()
-    if environ.get("SERVICE_NAME") is None:
-        set_var(config.dotenv_file, "SERVICE_NAME", "harmony")
+    if config.service_name is None:
+        set_var(config.dotenv_file, "HARMONY_SERVICE", "harmony")
+        config.service_name = "harmony"
     # set blskey.pass file if it exists
     if os.path.isfile(f"{config.harmony_dir}/blskey.pass"):
         update_text_file(
@@ -595,15 +593,16 @@ def safety_defaults() -> None:
 
 
 def refresh_toggle() -> None:
-    if environ.get("REFRESH_OPTION") == "True":
+    if config.refresh_option == "True":
         answer = ask_yes_no(
             f"* Refresh is currently enabled. Would you like to disable it? (Y/N) "
         )
         if answer:
             set_var(config.dotenv_file, "REFRESH_OPTION", "False")
+            config.refresh_option = "False"
         else:
             answer = ask_yes_no(
-                f'* Your current refresh time is {str(environ.get("REFRESH_TIME"))} seconds. Would you like to change the delay? (Y/N) '
+                f'* Your current refresh time is {str(config.refresh_time)} seconds. Would you like to change the delay? (Y/N) '
             )
             if answer:
                 delay_time = timedInteger(
@@ -613,12 +612,14 @@ def refresh_toggle() -> None:
                     allowNegative=False,
                 )
                 set_var(config.dotenv_file, "REFRESH_TIME", str(delay_time[0]))
+                config.refresh_time = str(delay_time[0])
     else:
         answer = ask_yes_no(
             f"* Refresh is currently disabled. Would you like to enable it? (Y/N) "
         )
         if answer:
             set_var(config.dotenv_file, "REFRESH_OPTION", "True")
+            config.refresh_option = "True"
         answer = ask_yes_no(
             f'* Your current refresh time is {str(environ.get("REFRESH_TIME"))} seconds. Would you like to change the delay? (Y/N) '
         )
@@ -630,14 +631,14 @@ def refresh_toggle() -> None:
                 allowNegative=False,
             )
             set_var(config.dotenv_file, "REFRESH_TIME", str(delay_time[0]))
-    load_var_file(config.dotenv_file)
+            config.refresh_time = str(delay_time[0])
     return
 
 
 def update_stats_option() -> None:
-    if environ.get("REFRESH_OPTION") == "True":
+    if config.refresh_option == "True":
         print(
-            f"*  20 - Disable auto-update       - Disable Refresh or Change Delay Timer: {str(environ.get('REFRESH_TIME'))} seconds"
+            f"*  20 - Disable auto-update       - Disable Refresh or Change Delay Timer: {str(config.refresh_time)} seconds"
         )
     else:
         print(f"*  20 - Enable Auto update        - Enable Update Timer")
@@ -661,7 +662,7 @@ def harmony_voting() -> None:
         if proposal == "Quit" or question == False:
             return
         validator_wallet_name = get_validator_wallet_name(
-            environ.get("VALIDATOR_WALLET")
+            config.validator_wallet
         )
         if proposal == "HIP-30v2":
             vote_choice_option, vote_choice_text = get_vote_choice()
@@ -724,14 +725,14 @@ def run_regular_node() -> None:
     }
     while True:
         load_var_file(config.dotenv_file)
-        software_versions = version_checks(environ.get("HARMONY_DIR"))
+        software_versions = version_checks(config.harmony_dir)
         menu_regular(software_versions)
-        if environ.get("REFRESH_OPTION") == "True":
+        if config.refresh_option == "True":
             try:
                 # run timed input
                 option, timedOut = timedInteger(
                     f"* Auto refresh enabled, Enter your menu choice: ",
-                    timeout=int(environ.get("REFRESH_TIME")),
+                    timeout=int(config.refresh_time),
                     resetOnInput=True,
                     allowNegative=False,
                 )
@@ -768,7 +769,7 @@ def run_regular_node() -> None:
 
 def service_menu_option() -> None:
     status = process_command(
-        f"systemctl is-active --quiet {config.service_name}", True, False
+        f"systemctl is-active --quiet {config.harmony_service}", True, False
     )
     if status:
         print(
@@ -812,7 +813,7 @@ def hip_voting_option() -> None:
 
 
 def rewards_sender_option() -> None:
-    if environ.get("REWARDS_WALLET"):
+    if config.rewards_wallet is not None:
         print(
             "*   5 - Send Wallet Balance       - Send your wallet balance - saved gas to rewards wallet"
         )
@@ -896,11 +897,11 @@ def update_harmony_app():
                     + "* Are you sure you would like to proceed with upgrading and trimming database 0?\n\nType 'Yes' or 'No' to continue"
                 )
                 if question:
-                    process_command(f"sudo service {config.service_name} stop")
+                    process_command(f"sudo service {config.harmony_service} stop")
                     process_command(
                         f"mv {config.harmony_dir}/harmony_db_0 {config.harmony_dir}/harmony_db_0_old"
                     )
-                    process_command(f"sudo service {config.service_name} start")
+                    process_command(f"sudo service {config.harmony_service} start")
                     process_command(f"rm -r {config.harmony_dir}/harmony_db_0_old")
                 else:
                     print(
@@ -908,7 +909,7 @@ def update_harmony_app():
                     )
             else:
                 print("Your database 0 is already trimmed, enjoy!")
-    process_command(f"sudo service {config.service_name} restart")
+    process_command(f"sudo service {config.harmony_service} restart")
     print(
         f"{string_stars()}\nHarmony Service is restarting, waiting 10 seconds for processing to resume..."
     )
@@ -934,13 +935,13 @@ def harmony_binary_upgrade():
 
 
 def menu_service_stop_start():
-    menu_service_stop_start_trigger(environ.get("HARMONY_SERVICE"))
+    menu_service_stop_start_trigger(config.harmony_service)
 
 
 def menu_service_stop_start_trigger(service) -> str:
     status = process_command(f"systemctl is-active --quiet {service}")
     if status != 0:
-        process_command(f"sudo service {config.service_name} start")
+        process_command(f"sudo service {config.harmony_service} start")
         print()
         print("* Harmony Service Has Been Started.")
         print()
@@ -954,7 +955,7 @@ def menu_service_stop_start_trigger(service) -> str:
             + "* Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
         )
         if question:
-            process_command(f"sudo service {config.service_name} stop")
+            process_command(f"sudo service {config.harmony_service} stop")
             print()
             print(
                 "* Harmony Service Has Been Stopped. "
@@ -976,7 +977,7 @@ def menu_service_restart() -> str:
         + "Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
     )
     if question:
-        process_command(f"sudo service {config.service_name} restart")
+        process_command(f"sudo service {config.harmony_service} restart")
         print()
         print("* The Harmony Service Has Been Restarted")
         input("* Press ENTER to return to the main menu.")

@@ -636,22 +636,14 @@ def get_available_space(directory: str) -> int:
     return (statvfs.f_frsize * statvfs.f_bavail) / (1024**3)
 
 
-def check_space_requirements(shard: int, directory: str) -> bool:
+def check_space_requirements(shard: int, directory: str, required_space: int) -> bool:
     available_space = get_available_space(directory)
-    if shard == 0 and available_space < 400:
+    if available_space < required_space:
         if not os.listdir(directory):
             shutil.rmtree(f"{directory}")
         os.remove(f"{config.user_home_dir}/.easynode.env")
         input(
-            f"* Warning: There is not enough space to load shard 0 into {directory}.\n* Restart the toolbox and select a volume with more free space when prompted on the install location.\n* Press ENTER to quit."
-        )
-        raise SystemExit(0)
-    elif shard in [1, 2, 3] and available_space < 50:
-        if not os.listdir(directory):
-            shutil.rmtree(f"{directory}")
-        os.remove(f"{config.user_home_dir}/.easynode.env")
-        input(
-            f"* Warning: There is not enough space to load shard {shard} into {directory}.\n* Restart the toolbox and select a volume with more free space when prompted on the install location.\n* Press ENTER to quit."
+            f"* Warning: There is not enough space to load shard {shard} into {directory}.\n* Required: {required_space} GB, Available: {int(available_space)} GB\n* Restart the toolbox and select a volume with more free space when prompted on the install location.\n* Press ENTER to quit."
         )
         raise SystemExit(0)
     return True
@@ -838,8 +830,6 @@ def clear_temp_files() -> None:
 
 
 def check_online_version(harmony_version_str="Offline", hmy_ver="Offline") -> None:
-    print(Fore.GREEN + string_stars())
-    print("* Checking online version of harmony & hmy...")
     try:
         # Check if the harmony binary exists before downloading
         if not os.path.exists(config.harmony_tmp_path):
@@ -888,97 +878,39 @@ def check_online_version(harmony_version_str="Offline", hmy_ver="Offline") -> No
 def first_env_check(env_file) -> None:
     # Load our easynode.env file
     load_var_file(env_file)
+
+    # Update run count for menus
+    current_run_count = config.run_count + 1
+    if current_run_count > config.print_menu_count:
+        current_run_count = 0
+    set_var(config.dotenv_file, "RUN_COUNT", str(current_run_count))
     
-    # Detect folders
+    # Get all folders for multi-stats run
     folders = get_folders()
+
+    # Here we need to see if we have any folders, then we can see if it matches config.harmony_dir and if it does we know our default already. If there's a mismatch ask which folder from the folders list only (ignore the config.harmony_dir) should be their default and ask to confirm when they select.
     if not folders:
-        print("* No harmony folders found. Please run installation first.")
-        finish_node()
-    
-    default_folder_file = os.path.join(config.toolbox_location, "default_folder.txt")
-    last_folder_file = os.path.join(config.toolbox_location, "last_folder.txt")
-    selected_folder = os.environ.get("SELECTED_FOLDER")
-    if selected_folder and selected_folder in folders:
-        folder_name = selected_folder
-        print(f"* Using specified folder: {folder_name}")
-    else:
-        # Check for default folder from HARMONY_DIR
-        default_folder = None
-        harmony_dir_env = os.environ.get("HARMONY_DIR")
-        if harmony_dir_env:
-            potential_folder = os.path.basename(harmony_dir_env)
-            if potential_folder in folders:
-                default_folder = potential_folder
+        print("* No harmony folders found. Installation triggered.")
+        # Run installer
+        return
         
-        if default_folder:
-            folder_name = default_folder
-            print(f"* Using default folder from HARMONY_DIR: {folder_name}")
-        elif len(folders) == 1:
-            folder_name = list(folders.keys())[0]
-        else:
-            # Check for last selected folder
-            last_folder = None
-            if os.path.exists(last_folder_file):
-                with open(last_folder_file, "r") as f:
-                    last_folder = f.read().strip()
-                if last_folder not in folders:
-                    last_folder = None
-            
-            if last_folder:
-                print(f"* Using last selected folder: {last_folder}")
-                use_last = ask_yes_no("* Use this folder? (Y/N)")
-                if use_last:
-                    folder_name = last_folder
-                else:
-                    last_folder = None
-            
-            if not last_folder:
-                print("* Multiple harmony folders found:")
-                for i, f in enumerate(folders.keys()):
-                    print(f"  {i+1}. {f}")
-                while True:
-                    try:
-                        choice = int(input("* Select folder number: ")) - 1
-                        if 0 <= choice < len(folders):
-                            folder_name = list(folders.keys())[choice]
-                            break
-                        else:
-                            print("* Invalid choice.")
-                    except ValueError:
-                        print("* Please enter a number.")
-            
-            # After selection, ask to set as default if not already set from HARMONY_DIR
-            if not os.environ.get("HARMONY_DIR"):
-                set_default = ask_yes_no("* Set this as default folder? (Y/N)")
-                if set_default:
-                    set_var(config.dotenv_file, "HARMONY_DIR", f"{config.user_home_dir}/{folder_name}")
-    
-    # Always save as last
-    with open(last_folder_file, "w") as f:
-        f.write(folder_name)
-    
-    harmony_dir = f"{config.user_home_dir}/{folder_name}"
-    os.environ["HARMONY_DIR"] = harmony_dir
-    
     # Read shard from conf
     try:
-        with open(f"{harmony_dir}/harmony.conf", "r") as f:
+        with open(f"{config.harmony_dir}/harmony.conf", "r") as f:
             for line in f:
                 if line.strip().startswith("ShardID ="):
                     shard = line.split("=")[1].strip()
                     os.environ["SHARD"] = shard
                     break
     except FileNotFoundError:
-        print("* harmony.conf not found.")
+        print("* Harmony dir & harmony.conf not found, run ./harmony.sh --install")
         finish_node()
     
-    config.service_name = folder_name
-    
     # Check for validator wallet
-    if not os.environ.get("VALIDATOR_WALLET"):
+    if not config.validator_wallet:
         while True:
             wallet = input("* Enter your validator wallet address (one1... or 0x...): ").strip()
-            if wallet.startswith(("one1", "0x")) and len(wallet) > 10:
+            if wallet.startswith(("one1", "0x")) and len(wallet) == 42:
                 set_var(config.dotenv_file, "VALIDATOR_WALLET", wallet)
                 os.environ["VALIDATOR_WALLET"] = wallet
                 break
@@ -986,24 +918,13 @@ def first_env_check(env_file) -> None:
                 print("* Invalid wallet address. Please try again.")
     
     # Detect passphrase
-    if os.path.exists(f"{harmony_dir}/passphrase.txt"):
-        config.pass_switch = f"--passphrase-file {harmony_dir}/passphrase.txt"
+    if os.path.exists(f"{config.harmony_dir}/passphrase.txt"):
+        config.pass_switch = f"--passphrase-file {config.harmony_dir}/passphrase.txt"
     else:
         config.pass_switch = "--passphrase"
-
-    os.environ["NODE_WALLET"] = "true"
     
     # Fetch online versions
     check_online_version()
-    
-    # Load settings
-    settings_file = os.path.join(config.toolbox_location, "settings.txt")
-    if os.path.exists(settings_file):
-        with open(settings_file, "r") as f:
-            for line in f:
-                if "=" in line:
-                    key, value = line.strip().split("=", 1)
-                    os.environ[key] = value
     
     return
 
@@ -1094,31 +1015,12 @@ def check_for_install(shard) -> str:
 
 
 def install_rclone():
-    # Fetch the content of the script
-    url = "https://rclone.org/install.sh"
-    response = requests.get(url)
-
-    # Check if the request was successful
-    if response.status_code != 200:
-        print("* Failed to download the script.")
-        return False
-
-    script_content = response.text
-
-    # Execute the fetched content
+    """Install rclone using apt on Ubuntu."""
     try:
-        process = subprocess.Popen(
-            ["sudo", "bash"],
-            stdin=subprocess.PIPE,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-        process.communicate(input=script_content.encode())
-        if process.returncode != 0:
-            return False
+        subprocess.run(["sudo", "apt", "update"], check=True, capture_output=True)
+        subprocess.run(["sudo", "apt", "install", "-y", "rclone"], check=True, capture_output=True)
         return True
-    except Exception as e:
-        print(f"Error: {e}")
+    except subprocess.CalledProcessError:
         return False
 
 
@@ -1144,16 +1046,60 @@ def get_folder_choice() -> str:
     return vote_choice_text
 
 
+def get_remote_size(remote: str, path: str, url: str) -> int:
+    """Get the size of a remote path using rclone size."""
+    import subprocess
+    import json
+    
+    try:
+        result = subprocess.run(
+            ['rclone', 'size', '--json', f'{remote}:{path}', '--webdav-url', url],
+            capture_output=True, text=True, timeout=30
+        )
+        if result.returncode == 0:
+            data = json.loads(result.stdout)
+            bytes_size = data['bytes']
+            gb = bytes_size / (1024 ** 3)
+            return int(gb)
+        else:
+            return 0
+    except (subprocess.TimeoutExpired, json.JSONDecodeError, KeyError, subprocess.CalledProcessError):
+        return 0
+
+
+def get_rclone_estimate() -> int:
+    shard = int(config.shard)
+    if shard == 0:
+        size = get_remote_size('snap', 'harmony_db_0', 'http://snapdb.s0.t.hmny.io/webdav')
+    else:
+        size = get_remote_size('snap', f'harmony_db_{shard}', f'http://fulldb.s{shard}.t.hmny.io/webdav')
+    
+    return size + 1 if size > 0 else 0
+
+
 # Installer Module
 def install_harmony() -> None:
+    # Install rclone early for size estimation
+    print("* Installing rclone for size estimation...")
+    if not install_rclone():
+        print("* Failed to install rclone. Please check your internet connection and try again.")
+        finish_node()
+    
+    process_command(
+        f"mkdir -p {config.user_home_dir}/.config/rclone && cp {config.toolbox_location}/src/bin/rclone.conf {config.user_home_dir}/.config/rclone/"
+    )
+    
     while True:
         print(f"{string_stars()}\n* Install Location")
-        folder_path = get_folder_choice()
-        harmony_dir = f"{config.user_home_dir}/{folder_path}"
-        set_var(config.dotenv_file, "HARMONY_DIR", f"{harmony_dir}")
+        service_name = get_folder_choice()
+        harmony_dir = f"{config.user_home_dir}/{service_name}"
+
         # Show storage info before asking about the path
         available_space = get_available_space(os.path.dirname(harmony_dir))
-        required_space = 400 if int(environ.get("SHARD")) == 0 else 50
+        estimated_space = get_rclone_estimate()
+        if estimated_space == 0:
+            estimated_space = 350 if int(config.shard) == 0 else 50  # Fallback estimates
+        required_space = int(estimated_space) if int(config.shard) == 0 else 50
         print(
             f"{Fore.GREEN}* Checking available storage on {os.path.dirname(harmony_dir)}..."
         )
@@ -1169,41 +1115,43 @@ def install_harmony() -> None:
                 f"{Fore.GREEN}* The folder {harmony_dir} already exists.\n* Are you sure you want to re-install into this existing folder? (YES/NO) "
             )
             if question:
-                install_path = harmony_dir
-                service_name = os.path.basename(harmony_dir)
                 break
+            else:
+                print("* Let's choose the install location again.")
+                continue
         else:
             question = ask_yes_no(
                 f"{Fore.GREEN}* The path {harmony_dir} doesn't exist yet.\n* Do you want to create it and install the harmony files here? (YES/NO) "
             )
             if question:
-                install_path = harmony_dir
-                service_name = os.path.basename(harmony_dir)
+                # Create the directory if not exists, and set ownership
+                process_command(f"mkdir -p {harmony_dir}/.hmy/blskeys")
+                process_command(
+                    f"sudo chown -R {config.active_user}:{config.active_user} {harmony_dir}"
+                )
                 break
+            else:
+                print("* Let's choose the install location again.")
+                continue
 
     # Save envs
-    set_var(config.dotenv_file, "HARMONY_DIR", install_path)
-    set_var(config.dotenv_file, "SERVICE_NAME", service_name)
-
-    # Create the directory if not exists, and set ownership
-    process_command(f"sudo mkdir -p {install_path}")
-    process_command(
-        f"sudo chown {config.active_user}:{config.active_user} {install_path}"
-    )
+    if not environ.get("HARMONY_DIR"):
+        set_var(config.dotenv_file, "HARMONY_DIR", harmony_dir)
+    config.harmony_dir = harmony_dir
+    if not environ.get("HARMONY_SERVICE"):
+        set_var(config.dotenv_file, "HARMONY_SERVICE", service_name)
+    config.harmony_service = service_name
 
     # Check space requirements for the selected shard
-    shard_value = int(environ.get("SHARD"))
+    shard_value = int(config.shard)
     answer = ask_yes_no(
-        f"* Last chance to verify, you want to install shard {shard_value} into {install_path}? (Yes/No): "
+        f"* Last chance to verify, you want to install shard {shard_value} into {harmony_dir}? (Yes/No): "
     )
     if answer:
-        check_space_requirements(shard_value, install_path)
+        check_space_requirements(shard_value, harmony_dir, required_space)
     else:
         print("* We will exit out of the installation process.")
         finish_node()
-
-    print(f"{string_stars()}\n* Creating all Harmony Files & Folders")
-    process_command(f"mkdir -p {install_path}/.hmy/blskeys")
 
     # Setup folders now that symlink exists or we know we're using ~/harmony
     if not os.path.isdir(f"{config.user_home_dir}/.hmy_cli/account-keys/"):
@@ -1216,24 +1164,6 @@ def install_harmony() -> None:
     update_hmy_binary()
     # Install harmony
     update_harmony_binary()
-    # install hmy files
-    print(f"* Installing rclone application & rclone configuration files")
-    # check for working rclone site and download
-    try:
-        install_rclone()
-    except (ValueError, KeyError, TypeError):
-        result = ask_yes_no(
-            "* rclone site is offline, we can install rclone from the Ubuntu repo as a workaround, do you want to continue? (Y/N): "
-        )
-        if result:
-            # If rclone curl is down, install rclone with apt instead
-            subprocess.run("sudo apt install rclone -y")
-        else:
-            finish_node()
-
-    process_command(
-        f"mkdir -p {config.user_home_dir}/.config/rclone && cp {config.toolbox_location}/src/bin/rclone.conf {config.user_home_dir}/.config/rclone/"
-    )
     # Setup the harmony service file
     print(f"* Customizing, Moving & Enabling your {service_name}.service systemd file")
 
@@ -1248,11 +1178,11 @@ def install_harmony() -> None:
     filedata = filedata.replace("User=serviceharmony", f"User={config.active_user}")
     filedata = filedata.replace(
         "WorkingDirectory=/home/serviceharmony/harmony",
-        f"WorkingDirectory={install_path}",
+        f"WorkingDirectory={harmony_dir}",
     )
     filedata = filedata.replace(
         "ExecStart=/home/serviceharmony/harmony/harmony -c harmony.conf",
-        f"ExecStart={install_path}/harmony -c harmony.conf",
+        f"ExecStart={harmony_dir}/harmony -c harmony.conf",
     )
 
     # Write the file out again
@@ -1537,7 +1467,7 @@ def menu_reboot_server() -> str:
 
 
 def finish_node():
-    if int(os.environ.get("RUN_COUNT", default=0)) == 0:
+    if config.run_count == 0:
         print(
             "* Thanks for using Easy Node Toolbox - Making everything Easy Mode!"
             + "\n*\n* We serve up free tools and guides for validators every day."
