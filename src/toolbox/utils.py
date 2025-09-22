@@ -410,7 +410,6 @@ def validator_stats_output() -> None:
             executor.map(process_folder, folders.keys(), folders.values())
         )
 
-    print(f"{string_stars()}")
     print(f"* Service Status & Sync:")
     print(
         f"* {'Folder':<10} {'S':<2} {'Sync':<5} {'DB 0':<6} {'Free 0':<6} {'DB 1':<6} {'Free 1':<6} {'Local Block':<12}"
