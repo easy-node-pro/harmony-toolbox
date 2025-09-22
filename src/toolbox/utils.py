@@ -410,18 +410,6 @@ def validator_stats_output() -> None:
             executor.map(process_folder, folders.keys(), folders.values())
         )
 
-    # Collect version info (assume same for all)
-    versions = None
-    for result in folder_results:
-        if result and "versions" in result:
-            versions = result["versions"]
-            break
-
-    if versions:
-        print(
-            f"* Toolbox Version: {Fore.CYAN}v{config.easy_version}{Fore.GREEN}\n* Online Harmony Version: {Fore.YELLOW}{environ.get('ONLINE_HARMONY_VERSION', 'Unknown')}{Fore.GREEN}\n* Online HMY Version: {Fore.YELLOW}{environ.get('ONLINE_HMY_VERSION', 'Unknown')}{Fore.GREEN}"
-        )
-
     print(f"{string_stars()}")
     print(f"* Service Status & Sync:")
     print(
@@ -451,8 +439,20 @@ def validator_stats_output() -> None:
                     f"* {result['folder']:<10} {result['shard_id']:<2} {sync_status:<5} {colorize_size(result['db_size_0']):<6} {colorize_size(result['free_space_0']):<6} {colorize_size(db_size_shard):<6} {colorize_size(free_space_shard):<6} {result['local_block']:<12}"
                 )
 
+    # Collect version info (assume same for all)
+    versions = None
+    for result in folder_results:
+        if result and "versions" in result:
+            versions = result["versions"]
+            break
+
+    if versions:
+        print(
+            f"* Toolbox Version: {Fore.CYAN}v{config.easy_version}{Fore.GREEN}\n* Online Harmony Version: {Fore.YELLOW}{environ.get('ONLINE_HARMONY_VERSION', 'Unknown')}{Fore.GREEN}\n* Online HMY Version: {Fore.YELLOW}{environ.get('ONLINE_HMY_VERSION', 'Unknown')}{Fore.GREEN}"
+        )
+
     print(f"{string_stars()}")
-    print("* Software Versions:")
+    print("* Software Updates:")
     print("* Folder       Harmony   HMY")
     print("* ------------ -------- -----")
     for result in folder_results:
@@ -462,7 +462,7 @@ def validator_stats_output() -> None:
             hmy_status = f"{Fore.YELLOW}SYNC{Fore.GREEN}" if v["hmy_upgrade"] == "False" else f"{Fore.RED}UPDATE{Fore.GREEN}"
             print(f"* {result['folder']:<12} {harmony_status:<8} {hmy_status}")
     print(f"{string_stars()}")
-    
+
 
 def harmony_service_status(service="harmony") -> str:
     status = subprocess.call(["systemctl", "is-active", "--quiet", service])
