@@ -134,7 +134,7 @@ def parse_flags(parser):
         else:
             first_setup()
 
-    if args.upgrade:
+    if args.upgrade_harmony:
         first_env_check(config.dotenv_file)
         update_harmony_app()
 
