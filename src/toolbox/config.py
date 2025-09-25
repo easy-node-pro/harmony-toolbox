@@ -136,7 +136,6 @@ class Config:
             "bls_key_dir",
             "hmy_wallet_store",
             "toolbox_location",
-            "validator_data",
             "passphrase_path",
             "validator_wallet",
             "rewards_wallet",
