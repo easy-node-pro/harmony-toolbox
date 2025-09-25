@@ -9,6 +9,7 @@ from toolbox.utils import (
     first_env_check,
 )
 from toolbox.toolbox import (
+    harmony_binary_upgrade,
     update_harmony_app,
     run_multistats,
     rewards_collector,
@@ -35,10 +36,17 @@ def parse_flags(parser):
     )
 
     parser.add_argument(
-        "-u",
-        "--upgrade",
+        "-uh",
+        "--upgrade-harmony",
         action="store_true",
-        help="Upgrade your Harmony binary if an upgrade is available.",
+        help="Upgrade your harmony file if an upgrade is available.",
+    )
+
+    parser.add_argument(
+        "-uhmy",
+        "--upgrade-hmy",
+        action="store_true",
+        help="Upgrade your hmy file if an upgrade is available.",
     )
 
     parser.add_argument(
@@ -126,9 +134,13 @@ def parse_flags(parser):
         else:
             first_setup()
 
-    if args.upgrade:
+    if args.upgrade_harmony:
         first_env_check(config.dotenv_file)
         update_harmony_app()
+
+    if args.upgrade_hmy:
+        first_env_check(config.dotenv_file)
+        harmony_binary_upgrade()
 
     if args.stats:
         first_env_check(config.dotenv_file)
