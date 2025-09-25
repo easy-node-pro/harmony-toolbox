@@ -504,8 +504,8 @@ def validator_stats_output() -> None:
             # Get HTTP ports from harmony.conf
             folder_path = f"{config.user_home_dir}/{result['folder']}"
             http_ports = get_http_ports(folder_path)
-            port_display = f"{http_ports['port']:>1}"
-            auth_port_display = f"{http_ports['auth_port']:>8}"
+            port_display = f"{http_ports['port']:>5}"
+            auth_port_display = f"{http_ports['auth_port']:>5}"
             
             print(f"* {result['folder']:<12} {harmony_status} {hmy_status} {port_display} {auth_port_display}")
     print(f"{string_stars()}")
