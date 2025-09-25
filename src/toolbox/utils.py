@@ -267,6 +267,33 @@ def find_port(folder):
             count += 1
 
 
+def get_http_ports(folder):
+    """Extract HTTP Port and AuthPort from harmony.conf"""
+    ports = {"port": "N/A", "auth_port": "N/A"}
+    try:
+        with open(f"{folder}/harmony.conf", "r") as f:
+            lines = f.readlines()
+        
+        in_http_section = False
+        for line in lines:
+            line = line.strip()
+            if line == "[HTTP]":
+                in_http_section = True
+                continue
+            elif line.startswith("[") and in_http_section:
+                # We've moved to a different section
+                break
+            elif in_http_section:
+                if line.startswith("Port ="):
+                    ports["port"] = line.split("=")[1].strip()
+                elif line.startswith("AuthPort ="):
+                    ports["auth_port"] = line.split("=")[1].strip()
+    except (FileNotFoundError, IOError, IndexError):
+        pass
+    
+    return ports
+
+
 # build list of installs
 def get_folders():
     folders = {}
@@ -466,14 +493,21 @@ def validator_stats_output() -> None:
 
     print(f"{string_stars()}")
     print(f"* {Fore.CYAN}Software Updates (OK = Current Version):{Fore.GREEN}")
-    print("* Folder       Harmony   HMY")
-    print("* ------------ -------- -----")
+    print("* Folder       Harmony   HMY      Port    AuthPort")
+    print("* ------------ -------- ----- -------- --------")
     for result in folder_results:
         if result and "versions" in result:
             v = result["versions"]
             harmony_status = f"{Fore.YELLOW}OK{Fore.GREEN}{' '*6}" if v["harmony_upgrade"] == "False" else f"{Fore.RED}UPDATE{Fore.GREEN}{' '*2}"
             hmy_status = f"{Fore.YELLOW}OK{Fore.GREEN}" if v["hmy_upgrade"] == "False" else f"{Fore.RED}UPDATE{Fore.GREEN}"
-            print(f"* {result['folder']:<12} {harmony_status} {hmy_status}")
+            
+            # Get HTTP ports from harmony.conf
+            folder_path = f"{config.user_home_dir}/{result['folder']}"
+            http_ports = get_http_ports(folder_path)
+            port_display = f"{http_ports['port']:>8}"
+            auth_port_display = f"{http_ports['auth_port']:>8}"
+            
+            print(f"* {result['folder']:<12} {harmony_status} {hmy_status} {port_display} {auth_port_display}")
     print(f"{string_stars()}")
 
 
