@@ -225,32 +225,31 @@ def recover_wallet():
 
 
 def update_harmony_binary():
-    harmony_dir = environ.get("HARMONY_DIR")
-    os.chdir(f"{harmony_dir}")
-    if os.path.isfile(f"{config.harmony_tmp_path}/harmony"):
-        process_command(f"cp /tmp/harmony {harmony_dir}")
+    os.chdir(f"{config.harmony_dir}")
+    if os.path.isfile(f"{config.harmony_tmp_path}"):
+        process_command(f"cp {config.harmony_tmp_path} {config.harmony_dir}")
     else:
         process_command(
             "curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony"
         )
     process_command("./harmony config dump harmony.conf")
     update_text_file(
-        f"{harmony_dir}/harmony.conf",
+        f"{config.harmony_conf}",
         " DisablePrivateIPScan = false",
         " DisablePrivateIPScan = true",
     )
     # Update to 11 keys for HIP-32 expansion to 396 slots
-    update_text_file(f"{harmony_dir}/harmony.conf", " MaxKeys = 10", " MaxKeys = 11")
-    if os.path.isfile(f"{harmony_dir}/blskey.pass"):
+    update_text_file(f"{config.harmony_conf}", " MaxKeys = 10", " MaxKeys = 11")
+    if os.path.isfile(f"{config.bls_key_file}"):
         update_text_file(
-            f"{harmony_dir}/harmony.conf", 'PassFile = ""', 'PassFile = "blskey.pass"'
+            f"{config.harmony_conf}", 'PassFile = ""', 'PassFile = "blskey.pass"'
         )
         print(
-            f"* Harmony binary installed\n* {harmony_dir}/harmony.conf created\n* Set config to 11 keys max for shard {environ.get('SHARD')} & disabled private ip scan.\n* Modified: blskey.pass file."
+            f"* Harmony binary installed\n* {config.harmony_conf} created\n* Set config to 11 keys max for shard {environ.get('SHARD')} & disabled private ip scan.\n* Modified: blskey.pass file."
         )
     else:
         print(
-            f"* Harmony binary installed\n* {harmony_dir}/harmony.conf created\n* Set config to 11 keys max for shard {environ.get('SHARD')} & disabled private ip scan."
+            f"* Harmony binary installed\n* {config.harmony_conf} created\n* Set config to 11 keys max for shard {environ.get('SHARD')} & disabled private ip scan."
         )
     return
 
@@ -266,6 +265,33 @@ def find_port(folder):
             if count == 3:
                 return line[9:]
             count += 1
+
+
+def get_http_ports(folder):
+    """Extract HTTP Port and AuthPort from harmony.conf"""
+    ports = {"port": "N/A", "auth_port": "N/A"}
+    try:
+        with open(f"{folder}/harmony.conf", "r") as f:
+            lines = f.readlines()
+        
+        in_http_section = False
+        for line in lines:
+            line = line.strip()
+            if line == "[HTTP]":
+                in_http_section = True
+                continue
+            elif line.startswith("[") and in_http_section:
+                # We've moved to a different section
+                break
+            elif in_http_section:
+                if line.startswith("Port ="):
+                    ports["port"] = line.split("=")[1].strip()
+                elif line.startswith("AuthPort ="):
+                    ports["auth_port"] = line.split("=")[1].strip()
+    except (FileNotFoundError, IOError, IndexError):
+        pass
+    
+    return ports
 
 
 # build list of installs
@@ -466,15 +492,22 @@ def validator_stats_output() -> None:
         )
 
     print(f"{string_stars()}")
-    print(f"* {Fore.CYAN}Software Updates (OK = Current Version):{Fore.GREEN}")
-    print("* Folder       Harmony   HMY")
-    print("* ------------ -------- -----")
+    print(f"* {Fore.CYAN}Software Updates (OK = Current, UG = Upgrade Available):{Fore.GREEN}")
+    print("* Folder       Harmony  HMY   Port  AuthPort")
+    print("* ------------ -------- ----- ----- --------")
     for result in folder_results:
         if result and "versions" in result:
             v = result["versions"]
-            harmony_status = f"{Fore.YELLOW}OK{Fore.GREEN}{' '*6}" if v["harmony_upgrade"] == "False" else f"{Fore.RED}UPDATE{Fore.GREEN}{' '*2}"
-            hmy_status = f"{Fore.YELLOW}OK{Fore.GREEN}" if v["hmy_upgrade"] == "False" else f"{Fore.RED}UPDATE{Fore.GREEN}"
-            print(f"* {result['folder']:<12} {harmony_status} {hmy_status}")
+            harmony_status = f"{Fore.YELLOW}OK{Fore.GREEN}{' '*6}" if v["harmony_upgrade"] == "False" else f"{Fore.RED}UG{Fore.GREEN}{' '*6}"
+            hmy_status = f"{Fore.YELLOW}OK{Fore.GREEN}{' '*2}" if v["hmy_upgrade"] == "False" else f"{Fore.RED}UG{Fore.GREEN}{' '*2}"
+            
+            # Get HTTP ports from harmony.conf
+            folder_path = f"{config.user_home_dir}/{result['folder']}"
+            http_ports = get_http_ports(folder_path)
+            port_display = f"{http_ports['port']:>5}"
+            auth_port_display = f"{http_ports['auth_port']:>5}"
+            
+            print(f"* {result['folder']:<12} {harmony_status} {hmy_status} {port_display} {auth_port_display}")
     print(f"{string_stars()}")
 
 
@@ -539,7 +572,7 @@ def recovery_type():
         # Mnemonic Recovery Here
         # --passphrase-file passphrase.txt not working atm on ./hmy keys
         run_command(
-            f"{config.harmony_dir}/hmy keys recover-from-mnemonic {config.active_user} --passphrase"
+            f"{config.hmy_app} keys recover-from-mnemonic {config.active_user} --passphrase"
         )
         set_wallet_env()
     elif results == 1:
@@ -552,7 +585,7 @@ def recovery_type():
         )
         # --passphrase-file passphrase.txt not working atm on ./hmy keys
         run_command(
-            f"{config.harmony_dir}/hmy keys import-private-key {private} {config.active_user} --passphrase"
+            f"{config.hmy_app} keys import-private-key {private} {config.active_user} --passphrase"
         )
         set_wallet_env()
 
@@ -563,7 +596,7 @@ def passphrase_status():
         set_var(
             config.dotenv_file,
             "PASS_SWITCH",
-            f"--passphrase-file {config.harmony_dir}/passphrase.txt",
+            f"--passphrase-file {config.passphrase_path}",
         )
     else:
         set_var(config.dotenv_file, "PASS_SWITCH", "--passphrase")
@@ -571,11 +604,11 @@ def passphrase_status():
 
 
 def passphrase_set():
-    if os.path.exists(f"{config.harmony_dir}/passphrase.txt"):
+    if os.path.exists(config.passphrase_path):
         return
 
     print(
-        f"{Fore.GREEN}* Setup {config.harmony_dir}/passphrase.txt file for use with autobidder & harmony-toolbox.\n{string_stars()}"
+        f"{Fore.GREEN}* Setup {config.passphrase_path} file for use with autobidder & harmony-toolbox.\n{string_stars()}"
     )
     # take input
     while True:
@@ -591,7 +624,7 @@ def passphrase_set():
             print("* Passwords Match!")
             break
     # Save file, we won't encrypt because if someone has access to the file, they will also have the salt and decrypt code at their disposal.
-    save_text(f"{config.harmony_dir}/passphrase.txt", password_1)
+    save_text(config.passphrase_path, password_1)
     load_var_file(config.dotenv_file)
     passphrase_status()
 
@@ -939,8 +972,8 @@ def first_env_check(env_file) -> None:
                 print("* Invalid wallet address. Please try again.")
     
     # Detect passphrase
-    if os.path.exists(f"{config.harmony_dir}/passphrase.txt"):
-        config.pass_switch = f"--passphrase-file {config.harmony_dir}/passphrase.txt"
+    if os.path.exists(config.passphrase_path):
+        config.pass_switch = f"--passphrase-file {config.passphrase_path}"
     else:
         config.pass_switch = "--passphrase"
     

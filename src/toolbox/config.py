@@ -12,9 +12,9 @@ class Config:
     def __init__(self):
         # Read version from setup.cfg
         config_parser = configparser.ConfigParser()
-        setup_cfg_path = path.join(path.dirname(__file__), '..', '..', 'setup.cfg')
+        setup_cfg_path = path.join(path.dirname(__file__), "..", "..", "setup.cfg")
         config_parser.read(setup_cfg_path)
-        self.easy_version = config_parser.get('metadata', 'version')
+        self.easy_version = config_parser.get("metadata", "version")
 
         # Host and user information
         self.user_home_dir = path.expanduser("~")
@@ -34,10 +34,11 @@ class Config:
         self.hmy_app = path.join(self.harmony_dir, "hmy")
         self.harmony_conf = path.join(self.harmony_dir, "harmony.conf")
         self.bls_key_dir = path.join(self.harmony_dir, ".hmy", "blskeys")
-        self.hmy_wallet_store = path.join(self.user_home_dir, ".hmy_cli", "account-keys", self.active_user)
+        self.hmy_wallet_store = path.join(
+            self.user_home_dir, ".hmy_cli", "account-keys", self.active_user
+        )
         self.toolbox_location = path.join(self.user_home_dir, "harmony-toolbox")
-        self.validator_data = path.join(self.toolbox_location, "metadata", "validator.json")
-        self.password_path = path.join(self.harmony_dir, "passphrase.txt")
+        self.passphrase_path = path.join(self.harmony_dir, "passphrase.txt")
 
         # Wallets and addresses
         self.validator_wallet = environ.get("VALIDATOR_WALLET") or "0xInvalidAddress"
@@ -45,7 +46,9 @@ class Config:
 
         # Network and external info
         self.external_ip = self.get_url()
-        self.main_menu_regular = path.join(self.toolbox_location, "src", "messages", "regularmenu.txt")
+        self.main_menu_regular = path.join(
+            self.toolbox_location, "src", "messages", "regularmenu.txt"
+        )
 
         # RPC endpoints
         self.shard_0_rpc_endpoints = [
@@ -53,16 +56,22 @@ class Config:
             "https://api.s0.t.hmny.io",
             "https://api.harmony.one",
             "https://rpc.ankr.com/harmony",
-            "https://hmyone-pokt.nodies.app"
+            "https://hmyone-pokt.nodies.app",
         ]
-        self.rpc_endpoints_max_connection_retries = 10
 
         # Temporary paths
         self.hmy_tmp_path = "/tmp/hmy"
         self.harmony_tmp_path = "/tmp/harmony"
 
         # Folder checks and service defaults
-        self.folder_checks = ["harmony", "harmony0", "harmony1", "harmony2", "harmony3", "harmony4"]
+        self.folder_checks = [
+            "harmony",
+            "harmony0",
+            "harmony1",
+            "harmony2",
+            "harmony3",
+            "harmony4",
+        ]
         self.shard = environ.get("SHARD") or "4"
         self.harmony_service = environ.get("HARMONY_SERVICE") or "harmony"
         self.pass_switch = environ.get("PASS_SWITCH") or "--passphrase"
@@ -71,13 +80,13 @@ class Config:
         self.refresh_option = environ.get("REFRESH_OPTION") or "False"
         self.run_count = environ.get("RUN_COUNT") or "0"
         self.print_menu_count = 50  # Number of runs before printing the menu again
-        
-        
 
     @staticmethod
     def get_url(timeout=5) -> str:
         try:
-            response = requests.get("https://api.ipify.org?format=json", timeout=timeout)
+            response = requests.get(
+                "https://api.ipify.org?format=json", timeout=timeout
+            )
             response.raise_for_status()
             ip_data = response.json()
             return ip_data["ip"]
@@ -103,7 +112,7 @@ class Config:
     @property
     def working_rpc_endpoint(self):
         return self.get_working_endpoint(self.shard_0_rpc_endpoints)
-        
+
     @property
     def harmony_sh_home_path(self):
         return path.join(self.user_home_dir, "harmony.sh")
@@ -127,14 +136,12 @@ class Config:
             "bls_key_dir",
             "hmy_wallet_store",
             "toolbox_location",
-            "validator_data",
-            "password_path",
+            "passphrase_path",
             "validator_wallet",
             "rewards_wallet",
             "external_ip",
             "main_menu_regular",
             "shard_0_rpc_endpoints",
-            "rpc_endpoints_max_connection_retries",
             "hmy_tmp_path",
             "harmony_tmp_path",
             "folder_checks",
@@ -148,6 +155,7 @@ class Config:
         for var in essential_vars:
             if not getattr(self, var):
                 raise Exception(f"Config variable {var} is not set!")
+
 
 # Usage
 config = Config()
