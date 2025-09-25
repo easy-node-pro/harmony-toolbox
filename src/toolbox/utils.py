@@ -493,8 +493,8 @@ def validator_stats_output() -> None:
 
     print(f"{string_stars()}")
     print(f"* {Fore.CYAN}Software Updates (OK = Current Version):{Fore.GREEN}")
-    print("* Folder       Harmony   HMY      Port    AuthPort")
-    print("* ------------ -------- ----- -------- --------")
+    print("* Folder       Harmony   HMY   Port  AuthPort")
+    print("* ------------ --------  ----- ----- --------")
     for result in folder_results:
         if result and "versions" in result:
             v = result["versions"]
@@ -504,8 +504,8 @@ def validator_stats_output() -> None:
             # Get HTTP ports from harmony.conf
             folder_path = f"{config.user_home_dir}/{result['folder']}"
             http_ports = get_http_ports(folder_path)
-            port_display = f"{http_ports['port']:>8}"
-            auth_port_display = f"{http_ports['auth_port']:>8}"
+            port_display = f"{http_ports['port']:>6}"
+            auth_port_display = f"{http_ports['auth_port']:>6}"
             
             print(f"* {result['folder']:<12} {harmony_status} {hmy_status} {port_display} {auth_port_display}")
     print(f"{string_stars()}")
