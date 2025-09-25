@@ -499,7 +499,7 @@ def validator_stats_output() -> None:
         if result and "versions" in result:
             v = result["versions"]
             harmony_status = f"{Fore.YELLOW}OK{Fore.GREEN}{' '*6}" if v["harmony_upgrade"] == "False" else f"{Fore.RED}UG{Fore.GREEN}{' '*6}"
-            hmy_status = f"{Fore.YELLOW}OK{Fore.GREEN}{' '*4}" if v["hmy_upgrade"] == "False" else f"{Fore.RED}UG{Fore.GREEN}{' '*4}"
+            hmy_status = f"{Fore.YELLOW}OK{Fore.GREEN}{' '*2}" if v["hmy_upgrade"] == "False" else f"{Fore.RED}UG{Fore.GREEN}{' '*2}"
             
             # Get HTTP ports from harmony.conf
             folder_path = f"{config.user_home_dir}/{result['folder']}"
