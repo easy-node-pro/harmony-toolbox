@@ -351,10 +351,9 @@ def validator_stats_output() -> None:
     short_address = f"{environ.get('VALIDATOR_WALLET')[:4]}...{environ.get('VALIDATOR_WALLET')[-4:]}"
     # Print Menu
     print(
-        f"{Fore.GREEN}{string_stars()}\n* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node{' '*8}{Style.RESET_ALL}{Fore.WHITE}   https://EasyNodePro.com {Fore.GREEN}*"
-    )
-    print(
-        f"{string_stars()}\n* Address: {Fore.RED}{short_address}{Fore.GREEN} Balance: {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN} Pending Rewards: {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get('VALIDATOR_WALLET')), 2))}{Fore.GREEN}\n* Hostname: {Fore.CYAN}{config.server_host_name}{Fore.GREEN} IP: {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
+        f"{Fore.GREEN}{string_stars()}\n* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node{' '*8}{Style.RESET_ALL}{Fore.WHITE}   https://EasyNodePro.com {Fore.GREEN}*" +
+        f"* {Fore.CYAN}Validator Stats for {Fore.RED}{short_address}{Fore.GREEN} *"
+        f"{string_stars()}\n* Balance: {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN} Pending Rewards: {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get('VALIDATOR_WALLET')), 2))}{Fore.GREEN}\n* Hostname: {Fore.CYAN}{config.server_host_name}{Fore.GREEN} IP: {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
     )
     service_statuses = [harmony_service_status(folder) for folder in folders]
     print(f"* Service Status: {' '.join(service_statuses)}")
@@ -362,7 +361,8 @@ def validator_stats_output() -> None:
         f"* Current Signing %: {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}"
     )
     print(
-        f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min\n{string_stars()}"
+        f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min\n{string_stars()}" +
+        f"* {Fore.CYAN}Remote Node Status:{Fore.GREEN}"
     )
     # get api here
     api_endpoint = config.working_rpc_endpoint
@@ -410,7 +410,7 @@ def validator_stats_output() -> None:
             executor.map(process_folder, folders.keys(), folders.values())
         )
 
-    print(f"* Service Status & Sync:")
+    print(f"* {Fore.CYAN}Service Status & Sync:{Fore.GREEN}")
     print(
         f"* {'Folder':<10} {'S':<2} {'Sync':<5} {'Epoch':<6} {'DB 0':<6} {'Free 0':<6} {'DB 1':<6} {'Free 1':<6} {'Local Block':<12}"
     )
