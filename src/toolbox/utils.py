@@ -417,8 +417,8 @@ def validator_stats_output() -> None:
     # Now output all the gathered information
     print(
         f"{Fore.GREEN}{string_stars()}\n* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node{' '*8}{Style.RESET_ALL}{Fore.WHITE}   https://EasyNodePro.com {Fore.GREEN}*\n" +
-        f"* {Fore.CYAN}Validator Stats for {Fore.RED}{short_address}{Fore.GREEN} *\n" +
-        f"{string_stars()}\n* Balance: {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN} Pending Rewards: {Fore.CYAN}{str(round(pending_rewards, 2))}{Fore.GREEN}\n* Hostname: {Fore.CYAN}{config.server_host_name}{Fore.GREEN} IP: {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
+        f"{string_stars()}\n* {Fore.CYAN}Validator Stats for {Fore.RED}{short_address}{Fore.GREEN}\n" +
+        f"* Balance: {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN} Pending Rewards: {Fore.CYAN}{str(round(pending_rewards, 2))}{Fore.GREEN}\n* Hostname: {Fore.CYAN}{config.server_host_name}{Fore.GREEN} IP: {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
     )
     print(f"* Service Status: {' '.join(service_statuses)}")
     print(
