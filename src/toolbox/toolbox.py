@@ -578,7 +578,7 @@ def safety_defaults() -> None:
         set_var(config.dotenv_file, "HARMONY_SERVICE", "harmony")
         config.service_name = "harmony"
     # set blskey.pass file if it exists
-    if os.path.isfile(f"{config.harmony_dir}/blskey.pass"):
+    if os.path.isfile(f"{config.bls_key_file}"):
         update_text_file(
             config.harmony_conf, 'PassFile = ""', 'PassFile = "blskey.pass"'
         )
