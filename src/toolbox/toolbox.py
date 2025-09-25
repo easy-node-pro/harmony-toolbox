@@ -158,7 +158,6 @@ def get_folder_choice() -> str:
 
 
 def run_multistats():
-    refreshing_stats_message()
     validator_stats_output()
     return
 

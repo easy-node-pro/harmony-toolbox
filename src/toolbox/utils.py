@@ -342,34 +342,24 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
 
 
 def validator_stats_output() -> None:
-    # Get all folders for multi-stats run
+    # Show gathering message first
+    print(f"{Fore.GREEN}* Gathering all validator and blockchain information...")
+    
+    # Gather all data first without any output
     folders = get_folders()
-    # Get server stats & wallet balances
     load_1, load_5, load_15 = os.getloadavg()
     sign_percentage = get_sign_pct()
     validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
+    pending_rewards = get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET"))
     short_address = f"{environ.get('VALIDATOR_WALLET')[:4]}...{environ.get('VALIDATOR_WALLET')[-4:]}"
-    # Print Menu
-    print(
-        f"{Fore.GREEN}{string_stars()}\n* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node{' '*8}{Style.RESET_ALL}{Fore.WHITE}   https://EasyNodePro.com {Fore.GREEN}*\n" +
-        f"* {Fore.CYAN}Validator Stats for {Fore.RED}{short_address}{Fore.GREEN} *\n" +
-        f"{string_stars()}\n* Balance: {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN} Pending Rewards: {Fore.CYAN}{str(round(get_rewards_balance(config.working_rpc_endpoint, environ.get('VALIDATOR_WALLET')), 2))}{Fore.GREEN}\n* Hostname: {Fore.CYAN}{config.server_host_name}{Fore.GREEN} IP: {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
-    )
     service_statuses = [harmony_service_status(folder) for folder in folders]
-    print(f"* Service Status: {' '.join(service_statuses)}")
-    print(
-        f"* Current Signing %: {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}"
-    )
-    print(
-        f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min\n{string_stars()}\n" +
-        f"* {Fore.CYAN}Remote Node Status:{Fore.GREEN}"
-    )
-    # get api here
     api_endpoint = config.working_rpc_endpoint
+    
+    # Get remote shard data
     shard_0_info = ""
     shard_1_info = ""
     
-    if api_endpoint:
+    if api_endpoint and folders:
         remote_shard_0 = [
             f"{config.user_home_dir}/{list(folders.items())[0][0]}/hmy",
             "utility",
@@ -380,35 +370,66 @@ def validator_stats_output() -> None:
             remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True
         )
         if result_shard_0.returncode == 0 and result_shard_0.stdout.strip():
-            remote_0_data = json.loads(result_shard_0.stdout)
-            shard_0_info = f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}\n"
+            try:
+                remote_0_data = json.loads(result_shard_0.stdout)
+                shard_0_info = f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}\n"
+            except (json.JSONDecodeError, KeyError):
+                shard_0_info = "* Unable to parse remote Shard 0 data\n"
         else:
             shard_0_info = "* Unable to fetch remote Shard 0 data\n"
     else:
         shard_0_info = "* No working RPC endpoint for Shard 0\n"
     
-    remote_shard_1 = [
-        f"{config.user_home_dir}/{list(folders.items())[0][0]}/hmy",
-        "utility",
-        "metadata",
-        f"--node=https://api.s1.t.hmny.io",
-    ]
-    result_shard_1 = run(
-        remote_shard_1, stdout=PIPE, stderr=PIPE, universal_newlines=True
-    )
-    if result_shard_1.returncode == 0 and result_shard_1.stdout.strip():
-        remote_1_data = json.loads(result_shard_1.stdout)
-        shard_1_info = f"* Remote Shard 1 Epoch: {remote_1_data['result']['current-epoch']}, Current Block: {remote_1_data['result']['current-block-number']}\n{string_stars()}"
+    if folders:
+        remote_shard_1 = [
+            f"{config.user_home_dir}/{list(folders.items())[0][0]}/hmy",
+            "utility",
+            "metadata",
+            f"--node=https://api.s1.t.hmny.io",
+        ]
+        result_shard_1 = run(
+            remote_shard_1, stdout=PIPE, stderr=PIPE, universal_newlines=True
+        )
+        if result_shard_1.returncode == 0 and result_shard_1.stdout.strip():
+            try:
+                remote_1_data = json.loads(result_shard_1.stdout)
+                shard_1_info = f"* Remote Shard 1 Epoch: {remote_1_data['result']['current-epoch']}, Current Block: {remote_1_data['result']['current-block-number']}\n{string_stars()}"
+            except (json.JSONDecodeError, KeyError):
+                shard_1_info = f"* Unable to parse remote Shard 1 data\n{string_stars()}"
+        else:
+            shard_1_info = f"* Unable to fetch remote Shard 1 data\n{string_stars()}"
     else:
-        shard_1_info = f"* Unable to fetch remote Shard 1 data\n{string_stars()}"
+        shard_1_info = f"* No folders available for Shard 1 check\n{string_stars()}"
     
-    print(shard_0_info + shard_1_info)
-
-    # Concurrently process each folder
+    # Concurrently process each folder to get detailed stats
     with ThreadPoolExecutor(max_workers=10) as executor:
         folder_results = list(
             executor.map(process_folder, folders.keys(), folders.values())
         )
+    
+    # Collect version info (assume same for all)
+    versions = None
+    for result in folder_results:
+        if result and "versions" in result:
+            versions = result["versions"]
+            break
+    
+    # Now output all the gathered information
+    print(
+        f"{Fore.GREEN}{string_stars()}\n* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node{' '*8}{Style.RESET_ALL}{Fore.WHITE}   https://EasyNodePro.com {Fore.GREEN}*\n" +
+        f"* {Fore.CYAN}Validator Stats for {Fore.RED}{short_address}{Fore.GREEN} *\n" +
+        f"{string_stars()}\n* Balance: {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN} Pending Rewards: {Fore.CYAN}{str(round(pending_rewards, 2))}{Fore.GREEN}\n* Hostname: {Fore.CYAN}{config.server_host_name}{Fore.GREEN} IP: {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
+    )
+    print(f"* Service Status: {' '.join(service_statuses)}")
+    print(
+        f"* Current Signing %: {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}"
+    )
+    print(
+        f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min\n{string_stars()}\n" +
+        f"* {Fore.CYAN}Remote Node Status:{Fore.GREEN}"
+    )
+    
+    print(shard_0_info + shard_1_info)
 
     print(f"* {Fore.CYAN}Service Status & Sync:{Fore.GREEN}")
     print(
@@ -416,7 +437,7 @@ def validator_stats_output() -> None:
     )
     print(f"* {'-'*10} {'-'*2} {'-'*5} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*12}")
 
-    # Now print results for each folder
+    # Print results for each folder
     for result in folder_results:
         if result:
             if "error" in result:
@@ -437,13 +458,6 @@ def validator_stats_output() -> None:
                 print(
                     f"* {result['folder']:<10} {result['shard_id']:<2} {sync_status:<5} {result['local_epoch']:<6} {colorize_size(result['db_size_0']):<6} {colorize_size(result['free_space_0']):<6} {colorize_size(db_size_shard):<6} {colorize_size(free_space_shard):<6} {result['local_block']:<12}"
                 )
-
-    # Collect version info (assume same for all)
-    versions = None
-    for result in folder_results:
-        if result and "versions" in result:
-            versions = result["versions"]
-            break
 
     if versions:
         print(f"{string_stars()}")
