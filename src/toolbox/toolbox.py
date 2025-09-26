@@ -564,8 +564,9 @@ def safety_defaults() -> None:
                 config.dotenv_file, "HARMONY_DIR", f"{config.user_home_dir}/harmony"
             )
             config.harmony_dir = f"{config.user_home_dir}/harmony"
+            config.harmony_service = "harmony"
             set_var(config.dotenv_file, "HARMONY_SERVICE", "harmony")
-            config.service_name = "harmony"
+            set_var(config.dotenv_file, "HARMONY_SERVICE", "harmony")
             return
         elif os.path.isfile(f"{config.user_home_dir}/harmony"):
             print(
@@ -574,9 +575,6 @@ def safety_defaults() -> None:
             raise SystemExit(0)
         else:
             first_setup()
-    if config.service_name is None:
-        set_var(config.dotenv_file, "HARMONY_SERVICE", "harmony")
-        config.service_name = "harmony"
     # set blskey.pass file if it exists
     if os.path.isfile(f"{config.bls_key_file}"):
         update_text_file(
