@@ -575,19 +575,17 @@ def safety_defaults() -> None:
             raise SystemExit(0)
         else:
             first_setup()
-    
-    # Check harmony service name and set if not set.
-    if config.harmony_service is None:
-        set_var(config.dotenv_file, "HARMONY_SERVICE", "harmony")
-        config.service_name = "harmony"
-
-    # Check blskey.pass file if it exists and set harmony.conf
+    # set blskey.pass file if it exists
     if os.path.isfile(f"{config.bls_key_file}"):
         update_text_file(
             config.harmony_conf, 'PassFile = ""', 'PassFile = "blskey.pass"'
         )
     passphrase_status()
-    get_shard_menu()
+    
+    # Only ask for shard selection if SHARD is not already set
+    if not environ.get("SHARD"):
+        get_shard_menu()
+    
     if environ.get("VALIDATOR_WALLET") is None:
         # Recover wallet or have them add address
         recover_wallet()
