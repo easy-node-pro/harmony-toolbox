@@ -1195,6 +1195,10 @@ def install_harmony() -> None:
     if not environ.get("HARMONY_SERVICE"):
         set_var(config.dotenv_file, "HARMONY_SERVICE", service_name)
     config.harmony_service = service_name
+    config.harmony_conf = f"{harmony_dir}/harmony.conf"
+    config.bls_key_file = f"{harmony_dir}/blskey.pass"
+    config.hmy_app = f"{harmony_dir}/hmy"
+    config.bls_key_dir = f"{harmony_dir}/.hmy/blskeys"
 
     # Check space requirements for the selected shard
     shard_value = int(config.shard)
