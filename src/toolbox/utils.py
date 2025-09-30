@@ -481,15 +481,15 @@ def validator_stats_output() -> None:
     )
     print(
         f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min\n{string_stars()}\n" +
-        f"* {Fore.CYAN}Remote Node Status:{Fore.GREEN}" +
+        f"* {Fore.CYAN}Remote Node Status:{Fore.GREEN}\n" +
         shard_0_info + 
         shard_1_info
     )
 
     print(
-        f"* {Fore.CYAN}Service Status & Sync:{Fore.GREEN}" +
-        f"* {'Folder':<10} {'S':<2} {'Sync':<5} {'Epoch':<6} {'DB 0':<6} {'Free 0':<6} {'DB 1':<6} {'Free 1':<6} {'Local Block':<12}"  +
-        f"* {'-'*10} {'-'*2} {'-'*5} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*12}"
+        f"* {Fore.CYAN}Service Status & Sync:{Fore.GREEN}\n" +
+        f"* {'Folder':<10} {'S':<2} {'Sync':<5} {'Epoch':<6} {'DB 0':<6} {'Free 0':<6} {'DB 1':<6} {'Free 1':<6} {'Local Block':<12}\n"  +
+        f"* {'-'*10} {'-'*2} {'-'*5} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*12}\n"
     )
 
     # Print results for each folder
