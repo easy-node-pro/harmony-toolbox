@@ -364,7 +364,17 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
             if retry_count <= max_retries:
                 time.sleep(retry_delay)
             else:
-                return {"folder": folder, "error": f"Offline or error: {e}"}
+                # Categorize the error for better display
+                error_msg = str(e)
+                if "Connection refused" in error_msg or "ConnectTimeoutError" in error_msg:
+                    status = "OFFLINE"
+                elif "Expecting value" in error_msg or "JSONDecodeError" in error_msg:
+                    status = "OFFLINE"
+                elif "No such file" in error_msg:
+                    status = "NO BINARY"
+                else:
+                    status = "ERROR"
+                return {"folder": folder, "error": status}
 
 
 def validator_stats_output() -> None:
@@ -467,7 +477,14 @@ def validator_stats_output() -> None:
     for result in folder_results:
         if result:
             if "error" in result:
-                print(f"* {result['folder']:<10} ERROR: {result['error']}")
+                # Display offline/error services in a clean, aligned format
+                error_status = result["error"]
+                if error_status == "OFFLINE":
+                    print(f"* {result['folder']:<10} {Fore.RED}-- OFFLINE - CHECK SERVICE{Fore.GREEN:<25} {'--':<6} {'--':<6} {'--':<6} {'--':<6} {'--':<12}")
+                elif error_status == "NO BINARY":
+                    print(f"* {result['folder']:<10} {Fore.YELLOW}-- NO BINARY - REINSTALL{Fore.GREEN:<25} {'--':<6} {'--':<6} {'--':<6} {'--':<6} {'--':<12}")
+                else:
+                    print(f"* {result['folder']:<10} {Fore.RED}-- ERROR - CHECK LOGS{Fore.GREEN:<25} {'--':<6} {'--':<6} {'--':<6} {'--':<6} {'--':<12}")
             else:
                 sync_status = (
                     "OK"
