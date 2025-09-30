@@ -480,11 +480,11 @@ def validator_stats_output() -> None:
                 # Display offline/error services in a clean, aligned format
                 error_status = result["error"]
                 if error_status == "OFFLINE":
-                    print(f"* {result['folder']:<10} {Fore.RED}-- OFFLINE - CHECK SERVICE{Fore.GREEN:<25} {'--':<6} {'--':<6} {'--':<6} {'--':<6} {'--':<12}")
+                    print(f"* {result['folder']:<10} {Fore.RED}-- OFFLINE - CHECK SERVICE{Fore.GREEN:<2} {'--':<6} {'--':<6} {'--':<6} {'--':<6} {'--':<12}")
                 elif error_status == "NO BINARY":
-                    print(f"* {result['folder']:<10} {Fore.YELLOW}-- NO BINARY - REINSTALL{Fore.GREEN:<25} {'--':<6} {'--':<6} {'--':<6} {'--':<6} {'--':<12}")
+                    print(f"* {result['folder']:<10} {Fore.YELLOW}-- NO BINARY - REINSTALL{Fore.GREEN:<2} {'--':<6} {'--':<6} {'--':<6} {'--':<6} {'--':<12}")
                 else:
-                    print(f"* {result['folder']:<10} {Fore.RED}-- ERROR - CHECK LOGS{Fore.GREEN:<25} {'--':<6} {'--':<6} {'--':<6} {'--':<6} {'--':<12}")
+                    print(f"* {result['folder']:<10} {Fore.RED}-- ERROR - CHECK LOGS{Fore.GREEN:<2} {'--':<6} {'--':<6} {'--':<6} {'--':<6} {'--':<12}")
             else:
                 sync_status = (
                     "OK"
