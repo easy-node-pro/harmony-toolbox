@@ -509,7 +509,7 @@ def validator_stats_output() -> None:
                     "OK"
                     if result["local_epoch"] == result["remote_epoch"]
                     and abs(result["local_block"] - result["remote_block"]) <= 2
-                    else f"{Fore.RED}SYNC{Fore.GREEN}"
+                    else f"{Fore.RED}SYNC {Fore.GREEN}"
                 )
                 db_size_shard = (
                     result["db_size_shard"] if result["shard_id"] != 0 else "N/A"
