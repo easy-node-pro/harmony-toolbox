@@ -481,16 +481,16 @@ def validator_stats_output() -> None:
     )
     print(
         f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min\n{string_stars()}\n" +
-        f"* {Fore.CYAN}Remote Node Status:{Fore.GREEN}"
+        f"* {Fore.CYAN}Remote Node Status:{Fore.GREEN}" +
+        shard_0_info + 
+        shard_1_info
     )
-    
-    print(shard_0_info + shard_1_info)
 
-    print(f"* {Fore.CYAN}Service Status & Sync:{Fore.GREEN}")
     print(
-        f"* {'Folder':<10} {'S':<2} {'Sync':<5} {'Epoch':<6} {'DB 0':<6} {'Free 0':<6} {'DB 1':<6} {'Free 1':<6} {'Local Block':<12}"
+        f"* {Fore.CYAN}Service Status & Sync:{Fore.GREEN}" +
+        f"* {'Folder':<10} {'S':<2} {'Sync':<5} {'Epoch':<6} {'DB 0':<6} {'Free 0':<6} {'DB 1':<6} {'Free 1':<6} {'Local Block':<12}"  +
+        f"* {'-'*10} {'-'*2} {'-'*5} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*12}"
     )
-    print(f"* {'-'*10} {'-'*2} {'-'*5} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*12}")
 
     # Print results for each folder
     for result in folder_results:
@@ -509,7 +509,7 @@ def validator_stats_output() -> None:
                     "OK"
                     if result["local_epoch"] == result["remote_epoch"]
                     and abs(result["local_block"] - result["remote_block"]) <= 2
-                    else "SYNC"
+                    else f"{Fore.RED}SYNC{Fore.GREEN}"
                 )
                 db_size_shard = (
                     result["db_size_shard"] if result["shard_id"] != 0 else "N/A"
