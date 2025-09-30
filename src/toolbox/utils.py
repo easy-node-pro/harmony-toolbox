@@ -378,16 +378,35 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
 
 
 def validator_stats_output() -> None:
-    # Show gathering message first
+    # Validate we have the minimum requirements for stats
+    folders = get_folders()
+    validator_wallet = environ.get('VALIDATOR_WALLET')
+    
+    # Check if we have any valid harmony installations
+    if not folders:
+        print(f"{Fore.RED}* No harmony folders found with valid harmony.conf files.")
+        print(f"* Available folders checked: {', '.join(config.folder_checks)}")
+        print(f"* Please run installation first: ./harmony.sh --install")
+        print(f"{string_stars()}")
+        return
+    
+    # Check if we have a validator wallet configured
+    if not validator_wallet or validator_wallet == "0xInvalidAddress":
+        print(f"{Fore.RED}* No validator wallet configured.")
+        print(f"* Please set VALIDATOR_WALLET in ~/.easynode.env")
+        print(f"* Example: VALIDATOR_WALLET='one1your42charactervalidatorwalletaddresshere'")
+        print(f"{string_stars()}")
+        return
+    
+    # Show gathering message after validation passes
     print(f"{Fore.GREEN}* Gathering all validator and blockchain information...")
     
     # Gather all data first without any output
-    folders = get_folders()
     load_1, load_5, load_15 = os.getloadavg()
     sign_percentage = get_sign_pct()
-    validator_wallet_balance = get_wallet_balance(environ.get("VALIDATOR_WALLET"))
-    pending_rewards = get_rewards_balance(config.working_rpc_endpoint, environ.get("VALIDATOR_WALLET"))
-    short_address = f"{environ.get('VALIDATOR_WALLET')[:4]}...{environ.get('VALIDATOR_WALLET')[-4:]}"
+    validator_wallet_balance = get_wallet_balance(validator_wallet)
+    pending_rewards = get_rewards_balance(config.working_rpc_endpoint, validator_wallet)
+    short_address = f"{validator_wallet[:4]}...{validator_wallet[-4:]}"
     service_statuses = [harmony_service_status(folder) for folder in folders]
     api_endpoint = config.working_rpc_endpoint
     
