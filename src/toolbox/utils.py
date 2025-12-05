@@ -227,10 +227,10 @@ def recover_wallet():
 def update_harmony_binary():
     os.chdir(f"{config.harmony_dir}")
     if os.path.isfile(f"{config.harmony_tmp_path}"):
-        process_command(f"cp {config.harmony_tmp_path} {config.harmony_dir}")
+        process_command(f"cp {config.harmony_tmp_path} {config.harmony_dir}/harmony")
     else:
         process_command(
-            "curl -LO https://harmony.one/binary && mv binary harmony && chmod +x harmony"
+            "wget https://harmony.one/binary -O harmony && chmod +x harmony"
         )
     process_command("./harmony config dump harmony.conf")
     update_text_file(
@@ -923,18 +923,11 @@ def check_online_version(harmony_version_str="Offline", hmy_ver="Offline") -> No
     try:
         # Check if the harmony binary exists before downloading
         if not os.path.exists(config.harmony_tmp_path):
-            with open(os.devnull, "wb") as devnull:
-                subprocess.call(
-                    [
-                        "wget",
-                        "https://harmony.one/binary",
-                        "-O",
-                        config.harmony_tmp_path,
-                    ],
-                    stdout=devnull,
-                    stderr=devnull,
-                )
-                set_mod_x(config.harmony_tmp_path)
+            process_command(
+                f"wget https://harmony.one/binary -O {config.harmony_tmp_path}",
+                print_output=False
+            )
+            set_mod_x(config.harmony_tmp_path)
 
         # Get harmony version
         harmony_ver = subprocess.getoutput(f"{config.harmony_tmp_path} -V")
@@ -946,13 +939,11 @@ def check_online_version(harmony_version_str="Offline", hmy_ver="Offline") -> No
 
         # Check if the hmycli binary exists before downloading
         if not os.path.exists(config.hmy_tmp_path):
-            with open(os.devnull, "wb") as devnull:
-                subprocess.call(
-                    ["wget", "https://harmony.one/hmycli", "-O", config.hmy_tmp_path],
-                    stdout=devnull,
-                    stderr=devnull,
-                )
-                set_mod_x(config.hmy_tmp_path)
+            process_command(
+                f"wget https://harmony.one/hmycli -O {config.hmy_tmp_path}",
+                print_output=False
+            )
+            set_mod_x(config.hmy_tmp_path)
 
         # Get hmy version
         hmy_ver = subprocess.getoutput(f"{config.hmy_tmp_path} version")
