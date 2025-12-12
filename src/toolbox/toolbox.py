@@ -874,6 +874,103 @@ def hmy_cli_upgrade():
     input("* Update completed, press ENTER to return to the main menu. ")
 
 
+def hmy_cli_upgrade_all():
+    """Upgrade hmy CLI in all detected harmony folders."""
+    from toolbox.utils import get_folders
+    
+    folders = get_folders()
+    
+    if not folders:
+        print(f"{Fore.RED}* No harmony folders found with valid harmony.conf files.")
+        print(f"* Please run installation first: ./harmony.sh --install")
+        print(f"{string_stars()}")
+        return
+    
+    print(f"{Fore.GREEN}{string_stars()}")
+    print(f"* Detected {len(folders)} harmony installation(s): {', '.join(folders.keys())}")
+    print(f"{string_stars()}")
+    
+    question = ask_yes_no(
+        f"* Are you sure you would like to upgrade the hmy CLI in ALL {len(folders)} folder(s)?\n\nType 'Yes' or 'No' to continue"
+    )
+    
+    if not question:
+        print("* Update canceled.")
+        return
+    
+    success_count = 0
+    failed_folders = []
+    
+    for folder_name in folders.keys():
+        folder_path = f"{config.user_home_dir}/{folder_name}"
+        print(f"\n{Fore.GREEN}{string_stars()}")
+        print(f"* Upgrading hmy CLI in: {Fore.CYAN}{folder_name}{Fore.GREEN}")
+        print(f"{string_stars()}")
+        
+        try:
+            # Create backup directory
+            folder_backup = make_backup_dir()
+            hmy_path = f"{folder_path}/hmy"
+            
+            # Backup current hmy if it exists
+            if os.path.isfile(hmy_path):
+                process_command(f"cp {hmy_path} {folder_backup}")
+                print(f"* Backed up existing hmy CLI")
+            
+            # Download fresh hmy to this folder
+            destination_path = hmy_path
+            
+            if os.path.isfile(config.hmy_tmp_path):
+                process_command(f"cp {config.hmy_tmp_path} {destination_path}")
+                process_command(f"chmod +x {destination_path}")
+            else:
+                import requests
+                download_url = "https://harmony.one/hmycli"
+                try:
+                    response = requests.get(download_url, stream=True)
+                    response.raise_for_status()
+                    
+                    with open(destination_path, "wb") as file:
+                        for chunk in response.iter_content(chunk_size=8192):
+                            file.write(chunk)
+                    
+                    os.chmod(destination_path, 0o755)
+                except requests.RequestException as e:
+                    print(f"{Fore.RED}* Error downloading hmy: {e}{Fore.GREEN}")
+                    failed_folders.append(folder_name)
+                    continue
+            
+            # Verify installation
+            software_versions = version_checks(folder_path)
+            if software_versions and software_versions.get('hmy_version'):
+                print(f"* {Fore.CYAN}{folder_name}{Fore.GREEN} hmy CLI updated to: {Fore.YELLOW}{software_versions['hmy_version']}{Fore.GREEN}")
+                success_count += 1
+            else:
+                print(f"{Fore.RED}* Warning: Could not verify hmy version in {folder_name}{Fore.GREEN}")
+                failed_folders.append(folder_name)
+                
+        except Exception as e:
+            print(f"{Fore.RED}* Error updating {folder_name}: {e}{Fore.GREEN}")
+            failed_folders.append(folder_name)
+    
+    # Summary
+    print(f"\n{Fore.GREEN}{string_stars()}")
+    print(f"* {Fore.CYAN}Upgrade Summary{Fore.GREEN}")
+    print(f"* Successfully upgraded: {Fore.YELLOW}{success_count}{Fore.GREEN} folder(s)")
+    
+    if failed_folders:
+        print(f"* {Fore.RED}Failed: {len(failed_folders)} folder(s): {', '.join(failed_folders)}{Fore.GREEN}")
+    
+    print(f"{string_stars()}")
+    
+    # Update environment variable if all succeeded
+    if success_count == len(folders):
+        set_var(config.dotenv_file, "HMY_UPGRADE_AVAILABLE", "False")
+    
+    input("* Press ENTER to exit. ")
+    finish_node()
+
+
 def update_harmony_app():
     our_shard = config.shard
     os.chdir(f"{config.harmony_dir}")

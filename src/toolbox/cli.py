@@ -15,6 +15,7 @@ from toolbox.toolbox import (
     rewards_collector,
     first_setup,
     multi_setup,
+    hmy_cli_upgrade_all,
 )
 from toolbox.config import config
 
@@ -140,7 +141,7 @@ def parse_flags(parser):
 
     if args.upgrade_hmy:
         first_env_check(config.dotenv_file)
-        harmony_binary_upgrade()
+        hmy_cli_upgrade_all()
 
     if args.stats:
         first_env_check(config.dotenv_file)
