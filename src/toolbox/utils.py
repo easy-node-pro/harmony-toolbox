@@ -920,14 +920,16 @@ def clear_temp_files() -> None:
 
 
 def check_online_version(harmony_version_str="Offline", hmy_ver="Offline") -> None:
+    # Clean temp files first to ensure we get fresh versions
+    clear_temp_files()
+    
     try:
-        # Check if the harmony binary exists before downloading
-        if not os.path.exists(config.harmony_tmp_path):
-            process_command(
-                f"wget https://harmony.one/binary -O {config.harmony_tmp_path}",
-                print_output=False
-            )
-            set_mod_x(config.harmony_tmp_path)
+        # Download the harmony binary
+        process_command(
+            f"wget https://harmony.one/binary -O {config.harmony_tmp_path}",
+            print_output=False
+        )
+        set_mod_x(config.harmony_tmp_path)
 
         # Get harmony version
         harmony_ver = subprocess.getoutput(f"{config.harmony_tmp_path} -V")
@@ -937,13 +939,12 @@ def check_online_version(harmony_version_str="Offline", hmy_ver="Offline") -> No
         harmony_version_str = output_harmony_version.group(1)[:-2]
         set_var(config.dotenv_file, "ONLINE_HARMONY_VERSION", harmony_version_str)
 
-        # Check if the hmycli binary exists before downloading
-        if not os.path.exists(config.hmy_tmp_path):
-            process_command(
-                f"wget https://harmony.one/hmycli -O {config.hmy_tmp_path}",
-                print_output=False
-            )
-            set_mod_x(config.hmy_tmp_path)
+        # Download the hmycli binary
+        process_command(
+            f"wget https://harmony.one/hmycli -O {config.hmy_tmp_path}",
+            print_output=False
+        )
+        set_mod_x(config.hmy_tmp_path)
 
         # Get hmy version
         hmy_ver = subprocess.getoutput(f"{config.hmy_tmp_path} version")
