@@ -10,6 +10,7 @@ from toolbox.utils import (
 )
 from toolbox.toolbox import (
     harmony_binary_upgrade,
+    harmony_binary_upgrade_all,
     update_harmony_app,
     run_multistats,
     rewards_collector,
@@ -137,7 +138,7 @@ def parse_flags(parser):
 
     if args.upgrade_harmony:
         first_env_check(config.dotenv_file)
-        update_harmony_app()
+        harmony_binary_upgrade_all()
 
     if args.upgrade_hmy:
         first_env_check(config.dotenv_file)

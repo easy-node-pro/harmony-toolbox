@@ -99,6 +99,32 @@ for folder, port in folders.items():
 3. Use `TerminalMenu` from `simple-term-menu` for user input
 4. Add CLI flag to `cli.py` if needed for automation
 
+### Harmony Binary Upgrade Workflow
+**Critical**: When upgrading harmony binary, you MUST follow this sequence:
+1. **Stop service**: `sudo service harmonyX stop`
+2. **Update binary**: Download/copy new harmony binary
+3. **Dump config**: `./harmony config dump harmony.conf` (generates fresh config from binary)
+4. **Customize config**: Apply customizations (DisablePrivateIPScan, MaxKeys, ports, PassFile)
+5. **Restart service**: `sudo service harmonyX restart`
+
+**Port Management**: Each folder has unique ports that MUST be preserved:
+- `harmony`: 9500/9501 (HTTP/AuthPort)
+- `harmony0`: 9500/9501
+- `harmony1`: 9502/9503
+- `harmony2`: 9504/9505
+- `harmony3`: 9506/9507
+
+**Config Customizations Applied**:
+```python
+# Standard customizations for all upgrades
+update_text_file(config_path, " DisablePrivateIPScan = false", " DisablePrivateIPScan = true")
+update_text_file(config_path, " MaxKeys = 10", " MaxKeys = 11")
+update_text_file(config_path, "  Port = 9500", f"  Port = {saved_port}")
+update_text_file(config_path, "  AuthPort = 9501", f"  AuthPort = {saved_auth_port}")
+# If blskey.pass exists
+update_text_file(config_path, 'PassFile = ""', 'PassFile = "blskey.pass"')
+```
+
 ### Testing & Validation
 - **No Unit Tests**: Project uses manual validation on live systems
 - **Testing Approach**: Test on staging validator node before production

@@ -715,8 +715,8 @@ def run_regular_node() -> None:
         7: harmony_voting,
         8: menu_service_stop_start,
         9: menu_service_restart,
-        10: harmony_binary_upgrade,
-        11: hmy_cli_upgrade,
+        10: harmony_binary_upgrade_all,
+        11: hmy_cli_upgrade_all,
         12: menu_ubuntu_updates,
         13: drive_check,
         14: tmi_server_info,
@@ -1030,6 +1030,177 @@ def harmony_binary_upgrade():
         print(
             "* We do not support upgrading shards 2/3 any longer, please upgrade manually if you'd like to update for now.\n* See the harmony discord here for more details on upgrading: https://discord.com/channels/532383335348043777/616699767594156045/1164484026413895742"
         )
+
+
+def harmony_binary_upgrade_all():
+    """Upgrade harmony binary in all detected harmony folders with proper config management."""
+    from toolbox.utils import get_folders, get_http_ports, update_text_file
+    
+    folders = get_folders()
+    
+    if not folders:
+        print(f"{Fore.RED}* No harmony folders found with valid harmony.conf files.")
+        print(f"* Please run installation first: ./harmony.sh --install")
+        print(f"{string_stars()}")
+        return
+    
+    print(f"{Fore.GREEN}{string_stars()}")
+    print(f"* Detected {len(folders)} harmony installation(s): {', '.join(folders.keys())}")
+    print(f"{string_stars()}")
+    
+    question = ask_yes_no(
+        Fore.RED
+        + f"* WARNING: YOU WILL MISS BLOCKS WHILE YOU UPGRADE ALL {len(folders)} HARMONY SERVICE(S).\n\n"
+        + Fore.WHITE
+        + "* Are you sure you would like to proceed with upgrading ALL folders?\n\nType 'Yes' or 'No' to continue"
+    )
+    
+    if not question:
+        print("* Update canceled.")
+        return
+    
+    success_count = 0
+    failed_folders = []
+    
+    for folder_name, port in folders.items():
+        folder_path = f"{config.user_home_dir}/{folder_name}"
+        service_name = f"harmony{folder_name.replace('harmony', '')}"
+        
+        print(f"\n{Fore.GREEN}{string_stars()}")
+        print(f"* Upgrading Harmony in: {Fore.CYAN}{folder_name}{Fore.GREEN}")
+        print(f"* Service: {Fore.CYAN}{service_name}{Fore.GREEN}")
+        print(f"{string_stars()}")
+        
+        try:
+            os.chdir(folder_path)
+            
+            # Save current ports before upgrade
+            old_ports = get_http_ports(folder_path)
+            print(f"* Current HTTP Port: {Fore.YELLOW}{old_ports['port']}{Fore.GREEN}, AuthPort: {Fore.YELLOW}{old_ports['auth_port']}{Fore.GREEN}")
+            
+            # Show current version
+            print(f"* Current version:")
+            process_command("./harmony -V")
+            
+            # Create backup
+            folder_backup = make_backup_dir()
+            process_command(f"cp {folder_path}/harmony {folder_path}/harmony.conf {folder_backup}")
+            print(f"* Backup created: {folder_backup}")
+            
+            # Stop service
+            print(f"* Stopping service: {service_name}...")
+            process_command(f"sudo service {service_name} stop")
+            
+            # Update harmony binary
+            if os.path.isfile(config.harmony_tmp_path):
+                process_command(f"cp {config.harmony_tmp_path} {folder_path}/harmony")
+            else:
+                process_command("wget https://harmony.one/binary -O harmony && chmod +x harmony")
+            
+            # Dump new config
+            print(f"* Dumping new harmony.conf...")
+            process_command("./harmony config dump harmony.conf")
+            
+            # Apply config customizations
+            update_text_file(
+                f"{folder_path}/harmony.conf",
+                " DisablePrivateIPScan = false",
+                " DisablePrivateIPScan = true",
+            )
+            update_text_file(f"{folder_path}/harmony.conf", " MaxKeys = 10", " MaxKeys = 11")
+            
+            # Restore port configuration
+            if old_ports['port'] != "N/A":
+                # Update Port in [HTTP] section
+                update_text_file(
+                    f"{folder_path}/harmony.conf",
+                    f"  Port = 9500",
+                    f"  Port = {old_ports['port']}",
+                )
+            
+            if old_ports['auth_port'] != "N/A":
+                # Update AuthPort in [HTTP] section
+                update_text_file(
+                    f"{folder_path}/harmony.conf",
+                    f"  AuthPort = 9501",
+                    f"  AuthPort = {old_ports['auth_port']}",
+                )
+            
+            # Handle BLS passphrase file if it exists
+            bls_pass_file = f"{folder_path}/blskey.pass"
+            if os.path.isfile(bls_pass_file):
+                update_text_file(
+                    f"{folder_path}/harmony.conf",
+                    'PassFile = ""',
+                    'PassFile = "blskey.pass"'
+                )
+            
+            print(f"* Config updated with ports restored: {old_ports['port']}/{old_ports['auth_port']}")
+            
+            # Restart service
+            print(f"* Restarting service: {service_name}...")
+            process_command(f"sudo service {service_name} restart")
+            
+            # Show updated version
+            print(f"* Updated version:")
+            process_command("./harmony -V")
+            
+            print(f"* {Fore.CYAN}{folder_name}{Fore.GREEN} upgrade completed successfully!")
+            success_count += 1
+            
+            # Handle DB0 trimming if not shard 0
+            shard_id = config.shard if folder_name == "harmony" else folder_name.replace("harmony", "")
+            if shard_id != "0":
+                db0_path = f"{folder_path}/harmony_db_0"
+                if os.path.exists(db0_path):
+                    size = 0
+                    for path_walk, dirs, files in os.walk(db0_path):
+                        for f in files:
+                            fp = os.path.join(path_walk, f)
+                            size += os.path.getsize(fp)
+                    if size >= 500000000:
+                        question_db = ask_yes_no(
+                            f"* Would you like to trim database 0 for {folder_name}? (YES/NO)"
+                        )
+                        if question_db:
+                            print(f"* Trimming DB0 for {folder_name}...")
+                            process_command(f"sudo service {service_name} stop")
+                            process_command(f"mv {db0_path} {db0_path}_old")
+                            process_command(f"sudo service {service_name} start")
+                            process_command(f"rm -r {db0_path}_old")
+                            print(f"* DB0 trimmed for {folder_name}")
+            
+            # Wait for service to stabilize
+            print(f"* Waiting 10 seconds for {service_name} to stabilize...")
+            time.sleep(10)
+            
+        except Exception as e:
+            print(f"{Fore.RED}* Error upgrading {folder_name}: {e}{Fore.GREEN}")
+            failed_folders.append(folder_name)
+            # Try to restart service anyway
+            try:
+                process_command(f"sudo service {service_name} restart")
+            except:
+                pass
+    
+    # Summary
+    print(f"\n{Fore.GREEN}{string_stars()}")
+    print(f"* {Fore.CYAN}Harmony Upgrade Summary{Fore.GREEN}")
+    print(f"* Successfully upgraded: {Fore.YELLOW}{success_count}{Fore.GREEN} folder(s)")
+    
+    if failed_folders:
+        print(f"* {Fore.RED}Failed: {len(failed_folders)} folder(s): {', '.join(failed_folders)}{Fore.GREEN}")
+    
+    print(f"{string_stars()}")
+    
+    # Update environment variable if all succeeded
+    if success_count == len(folders):
+        set_var(config.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
+        print(f"* All services upgraded successfully!")
+    
+    print(f"{string_stars()}")
+    input("* Press ENTER to exit. ")
+    finish_node()
 
 
 def menu_service_stop_start():
