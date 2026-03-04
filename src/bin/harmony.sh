@@ -24,43 +24,42 @@ if ! command_exists pip3; then
     exit 1
 fi
 
+printf "⚙ harmony.sh:"
+
 # Check if the harmony-toolbox directory exists
 if [ -d "$HOME_DIR/harmony-toolbox" ]; then
     # If it exists, go into it and pull updates
     cd "$HOME_DIR/harmony-toolbox"
-    printf "⚙ Updating harmony-toolbox... "
+    printf " [toolbox"
     if ! git pull --quiet > /dev/null 2>&1; then
-        echo "⚠ Warning: Failed to update. Continuing with existing version."
+        printf " ⚠]"
     else
-        echo "✓"
+        printf " ✓]"
     fi
 else
     # If it doesn't exist, clone the repository
-    printf "⚙ Cloning harmony-toolbox... "
+    printf " [cloning toolbox"
     if ! git clone https://github.com/easy-node-pro/harmony-toolbox.git "$HOME_DIR/harmony-toolbox" > /dev/null 2>&1; then
+        echo ""
         echo "✗ Error: Failed to clone harmony-toolbox repository."
         exit 1
-    else
-        echo "✓"
     fi
+    printf " ✓]"
     # Go into the new directory, we already have updates
     cd "$HOME_DIR/harmony-toolbox"
 fi
 
 # Install/update requirements if requirements.txt exists
 if [ -f "requirements.txt" ]; then
-    printf "⚙ Installing requirements... "
+    printf " [packages"
     if ! pip3 install -r requirements.txt --quiet > /dev/null 2>&1; then
-        echo "⚠ Warning: Failed to install some requirements."
+        printf " ⚠]"
     else
-        echo "✓"
+        printf " ✓]"
     fi
-else
-    echo "⚠ Warning: requirements.txt not found. Skipping requirements installation."
 fi
 
-# Clear the startup messages before launching the toolbox
-printf "\033[2J\033[H"
+printf " [launching]\n"
 
 # Start toolbox, with flags if passed
 python3 "$HOME_DIR/harmony-toolbox/src/menu.py" "$@"
