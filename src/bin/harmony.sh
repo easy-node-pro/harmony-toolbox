@@ -2,6 +2,10 @@
 set -e  # Exit on any error
 
 HOME_DIR="$HOME"
+TOOLBOX_DIR="$HOME_DIR/harmony-toolbox"
+SELF="$HOME_DIR/harmony.sh"
+G="\033[0;32m"
+R="\033[0m"
 
 # Function to check if command exists
 command_exists() {
@@ -24,42 +28,52 @@ if ! command_exists pip3; then
     exit 1
 fi
 
-printf "⚙ harmony.sh:"
+printf "${G}⚙ harmony.sh:${R}"
 
 # Check if the harmony-toolbox directory exists
-if [ -d "$HOME_DIR/harmony-toolbox" ]; then
+if [ -d "$TOOLBOX_DIR" ]; then
     # If it exists, go into it and pull updates
-    cd "$HOME_DIR/harmony-toolbox"
-    printf " [toolbox"
+    cd "$TOOLBOX_DIR"
+    printf "${G} [toolbox${R}"
     if ! git pull --quiet > /dev/null 2>&1; then
-        printf " ⚠]"
+        printf "${G} ⚠]${R}"
     else
-        printf " ✓]"
+        printf "${G} ✓]${R}"
     fi
 else
     # If it doesn't exist, clone the repository
-    printf " [cloning toolbox"
-    if ! git clone https://github.com/easy-node-pro/harmony-toolbox.git "$HOME_DIR/harmony-toolbox" > /dev/null 2>&1; then
+    printf "${G} [cloning toolbox${R}"
+    if ! git clone https://github.com/easy-node-pro/harmony-toolbox.git "$TOOLBOX_DIR" > /dev/null 2>&1; then
         echo ""
         echo "✗ Error: Failed to clone harmony-toolbox repository."
         exit 1
     fi
-    printf " ✓]"
-    # Go into the new directory, we already have updates
-    cd "$HOME_DIR/harmony-toolbox"
+    printf "${G} ✓]${R}"
+    cd "$TOOLBOX_DIR"
+fi
+
+# Self-update: if ~/harmony.sh differs from the toolbox version, update and re-exec
+TOOLBOX_SH="$TOOLBOX_DIR/src/bin/harmony.sh"
+if [ -f "$TOOLBOX_SH" ] && [ -f "$SELF" ]; then
+    if ! diff -q "$TOOLBOX_SH" "$SELF" > /dev/null 2>&1; then
+        cp "$TOOLBOX_SH" "$SELF"
+        chmod +x "$SELF"
+        printf "${G} [self-updated, restarting]\n${R}"
+        exec "$SELF" "$@"
+    fi
 fi
 
 # Install/update requirements if requirements.txt exists
 if [ -f "requirements.txt" ]; then
-    printf " [packages"
+    printf "${G} [packages${R}"
     if ! pip3 install -r requirements.txt --quiet > /dev/null 2>&1; then
-        printf " ⚠]"
+        printf "${G} ⚠]${R}"
     else
-        printf " ✓]"
+        printf "${G} ✓]${R}"
     fi
 fi
 
-printf " [launching]\n"
+printf "${G} [launching]\n${R}"
 
 # Start toolbox, with flags if passed
-python3 "$HOME_DIR/harmony-toolbox/src/menu.py" "$@"
+python3 "$TOOLBOX_DIR/src/menu.py" "$@"

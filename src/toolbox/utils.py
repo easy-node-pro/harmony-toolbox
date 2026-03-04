@@ -740,30 +740,24 @@ def check_space_requirements(shard: int, directory: str, required_space: int) ->
 
 
 def check_harmony_sh():
-    if os.path.exists(config.harmony_sh_home_path):
-        # Check if executable
-        if not os.access(config.harmony_sh_home_path, os.X_OK):
-            print("* ~/harmony.sh is not executable, fixing permissions...")
-            os.chmod(config.harmony_sh_home_path, 0o755)
+    if not os.path.exists(config.harmony_sh_toolbox_path):
+        return
 
-        # Check MD5
+    with open(config.harmony_sh_toolbox_path, "rb") as f:
+        toolbox_md5 = hashlib.md5(f.read()).hexdigest()
+
+    if os.path.exists(config.harmony_sh_home_path):
         with open(config.harmony_sh_home_path, "rb") as f:
             home_md5 = hashlib.md5(f.read()).hexdigest()
-        with open(config.harmony_sh_toolbox_path, "rb") as f:
-            toolbox_md5 = hashlib.md5(f.read()).hexdigest()
-
-        if home_md5 != toolbox_md5:
-            print("* ~/harmony.sh is outdated, updating...")
-            shutil.copy2(config.harmony_sh_toolbox_path, config.harmony_sh_home_path)
-            os.chmod(config.harmony_sh_home_path, 0o755)
-            print(
-                "* Updated ~/harmony.sh. Please re-run the script for the latest version."
-            )
-            finish_node()
+        needs_update = home_md5 != toolbox_md5
     else:
-        print(
-            "* ~/harmony.sh not found. If you want to use the launcher script, copy it from the toolbox."
-        )
+        needs_update = True
+
+    if needs_update:
+        shutil.copy2(config.harmony_sh_toolbox_path, config.harmony_sh_home_path)
+
+    if needs_update or not os.access(config.harmony_sh_home_path, os.X_OK):
+        os.chmod(config.harmony_sh_home_path, 0o755)
 
 
 def get_wallet_address():
