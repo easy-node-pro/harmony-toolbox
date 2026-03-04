@@ -902,7 +902,10 @@ def get_local_version(folder):
 
 
 def set_mod_x(file):
-    subprocess.run(["chmod", "+x", file])
+    try:
+        os.chmod(file, 0o755)
+    except OSError:
+        pass
 
 
 def clear_temp_files() -> None:
@@ -914,8 +917,7 @@ def clear_temp_files() -> None:
             os.remove(tmp_file)
         except FileNotFoundError:
             pass  # Silently ignore if file doesn't exist
-        except Exception as e:
-            # You can still log or handle other exceptions if desired
+        except Exception:
             pass
 
 
