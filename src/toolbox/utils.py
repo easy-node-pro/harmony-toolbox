@@ -754,9 +754,13 @@ def check_harmony_sh():
         needs_update = True
 
     if needs_update:
-        shutil.copy2(config.harmony_sh_toolbox_path, config.harmony_sh_home_path)
-
-    if needs_update or not os.access(config.harmony_sh_home_path, os.X_OK):
+        # Write to a temp file then rename atomically so bash doesn't read
+        # new content mid-execution if it launched us from the old ~/harmony.sh
+        tmp_path = config.harmony_sh_home_path + ".tmp"
+        shutil.copy2(config.harmony_sh_toolbox_path, tmp_path)
+        os.chmod(tmp_path, 0o755)
+        os.replace(tmp_path, config.harmony_sh_home_path)
+    elif not os.access(config.harmony_sh_home_path, os.X_OK):
         os.chmod(config.harmony_sh_home_path, 0o755)
 
 

@@ -52,11 +52,8 @@ class Config:
 
         # RPC endpoints
         self.shard_0_rpc_endpoints = [
-            "https://1rpc.io/one",
             "https://api.s0.t.hmny.io",
-            "https://api.harmony.one",
-            "https://rpc.ankr.com/harmony",
-            "https://hmyone-pokt.nodies.app",
+            "https://api.harmony.one"
         ]
 
         # Temporary paths
