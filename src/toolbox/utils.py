@@ -488,6 +488,7 @@ def validator_stats_output() -> None:
 
     print(
         f"* {Fore.CYAN}Service Status & Sync:{Fore.GREEN}\n" +
+        f"* API URL: {Fore.CYAN}{api_endpoint}{Fore.GREEN}\n" +
         f"* {'Folder':<10} {'S':<2} {'Sync':<5} {'Epoch':<6} {'DB 0':<6} {'Free 0':<6} {'DB 1':<6} {'Free 1':<6} {'Local Block':<12}\n"  +
         f"* {'-'*10} {'-'*2} {'-'*5} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*12}"
     )
