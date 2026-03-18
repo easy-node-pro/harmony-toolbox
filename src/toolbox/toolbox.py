@@ -570,7 +570,7 @@ def safety_defaults() -> None:
             return
         elif os.path.isfile(f"{config.user_home_dir}/harmony"):
             print(
-                f"* It appears your don't have harmony binary in a folder. We're exiting as we're not compatible. Install harmony on a fresh server with toolbox to become compatible or read our docs.\n* Error: {e}"
+                f"* It appears you don't have harmony binary in a folder. We're exiting as we're not compatible. Install harmony on a fresh server with toolbox to become compatible or read our docs."
             )
             raise SystemExit(0)
         else:
@@ -971,66 +971,6 @@ def hmy_cli_upgrade_all():
     finish_node()
 
 
-def update_harmony_app():
-    our_shard = config.shard
-    os.chdir(f"{config.harmony_dir}")
-    print(f"{string_stars()}\nCurrently installed version: ")
-    process_command("./harmony -V")
-    folder_name = make_backup_dir()
-    process_command(
-        f"cp {config.harmony_dir}/harmony {config.harmony_dir}/harmony.conf {folder_name}"
-    )
-    update_harmony_binary()
-    print(f"{string_stars()}\nUpdated version: ")
-    process_command("./harmony -V")
-    if our_shard != "0":
-        size = 0
-        for path, dirs, files in os.walk(f"{config.harmony_dir}/harmony_db_0"):
-            for f in files:
-                fp = os.path.join(path, f)
-                size += os.path.getsize(fp)
-            if size >= 500000000:
-                question = ask_yes_no(
-                    Fore.WHITE
-                    + "* Are you sure you would like to proceed with upgrading and trimming database 0?\n\nType 'Yes' or 'No' to continue"
-                )
-                if question:
-                    process_command(f"sudo service {config.harmony_service} stop")
-                    process_command(
-                        f"mv {config.harmony_dir}/harmony_db_0 {config.harmony_dir}/harmony_db_0_old"
-                    )
-                    process_command(f"sudo service {config.harmony_service} start")
-                    process_command(f"rm -r {config.harmony_dir}/harmony_db_0_old")
-                else:
-                    print(
-                        "Skipping removal of 0, but it's no longer required, get your space back next time by running this prune, fyi!"
-                    )
-            else:
-                print("Your database 0 is already trimmed, enjoy!")
-    process_command(f"sudo service {config.harmony_service} restart")
-    print(
-        f"{string_stars()}\nHarmony Service is restarting, waiting 10 seconds for processing to resume..."
-    )
-    set_var(config.dotenv_file, "HARMONY_UPGRADE_AVAILABLE", "False")
-    time.sleep(10)
-
-
-def harmony_binary_upgrade():
-    our_shard = config.shard
-    if our_shard == "0" or our_shard == "1":
-        question = ask_yes_no(
-            Fore.RED
-            + "* WARNING: YOU WILL MISS BLOCKS WHILE YOU UPGRADE THE HARMONY SERVICE.\n\n"
-            + Fore.WHITE
-            + "* Are you sure you would like to proceed?\n\nType 'Yes' or 'No' to continue"
-        )
-        if question:
-            update_harmony_app()
-    else:
-        print(
-            "* We do not support upgrading shards 2/3 any longer, please upgrade manually if you'd like to update for now.\n* See the harmony discord here for more details on upgrading: https://discord.com/channels/532383335348043777/616699767594156045/1164484026413895742"
-        )
-
 
 def harmony_binary_upgrade_all():
     """Upgrade harmony binary in all detected harmony folders with proper config management."""
@@ -1092,10 +1032,7 @@ def harmony_binary_upgrade_all():
             process_command(f"sudo service {service_name} stop")
             
             # Update harmony binary
-            if os.path.isfile(config.harmony_tmp_path):
-                process_command(f"cp {config.harmony_tmp_path} {folder_path}/harmony")
-            else:
-                process_command("wget https://harmony.one/binary -O harmony && chmod +x harmony")
+            update_harmony_binary(folder_path)
             
             # Dump new config
             print(f"* Dumping new harmony.conf...")

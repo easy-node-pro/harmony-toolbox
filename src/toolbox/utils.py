@@ -224,34 +224,11 @@ def recover_wallet():
     return
 
 
-def update_harmony_binary():
-    os.chdir(f"{config.harmony_dir}")
-    if os.path.isfile(f"{config.harmony_tmp_path}"):
-        process_command(f"cp {config.harmony_tmp_path} {config.harmony_dir}/harmony")
-    else:
-        process_command(
-            "wget https://harmony.one/binary -O harmony && chmod +x harmony"
-        )
-    process_command("./harmony config dump harmony.conf")
-    update_text_file(
-        f"{config.harmony_conf}",
-        " DisablePrivateIPScan = false",
-        " DisablePrivateIPScan = true",
-    )
-    # Update to 11 keys for HIP-32 expansion to 396 slots
-    update_text_file(f"{config.harmony_conf}", " MaxKeys = 10", " MaxKeys = 11")
-    if os.path.isfile(f"{config.bls_key_file}"):
-        update_text_file(
-            f"{config.harmony_conf}", 'PassFile = ""', 'PassFile = "blskey.pass"'
-        )
-        print(
-            f"* Harmony binary installed\n* {config.harmony_conf} created\n* Set config to 11 keys max for shard {environ.get('SHARD')} & disabled private ip scan.\n* Modified: blskey.pass file."
-        )
-    else:
-        print(
-            f"* Harmony binary installed\n* {config.harmony_conf} created\n* Set config to 11 keys max for shard {environ.get('SHARD')} & disabled private ip scan."
-        )
-    return
+def update_harmony_binary(folder_path):
+    """Download the harmony binary fresh from harmony.one/binary and make it executable."""
+    binary_path = f"{folder_path}/harmony"
+    process_command(f"wget https://harmony.one/binary -O {binary_path}")
+    os.chmod(binary_path, 0o755)
 
 
 # Search harmony.conf for the proper port to hit
@@ -1250,7 +1227,25 @@ def install_harmony() -> None:
     # Install hmy
     update_hmy_binary()
     # Install harmony
-    update_harmony_binary()
+    update_harmony_binary(harmony_dir)
+    process_command(f"{harmony_dir}/harmony config dump {harmony_dir}/harmony.conf")
+    update_text_file(
+        f"{config.harmony_conf}",
+        " DisablePrivateIPScan = false",
+        " DisablePrivateIPScan = true",
+    )
+    update_text_file(f"{config.harmony_conf}", " MaxKeys = 10", " MaxKeys = 11")
+    if os.path.isfile(f"{config.bls_key_file}"):
+        update_text_file(
+            f"{config.harmony_conf}", 'PassFile = ""', 'PassFile = "blskey.pass"'
+        )
+        print(
+            f"* Harmony binary installed\n* {config.harmony_conf} created\n* Set config to 11 keys max for shard {environ.get('SHARD')} & disabled private ip scan.\n* Modified: blskey.pass file."
+        )
+    else:
+        print(
+            f"* Harmony binary installed\n* {config.harmony_conf} created\n* Set config to 11 keys max for shard {environ.get('SHARD')} & disabled private ip scan."
+        )
     # Setup the harmony service file
     print(f"* Customizing, Moving & Enabling your {service_name}.service systemd file")
 

@@ -9,9 +9,7 @@ from toolbox.utils import (
     first_env_check,
 )
 from toolbox.toolbox import (
-    harmony_binary_upgrade,
     harmony_binary_upgrade_all,
-    update_harmony_app,
     run_multistats,
     rewards_collector,
     first_setup,
