@@ -286,6 +286,8 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
         return None
     current_full_path = f"{config.user_home_dir}/{folder}"
     software_versions = version_checks(current_full_path)
+    if subprocess.call(["systemctl", "is-active", "--quiet", folder], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
+        return {"folder": folder, "error": "OFFLINE"}
     retry_count = 0
     while retry_count <= max_retries:
         try:
