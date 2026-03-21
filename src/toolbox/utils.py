@@ -296,7 +296,7 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
                 f"--node=http://localhost:{port}",
             ]
             result_local_server = run(
-                local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True
+                local_server, stdout=PIPE, stderr=PIPE, universal_newlines=True, timeout=5
             )
             local_data = json.loads(result_local_server.stdout)
             shard_id = local_data["result"]["shard-id"]
@@ -307,7 +307,7 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
                 f"--node=https://api.s{shard_id}.t.hmny.io",
             ]
             result_remote_server = run(
-                remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True
+                remote_server, stdout=PIPE, stderr=PIPE, universal_newlines=True, timeout=5
             )
             remote_data = json.loads(result_remote_server.stdout)
             db_size_0 = get_db_size(f"{current_full_path}", "0")
@@ -336,6 +336,8 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
                 "free_space_shard": free_space_shard,
                 "versions": software_versions,
             }
+        except subprocess.TimeoutExpired:
+            return {"folder": folder, "error": "OFFLINE"}
         except Exception as e:
             retry_count += 1
             if retry_count <= max_retries:
@@ -387,50 +389,32 @@ def validator_stats_output() -> None:
     service_statuses = [harmony_service_status(folder) for folder in folders]
     api_endpoint = config.working_rpc_endpoint
     
-    # Get remote shard data
-    shard_0_info = ""
-    shard_1_info = ""
-    
-    if api_endpoint and folders:
-        remote_shard_0 = [
-            f"{config.user_home_dir}/{list(folders.items())[0][0]}/hmy",
-            "utility",
-            "metadata",
-            f"--node={api_endpoint}",
-        ]
-        result_shard_0 = run(
-            remote_shard_0, stdout=PIPE, stderr=PIPE, universal_newlines=True
-        )
-        if result_shard_0.returncode == 0 and result_shard_0.stdout.strip():
-            try:
-                remote_0_data = json.loads(result_shard_0.stdout)
-                shard_0_info = f"* Remote Shard 0 Epoch: {remote_0_data['result']['current-epoch']}, Current Block: {remote_0_data['result']['current-block-number']}\n"
-            except (json.JSONDecodeError, KeyError):
-                shard_0_info = "* Unable to parse remote Shard 0 data\n"
-        else:
-            shard_0_info = "* Unable to fetch remote Shard 0 data\n"
+    # Get remote shard data concurrently
+    hmy_bin = f"{config.user_home_dir}/{list(folders.items())[0][0]}/hmy" if folders else None
+
+    def fetch_shard_info(node_url, shard_num, trail=""):
+        try:
+            result = run(
+                [hmy_bin, "utility", "metadata", f"--node={node_url}"],
+                stdout=PIPE, stderr=PIPE, universal_newlines=True, timeout=5
+            )
+            if result.returncode == 0 and result.stdout.strip():
+                data = json.loads(result.stdout)["result"]
+                return f"* Remote Shard {shard_num} Epoch: {data['current-epoch']}, Current Block: {data['current-block-number']}\n{trail}"
+        except subprocess.TimeoutExpired:
+            return f"* Remote Shard {shard_num} timed out\n{trail}"
+        except (json.JSONDecodeError, KeyError):
+            pass
+        return f"* Unable to fetch remote Shard {shard_num} data\n{trail}"
+
+    if hmy_bin and api_endpoint and folders:
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            future_0 = executor.submit(fetch_shard_info, api_endpoint, 0)
+            future_1 = executor.submit(fetch_shard_info, "https://api.s1.t.hmny.io", 1, string_stars())
+            shard_0_info = future_0.result()
+            shard_1_info = future_1.result()
     else:
         shard_0_info = "* No working RPC endpoint for Shard 0\n"
-    
-    if folders:
-        remote_shard_1 = [
-            f"{config.user_home_dir}/{list(folders.items())[0][0]}/hmy",
-            "utility",
-            "metadata",
-            f"--node=https://api.s1.t.hmny.io",
-        ]
-        result_shard_1 = run(
-            remote_shard_1, stdout=PIPE, stderr=PIPE, universal_newlines=True
-        )
-        if result_shard_1.returncode == 0 and result_shard_1.stdout.strip():
-            try:
-                remote_1_data = json.loads(result_shard_1.stdout)
-                shard_1_info = f"* Remote Shard 1 Epoch: {remote_1_data['result']['current-epoch']}, Current Block: {remote_1_data['result']['current-block-number']}\n{string_stars()}"
-            except (json.JSONDecodeError, KeyError):
-                shard_1_info = f"* Unable to parse remote Shard 1 data\n{string_stars()}"
-        else:
-            shard_1_info = f"* Unable to fetch remote Shard 1 data\n{string_stars()}"
-    else:
         shard_1_info = f"* No folders available for Shard 1 check\n{string_stars()}"
     
     # Concurrently process each folder to get detailed stats
