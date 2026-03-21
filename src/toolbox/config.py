@@ -68,6 +68,11 @@ class Config:
             "harmony2",
             "harmony3",
             "harmony4",
+            "harmony5",
+            "harmony6",
+            "harmony7",
+            "harmony8",
+            "harmony9",
         ]
         self.shard = environ.get("SHARD") or "4"
         self.harmony_service = environ.get("HARMONY_SERVICE") or "harmony"
