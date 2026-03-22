@@ -438,7 +438,8 @@ def validator_stats_output() -> None:
         f"{string_stars()}\n* {Fore.CYAN}Validator Stats for {Fore.RED}{short_address}{Fore.GREEN}\n" +
         f"* Balance: {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN} Pending Rewards: {Fore.CYAN}{str(round(pending_rewards, 2))}{Fore.GREEN}\n* Hostname: {Fore.CYAN}{config.server_host_name}{Fore.GREEN} IP: {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
     )
-    print(f"* Service Status: {' '.join(service_statuses)}")
+    chunks = [service_statuses[i:i+4] for i in range(0, len(service_statuses), 4)]
+    print(f"* Service Status: {('\n* ' + ' ' * 16).join(' '.join(c) for c in chunks)}")
     print(
         f"* Current Signing %: {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}"
     )
