@@ -381,17 +381,11 @@ def validator_stats_output() -> None:
     
     # Show gathering message after validation passes
     print(f"{Fore.GREEN}* Gathering all validator and blockchain information...")
-    
+
     # Gather all data first without any output
     load_1, load_5, load_15 = os.getloadavg()
-    sign_percentage = get_sign_pct()
-    validator_wallet_balance = get_wallet_balance(validator_wallet)
-    pending_rewards = get_rewards_balance(config.working_rpc_endpoint, validator_wallet)
-    short_address = f"{validator_wallet[:4]}...{validator_wallet[-4:]}"
     service_statuses = [harmony_service_status(folder) for folder in folders]
     api_endpoint = config.working_rpc_endpoint
-    
-    # Get remote shard data concurrently
     hmy_bin = f"{config.user_home_dir}/{list(folders.items())[0][0]}/hmy" if folders else None
 
     def fetch_shard_info(node_url, shard_num, trail=""):
@@ -409,15 +403,42 @@ def validator_stats_output() -> None:
             pass
         return f"* Unable to fetch remote Shard {shard_num} data\n{trail}"
 
+    def fetch_elected_local_wallets():
+        local = get_local_wallet_addresses(hmy_bin)
+        if not local:
+            return [("unknown", validator_wallet)] if validator_wallet else []
+        elected = get_elected_validators(hmy_bin, api_endpoint)
+        found = [(name, addr) for name, addr in local if addr in elected]
+        return found if found else ([("unknown", validator_wallet)] if validator_wallet else [])
+
     if hmy_bin and api_endpoint and folders:
-        with ThreadPoolExecutor(max_workers=2) as executor:
+        with ThreadPoolExecutor(max_workers=5) as executor:
             future_0 = executor.submit(fetch_shard_info, api_endpoint, 0)
             future_1 = executor.submit(fetch_shard_info, "https://api.s1.t.hmny.io", 1, string_stars())
+            future_elected = executor.submit(fetch_elected_local_wallets)
             shard_0_info = future_0.result()
             shard_1_info = future_1.result()
+            elected_wallets = future_elected.result()
     else:
         shard_0_info = "* No working RPC endpoint for Shard 0\n"
         shard_1_info = f"* No folders available for Shard 1 check\n{string_stars()}"
+        elected_wallets = [validator_wallet] if validator_wallet else []
+
+    def fetch_wallet_stats(name_addr):
+        name, addr = name_addr
+        return {
+            "name": name,
+            "short": addr[:4] + "..." + addr[-4:],
+            "balance": get_wallet_balance(addr) or 0,
+            "rewards": get_rewards_balance(api_endpoint, addr) or 0,
+            "uptime": get_sign_pct(addr),
+        }
+
+    if elected_wallets:
+        with ThreadPoolExecutor(max_workers=max(1, len(elected_wallets))) as executor:
+            wallet_stats = list(executor.map(fetch_wallet_stats, elected_wallets))
+    else:
+        wallet_stats = []
     
     # Concurrently process each folder to get detailed stats
     with ThreadPoolExecutor(max_workers=10) as executor:
@@ -433,17 +454,22 @@ def validator_stats_output() -> None:
             break
     
     # Now output all the gathered information
+    elected_label = str(len(wallet_stats)) if wallet_stats else "0"
     print(
         f"{Fore.GREEN}{string_stars()}\n* harmony-toolbox for {Fore.CYAN}Harmony ONE{Fore.GREEN} Validators by Easy Node{' '*8}{Style.RESET_ALL}{Fore.WHITE}   https://EasyNodePro.com {Fore.GREEN}*\n" +
-        f"{string_stars()}\n* {Fore.CYAN}Validator Stats for {Fore.RED}{short_address}{Fore.GREEN}\n" +
-        f"* Balance: {Fore.CYAN}{str(round(validator_wallet_balance, 2))}{Fore.GREEN} Pending Rewards: {Fore.CYAN}{str(round(pending_rewards, 2))}{Fore.GREEN}\n* Hostname: {Fore.CYAN}{config.server_host_name}{Fore.GREEN} IP: {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
+        f"{string_stars()}\n* {Fore.CYAN}Validator Stats: {Fore.RED}{elected_label} Elected Validator(s){Fore.GREEN}\n" +
+        f"* Hostname: {Fore.CYAN}{config.server_host_name}{Fore.GREEN} IP: {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
     )
+    for ws in wallet_stats:
+        print(
+            f"* {Fore.CYAN}{ws['name']}{Fore.GREEN} ({Fore.RED}{ws['short']}{Fore.GREEN})"
+            f"  Balance: {Fore.CYAN}{round(ws['balance'], 2)}{Fore.GREEN}"
+            f"  Pending: {Fore.CYAN}{round(ws['rewards'], 2)}{Fore.GREEN}"
+            f"  Uptime: {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{ws['uptime']} %{Style.RESET_ALL}{Fore.GREEN}"
+        )
     chunks = [service_statuses[i:i+4] for i in range(0, len(service_statuses), 4)]
     sep = "\n* " + " " * 16
     print(f"* Service Status: {sep.join(' '.join(c) for c in chunks)}")
-    print(
-        f"* Current Signing %: {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{sign_percentage} %{Style.RESET_ALL}{Fore.GREEN}"
-    )
     print(
         f"* CPU Load Averages: {round(load_1, 2)} over 1 min, {round(load_5, 2)} over 5 min, {round(load_15, 2)} over 15 min\n{string_stars()}\n" +
         f"* {Fore.CYAN}Remote Node Status:{Fore.GREEN}\n" +
@@ -823,12 +849,14 @@ def return_json(fn: str, single_key: str = None) -> dict:
         return {}
 
 
-def get_sign_pct() -> str:
+def get_sign_pct(wallet=None) -> str:
+    if wallet is None:
+        wallet = environ.get('VALIDATOR_WALLET')
     hmy_external_rpc = (
         f"{config.harmony_dir}/hmy --node='{config.working_rpc_endpoint}'"
     )
     output = subprocess.getoutput(
-        f"{hmy_external_rpc} blockchain validator information {environ.get('VALIDATOR_WALLET')} | grep signing-percentage"
+        f"{hmy_external_rpc} blockchain validator information {wallet} | grep signing-percentage"
     )
     output_stripped = output.lstrip(
         '        "current-epoch-signing-percentage": "'
@@ -841,6 +869,34 @@ def get_sign_pct() -> str:
     except (OSError, ValueError):
         output_stripped = "0"
         return str(output_stripped)
+
+
+def get_local_wallet_addresses(hmy_bin):
+    """Returns list of (name, address) tuples from hmy keys list."""
+    try:
+        result = subprocess.getoutput(f"{hmy_bin} keys list")
+        wallets = []
+        for line in result.strip().splitlines()[1:]:  # skip NAME/ADDRESS header
+            parts = line.split()
+            if len(parts) >= 2 and parts[-1].startswith("one1"):
+                wallets.append((parts[0], parts[-1]))
+        return wallets
+    except Exception:
+        return []
+
+
+def get_elected_validators(hmy_bin, endpoint):
+    try:
+        result = run(
+            [hmy_bin, "blockchain", "validator", "elected", f"--node={endpoint}"],
+            stdout=PIPE, stderr=PIPE, universal_newlines=True, timeout=10
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            data = json.loads(result.stdout)
+            return set(data.get("result", []))
+    except Exception:
+        pass
+    return set()
 
 
 def get_local_version(folder):
