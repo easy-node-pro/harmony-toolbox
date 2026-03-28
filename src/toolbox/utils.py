@@ -287,7 +287,7 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
     current_full_path = f"{config.user_home_dir}/{folder}"
     software_versions = version_checks(current_full_path)
     if subprocess.call(["systemctl", "is-active", "--quiet", folder], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
-        return {"folder": folder, "error": "OFFLINE", "versions": software_versions}
+        return {"folder": folder, "error": "OFFLINE", "versions": software_versions, "http_ports": get_http_ports(current_full_path)}
     retry_count = 0
     while retry_count <= max_retries:
         try:
@@ -338,6 +338,7 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
                 "db_size_shard": db_size_shard,
                 "free_space_0": free_space_0,
                 "free_space_shard": free_space_shard,
+                "http_ports": get_http_ports(current_full_path),
                 "versions": software_versions,
             }
         except subprocess.TimeoutExpired:
@@ -486,39 +487,36 @@ def validator_stats_output() -> None:
     print(
         f"* {Fore.CYAN}Service Status & Sync:{Fore.GREEN}\n" +
         f"* API URL: {Fore.CYAN}{api_endpoint}{Fore.GREEN}\n" +
-        f"* {'Folder':<10} {'S':<2} {'Sync':<5} {'Epoch':<6} {'DB 0':<6} {'Free 0':<6} {'DB 1':<6} {'Free 1':<6} {'Local Block':<12}\n"  +
-        f"* {'-'*10} {'-'*2} {'-'*5} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*12}"
+        f"* {'Folder':<10} {'S':<2} {'Sync':<5} {'Epoch':<6} {'DB 0':<6} {'Free 0':<6} {'DB 1':<6} {'Free 1':<6} {'Local Block':<14} {'Port':<6} {'AuthPort'}\n" +
+        f"* {'-'*10} {'-'*2} {'-'*5} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*6} {'-'*14} {'-'*6} {'-'*8}"
     )
 
     # Print results for each folder
     for result in folder_results:
         if result:
+            ports = result.get("http_ports", {})
+            port_str = ports.get("port", "N/A")
+            auth_port_str = ports.get("auth_port", "N/A")
             if "error" in result:
-                # Display offline/error services in a clean, aligned format
                 error_status = result["error"]
                 if error_status == "OFFLINE":
-                    print(f"* {result['folder']:<10} {Fore.RED}-  OFFLINE - CHECK SERVICE{Fore.GREEN:<2}")
+                    print(f"* {result['folder']:<10} {Fore.RED}-  OFFLINE - CHECK SERVICE{Fore.GREEN}  {port_str:<6} {auth_port_str}")
                 elif error_status == "NO BINARY":
-                    print(f"* {result['folder']:<10} {Fore.YELLOW}-  NO BINARY - REINSTALL{Fore.GREEN:<2}")
+                    print(f"* {result['folder']:<10} {Fore.YELLOW}-  NO BINARY - REINSTALL{Fore.GREEN}    {port_str:<6} {auth_port_str}")
                 else:
-                    print(f"* {result['folder']:<10} {Fore.RED}-  ERROR - CHECK LOGS{Fore.GREEN:<2}")
+                    print(f"* {result['folder']:<10} {Fore.RED}-  ERROR - CHECK LOGS{Fore.GREEN}       {port_str:<6} {auth_port_str}")
             else:
                 bingo_block = result.get("bingo_block")
                 remote_block = result["remote_block"]
-                if bingo_block is not None and abs(remote_block - bingo_block) <= 10:
-                    sync_status = f"{Style.RESET_ALL}{Back.GREEN}{Fore.BLACK}OK{Style.RESET_ALL}{Fore.GREEN}   "
-                elif result["local_epoch"] == result["remote_epoch"] and abs(result["local_block"] - remote_block) <= 2:
+                if (bingo_block is not None and abs(remote_block - bingo_block) <= 10) or \
+                        (result["local_epoch"] == result["remote_epoch"] and abs(result["local_block"] - remote_block) <= 2):
                     sync_status = f"{Fore.YELLOW}OK{Fore.GREEN}   "
                 else:
                     sync_status = f"{Fore.RED}SYNC {Fore.GREEN}"
-                db_size_shard = (
-                    result["db_size_shard"] if result["shard_id"] != 0 else "N/A"
-                )
-                free_space_shard = (
-                    result["free_space_shard"] if result["shard_id"] != 0 else "N/A"
-                )
+                db_size_shard = result["db_size_shard"] if result["shard_id"] != 0 else "N/A"
+                free_space_shard = result["free_space_shard"] if result["shard_id"] != 0 else "N/A"
                 print(
-                    f"* {result['folder']:<10} {result['shard_id']:<2} {sync_status:<5} {result['local_epoch']:<6} {colorize_size(result['db_size_0']):<6} {colorize_size(result['free_space_0']):<6} {colorize_size(db_size_shard):<6} {colorize_size(free_space_shard):<6} {result['local_block']:<12}"
+                    f"* {result['folder']:<10} {result['shard_id']:<2} {sync_status:<5} {result['local_epoch']:<6} {colorize_size(result['db_size_0']):<6} {colorize_size(result['free_space_0']):<6} {colorize_size(db_size_shard):<6} {colorize_size(free_space_shard):<6} {result['local_block']:<14} {port_str:<6} {auth_port_str}"
                 )
 
     if versions:
@@ -527,23 +525,18 @@ def validator_stats_output() -> None:
             f"* Toolbox Version: {Fore.CYAN}v{config.easy_version}{Fore.GREEN}\n* Online Harmony Version: {Fore.YELLOW}{environ.get('ONLINE_HARMONY_VERSION', 'Unknown')}{Fore.GREEN}\n* Online HMY Version: {Fore.YELLOW}{environ.get('ONLINE_HMY_VERSION', 'Unknown')}{Fore.GREEN}"
         )
 
-    print(f"{string_stars()}")
-    print(f"* {Fore.CYAN}Software Updates (OK = Current, UG = Upgrade Available):{Fore.GREEN}")
-    print("* Folder       Harmony  HMY   Port  AuthPort")
-    print("* ------------ -------- ----- ----- --------")
-    for result in folder_results:
-        if result and "versions" in result:
+    upgrades = [r for r in folder_results if r and "versions" in r and
+                (r["versions"].get("harmony_upgrade") != "False" or r["versions"].get("hmy_upgrade") != "False")]
+    if upgrades:
+        print(f"{string_stars()}")
+        print(f"* {Fore.RED}Software Updates Available:{Fore.GREEN}")
+        print(f"* {'Folder':<12} {'Harmony':<8} {'HMY'}")
+        print(f"* {'-'*12} {'-'*8} {'-'*5}")
+        for result in upgrades:
             v = result["versions"]
-            harmony_status = f"{Fore.YELLOW}OK{Fore.GREEN}{' '*6}" if v["harmony_upgrade"] == "False" else f"{Fore.RED}UG{Fore.GREEN}{' '*6}"
-            hmy_status = f"{Fore.YELLOW}OK{Fore.GREEN}{' '*2}" if v["hmy_upgrade"] == "False" else f"{Fore.RED}UG{Fore.GREEN}{' '*2}"
-            
-            # Get HTTP ports from harmony.conf
-            folder_path = f"{config.user_home_dir}/{result['folder']}"
-            http_ports = get_http_ports(folder_path)
-            port_display = f"{http_ports['port']:>5}"
-            auth_port_display = f"{http_ports['auth_port']:>5}"
-            
-            print(f"* {result['folder']:<12} {harmony_status} {hmy_status} {port_display} {auth_port_display}")
+            harmony_status = f"{Fore.YELLOW}OK{Fore.GREEN}      " if v.get("harmony_upgrade") == "False" else f"{Fore.RED}UG{Fore.GREEN}      "
+            hmy_status = f"{Fore.YELLOW}OK{Fore.GREEN}" if v.get("hmy_upgrade") == "False" else f"{Fore.RED}UG{Fore.GREEN}"
+            print(f"* {result['folder']:<12} {harmony_status} {hmy_status}")
     print(f"{string_stars()}")
 
 
