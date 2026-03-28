@@ -506,7 +506,7 @@ def validator_stats_output() -> None:
                 bingo_block = result.get("bingo_block")
                 remote_block = result["remote_block"]
                 if bingo_block is not None and abs(remote_block - bingo_block) <= 10:
-                    sync_status = f"{Back.GREEN}{Fore.BLACK}OK{Style.RESET_ALL}{Fore.GREEN}   "
+                    sync_status = f"{Style.RESET_ALL}{Back.GREEN}{Fore.BLACK}OK{Style.RESET_ALL}{Fore.GREEN}   "
                 elif result["local_epoch"] == result["remote_epoch"] and abs(result["local_block"] - remote_block) <= 2:
                     sync_status = f"{Fore.YELLOW}OK{Fore.GREEN}   "
                 else:
