@@ -75,5 +75,14 @@ fi
 
 printf "${G} [launching]\n${R}"
 
+# Translate short flags that argparse can't handle as single-dash multi-char
+ARGS=()
+for arg in "$@"; do
+    case "$arg" in
+        -bingo) ARGS+=("--bingo") ;;
+        *)      ARGS+=("$arg")    ;;
+    esac
+done
+
 # Start toolbox, with flags if passed
-python3 "$TOOLBOX_DIR/src/menu.py" "$@"
+python3 "$TOOLBOX_DIR/src/menu.py" "${ARGS[@]}"

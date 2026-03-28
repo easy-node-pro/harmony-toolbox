@@ -7,6 +7,7 @@ from toolbox.utils import (
     get_folders,
     ask_yes_no,
     first_env_check,
+    bingo_all_folders,
 )
 from toolbox.toolbox import (
     harmony_binary_upgrade_all,
@@ -89,7 +90,18 @@ def parse_flags(parser):
         help="Set a new default folder.",
     )
 
+    parser.add_argument(
+        "--bingo",
+        action="store_true",
+        help="Check last signed (BINGO) block for each harmony folder.",
+    )
+
     args = parser.parse_args()
+
+    if args.bingo:
+        load_var_file(config.dotenv_file)
+        bingo_all_folders()
+        finish_node()
 
     if args.folder:
         os.environ["SELECTED_FOLDER"] = args.folder

@@ -324,6 +324,7 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
                 if os.path.exists(f"{current_full_path}/harmony_db_{shard_id}")
                 else "N/A"
             )
+            bingo_block, _ = get_bingo_block(current_full_path)
             return {
                 "folder": folder,
                 "path": current_full_path,
@@ -332,6 +333,7 @@ def process_folder(folder, port, max_retries=3, retry_delay=3):
                 "remote_epoch": remote_data["result"]["current-epoch"],
                 "local_block": local_data["result"]["current-block-number"],
                 "remote_block": remote_data["result"]["current-block-number"],
+                "bingo_block": bingo_block,
                 "db_size_0": db_size_0,
                 "db_size_shard": db_size_shard,
                 "free_space_0": free_space_0,
@@ -501,12 +503,14 @@ def validator_stats_output() -> None:
                 else:
                     print(f"* {result['folder']:<10} {Fore.RED}-  ERROR - CHECK LOGS{Fore.GREEN:<2}")
             else:
-                sync_status = (
-                    "OK"
-                    if result["local_epoch"] == result["remote_epoch"]
-                    and abs(result["local_block"] - result["remote_block"]) <= 2
-                    else f"{Fore.RED}SYNC {Fore.GREEN}"
-                )
+                bingo_block = result.get("bingo_block")
+                remote_block = result["remote_block"]
+                if bingo_block is not None and abs(remote_block - bingo_block) <= 10:
+                    sync_status = f"{Back.GREEN}{Fore.BLACK}OK{Style.RESET_ALL}{Fore.GREEN}   "
+                elif result["local_epoch"] == result["remote_epoch"] and abs(result["local_block"] - remote_block) <= 2:
+                    sync_status = f"{Fore.YELLOW}OK{Fore.GREEN}   "
+                else:
+                    sync_status = f"{Fore.RED}SYNC {Fore.GREEN}"
                 db_size_shard = (
                     result["db_size_shard"] if result["shard_id"] != 0 else "N/A"
                 )
@@ -887,6 +891,52 @@ def get_local_wallet_addresses(hmy_bin):
         return wallets
     except Exception:
         return []
+
+
+def get_bingo_block(folder_path):
+    """Returns (block_num, epoch) from the last BINGO line in the harmony log, or (None, None)."""
+    log_file = f"{folder_path}/latest/zerolog-harmony.log"
+    try:
+        result = subprocess.run(
+            ["grep", "BINGO", log_file],
+            capture_output=True, text=True, timeout=5
+        )
+        lines = [l for l in result.stdout.strip().splitlines() if l.strip()]
+        if not lines:
+            return None, None
+        data = json.loads(lines[-1])
+        return data.get("blockNum"), data.get("epochNum")
+    except Exception:
+        return None, None
+
+
+def bingo_all_folders():
+    folders = get_folders()
+    if not folders:
+        print(f"{Fore.RED}* No harmony folders found.")
+        print(f"{string_stars()}")
+        return
+
+    print(f"{Fore.GREEN}{string_stars()}")
+    print(f"* Bingo Check - Last Signed Block per Folder")
+    print(f"* {'Folder':<12} {'Last Bingo Block':<20} {'Epoch':<8} Status")
+    print(f"* {'-'*12} {'-'*20} {'-'*8} {'-'*10}")
+
+    for folder in folders:
+        folder_path = f"{config.user_home_dir}/{folder}"
+        block, epoch = get_bingo_block(folder_path)
+        if block is not None:
+            print(
+                f"* {Fore.CYAN}{folder:<12}{Fore.GREEN} {str(block):<20} {str(epoch):<8} "
+                f"{Back.GREEN}{Fore.BLACK}Signed{Style.RESET_ALL}{Fore.GREEN}"
+            )
+        else:
+            print(
+                f"* {Fore.CYAN}{folder:<12}{Fore.GREEN} {'N/A':<20} {'N/A':<8} "
+                f"{Fore.RED}No bingo found{Fore.GREEN}"
+            )
+
+    print(f"{string_stars()}")
 
 
 def get_elected_validators(hmy_bin, endpoint):
