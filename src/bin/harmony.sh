@@ -79,8 +79,9 @@ printf "${G} [launching]\n${R}"
 ARGS=()
 for arg in "$@"; do
     case "$arg" in
-        -bingo) ARGS+=("--bingo") ;;
-        *)      ARGS+=("$arg")    ;;
+        -bingo)  ARGS+=("--bingo")  ;;
+        -missed) ARGS+=("--missed") ;;
+        *)       ARGS+=("$arg")     ;;
     esac
 done
 

@@ -8,6 +8,7 @@ from toolbox.utils import (
     ask_yes_no,
     first_env_check,
     bingo_all_folders,
+    missed_all_folders,
 )
 from toolbox.toolbox import (
     harmony_binary_upgrade_all,
@@ -96,11 +97,22 @@ def parse_flags(parser):
         help="Check last signed (BINGO) block for each harmony folder.",
     )
 
+    parser.add_argument(
+        "--missed",
+        action="store_true",
+        help="Show missed block count and max consecutive streak per harmony folder.",
+    )
+
     args = parser.parse_args()
 
     if args.bingo:
         load_var_file(config.dotenv_file)
         bingo_all_folders()
+        finish_node()
+
+    if args.missed:
+        load_var_file(config.dotenv_file)
+        missed_all_folders()
         finish_node()
 
     if args.folder:
