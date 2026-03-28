@@ -1017,12 +1017,14 @@ def missed_all_folders():
         if stats["epoch"] is None:
             print(f"* {Fore.CYAN}{folder:<12}{Fore.GREEN} {'N/A':<8} {'N/A':<8} {'N/A':<8} {'N/A':<12} No log data")
         else:
-            missed_col = f"{Fore.RED}{stats['count']}{Fore.GREEN}" if stats["count"] > 0 else f"{Fore.YELLOW}{stats['count']}{Fore.GREEN}"
-            streak_col = f"{Fore.RED}{stats['max_streak']}{Fore.GREEN}" if stats["max_streak"] > 0 else f"{Fore.YELLOW}{stats['max_streak']}{Fore.GREEN}"
+            missed_str = f"{stats['count']:<8}"
+            streak_str = f"{stats['max_streak']:<12}"
+            missed_col = f"{Fore.RED}{missed_str}{Fore.GREEN}" if stats["count"] > 0 else f"{Fore.YELLOW}{missed_str}{Fore.GREEN}"
+            streak_col = f"{Fore.RED}{streak_str}{Fore.GREEN}" if stats["max_streak"] > 0 else f"{Fore.YELLOW}{streak_str}{Fore.GREEN}"
             block_range = f"{stats.get('first_block', 'N/A')} - {stats.get('last_block', 'N/A')}"
             print(
                 f"* {Fore.CYAN}{folder:<12}{Fore.GREEN} {str(stats['epoch']):<8} "
-                f"{str(stats['signed']):<8} {missed_col:<8} {streak_col:<12} {block_range}"
+                f"{str(stats['signed']):<8} {missed_col}{streak_col}{block_range}"
             )
 
     print(f"{string_stars()}")
