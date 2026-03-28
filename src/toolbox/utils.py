@@ -460,13 +460,17 @@ def validator_stats_output() -> None:
         f"{string_stars()}\n* {Fore.CYAN}Validator Stats: {Fore.RED}{elected_label} Elected Validator(s){Fore.GREEN}\n" +
         f"* Hostname: {Fore.CYAN}{config.server_host_name}{Fore.GREEN} IP: {Fore.YELLOW}{config.external_ip}{Fore.GREEN}"
     )
-    for ws in wallet_stats:
-        print(
-            f"* {Fore.CYAN}{ws['name']}{Fore.GREEN} ({Fore.RED}{ws['short']}{Fore.GREEN})"
-            f"  Balance: {Fore.CYAN}{round(ws['balance'], 2)}{Fore.GREEN}"
-            f"  Pending: {Fore.CYAN}{round(ws['rewards'], 2)}{Fore.GREEN}"
-            f"  Uptime: {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{ws['uptime']} %{Style.RESET_ALL}{Fore.GREEN}"
-        )
+    if wallet_stats:
+        name_w = max(len(ws['name']) for ws in wallet_stats)
+        bal_w  = max(len(str(round(ws['balance'], 2))) for ws in wallet_stats)
+        rew_w  = max(len(str(round(ws['rewards'], 2))) for ws in wallet_stats)
+        for ws in wallet_stats:
+            print(
+                f"* {Fore.CYAN}{ws['name']:<{name_w}}{Fore.GREEN}"
+                f"  Balance: {Fore.CYAN}{str(round(ws['balance'], 2)):>{bal_w}}{Fore.GREEN}"
+                f"  Pending: {Fore.CYAN}{str(round(ws['rewards'], 2)):>{rew_w}}{Fore.GREEN}"
+                f"  Uptime: {Style.BRIGHT}{Fore.GREEN}{Back.BLUE}{ws['uptime']:>10} %{Style.RESET_ALL}{Fore.GREEN}"
+            )
     chunks = [service_statuses[i:i+4] for i in range(0, len(service_statuses), 4)]
     sep = "\n* " + " " * 16
     print(f"* Service Status: {sep.join(' '.join(c) for c in chunks)}")
