@@ -932,6 +932,102 @@ def bingo_all_folders():
     print(f"{string_stars()}")
 
 
+def get_missed_blocks(folder_path, epoch_filter=None):
+    """
+    Reads BINGO entries from the log, filters to epoch_filter (or the latest epoch
+    found), then infers missed blocks from gaps in the signed block sequence.
+    Returns a dict with count, max_streak, signed, epoch, first_block, last_block.
+    """
+    log_file = f"{folder_path}/latest/zerolog-harmony.log"
+    try:
+        result = subprocess.run(
+            ["grep", "BINGO", log_file],
+            capture_output=True, text=True, timeout=10
+        )
+        lines = [l for l in result.stdout.strip().splitlines() if l.strip()]
+        if not lines:
+            return {"count": 0, "max_streak": 0, "signed": 0, "epoch": None}
+
+        # Parse all entries; if no epoch_filter use the latest epoch found
+        parsed = []
+        for line in lines:
+            try:
+                data = json.loads(line)
+                block = data.get("blockNum")
+                epoch = data.get("epochNum")
+                if block is not None and epoch is not None:
+                    parsed.append((epoch, block))
+            except (json.JSONDecodeError, KeyError):
+                continue
+
+        if not parsed:
+            return {"count": 0, "max_streak": 0, "signed": 0, "epoch": None}
+
+        target_epoch = epoch_filter if epoch_filter is not None else max(e for e, _ in parsed)
+        signed_blocks = sorted(set(b for e, b in parsed if e == target_epoch))
+
+        if not signed_blocks:
+            return {"count": 0, "max_streak": 0, "signed": 0, "epoch": target_epoch}
+
+        first_block = signed_blocks[0]
+        last_block  = signed_blocks[-1]
+        signed_set  = set(signed_blocks)
+
+        # Walk the full range and find gaps
+        missed_count = 0
+        max_streak = 0
+        streak = 0
+        for b in range(first_block, last_block + 1):
+            if b not in signed_set:
+                missed_count += 1
+                streak += 1
+                max_streak = max(max_streak, streak)
+            else:
+                streak = 0
+
+        return {
+            "count": missed_count,
+            "max_streak": max_streak,
+            "signed": len(signed_blocks),
+            "epoch": target_epoch,
+            "first_block": first_block,
+            "last_block": last_block,
+        }
+    except Exception:
+        return {"count": 0, "max_streak": 0, "signed": 0, "epoch": None}
+
+
+def missed_all_folders():
+    folders = get_folders()
+    if not folders:
+        print(f"{Fore.RED}* No harmony folders found.")
+        print(f"{string_stars()}")
+        return
+
+    print(f"{Fore.GREEN}{string_stars()}")
+    print(f"* Missed Block Analysis (current epoch, as far back as log goes)")
+    print(f"* {'Folder':<12} {'Epoch':<8} {'Signed':<8} {'Missed':<8} {'Max Streak':<12} Block Range")
+    print(f"* {'-'*12} {'-'*8} {'-'*8} {'-'*8} {'-'*12} {'-'*25}")
+
+    for folder in folders:
+        folder_path = f"{config.user_home_dir}/{folder}"
+        _, epoch = get_bingo_block(folder_path)
+        stats = get_missed_blocks(folder_path, epoch)
+
+        if stats["epoch"] is None:
+            print(f"* {Fore.CYAN}{folder:<12}{Fore.GREEN} {'N/A':<8} {'N/A':<8} {'N/A':<8} {'N/A':<12} No log data")
+        else:
+            missed_col = f"{Fore.RED}{stats['count']}{Fore.GREEN}" if stats["count"] > 0 else f"{Fore.YELLOW}{stats['count']}{Fore.GREEN}"
+            streak_col = f"{Fore.RED}{stats['max_streak']}{Fore.GREEN}" if stats["max_streak"] > 0 else f"{Fore.YELLOW}{stats['max_streak']}{Fore.GREEN}"
+            block_range = f"{stats.get('first_block', 'N/A')} - {stats.get('last_block', 'N/A')}"
+            print(
+                f"* {Fore.CYAN}{folder:<12}{Fore.GREEN} {str(stats['epoch']):<8} "
+                f"{str(stats['signed']):<8} {missed_col:<8} {streak_col:<12} {block_range}"
+            )
+
+    print(f"{string_stars()}")
+
+
 def get_elected_validators(hmy_bin, endpoint):
     try:
         result = run(
